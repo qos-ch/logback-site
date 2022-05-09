@@ -1,0 +1,12 @@
+target
+.settings
+.classpath
+.factorypath
+.project
+.idea
+*~
+*.iml
+*.ipr
+*.iws
+# ignore files with pound characters
+\#*\#

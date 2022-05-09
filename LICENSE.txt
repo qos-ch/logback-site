@@ -1,0 +1,8 @@
+Copyright (C) 2000-2022, QOS.ch Sarl (Switzerland)
+
+Creative Commons License
+
+This document is licensed under a Creative Commons
+Attribution-NonCommercial-ShareAlike 2.5 License
+
+https://creativecommons.org/licenses/by-nc-sa/2.5/
