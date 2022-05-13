@@ -961,13 +961,24 @@ public interface RollingPolicy extends LifeCycle {
        requires <span class="option">maxHistory</span> property to be
        set as well.  Moreover, the "max history" restriction is always
        applied first and the "total size cap" restriction applied
-       second. </p>
+       second.
+       </p>
+
+       <p>The <span class="prop">totalSizeCap</span> property can be
+       specified in units of bytes, kilobytes, megabytes or gigabytes
+       by suffixing a numeric value with KB, MB and respectively
+       GB. For example, 5000000, 5000KB, 5MB and 2GB are all valid
+       values, with the first three being equivalent. A numerical
+       value with no suffix is taken to be in units of bytes.
+       </p>
+
+       <p>By default, <span class="prop">totalSizeCap</span> is set to
+       zero, meaning that there is no total size cap.</p>
        </td>
      </tr>
 
      <tr >
-       <td><span class="prop"
-       container="tbrp">cleanHistoryOnStart</span></td>
+       <td><span class="prop" container="tbrp">cleanHistoryOnStart</span></td>
        <td>boolean</td>
        <td>
          <p>If set to true, archive removal will be executed on
