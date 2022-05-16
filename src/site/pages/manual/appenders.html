@@ -940,7 +940,7 @@ public interface RollingPolicy extends LifeCycle {
      <tr>
        <td><span class="prop" container="tbrp">maxHistory</span></td>
        <td>int</td>
-       <td>The optional <span class="prop">maxHistory</span> property
+       <td><p>The optional <span class="prop">maxHistory</span> property
        controls the maximum number of archive files to keep,
        asynchronously deleting older files. For example, if you
        specify monthly rollover, and set maxHistory to 6, then 6
@@ -948,6 +948,13 @@ public interface RollingPolicy extends LifeCycle {
        than 6 months deleted. Note as old archived log files are
        removed, any folders which were created for the purpose of log
        file archiving will be removed as appropriate.
+       </p>
+
+       <p>Setting <span class="prop">maxHistory</span> to zero
+       disables archive removal. By default, <span
+       class="prop">maxHistory</span> is set to zero, i.e. by default
+       there is no archive removal.
+       </p>
        </td>
      </tr>
 

@@ -115,8 +115,7 @@ a {
 #left a, #right a {
   display: block; 
   margin: 0px; 
-  padding: 2px; 
-  border: solid 1px #fff8e8; 
+  padding: 2px;  
   color: #0066cc; 
   text-decoration: none;
 }
@@ -131,24 +130,36 @@ p.menu_header {
 }
 
 #left a:hover, #right a:hover {
-  border: solid 1px #FFFFFF; 
-  background-color: #3333CC; 
-  color: #ffffff;
-  -webkit-border-radius: 3px;
-  -moz-border-radius: 3px;
-  border-radius: 3px;
-}
-.pub {
-  text-align: center;
+    /**border: solid 1px #FFFFFF; */
+    background-color: #3333CC; 
+    color: #ffffff;
 }
 
-#left .pub a:hover {
-  background-color: transparent;
-  border: solid 0px #FFFFFF;
+.pub {
+    justify-content: center;
+    text-align: center;
 }
+
+#left p.sponsoredBy {
+    margin: 0px; 
+    padding: 2px;
+    font-weight: normal; 
+
+    color: #564b47;    
+    background-color: #ffd0a0; 
+    border-top: solid 1px #CCCCCC;
+    border-bottom: solid 1px #CCCCCC;   
+}
+
+#left div.pub a, div.pub a:hover {
+  background-color: transparent;
+  color: #fff;
+  border-width: 0px;	
+}
+
 
 #left img {
-	border: none;
+    border: none;
 }
 
 #left div.jobadd {
@@ -170,7 +181,7 @@ p.menu_header {
   background-image: linear-gradient(to top left, #FFBB55 0%, #FF8822 100%);
 }
 
-#left div.jobadd a, div.jobadd a:hover {
+#left div.pub a, div.jobadd a:hover {
   background-color: transparent;
   color: #fff;
   border-width: 0px;	
