@@ -1497,7 +1497,7 @@ import ch.qos.logback.classic.LoggerContext;
 
   <pre id="variableSubstitution1" class="prettyprint source">&lt;configuration>
 
-  <b>&lt;property name="USER_HOME" value="/home/sebastien" /></b>
+  <b>&lt;variable name="USER_HOME" value="/home/sebastien" /></b>
 
   &lt;appender name="FILE" class="ch.qos.logback.core.FileAppender">
     <b>&lt;file>${USER_HOME}/myApp.log&lt;/file></b>
@@ -1550,7 +1550,7 @@ import ch.qos.logback.classic.LoggerContext;
 
   <pre id="variableSubstitution3" class="prettyprint source">&lt;configuration>
 
-  <b>&lt;property file="src/main/java/chapters/configuration/variables1.properties" /></b>
+  <b>&lt;variable file="src/main/java/chapters/configuration/variables1.properties" /></b>
 
   &lt;appender name="FILE" class="ch.qos.logback.core.FileAppender">
      <b>&lt;file>${USER_HOME}/myApp.log&lt;/file></b>
@@ -1580,7 +1580,7 @@ import ch.qos.logback.classic.LoggerContext;
 
   <pre class="prettyprint source">&lt;configuration>
 
-  <b>&lt;property resource="resource1.properties" /></b>
+  <b>&lt;variable resource="resource1.properties" /></b>
 
   &lt;appender name="FILE" class="ch.qos.logback.core.FileAppender">
      <b>&lt;file>${USER_HOME}/myApp.log&lt;/file></b>
@@ -1650,7 +1650,7 @@ import ch.qos.logback.classic.LoggerContext;
 
   <pre id="contextScopedVariable" class="prettyprint source">&lt;configuration>
 
-  &lt;property <b class="big">scope="context"</b> name="nodeId" value="firstNode" />
+  &lt;variable <b class="big">scope="context"</b> name="nodeId" value="firstNode" />
 
   &lt;appender name="FILE" class="ch.qos.logback.core.FileAppender">
     <b>&lt;file>/opt/${nodeId}/myApp.log&lt;/file></b>
@@ -1714,7 +1714,7 @@ fileName=myApp.log
 
     <pre class="prettyprint source">&lt;configuration>
 
-  &lt;property file="variables2.properties" />
+  &lt;variable file="variables2.properties" />
 
   &lt;appender name="FILE" class="ch.qos.logback.core.FileAppender">
     <b>&lt;file>${destination}&lt;/file></b>
@@ -1770,7 +1770,7 @@ fileName=myApp.log
 
   <!-- ============================================================== -->
   <h3 class="doAnchor" name="definingPropsOnTheFly">Defining
-  properties on the fly</h3>
+  variables, aka properties, on the fly</h3>
 
   <p>You may define properties dynamically using the
   <code>&lt;define></code> element. The define element takes two
