@@ -24,12 +24,17 @@ document.write('</div>');
 //document.write('<p>&nbsp;</p>');
 //document.write('<div class="jobadd"><p><a href="https://doodle.com/poll/s7n3wk59694pmnbs">Should logback 1.3.x series upgrade to Java 8 or remain with Java 7?</a></p></div>');
 
+document.write('<p>&nbsp;</p>');
 document.write('<p class="sponsoredBy">&nbsp;Sponsored by:</p>');
 
 document.write('<div class="pub">');
+document.write('    <a href="https://research.atspotify.com/" style="">');
+document.write('      <img alt="Spotify R&amp;D" src="' + prefix + 'images/logos/spotify-rnd-black.png" width="150"/>');
+document.write('    </a>');
 document.write('    <a href="https://www.exoscale.com" style="">');
 document.write('      <img alt="Exoscale" src="' + prefix + 'images/logos/exoscale.png" width="110"/>');
 document.write('    </a>');
+
 document.write('</div>');
 
 //document.write('<p>&nbsp;</p>');

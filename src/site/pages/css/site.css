@@ -138,6 +138,7 @@ p.menu_header {
 .pub {
     justify-content: center;
     text-align: center;
+    background-color: #fff8e8;
 }
 
 #left p.sponsoredBy {
@@ -602,4 +603,15 @@ p.menu {
     background-color: cornsilk;
     border-style: dotted;
     border-color: #F00;
+}
+
+#left p.sponsoredBy {
+    margin: 0px; 
+    padding: 2px;
+    font-weight: normal; 
+
+    color: #564b47;    
+    background-color: #ffd0a0; 
+    border-top: solid 1px #CCCCCC;
+    border-bottom: solid 1px #CCCCCC;   
 }
