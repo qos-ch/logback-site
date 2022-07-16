@@ -155,7 +155,7 @@ public class MySampleLayout extends LayoutBase&lt;ILoggingEvent> {
     your custom layout</h3>
 
 		<p>Custom layouts are configured as any other component. As
-		mentioned earlier, <code>FileAppender</code> and its sub-classes
+		mentioned earlier, <code>FileAppender</code> and its subclasses
 		expect an encoder. In order to fulfill this requirement, we pass
 		to <code>FileAppender</code> an instance of
 		<code>LayoutWrappingEncoder</code> which wraps our
@@ -316,7 +316,7 @@ public class MySampleLayout2 extends LayoutBase&lt;ILoggingEvent> {
     </p>
 
     <p>As already mentioned on several occasions,
-    <code>FileAppender</code> and sub-classes expect an
+    <code>FileAppender</code> and subclasses expect an
     encoder. Consequently, when used in conjunction with
     <code>FileAppender</code> or its subclasses a
     <code>PatternLayout</code> must be wrapped within an
@@ -878,7 +878,7 @@ Caller+0   at mainPackage.sub.sample.Bar.createLoggingRequest(Bar.java:17)</pre>
 				 </p>
 
 
-  			 <p>The <em>throwable</em> conversion word can followed by one of
+  			 <p>The <em>throwable</em> conversion word can be followed by one of
 						the following options:
 				 </p>
 				 <ul>
@@ -1057,7 +1057,7 @@ Caller+0   at mainPackage.sub.sample.Bar.createLoggingRequest(Bar.java:17)</pre>
         </td>
 
         <td><p>Outputs the value associated with a property named
-        <em>key</em>. The the relevant docs on how to define ion
+        <em>key</em>. The relevant docs on how to define ion
         entitled <a
         href="configuration.html#variableSubstitution">define
         variables</a> and <a href="configuration.html#scopes">variable
@@ -1121,7 +1121,7 @@ Caller+0   at mainPackage.sub.sample.Bar.createLoggingRequest(Bar.java:17)</pre>
         <pre>%d <b>%prefix(</b>%thread %level %logger %X{user}<b>)</b> %message</pre>
 
         <p>The two previous patterns will generate equivalent
-        output. The usefullness of the %prefix converter increases
+        output. The usefulness of the %prefix converter increases
         with the number of child converters contained in the pattern
         'p'.</p>
 
@@ -1369,7 +1369,7 @@ Wrapped by: org.springframework.BeanCreationException: Error creating bean with 
 
 		<h2 class="doAnchor" name="cwOptions">Conversion word options</h2>
 
-		<p>A conversion specifier can be followed by options. The are
+		<p>A conversion specifier can be followed by options. They are
 		always declared between braces. We have already seen some of the
 		possibilities offered by options, for instance in conjunction with
 		the MDC conversion specifier, as in: <em>%mdc{someKey}</em>.
@@ -1542,7 +1542,7 @@ Wrapped by: org.springframework.BeanCreationException: Error creating bean with 
 
     <p>Evaluators and in particular <em>evaluation expressions</em>
     are presented in a <a
-    href="filters.html#evalutatorFilter">dedicated section of the
+    href="filters.html#evaluatorFilter">dedicated section of the
     chapter on filters</a> which you MUST read if you want to use
     evaluators in any meaningful way. Also note that the examples below
     are implicitly based on <code>JaninoEventEvaluator</code> which
@@ -1808,7 +1808,7 @@ java.lang.Exception: display
 		abbreviate the logger name in the process.</p>
 
 		<p>Here is a customer converter which returns the time elapsed
-		since its creaton in nanoseconds:</p>
+		since its creation in nanoseconds:</p>
 
 <em> Example: Sample Converter Example
 <a href="../xref/chapters/layouts/MySampleConverter.html">
@@ -1828,7 +1828,7 @@ java.lang.Exception: display
 		<code>MySampleConverter</code> class extends
 		<code>ClassicConverter</code>, and implements the
 		<code>convert</code> method which returns the number of
-		nano-seconds elapsed since its creation.
+		nanoseconds elapsed since its creation.
 		</p>
 
     <h4>Step 2</h4>
@@ -2022,7 +2022,7 @@ java.lang.Exception: display
     class="option">locationInfo</span> and <span
     class="option">properties</span>. Setting <span
     class="option">locationInfo</span> to true enables the inclusion
-    of location info (caller data) in the each event. Setting <span
+    of location info (caller data) in each event. Setting <span
     class="option">properties</span> to true enables the inclusion of
     MDC information. Both options are set to false by default.
     </p>

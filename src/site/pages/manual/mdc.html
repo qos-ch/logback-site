@@ -199,13 +199,13 @@ Richard Nixon - Attributed to the former US president. 17 Nov 1973.</pre></div>
 		architectures.  Typically, multiple clients will be served by
 		multiple threads on the server.  Although the methods in the
 		<code>MDC</code> class are static, the diagnostic context is
-		managed on a per thread basis, allowing each server thread to bear
+		managed on a per-thread basis, allowing each server thread to bear
 		a distinct <code>MDC</code> stamp. <code>MDC</code> operations
 		such as <code>put()</code> and <code>get()</code> affect only the
 		<code>MDC</code> of the <em>current</em> thread, and the children
 		of the current thread. The <code>MDC</code> in other threads
 		remain unaffected. Given that <code>MDC</code> information is
-		managed on a per thread basis, each thread will have its own copy
+		managed on a per-thread basis, each thread will have its own copy
 		of the <code>MDC</code>.  Thus, there is no need for the developer
 		to worry about thread-safety or synchronization when programming
 		with the <code>MDC</code> because it handles these issues safely

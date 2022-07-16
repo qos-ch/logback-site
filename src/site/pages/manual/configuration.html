@@ -871,7 +871,7 @@ import ch.qos.logback.classic.LoggerContext;
     tag names</h4>
 
     <p>Since logback version 0.9.17, tag names pertaining to explicit
-    rules are case insensitive.  For example,
+    rules are case-insensitive.  For example,
     <code>&lt;logger></code>, <code>&lt;Logger></code> and
     <code>&lt;LOGGER></code> are valid configuration elements and will
     be interpreted in the same way. Note that XML well-formedness
@@ -899,7 +899,7 @@ import ch.qos.logback.classic.LoggerContext;
     <p>At this point you should have at least some understanding of <a
     href="architecture.html#effectiveLevel">level inheritance</a> and
     the <a href="architecture.html#basic_selection">basic selection
-    rule</a>. Otherwise, and unless you are an Egyptologist, logback
+    rule</a>. Otherwise, and unless you are an egyptologist, logback
     configuration will be no more meaningful to you than are
     hieroglyphics.
     </p>
@@ -1350,7 +1350,7 @@ import ch.qos.logback.classic.LoggerContext;
   children will go into the <em>myApp.log</em> file.
   </p>
 
-  <h4 class="doAnchor" name="overrridingCumulativity">Overriding the
+  <h4 class="doAnchor" name="overridingCumulativity">Overriding the
   default cumulative behaviour</h4>
 
   <p>In case the default cumulative behavior turns out to be
@@ -1623,7 +1623,7 @@ import ch.qos.logback.classic.LoggerContext;
    long as the JVM or until it is cleared.
    </p>
 
-   <p class="highlight">Properties are looked up in the the local
+   <p class="highlight">Properties are looked up in the local
    scope first, in the context scope second, in the system properties
    scope third, and in the OS environment last.
    </p>
@@ -1739,7 +1739,7 @@ fileName=myApp.log
 
    <h4>default value nesting</h4>
 
-   <p>The default value of a variable can reference a another
+   <p>The default value of a variable can reference another
    variable.  For example, assuming the variable 'id' is unassigned
    and the variable 'userid' is assigned the value "alice", then the
    expression "${id<b>:-</b>${userid}}" will return "alice".
@@ -1938,7 +1938,7 @@ fileName=myApp.log
   <p>Conditional processing is supported <em>anywhere</em> within the
   <code>&lt;configuration></code> element. Nested if-then-else
   statements are also supported. However, XML syntax is awfully
-  cumbersome and is ill suited as the foundation of a general purpose
+  cumbersome and is ill-suited as the foundation of a general purpose
   programming language.  Consequently, too many conditionals will
   quickly render your configuration files incomprehensible to subsequent
   readers, including yourself.

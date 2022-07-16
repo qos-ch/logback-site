@@ -298,7 +298,7 @@ public interface Appender&lt;E> extends LifeCycle, ContextAware, FilterAttachabl
 	class diagram for <code>OutputStreamAppender</code> and its subclasses.
 	</p>
 	
-	<img src="images/chapters/appenders/appenderClassDiagram.jpg" alt="A UML diagram showing OutputStreamAppender and sub-classes"/>
+	<img src="images/chapters/appenders/appenderClassDiagram.jpg" alt="A UML diagram showing OutputStreamAppender and subclasses"/>
 	
 
 	<h2 class="doAnchor" name="ConsoleAppender">ConsoleAppender</h2>
@@ -432,7 +432,7 @@ public interface Appender&lt;E> extends LifeCycle, ContextAware, FilterAttachabl
        <th>Description</th>
      </tr>
      <tr>
-       <td><span class="prop" container="fileApppender">append</span></td>
+       <td><span class="prop" container="fileAppender">append</span></td>
        <td><code>boolean</code></td>
        <td>If true, events are appended at the end of an existing
        file.  Otherwise, if <span class="prop">append</span> is false,
@@ -441,7 +441,7 @@ public interface Appender&lt;E> extends LifeCycle, ContextAware, FilterAttachabl
        </td>
      </tr>
      <tr >
-       <td><span class="prop" container="fileApppender">encoder</span></td>
+       <td><span class="prop" container="fileAppender">encoder</span></td>
        <td>
          <a href="../xref/ch/qos/logback/core/encoder/Encoder.html"><code>Encoder</code></a>
        </td>
@@ -451,11 +451,11 @@ public interface Appender&lt;E> extends LifeCycle, ContextAware, FilterAttachabl
    
      <tr>
        <td><span class="prop"
-       container="fileApppender">file</span></td>
+       container="fileAppender">file</span></td>
        <td><code>String</code></td>
        <td>The name of the file to write to. If the file does not
        exist, it is created. On the MS Windows platform users
-       frequently forget to escape back slashes.  For example, the
+       frequently forget to escape backslashes.  For example, the
        value <em>c:\temp\test.log</em> is not likely to be interpreted
        properly as <em>'\t'</em> is an escape sequence interpreted as
        a single tab character <em>(\u0009)</em>.  Correct values can
@@ -523,7 +523,7 @@ public interface Appender&lt;E> extends LifeCycle, ContextAware, FilterAttachabl
          </p>
          
          <p>The impact of prudent mode is highly dependent on network
-         speed as well as the OS implementation details. We provide an
+         speed as well as the OS implementation details. We provide a
          very small application called <a
          href="https://gist.github.com/2794241">FileLockSimulator</a>
          which can help you simulate the behavior of prudent mode in
@@ -671,12 +671,12 @@ public interface Appender&lt;E> extends LifeCycle, ContextAware, FilterAttachabl
 
    <p class="command">java chapters.appenders.ConfigurationTester src/main/resources/chapters/appenders/conf/logback-timestamp.xml</p>
 
-   <p>To use the logger context birth date as time reference, you
+   <p>To use the logger context birthdate as time reference, you
    would set the <span class="attr">timeReference</span> attribute to
    "contextBirth" as shown below.</p>
 
 
-   <p class="example">Example: Timestamp using context birth date as time reference
+   <p class="example">Example: Timestamp using context birthdate as time reference
    (logback-examples/src/main/resources/chapters/appenders/conf/logback-timestamp-contextBirth.xml)</p>
 
    <pre id="logback-timestamp-contextBirth" class="prettyprint source">&lt;configuration>
@@ -696,12 +696,12 @@ public interface Appender&lt;E> extends LifeCycle, ContextAware, FilterAttachabl
 	 met, change its logging target to another file.
    </p>
      
-   <p>There are two important sub-components that interact with
+   <p>There are two important subcomponents that interact with
    <code>RollingFileAppender</code>. The first
    <code>RollingFileAppender</code> sub-component, namely
    <code>RollingPolicy</code>, (<a href="#onRollingPolicies">see
    below</a>) is responsible for undertaking the actions required for
-   a rollover. A second sub-component of
+   a rollover. A second subcomponent of
    <code>RollingFileAppender</code>, namely
    <code>TriggeringPolicy</code>, (<a href="#TriggeringPolicy">see
    below</a>) will determine if and exactly when rollover
@@ -882,7 +882,7 @@ public interface RollingPolicy extends LifeCycle {
          the <span class="prop">file</span> property of the
          containing <code>FileAppender</code>, you can decouple the
          location of the active log file and the location of the
-         archived log files. The current logs will be always targeted
+         archived log files. The current logs will always be targeted
          at the file specified by the <span class="prop">file</span>
          property. It follows that the name of the currently active
          log file will not change over time.</p>
@@ -1176,7 +1176,7 @@ public interface RollingPolicy extends LifeCycle {
          file will be compressed and renamed as
          <em>/wombat/foo.2009-11-23.gz</em>.  A new
          <em>/wombat/foo.txt</em> file will be created where logging
-         output will go for the rest of November 24rd. At midnight
+         output will go for the rest of November 24th. At midnight
          November 24th, <em>/wombat/foo.txt</em> will be compressed and
          renamed as <em>/wombat/foo.2009-11-24.gz</em> and so on.
          </p>
@@ -1343,7 +1343,7 @@ public interface RollingPolicy extends LifeCycle {
     <code>TimeBasedRollingPolicy</code> described above and setting
     the <a href="#tbrpTotalSizeCap"><span
     class="option">totalSizeCap</span></a> property should be amply
-    sufficent.
+    sufficient.
     </p>
 
     <p>Here is a sample configuration file demonstrating time and size
@@ -1779,7 +1779,7 @@ public interface TriggeringPolicy&lt;E&gt; extends LifeCycle {
 		connector thread.  A connector thread exists only if the
 		connection to the server is down.  To avoid this garbage
 		collection problem, you should close the
-		<code>SocketAppender</code> explicitly. Long lived applications
+		<code>SocketAppender</code> explicitly. Long-lived applications
 		which create/destroy many <code>SocketAppender</code> instances
 		should be aware of this garbage collection problem. Most other
 		applications can safely ignore it.  If the JVM hosting the
@@ -2058,7 +2058,7 @@ public interface TriggeringPolicy&lt;E&gt; extends LifeCycle {
 
 		<p>As deserialized events can be handled in the same way as
 		locally generated events, they even can be sent to a second server
-		for further treatment.  As an exercise, you may wish to setup two
+		for further treatment.  As an exercise, you may wish to set up two
 		servers where the first server tunnels the events it receives from
 		its clients to a second server.
 		</p>
@@ -2091,7 +2091,7 @@ public interface TriggeringPolicy&lt;E&gt; extends LifeCycle {
     </p>
     
     <p>Because the server configuration has <code>debug="true"</code>
-    specified on the root element, you'll will see in the server's
+    specified on the root element, you will see in the server's
     startup logging the SSL configuration that will be used.  This is
     useful in validating that local security policies are properly
     implemented.
@@ -2472,7 +2472,7 @@ public interface TriggeringPolicy&lt;E&gt; extends LifeCycle {
 
           <p>By specifying a discriminator other than the default
           one, it is possible to receive email messages
-          containing a events pertaining to a particular user, user
+          containing an events pertaining to a particular user, user
           session or client IP address.
           </p>
         </td>
@@ -2510,7 +2510,7 @@ public interface TriggeringPolicy&lt;E&gt; extends LifeCycle {
           href="../xref/ch/qos/logback/classic/boolex/OnMarkerEvaluator.html"><code>OnMarkerEvaluator</code></a>
           (discussed below) and a powerful evaluator called <a
           href="../xref/ch/qos/logback/classic/boolex/JaninoEventEvaluator.html"><code>JaninoEventEvaluator</code></a>,
-          discussed in <a href="filters.html#evalutatorFilter">another
+          discussed in <a href="filters.html#evaluatorFilter">another
           chapter</a>. The more recent versions of logback ship with
           an even more powerful evaluator called <a
           href="filters.html#GEventEvaluator"><code>GEventEvaluator</code></a>.
@@ -2814,7 +2814,7 @@ public interface TriggeringPolicy&lt;E&gt; extends LifeCycle {
     desires, you may set a different buffer size as shown in the next example.
     </p>
 
-   <p class="example">Example:  <code>SMTPAppender</code> configuration with a custom bufer size (logback-examples/src/main/resources/chapters/appenders/mail/customBufferSize.xml)</p>	
+   <p class="example">Example:  <code>SMTPAppender</code> configuration with a custom buffer size (logback-examples/src/main/resources/chapters/appenders/mail/customBufferSize.xml)</p>
 
    
    <div class="tab">
@@ -2986,7 +2986,7 @@ public class CounterBasedEvaluator extends ContextAwareBase implements EventEval
 
     <pre class="prettyprint source">Marker notifyAdmin = MarkerFactory.getMarker("NOTIFY_ADMIN");
 logger.error(<b>notifyAdmin</b>,
-  "This is a serious an error requiring the admin's attention",
+  "This is a serious error requiring the admin's attention",
    new Exception("Just testing"));</pre>
 
    <p>The next configuration file will trigger outgoing emails only in
@@ -3258,7 +3258,7 @@ logger.error(<b>notifyAdmin</b>,
     </p>
 
     <p class="example">Example: <code>SMTPAppender</code> with
-    MDCBasedDsicriminator
+    MDCBasedDiscriminator
     (logback-examples/src/main/resources/chapters/appenders/mail/mailWithMDCBasedDiscriminator.xml)</p>
 
     <div class="tab">
@@ -3688,7 +3688,7 @@ logger.error(<b>notifyAdmin</b>,
   <b>&lt;appender name="DB" class="ch.qos.logback.classic.db.DBAppender">
     &lt;connectionSource class="ch.qos.logback.core.db.DriverManagerConnectionSource">
       &lt;driverClass>com.mysql.jdbc.Driver&lt;/driverClass>
-      &lt;url>jdbc:mysql://host_name:3306/datebase_name&lt;/url>
+      &lt;url>jdbc:mysql://host_name:3306/database_name&lt;/url>
       &lt;user>username&lt;/user>
       &lt;password>password&lt;/password>
     &lt;/connectionSource>
@@ -4225,8 +4225,8 @@ logger.error(<b>notifyAdmin</b>,
     below). <code>SiftingAppender</code> is responsible for managing
     the lifecycle of child appenders. For example,
     <code>SiftingAppender</code> will automatically close and remove
-    any stale appender. A nested appender is considered stale when no
-    accesses it beyond the duration specified by the <span
+    any stale appender. A nested appender is considered stale when
+    nothing accesses it beyond the duration specified by the <span
     class="prop">timeout</span> parameter.
     </p>
 
@@ -4369,7 +4369,7 @@ import static ch.qos.logback.classic.ClassicConstants.FINALIZE_SESSION_MARKER;
     MDC.put("jobId", jobId);
     logger.info("Starting job.");
 
-    ... do whather the job needs to do
+    ... do whatever the job needs to do
     
     // will cause the nested appender reach end-of-life. It will
     // linger for a few seconds.
@@ -4416,7 +4416,7 @@ import static ch.qos.logback.classic.ClassicConstants.FINALIZE_SESSION_MARKER;
     will wait for the worker thread to flush up to the timeout specified
     in <span class="prop">maxFlushTime</span>. If you find that queued events
     are being discarded during close of the <code>LoggerContext</code>, you
-    may need to increase the time out. Specifying a value of 0 for 
+    may need to increase the time-out. Specifying a value of 0 for
     <span class="prop">maxFlushTime</span> will force the <code>AsyncAppender</code>
     to wait for all queued events to be flushed before returning from 
    	the stop method.
@@ -4424,7 +4424,7 @@ import static ch.qos.logback.classic.ClassicConstants.FINALIZE_SESSION_MARKER;
     
     <p><span class="label">Post shutdown cleanup</span>
     Depending on the mode of JVM shutdown, the worker thread processing the 
-    queued events can be interrupted causing events to be strandeds in the
+    queued events can be interrupted causing events to be stranded in the
     queue. This generally occurs when the <code>LoggerContext</code> is not
     stopped cleanly or when the JVM terminates outside of the typical control
     flow. In order to avoid interrupting the worker thread under these 

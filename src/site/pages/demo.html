@@ -65,7 +65,7 @@
     logback-classic with two appenders: a <code>ConsoleAppender</code>
     and a <code>RollingFileAppender</code>. The
     <code>RollingFileAppender</code> sends logging events to a file
-    called <em>logFile.log</em> and will rollover the active file
+    called <em>logFile.log</em> and will roll over the active file
     every minute. The old file will be renamed and compressed to a
     <em>zip</em> file. The <code>ConsoleAppender</code> will output
     the logging requests to the console, and shorten the logger names
@@ -82,7 +82,7 @@
   </p>
 
   <p>Let us now visit the <em>ViewStatii</em> page, via the navigation
-  menu on the left hand side of your browser's window. This page
+  menu on the left-hand side of your browser's window. This page
   contains the content of the <code>Status</code> objects that were
   created up until now. <code>Status</code> objects are a part of
   logback's internal reporting framework. They allow you to see what
@@ -166,7 +166,7 @@
   the String <em>LoggingTask</em>, but also that its message contains
   the string <em>Howdydy-diddly-ho</em>.  Moreover, in order to be
   sure that the <em>Howdydy-diddly-ho</em> task actually works, we add
-  a last condition which checks that that at least 20 seconds have
+  a last condition which checks that at least 20 seconds have
   elapsed after application launch. The variable references in the
   expression, namely (<code>logger</code>, <code>message</code> and
   <code>event</code>) are implicitly made available by logback.  The
@@ -205,7 +205,7 @@
   "sebastien". The logback-demo application contains a <a
   href="http://java.sun.com/products/servlet/Filters.html">servlet
   filter</a> which will set the MDC key "username" with the name of
-  the currently logged in user.</p>
+  the currently logged-in user.</p>
 
 
   <p>For the purpose of this demo, let us disable all logging by
@@ -228,7 +228,7 @@
   username <em>sebastien</em> and perform a few prime
   computations. The <em>View logs</em> page should show the logging
   events that were generated. Moreover, each logging event will have
-  an MDC field associated with the name of the logged in user, in this
+  an MDC field associated with the name of the logged-in user, in this
   case, sebastien. Please log off before continuing the demo, using
   the <em>logout</em> button on the left.
   </p>

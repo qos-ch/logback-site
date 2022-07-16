@@ -129,7 +129,7 @@
     configuration files. However, in case there is demand, it may be
     re-introduced.</p>
 
-    <h2 class="doAnchor" name="entensions">Extensions specific to
+    <h2 class="doAnchor" name="extensions">Extensions specific to
     <em>logback.groovy</em></h2>
 
     <p><span class="green">Essentially, <em>Logback.groovy</em> syntax
@@ -196,7 +196,7 @@
   <pre class="prettyprint source">logger("com.foo", DEBUG, ["CONSOLE"])</pre>
     
    <p>The next script is similar to the previous one, except that it
-   also sets the the additivity flag of the "com.foo" logger to
+   also sets the additivity flag of the "com.foo" logger to
    false.</p>
 
   <pre class="prettyprint source">logger("com.foo", DEBUG, ["CONSOLE"], false)</pre>
@@ -211,13 +211,13 @@
     closure containing further configuration instructions. If omitted,
     it defaults to null.</p>
 
-    <p>Most appenders require properties to be set and sub-components
+    <p>Most appenders require properties to be set and subcomponents
     to be injected to function properly. Properties are set using the
-    '=' operator (assignment). Sub-components are injected by invoking
+    '=' operator (assignment). Subcomponents are injected by invoking
     a method named after the property and passing that method the
     class to instantiate as an argument. This convention can be
     applied recursively to configure properties as well as
-    sub-components of any appender sub-component. This approach is at
+    subcomponents of any appender subcomponent. This approach is at
     the heart of <em>logback.groovy</em> scripts and is probably the
     only convention that needs learning.</p>
     
