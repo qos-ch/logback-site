@@ -54,7 +54,7 @@
     a <code>java.io.Writer</code>. In previous versions of logback,
     users would nest a <code>PatternLayout</code> within
     <code>FileAppender</code>. Since logback 0.9.19,
-    <code>FileAppender</code> and sub-classes <a
+    <code>FileAppender</code> and subclasses <a
     href="../codes.html#layoutInsteadOfEncoder">expect an encoder and no
     longer take a layout</a>.
     </p>
@@ -82,7 +82,7 @@
     <p>Encoders are responsible for transforming an incoming event
     into a byte array <b>and</b> writing out the resulting byte array
     onto the appropriate <code>OutputStream</code>.  Thus, encoders
-    have total control of what and when bytes gets written to the
+    have total control of what and when bytes get written to the
     <code>OutputStream</code> maintained by the owning appender. Here
     is the <a
     href="../xref/ch/qos/logback/core/encoder/Encoder.html">Encoder
@@ -127,7 +127,7 @@ public interface Encoder&lt;E> extends ContextAware, LifeCycle {
     <p>Until logback version 0.9.19, many appenders relied on the
     Layout instances to control the format of log output. As there
     exists substantial amount of code based on the layout interface,
-    we needed a way for encoders to inter-operate with layouts. <a
+    we needed a way for encoders to interoperate with layouts. <a
     href="../xref/ch/qos/logback/core/encoder/LayoutWrappingEncoder.html">LayoutWrappingEncoder</a>
     bridges the gap between encoders and layouts. It implements the
     encoder interface and wraps a layout to which it delegates the
@@ -176,7 +176,7 @@ public class LayoutWrappingEncoder&lt;E> extends EncoderBase&lt;E> {
     </p>
 
     <p>As of logback version 0.9.19, whenever a
-    <code>FileAppender</code> or one of its sub-classes was configured
+    <code>FileAppender</code> or one of its subclasses was configured
     with a <code>PatternLayout</code>, a
     <code>PatternLayoutEncoder</code> must be used instead. This is
     explained in the <a

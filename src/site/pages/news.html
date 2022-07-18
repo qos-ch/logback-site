@@ -45,7 +45,7 @@
 
     <p>Joran, logback's configuration system, has been rewritten to
     use an internal representation model which can be processed
-    separately. As a side-effect, logback configuration scripts are
+    separately. As a side effect, logback configuration scripts are
     now largely order-free. For example, appenders can now be defined
     after they are first referenced in a logger. Moreover,
     unreferenced appenders are no longer instantiated. 
@@ -61,9 +61,9 @@
     href="https://jira.qos.ch/browse/LOGBACK-1639">LOGBACK-1639</a>.
     </p>
     
-    <p>A bit-wise identical binary of this version can reproduced by
+    <p>A bit-wise identical binary of this version can be reproduced by
     checking out the tag v_1.3.0-alpha16 from the source code
-    repository (github). Release built using Java "18" 2022-03-22
+    repository (GitHub). Release built using Java "18" 2022-03-22
     build 18+36-2087 under Linux Debian 9.5.
     </p>
     
@@ -97,9 +97,9 @@
     href="https://jira.qos.ch/browse/LOGBACK-1623">LOGBACK-1623</a>
     reported by Oyvind Horneland.</p>
 
-    <p>A bit-wise identical binary of this version can reproduced by
+    <p>A bit-wise identical binary of this version can be reproduced by
     checking out the tag v_1.3.0-alpha15 from the source code
-    repository (github). Release built using Java "18" 2022-03-22
+    repository (GitHub). Release built using Java "18" 2022-03-22
     build 18+36-2087 under Linux Debian 11.2.</p>
 
     
@@ -151,7 +151,7 @@
     reported by Chris Cheshire.</p>
 
     <p>&bull;&nbsp; In <code>SMTPAppenderBase</code> empty username
-    parameter is now treatede the same <code>null</code>. This fixes
+    parameter is now treated the same <code>null</code>. This fixes
     <a href="https://jira.qos.ch/browse/LOGBACK-1594">LOGBACK-1594</a>
     reported by Mark Woon who also provided the relevant PR.</p>
 
@@ -175,7 +175,7 @@
 
     <p>&bull;&nbsp; Starting with version 1.3.0-alpha13 logback
     releases are reproducible. This means that anyone checking out the
-    code corresponding to the release version from github and building
+    code corresponding to the release version from GitHub and building
     that local copy, will get obtain an identical binary to the binary
     found on Maven central. Note that due
     to <a href="https://issues.apache.org/jira/browse/MJAR-275">issue
@@ -184,7 +184,7 @@
     </p>
     
     <p>&bull;&nbsp; Once the <code>Model</code> is created from XML
-    confifuration file, <code>Model</code> processing is now
+    configuration file, <code>Model</code> processing is now
     independent of any XML related code.  This
     fixes <a href="https://jira.qos.ch/browse/LOGBACK-1613">LOGBACK-1613</a>.
     </p>
@@ -229,13 +229,13 @@
 
     
     <p>&bull;&nbsp; Properties in an unreferenced appender no longer
-    cause warnings from <code>ImplicitModelHander</code>. This fixes
+    cause warnings from <code>ImplicitModelHandler</code>. This fixes
     <a
     href="https://jira.qos.ch/browse/LOGBACK-1572">LOGBACK-1572</a>.
     </p>
 
     <p>&bull;&nbsp; Properties in an unreferenced appender no longer
-    cause warnings from <code>ImplicitModelHander</code>. This fixes
+    cause warnings from <code>ImplicitModelHandler</code>. This fixes
     <a
     href="https://jira.qos.ch/browse/LOGBACK-1572">LOGBACK-1572</a>.
     </p>
@@ -266,7 +266,7 @@
     <p>1) Hardened logback's JNDI lookup mechanism to only honor
     requests in the <code>java:</code> namespace. All other types of
     requests are ignored. Many thanks to Michael Osipov for suggesting
-    this change and providing the relvant PR.
+    this change and providing the relevant PR.
     </p>
 
     <p>2) <code>SMTPAppender</code> was hardened.</p>
@@ -283,7 +283,7 @@
     understand that <a
     href="https://cve.report/CVE-2021-44228">log4Shell/CVE-2021-44228</a>
     and <a href="https://cve.report/CVE-2021-42550">CVE-2021-42550</a>
-    are of different severity levels. A successul RCE attack with
+    are of different severity levels. A successful RCE attack with
     CVE-2021-42550 requires <em>all</em> of the following conditions
     to be met:</p>
     
@@ -377,7 +377,7 @@
     </p>
 
     <p>&bull; <code>AsyncAppenderBase</code> now drains its buffer in
-    one go, considerably improving thoughput. See <a
+    one go, considerably improving throughput. See <a
     href="performance.html">benchmarking results</a> for further
     details.
     </p>
@@ -420,7 +420,7 @@
     the marker list. This method is deprecated and exists solely for
     backward compatibility reasons.  Logback components should use
     <code>getMarkerList()</code> and cater for all available markers and
-    not the only the first marker. This fixes <a
+    not only the first marker. This fixes <a
     href="https://jira.qos.ch/browse/LOGBACK-1569">LOGBACK-1569</a>
     reported by Pelle Kr&oslash;gholt .</p>
     
@@ -480,7 +480,7 @@
 
     <p>Implementation of
     <code>TargetLengthBasedClassNameAbbreviator</code> has been both
-    simplified and augmented with a LRU cache. This fixes <a
+    simplified and augmented with an LRU cache. This fixes <a
     href="https://jira.qos.ch/browse/LOGBACK-1509">LOGBACK-1509</a>
     reported by Michael Skells who also provided a relevant PR.
     </p>
@@ -489,7 +489,7 @@
 
     <p>Joran, logback's configuration system, has been rewritten to
     use an internal representation model which can be processed
-    separately. As a side-effect, logback configuration scripts are
+    separately. As a side effect, logback configuration scripts are
     now largely order-free. For example, appenders can now be defined
     after they are first referenced in a logger. Moreover,
     unreferenced appenders are no longer instantiated. Given the
@@ -525,7 +525,7 @@
 
     <p>For size bound log file archiving, allow
     <code>TimeBasedArchiveRemove</code> to remove files with indexes
-    containing upto 5 digits. This fixes <a
+    containing up to 5 digits. This fixes <a
     href="https://jira.qos.ch/browse/LOGBACK-1175">LOGBACK-1175</a>.
     </p>
 
@@ -791,8 +791,8 @@
     <p>Logback-classic now searches for the file
     <em>logback-test.xml</em> first, <em>logback.groovy</em> second
     and <em>logback.xml</em> third. In previous versions
-    <em>logback.groovy</em> was looked up first which was non-sensical
-    in presense of <em>logback-test.xml</em>. This fixes <a
+    <em>logback.groovy</em> was looked up first which was nonsensical
+    in presence of <em>logback-test.xml</em>. This fixes <a
     href="http://jira.qos.ch/browse/LOGBACK-1245">LOGBACK-1245</a>
     reported by Joern Huxhorn.
     </p>
@@ -810,7 +810,7 @@
       <li>The <code>ReentrantLock</code> in
       <code>OutputStreamAppender</code> is now "unfair". In previous
       versions of logback, a fair lock was used. Fair locks are much
-      slower. Just as importanly, logback has no mandate to influence
+      slower. Just as importantly, logback has no mandate to influence
       thread scheduling.
       </li>
 
@@ -857,7 +857,7 @@
     and Mark Elliot for hunting down this bug.
     </p>
     
-    <p>As it may be time consuming in certain environments, the
+    <p>As it may be time-consuming in certain environments, the
     HOSTNAME property is now computed lazily. This optimization
     requested in <a
     href="https://jira.qos.ch/browse/LOGBACK-1221">LOGBACK-1221</a> by
@@ -901,7 +901,7 @@
     </p>
  
     <p>Added proper implementation for
-    <code>LobackValve.getScheduledExecutorService()</code> method. The
+    <code>LogbackValve.getScheduledExecutorService()</code> method. The
     missing implementation manifested itself in the form of an
     <code>UnsupportedOperationException</code> thrown by
     LogbackValve. This problem is further described in <a
@@ -916,7 +916,7 @@
     <p>Removed the two period safeguard, aka untouchable periods, for
     archive removal beyond the size specified by <span
     class="option">totalSizeCap</span> in
-    <code>TimeBasedRollingPolicy</code>. It turns out the safegaurd is
+    <code>TimeBasedRollingPolicy</code>. It turns out the safeguard is
     not required and is unexpected as attested by <a
     href="http://jira.qos.ch/browse/LOGBACK-1166">LOGBACK-1166</a>.
     </p>
@@ -943,7 +943,7 @@
     </p>
 
     <p><code>BeanDescriptionFactory</code> no longer outputs a
-    superflous warning message in case the class contains bridge
+    superfluous warning message in case the class contains bridge
     methods. This fixes <a
     href="http://jira.qos.ch/browse/LOGBACK-1164">LOGBACK-1164</a>
     reported by Phil Clay.
@@ -1043,7 +1043,7 @@
     was provided by Ferenc Palkovics.</p>
 
     <p><code>BasicConfigurator.configure</code> method call executes
-    significatly faster. Improved documentation for configuration
+    significantly faster. Improved documentation for configuration
     using JDK 1.6 service-provider facility. These changes are in
     response to <a
     href="http://jira.qos.ch/browse/LOGBACK-1141">LOGBACK-1141</a>
@@ -1103,7 +1103,7 @@
     </div>
 
     <p>Added event replay support as introduced in SLF4J version
-    1.7.15. In most circumstances, logack-classic should run fine with
+    1.7.15. In most circumstances, logback-classic should run fine with
     earlier versions of slf4j-api, including all versions in the 1.6.x
     and 1.7.x series. However, with a version of slf4j-api.jar earlier
     than 1.7.15 in the classpath, attempting introspection of a
@@ -1136,7 +1136,7 @@
     application to run slower. Making bad worse. To alleviate this
     problem, packaging data is no longer computed by default. It has
     to be <a href="manual/configuration.html#packagingData">enabled
-    explicitly</a>. In the absence of explicit instructions, i.e the
+    explicitly</a>. In the absence of explicit instructions, i.e. the
     user has not specified a converter handling exceptions,
     <code>PatternLayout</code> in logback-classic will follow the
     settings defining for the logging environment. If packaging data
@@ -1153,7 +1153,7 @@
     time-based rolling policies to always rollover according to the
     local system time and ignore the time zone passed in the file name
     pattern. The issue was reported by Lukasz Sanek who also provided
-    the the relevant fix. </p>
+    the relevant fix. </p>
 
     <p><code>AsyncAppenderBase</code> now restores the current
     thread's interrupt flag when catching an
@@ -1221,7 +1221,7 @@
     (<a href="http://jira.qos.ch/browse/LOGBACK-116">LOGBACK-116</a>)
     </p>
 
-    <p>Simplified connection logic of SocketApender to reduce multi-threading
+    <p>Simplified connection logic of SocketAppender to reduce multithreading
     overhead and unnecessary instantiation of <code>SocketConnector</code>
     objects.</p>
 
@@ -1253,7 +1253,7 @@
     <code>AsyncAppender</code> based appender to corrupt the request
     headers, request parameters, or response headers, before logging.</p>
 
-    <p>SQL scripts to setup your logback database are now provided as
+    <p>SQL scripts to set up your logback database are now provided as
     JAR resources
     (<a href="http://jira.qos.ch/browse/LOGBACK-948">LOGBACK-948</a>).
     </p>
@@ -1523,7 +1523,7 @@
     pull request.
     </p>
 
-    <p>Logback will now correctly parses variables with a default
+    <p>Logback will now correctly parse variables with a default
     separator string nested within accolades, e.g. "{a:-b}". Such
     strings resemble variable references but lack the $ prefix, e.g
     "${a:-b}". This fixes <a
@@ -1742,7 +1742,7 @@
     Kuipers.</p>
 
     <p>Computation of caller information now takes into account Groovy
-    frames (if nunning under Groovy). This fixes <a
+    frames (if running under Groovy). This fixes <a
     href="http://jira.qos.ch/browse/LOGBACK-811">LOGBACK-811</a>.</p>
 
   
@@ -1795,7 +1795,7 @@
 
     <p>In order to avoid duplication, automatic status printing will
     be disabled if the user explicitly registers a status
-    listerner.</p>
+    listener.</p>
 
     <p>Added <code>OnErrorConsoleStatusListener</code> to print status
     messages on the error console, i.e. on System.err. This feature
@@ -1912,8 +1912,8 @@
 
     <h3>2012-05-31 Release of version 1.0.4</h3>
 
-    <p>Added <code>AsyncAppender</code> for asyncronous invocation of
-    nested appenders. This was a long standing and popular request as
+    <p>Added <code>AsyncAppender</code> for asynchronous invocation of
+    nested appenders. This was a long-standing and popular request as
     attested by <a
     href="http://jira.qos.ch/browse/LBCLASSIC-177">LBCLASSIC-177</a>,
     <a href="http://jira.qos.ch/browse/LBCORE-92">LBCORE-92</a> and <a
@@ -2026,7 +2026,7 @@
     </div>
     
     <p><code>ReconfigureOnChangeFilter</code> will avoid excessive
-    syncronization in case of CPU intensive applications. This fixes
+    synchronization in case of CPU intensive applications. This fixes
     <a
     href="http://jira.qos.ch/browse/LBCLASSIC-234">LBCLASSIC-234</a>,
     a recalcitrant bug reported by Uri Unger who also provided the key
@@ -2064,7 +2064,7 @@
     class="prop">cleanHistoryOnStart</span> to <a
     href="manual/appenders.html#TimeBasedRollingPolicy">TimeBasedRollingPolicy</a>.
     By setting this property to <code>true</code>, history removal
-    will work as expected even in the case of short lived
+    will work as expected even in the case of short-lived
     applications. This fixes <a
     href="http://jira.qos.ch/browse/LBCORE-226">LBCORE-226</a>
     reported by Bruce E. Irving.
@@ -2398,7 +2398,7 @@
     internally by logback.
     </p>
 
-    <p><code>SMPTAppender</code> now lets users to set a custom buffer
+    <p><code>SMPTAppender</code> now lets users set a custom buffer
     size for the outgoing messages. This fixes <a
     href="http://jira.qos.ch/browse/LBCORE-170">LBCORE-170</a> as
     requested by Peter Royal.
@@ -2482,7 +2482,7 @@
     </p>
 
     <p>Inspired by the functionality offered by
-    <code>SiftingAppender</code>, <code>SMTPApppender</code> now can
+    <code>SiftingAppender</code>, <code>SMTPAppender</code> now can
     <a href="manual/appenders.html#smtpDiscriminator">track multiple
     buffers according to selection information returned by a
     discriminator</a>.
@@ -2565,8 +2565,8 @@
     href="http://jira.qos.ch/browse/LBCORE-128">LBCORE-128</a>,
     <code>WriterAppender</code> has been renamed as
     <code>OutputStreamAppender</code>, <code>FileAppender</code> now
-    sub-classing the latter. <code>OutputStreamAppender</code> and
-    sub-classes now take an <code>Encoder</code> instead of a
+    subclassing the latter. <code>OutputStreamAppender</code> and
+    subclasses now take an <code>Encoder</code> instead of a
     <code>Layout</code>. 
     </p>
 
@@ -2653,7 +2653,7 @@ ALTER TABLE logging_event ADD arg3 VARCHAR(254);</pre>
     marker.</p>
 
     <p>Request header names in AccessEvent (logback-access) are now
-    stored in a case insensitive way as specified in RFC 2616.  This
+    stored in a case-insensitive way as specified in RFC 2616.  This
     prevents compatibility issues, in particular with recent versions
     of Tomcat which store request header names in lower-case.</p>
 
@@ -2778,7 +2778,7 @@ ALTER TABLE logging_event ADD arg3 VARCHAR(254);</pre>
     <code>IThrowableProxy</code>. This fixes <a
     href="http://jira.qos.ch/browse/LBCLASSIC-155">LBCLASSIC-155</a>
     as reported by Hontv&aacute;ri J&oacute;zsef. See <a
-    href="manual/filters.html#evalutatorFilter">EvaluatorFilter
+    href="manual/filters.html#evaluatorFilter">EvaluatorFilter
     documentation</a> for more details.</p>
 
     <p>The name of the log file nested within .zip archives was
@@ -2888,7 +2888,7 @@ ALTER TABLE logging_event ADD arg3 VARCHAR(254);</pre>
     href="http://jira.qos.ch/browse/LBCORE-59">LBCORE-59</a> by
     Michael Osipov.</p>
 
-    <p>FileAppender and its derived class RolllingFileAppender are now
+    <p>FileAppender and its derived class RollingFileAppender are now
     based on a finer-grain synchronization model. This change is aimed
     at reducing various synchronization related bugs, namely <a
     href="http://jira.qos.ch/browse/LBCLASSIC-135">LBCLASSIC-135</a>
@@ -2904,7 +2904,7 @@ ALTER TABLE logging_event ADD arg3 VARCHAR(254);</pre>
     a message</a> to the logback-user list
     </p>
 
-    <p>If the logger name had 12 or more segments, a the logger
+    <p>If the logger name had 12 or more segments, the logger
     conversion specified would throw an
     <code>ArrayIndexOfBounds</code> exception. Lukas Zapletal has
     kindly reported this problem in <a
@@ -3020,7 +3020,7 @@ ALTER TABLE logging_event ADD arg3 VARCHAR(254);</pre>
 
     <h3>29th of December 2008 Release of version 0.9.14</h3>
 
-    <p>Corrected a serious dead-lock problem occurring during
+    <p>Corrected a serious deadlock problem occurring during
     configuration. It was reported in <a
     href="http://jira.qos.ch/browse/LBCLASSIC-81">LBCLASSIC-81</a> by
     Holger Mense.</p>
@@ -3117,7 +3117,7 @@ ALTER TABLE logging_event ADD arg3 VARCHAR(254);</pre>
 
     <h3>5th of December 2008 Release of version 0.9.13</h3>
 
-    <p>A <code>NullPointerException</code> was being thrown when a the
+    <p>A <code>NullPointerException</code> was being thrown when the
     level of a logger was set to null. The logger in question had to
     have children. This problem was reported in <a
     href="http://jira.qos.ch/browse/LBCLASSIC-91">LBCLASSIC-91</a>
@@ -3327,14 +3327,14 @@ ALTER TABLE logging_event ADD arg3 VARCHAR(254);</pre>
   <p>Fixed issue <a
   href="http://jira.qos.ch/browse/LBCORE-55">LBCORE-55</a> reported by
   Natan Cox. <code>WriterAppender</code> now outputs its presentation
-  footer and file footer in the the correct order.
+  footer and file footer in the correct order.
   </p>
 
 
   <p>Fixed issue <a
   href="http://jira.qos.ch/browse/LBCORE-27">LBCORE-27</a> reported by
   Peter Royal. <code>SMTPAppender</code> now outputs its presentation
-  footer and file footer in the the correct order.
+  footer and file footer in the correct order.
   </p>
 
   <!-- ========================== LB CLASSIC ================== -->
@@ -3394,13 +3394,13 @@ ALTER TABLE logging_event ADD arg3 VARCHAR(254);</pre>
   </p>
   
   <p>Logback no longer includes retro-weaver generated jars for JDK
-  1.4. There seems to be little interest in JDK 1.4 builds. Calling
+  1.4. There seems to be little of interest in JDK 1.4 builds. Calling
   retro-weaver increases logback's build time by a few seconds each
   time &ndash; seconds in which we can do more productive things.
   </p>
 
   <p>Fixed <a href="http://bugzilla.qos.ch/show_bug.cgi?id=104">bug
-  104</a>, silly but but nonetheless serious copy-and-paste errors in
+  104</a>, silly but nonetheless serious copy-and-paste errors in
   the c.q.l.classic.Logger class, reported by Joern Huxhorn.
   </p>
 
@@ -3444,7 +3444,7 @@ ALTER TABLE logging_event ADD arg3 VARCHAR(254);</pre>
 
   <p>Fixed <a href="http://bugzilla.qos.ch/show_bug.cgi?id=8">bug
   8</a> reported by Sebastien Pennec. The documentation has been
-  updated to reflect the fact that that in the context of conversion
+  updated to reflect the fact that in the context of conversion
   patterns the percent sign carries special meaning, in order to
   include the percent sign as a literal, it must be escaped with a
   backslash.
@@ -3791,7 +3791,7 @@ ALTER TABLE logging_event ADD arg3 VARCHAR(254);</pre>
   <p>Version 0.5 of logback has been released.
   </p>
 		
-  <p>This release offers a important improvements in Joran. In
+  <p>This release offers an important improvements in Joran. In
   particular, Joran can now replay configuration elements.
   </p>
 

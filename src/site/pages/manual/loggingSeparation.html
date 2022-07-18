@@ -87,7 +87,7 @@
 
     <p>By virtue of class loader separation provided by the container,
     each web-application will load its own copy of
-    <code>LoggerContext</code> which will pickup its own copy of
+    <code>LoggerContext</code> which will pick up its own copy of
     <em>logback.xml</em>.</p>
     
     <p>Easy as pie.</p>
@@ -293,7 +293,7 @@
    associated with the application and then place it in a
    <code>ThreadLocal</code> variable. <code>ContextJNDISelector</code>
    will first check if the <code>ThreadLocal</code> variable is
-   set. If it is set, then JNDI lookup will skipped. Note that at the
+   set. If it is set, then JNDI lookup will be skipped. Note that at the
    end of the http request, the <code>ThreadLocal</code> variable will
    be nulled.  Installing <code>LoggerContextFilter</code> improves
    logger retrieval performance by a wide margin.
@@ -337,7 +337,7 @@
     
     <p>If a class, say <code>Mustafar</code>, belongs to a library
     shared by both <em>kenobi</em> and <em>yoda</em>, as long as
-    <code>Mustafar</code> has non static loggers, each invocation of
+    <code>Mustafar</code> has non-static loggers, each invocation of
     <code>LoggerFactory.getLogger()</code> will return a logger
     belonging to a logger context associated with the calling/current
     application. But if <code>Mustafar</code> has a static logger

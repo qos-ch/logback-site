@@ -38,7 +38,7 @@
     </div>
 
     <p class="big red">This chapter is outdated and needs to be
-    re-written to account for the massive changes occuring in 1.3</p>
+    re-written to account for the massive changes occurring in 1.3</p>
     
     <p>Joran stands for a cold north-west wind which, every now and
     then, blows forcefully on Lake Geneva. Located right in the middle
@@ -291,7 +291,7 @@ public abstract class Action extends ContextAwareBase {
      <li>It creates a parsing rule by associating the
      <em>hello-world</em> pattern with a corresponding
      <code>HelloWorldAction</code> instance</li>
-     <li>It creates a <code>SimpleConfigutator</code>, passing it the
+     <li>It creates a <code>SimpleConfigurator</code>, passing it the
      aforementioned rules map</li>
      <li>It then invokes the <code>doConfigure</code> method of the
      configurator, passing the designated XML file as parameter
@@ -442,7 +442,7 @@ public abstract class Action extends ContextAwareBase {
   href="../xref/chapters/onJoran/calculator/MultiplyAction.html"><code>MultiplyAction</code></a>
   will pop two previously pushed integers, i.e. 10 and 3, and compute
   their product.  It will push the result, i.e. 30, at the top of the
-  stack. At the very end, in reponse to the end event corresponding to
+  stack. At the very end, in response to the end event corresponding to
   the &lt;/computation&gt; tag, the ComputationAction1 will print the
   object at the top of the stack. Thus, running:
   </p>
@@ -475,7 +475,7 @@ public abstract class Action extends ContextAwareBase {
   &lt;multiply/&gt;
 &lt;/computation&gt;</pre>
 
-  <p>Much like the use of parentheses in an algebrical equation, the
+  <p>Much like the use of parentheses in an algebraic equation, the
   presence of a <code>computation</code> element nested in another is
   managed by the <a
   href="../xref/chapters/onJoran/calculator/ComputationAction2.html">
@@ -487,7 +487,7 @@ public abstract class Action extends ContextAwareBase {
 
   <h3 class="doAnchor" name="implicit">Implicit actions</h3>
 
-  <p>The rules defined thus far are called explicit actions because an
+  <p>The rules defined thus far are called explicit actions because a
   pattern/action association could be found in the rule store for the
   current element. However, in highly extensible systems, the number
   and type of components can be so large so as to make it very tedious
@@ -497,7 +497,7 @@ public abstract class Action extends ContextAwareBase {
   <p>At the same time, even in highly extensible systems one can
   observe recurrent rules linking various parts together. Assuming we
   could identify such rules, we could process components composed of
-  sub-components unknown at compilation time (of logback). For
+  subcomponents unknown at compilation time (of logback). For
   example, Apache Ant is capable of handling tasks which contain tags
   unknown at compile time, simply by inspecting the component for
   methods whose names start with <em>add</em>, as in
@@ -741,7 +741,7 @@ Element [abc] asked to be printed.
   as a new rule in Joran's rule store.</p>
 
 
-  <p>Here is how new rules can be declared in an xml file:</p>
+  <p>Here is how new rules can be declared in an XML file:</p>
 
   <pre class="prettyprint source">&lt;newRule pattern="*/computation/literal"
           actionClass="chapters.onJoran.calculator.LiteralAction"/&gt;</pre>

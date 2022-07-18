@@ -58,14 +58,14 @@
 
   <!-- =========================================================== -->
   <h3 class="doAnchor" name="layoutInsteadOfEncoder">This appender no
-  longer admits a layout as a sub-component, set an encoder instead.
+  longer admits a layout as a subcomponent, set an encoder instead.
   </h3>
 
   <p>As of logback version 0.9.19, the <code>WriterAppender</code>
   class has been renamed as <code>OutputStreamAppender</code>, with
-  <code>FileAppender</code> now sub-classing the
-  latter. <code>OutputStreamAppender</code> and sub-classes now take
-  an <code>Encoder</code> as a sub-component instead of a
+  <code>FileAppender</code> now subclassing the
+  latter. <code>OutputStreamAppender</code> and subclasses now take
+  an <code>Encoder</code> as a subcomponent instead of a
   <code>Layout</code>.
   </p>
 
@@ -372,8 +372,8 @@
   <p>The <span class="option">File</span> property, if present, must
   be placed before any rolling policy or triggering policy. Thus, in a
   configuration file, the <span class="option">File</span> property,
-  if present, must be declared declared before any rolling policy or
-  triggering policy declarations.
+  if present, must be declared before any rolling policy or triggering
+  policy declarations.
   </p>
 
   <!-- ============================================================= -->  
@@ -469,7 +469,7 @@
   file given by <em>pathToFile</em> open. </p>
 
   <p>Rolling might also fail due to incorrect file permission
-  settings. On windows, renaming a file requires the "modify"
+  settings. On Windows, renaming a file requires the "modify"
   permission which is different than the permission to "write" to the
   file.</p>
 
@@ -716,7 +716,7 @@ return false;</pre>
    referenced by name, it must be defined earlier in the configuration
    file. Referencing an appender defined later in the file is not
    allowed. Below are examples of correct and incorrect order of
-   definition and referece.
+   definition and reference.
    </p>
 
 

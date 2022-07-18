@@ -57,7 +57,7 @@
       destination, the circular buffer within
       <code>AsyncAppender</code> will eventually become full, as
       infinite sized buffers do not exist in our universe, and the
-      application will be able hand off events to
+      application will be able to hand off events to
       <code>AsyncAppender</code>'s buffer only at the rate the events
       are actually written to destination. This is an essential
       limitation of asynchronous logging and all queued/buffered
@@ -140,7 +140,7 @@
       throughput.</p>
 
  <!--
-     easier cut and paste with emacs marco uusing forward-whitespace with </td><td> insertions
+     easier cut and paste with emacs marco using forward-whitespace with </td><td> insertions
 -->      
       <table  class="bodyTable rightAlign striped">
         <tr>
@@ -272,7 +272,7 @@
       quite a testament for the performance of the JVM.</p>
       
       <p>Given that logback uses off the shelf JDK components in
-      contrast to log4j2 which uses the LMAX Distruptor, that is
+      contrast to log4j2 which uses the LMAX Disruptor, that is
       highly optimized code pervasively using 64-byte cache alignment,
       a.k.a. mechanical sympathy, the above results can be quite the
       surprise.  </p>
@@ -285,7 +285,7 @@
 
       <p>While we do not have a definite answer, it is likely that
       algorithmic differences account for logback's better
-      performance. Moreover, in a multi-core CPU running many threads,
+      performance. Moreover, in a multicore CPU running many threads,
       concurrent access requires use of the shared L3 cache, perhaps
       mitigating the advantages of L1 and L2 caches.      
       </p>
