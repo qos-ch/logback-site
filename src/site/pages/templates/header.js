@@ -2,7 +2,9 @@ document.write('<div id="header">');
 document.write('  <table width="100%" border="0">');
 document.write(' <tr>');
 document.write('  <td><a href="https://logback.qos.ch/">');
-document.write('       <img src="' + prefix + 'images/logos/lblogo.jpg" alt="" border="0" height="100"/>');
+
+//document.write('       <img src="' + prefix + 'images/logos/lblogo.jpg" alt="" border="0" height="100"/>');
+document.write('       <img src="' + prefix + 'images/logos/Logback_72dpi.png" alt="" border="0" height="70"/>');
 document.write('      </a>')
 document.write('  </td>')
 
