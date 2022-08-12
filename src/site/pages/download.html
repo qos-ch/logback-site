@@ -44,8 +44,22 @@
     and <em>javadoc.jar</em> files can be downloaded from <a
     href="https://repo1.maven.org/maven2/ch/qos/logback">Maven
     central</a> under the <code>ch.qos.logback</code> groupId.</p>
-     
 
+    <h2>Verifying contents</h2>
+
+    <p>Since early 2022, all logback binaries are reproducible. To
+    verify fidelity to the source code, check out the source code from
+    github with the tag corresponding to the version you wish to
+    verify. Build and compare.</p>
+
+    
+    <p>All logback artifacts published on Maven central are
+    signed. For each artifact, there is an associated signature file
+    with the .asc suffix. See <a
+    href="https://github.com/qos-ch/logback/blob/master/SECURITY.md">SECURITY.md</a>
+    for detailed instructions.
+    </p>
+    
     <!--
     <h3>logback-beagle: an Eclipse plug-in for viewing logs</h3>
    
