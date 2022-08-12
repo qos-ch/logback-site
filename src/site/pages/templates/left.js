@@ -28,10 +28,10 @@ document.write('<p>&nbsp;</p>');
 document.write('<p class="sponsoredBy">&nbsp;Sponsored by:</p>');
 
 document.write('<div class="pub">');
-document.write('    <a href="https://research.atspotify.com/" style="">');
+document.write('    <a href="' + prefix +'count/spotify.html" style="">');
 document.write('      <img alt="Spotify R&amp;D" src="' + prefix + 'images/logos/spotify-rnd-black.png" width="150"/>');
 document.write('    </a>');
-document.write('    <a href="https://www.exoscale.com" style="">');
+document.write('    <a href="' + prefix +'count/exoscale.html" style="">');
 document.write('      <img alt="Exoscale" src="' + prefix + 'images/logos/exoscale.png" width="110"/>');
 document.write('    </a>');
 

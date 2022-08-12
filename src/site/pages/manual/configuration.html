@@ -7,6 +7,7 @@
     <title>Chapter 3: Configuration</title>
 
     <link rel="stylesheet" type="text/css" href="../css/site.css" />
+    <link rel="stylesheet" type="text/css" href="../css/prettify.css" media="screen"/>        
 
   </head>
   <body onload="prettyPrint(); decorate();">
@@ -78,6 +79,34 @@
 
     <ol>
 
+      <li><p>Logback will search for any custom <a
+      href="../xref/ch/qos/logback/classic/spi/Configurator.html"><code>Configurator</code></a>
+      providers using
+        <a
+      href="http://docs.oracle.com/javase/6/docs/api/java/util/ServiceLoader.html">
+          service-provider loading facility</a> (introduced in JDK
+          1.6). If any such custom provider is found, it takes
+          precedence over logback's <code>DefaultJoranConfigurator</code> (see next).
+        
+      </p></li>
+      
+      <li><p>If no custom <code>Configurator</code> was found, then <a
+      href="https://github.com/qos-ch/logback/blob/master/logback-classic/src/main/java/ch/qos/logback/classic/util/DefaultJoranConfigurator.java"><code>DefaultJoranConfigurator</code>.</a>
+        
+
+
+          such file is found,  is
+      used to resolve the implementation of <a
+      href="../xref/ch/qos/logback/classic/spi/Configurator.html">
+      <code>com.qos.logback.classic.spi.Configurator</code></a>
+      interface by looking up the file
+      <em>META-INF\services\ch.qos.logback.classic.spi.Configurator</em>
+      in the class path. Its contents should specify the fully
+      qualified class name of the desired <code>Configurator</code>
+      implementation.
+      </p>
+      </li>
+
       <li>
         <p>Logback tries to find a file called
         <em>logback-test.xml</em> <a
@@ -91,20 +120,7 @@
         classpath</a>..</p>
       </li>
 
-      <li><p>If no such file is found, <a
-      href="http://docs.oracle.com/javase/6/docs/api/java/util/ServiceLoader.html">
-      service-provider loading facility</a> (introduced in JDK 1.6) is
-      used to resolve the implementation of <a
-      href="../xref/ch/qos/logback/classic/spi/Configurator.html">
-      <code>com.qos.logback.classic.spi.Configurator</code></a>
-      interface by looking up the file
-      <em>META-INF\services\ch.qos.logback.classic.spi.Configurator</em>
-      in the class path. Its contents should specify the fully
-      qualified class name of the desired <code>Configurator</code>
-      implementation.
-      </p>
-      </li>
-
+      
       <li><p>If none of the above succeeds, logback configures itself
       automatically using the <a
       href="../xref/ch/qos/logback/classic/BasicConfigurator.html"><code>BasicConfigurator</code></a>
