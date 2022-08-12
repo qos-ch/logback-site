@@ -1,0 +1,5 @@
+Redirect 302 /count/spotify.html  https://research.atspotify.com/
+Redirect 302 /count/exoscale.html https://www.exoscale.com/
+Redirect 302 /count/twitter.html  https://twitter.com/qos_ch
+Redirect 302 /count/github.html   https://github.com/qos-ch/logback
+Redirect 302 /count/lisette.html  https://www.facebook.com/Lise-Martins-Graphic-Designer-102159252581148/
