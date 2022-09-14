@@ -8,6 +8,10 @@ document.write('       <img src="' + prefix + 'images/logos/Logback_72dpi.png" a
 document.write('      </a>')
 document.write('  </td>')
 
+//document.write('   <td style="vertical-align:bottom;"> ');
+//document.write('    <div style="height: 40px; line-height: 40px; text-align: center; vertical-align: middle;background-color: cornsilk; border-style: dotted; border-color: #F00;">&nbsp;Discussion: <a href="https://github.com/qos-ch/logback/discussions/585">supporting both Java EE and Jakarta EE in logback</a></div> ');
+//document.write('   </td> ');
+
 //document.write('   <td style="vertical-align:bottom;">')
 //document.write('     <p style="background-color: #fffbd9; border-color: #db4545; border-width: thin;')
 //document.write('        border-style: dotted; padding: 5px; margin-left: 6ex;">');
@@ -19,8 +23,11 @@ document.write('  </td>')
 
 document.write(' <td style="vertical-align:bottom;">');
 document.write('   <div style="display: flex; float: right; align-items: flex-end;">');
+document.write('      <a href="' + prefix +'count/sponsor.html" style="margin-left: 1ex;">');
+document.write('        <img src="' + prefix + 'images/sponsor.png" alt="Sponsor qos-ch" height="35" style="border: 0; margin-left: 1ex;"/>');
+document.write('      </a>');
 
-document.write('       <iframe src="https://github.com/sponsors/qos-ch/button" title="Sponsor qos-ch" height="35" width="116" style="border: 0; margin-left: 1ex;"></iframe>');
+//document.write('       <iframe src="https://github.com/sponsors/qos-ch/button" title="Sponsor qos-ch" height="35" width="116" style="border: 0; margin-left: 1ex;"></iframe>');
 
 
 document.write('    <a href="' + prefix +'count/github.html" style="margin-left: 1ex;">');

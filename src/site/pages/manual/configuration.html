@@ -10,12 +10,15 @@
     <link rel="stylesheet" type="text/css" href="../css/prettify.css" media="screen"/>        
 
   </head>
-  <body onload="prettyPrint(); decorate();">
+  <body onload="prettyPrint(); decorate(); enableLegacy();">
 
     <script type="text/javascript">prefix='../'</script>
     <script type="text/javascript" src="../js/prettify.js"></script>
     <script type="text/javascript" src="../js/jquery-min.js"></script>
     <script type="text/javascript" src="../js/decorator.js"></script>
+    <script type="text/javascript" src="../js/dsl.js"></script>
+    <script type="text/javascript" src="../js/tab.js"></script>    
+
 
     <div id="container">
       <script type="text/javascript" src="../templates/header.js"></script>
@@ -270,7 +273,15 @@ public class Foo {
    <p class="example">Example: Basic configuration file
    (logback-examples/src/main/resources/chapters/configuration/sample0.xml)</p>
 
-  <pre id="sample0" class="prettyprint source">&lt;configuration>
+   <div class="tab">
+     <button class="tablinks" id="button_sample0_legacy"
+             onclick="openTab(event, 'sample0', 'legacy')">Legacy</button>
+     <button class="tablinks" id="button_sample0_canonical"
+             onclick="openTab(event, 'sample0', 'canonical')">Canonical (1.3)</button>
+   </div>
+
+   <div id="sample0_legacy" class="tabcontent">   
+   <pre class="prettyprint source">&lt;configuration>
 
   &lt;appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
     &lt;!-- encoders are assigned the type
@@ -284,7 +295,12 @@ public class Foo {
     &lt;appender-ref ref="STDOUT" />
   &lt;/root>
 &lt;/configuration></pre>
+   </div>
 
+   <div id="sample0_canonical" class="tabcontent">
+    <p>Requires a server call.</p>
+   </div>
+   
    <p>After you have renamed <em>sample0.xml</em> as
    <em>logback.xml</em> (or <em>logback-test.xml</em>) place it into a
    directory accessible from the class path. Running the <em>MyApp1</em>
@@ -365,12 +381,26 @@ public static void main(String[] args) {
    <p class="example">Example: Registering a status listener
    (logback-examples/src/main/resources/chapters/configuration/onConsoleStatusListener.xml)</p>
 
-   <pre id="onConsoleStatusListener" class="prettyprint source">&lt;configuration>
-  &lt;-- Recommendation: place status listeners towards the the top of the configuration file --&gt;
-  <b>&lt;statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener" /></b>
+    <div class="tab">
+    <button class="tablinks" id="button_onConsoleStatusListener_legacy"
+            onclick="openTab(event, 'onConsoleStatusListener', 'legacy')">Legacy</button>
+    <button class="tablinks" id="button_onConsoleStatusListener_canonical"
+            onclick="openTab(event, 'onConsoleStatusListener', 'canonical')">Canonical (1.3)</button>
+    </div>
+    
+    <div id="onConsoleStatusListener_legacy" class="tabcontent">
+   <pre class="prettyprint source">&lt;configuration>
+   &lt;!-- Recommendation: place status listeners towards the the top of the configuration file --&gt;
+   <b>&lt;statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener" /></b>
 
-  ... the rest of the configuration file
-&lt;/configuration></pre>
+   &lt;!-- ... the rest of the configuration file --&gt;
+     
+&lt;/configuration>
+   </div>
+
+    <div id="onConsoleStatusListener_canonical" class="tabcontent">
+    <p>Requires a server call.</p>
+    </div>     
 
    <p>A <code>StatusListener</code> can be installed using a
    configuration file assuming that:
@@ -418,12 +448,21 @@ public static void main(String[] args) {
    mode
    (logback-examples/src/main/resources/chapters/configuration/sample1.xml)</p>
 
-   <pre id="sample1" class="prettyprint source">
-&lt;configuration <span class="bold">debug="true"</span>>
+  
+  <div class="tab">
+    <button class="tablinks" id="button_sample1_legacy"
+            onclick="openTab(event, 'sample1', 'legacy')">Legacy</button>
+    <button class="tablinks" id="button_sample1_canonical"
+            onclick="openTab(event, 'sample1', 'canonical')">Canonical (1.3)</button>
+  </div>
+    
+  <div id="sample1_legacy" class="tabcontent">
+   <pre class="prettyprint source">
+&lt;configuration <b>debug="true"</b>>
 
   &lt;appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-    &lt;&excl;&dash;- encoders are  by default assigned the type
-         ch.qos.logback.classic.encoder.PatternLayoutEncoder &dash;&dash;>
+    &lt;!-- encoders are  by default assigned the type
+         ch.qos.logback.classic.encoder.PatternLayoutEncoder --&gt;
     &lt;encoder>
       &lt;pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n&lt;/pattern>
     &lt;/encoder>
@@ -433,6 +472,11 @@ public static void main(String[] args) {
     &lt;appender-ref ref="STDOUT" />
   &lt;/root>
 &lt;/configuration></pre>
+  </div>
+    
+  <div id="sample1_canonical" class="tabcontent">
+    <p>Requires a server call.</p>
+  </div>
 
    <p>By the way, setting <code>debug="true"</code> is strictly
    equivalent to installing an <code>OnConsoleStatusListener</code> as
@@ -779,14 +823,30 @@ import ch.qos.logback.classic.LoggerContext;
    down logback and releasing associated resources.
    </p>
 
+   <div class="tab">
+    <button class="tablinks" id="button_shutdownHook_legacy"
+            onclick="openTab(event, 'shutdownHook', 'legacy')">Legacy</button>
+    <button class="tablinks" id="button_shutdownHook_canonical"
+            onclick="openTab(event, 'shutdownHook', 'canonical')">Canonical (1.3)</button>
+   </div>
+
+    
+  <div id="shutdownHook_legacy" class="tabcontent">
 
    <pre class="prettyprint source">&lt;configuration debug="true">
    &lt;!-- in the absence of the class attribute, assume
    ch.qos.logback.core.hook.DefaultShutdownHook --&gt;
    <b>&lt;shutdownHook/></b>
-  ....
-&lt;/configuration></pre>
 
+   &lt;!-- rest of the config file.. --&gt;
+
+&lt;/configuration></pre>
+   </div>
+
+  <div id="shutdownHook_canonical" class="tabcontent">
+    <p>Requires a server call.</p>
+  </div>
+  
    <p>Note that you may install a shutdown hook of your own making by
    setting the <span class="attr">class</span> attribute to correspond
    to your shutdown hook's class name.</p>
@@ -841,7 +901,8 @@ import ch.qos.logback.classic.LoggerContext;
     variable. The most local setting has priority, i.e. web-app first,
     system property second and OS environment last.</p>
 
-
+   <!-- =================================================================== -->
+    
    <!-- =================================================================== -->
    <!-- =================================================================== -->
 
@@ -987,7 +1048,17 @@ import ch.qos.logback.classic.LoggerContext;
    <p class="example">Example: Setting the level of a logger
    (logback-examples/src/main/resources/chapters/configuration/sample2.xml)</p>
 
-   <pre id="sample2" class="prettyprint source">&lt;configuration>
+   <div class="tab">
+    <button class="tablinks" id="button_sample2_legacy"
+            onclick="openTab(event, 'sample2', 'legacy')">Legacy</button>
+    <button class="tablinks" id="button_sample2_canonical"
+            onclick="openTab(event, 'sample2', 'canonical')">Canonical (1.3)</button>
+  </div>
+
+    
+  <div id="sample2_legacy" class="tabcontent">
+
+    <pre class="prettyprint source">&lt;configuration>
 
   &lt;appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
     &lt;!-- encoders are assigned the type
@@ -1006,6 +1077,12 @@ import ch.qos.logback.classic.LoggerContext;
   &lt;/root>
 
 &lt;/configuration></pre>
+  </div>
+  
+  <div id="sample2_canonical" class="tabcontent">
+    <p>Requires a server call.</p>
+  </div>
+
 
   <p>When the above configuration file is given as argument to the
   <em>MyApp3</em> application, it will yield the following output:
@@ -1027,25 +1104,38 @@ import ch.qos.logback.classic.LoggerContext;
   <p class="example">Example: Setting the level of multiple loggers
   (logback-examples/src/main/resources/chapters/configuration/sample3.xml)</p>
 
-  <pre id="sample3" class="source prettyprint">&lt;configuration>
+  <div class="tab">
+    <button class="tablinks" id="button_sample3_legacy"
+            onclick="openTab(event, 'sample3', 'legacy')">Legacy</button>
+    <button class="tablinks" id="button_sample3_canonical"
+            onclick="openTab(event, 'sample3', 'canonical')">Canonical (1.3)</button>
+  </div>
 
-  &lt;appender name="STDOUT"
-    class="ch.qos.logback.core.ConsoleAppender">
-    &lt;encoder>
-      &lt;pattern>
+    
+  <div id="sample3_legacy" class="tabcontent">
+  <pre class="prettyprint source">&lt;configuration>
+
+  &lt;appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender"&gt;
+    &lt;encoder&gt;
+      &lt;pattern&gt;
         %d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n
-     &lt;/pattern>
-    &lt;/encoder>
-  &lt;/appender>
+     &lt;/pattern&gt;
+    &lt;/encoder&gt;
+  &lt;/appender&gt;
 
-  <b>&lt;logger name="chapters.configuration" level="INFO" /></b>
-  <b>&lt;logger name="chapters.configuration.Foo" level="DEBUG" /></b>
+  <b>&lt;logger name="chapters.configuration" level="INFO" /&gt;</b>
+  <b>&lt;logger name="chapters.configuration.Foo" level="DEBUG" /&gt;</b>
 
   &lt;root level="DEBUG">
-    &lt;appender-ref ref="STDOUT" />
+    &lt;appender-ref ref="STDOUT" /&gt;
   &lt;/root>
 
-&lt;/configuration></pre>
+&lt;/configuration&gt;</pre>
+  </div>
+
+  <div id="sample3_canonical" class="tabcontent">
+    <p>Requires a server call.</p>
+  </div>
 
   <p>Running <code>MyApp3</code> with this configuration file will
   result in the following output on the console:
@@ -1108,7 +1198,16 @@ import ch.qos.logback.classic.LoggerContext;
   <p class="example">Example: Logger level sample
   (logback-examples/src/main/resources/chapters/configuration/sample4.xml)</p>
 
-  <pre id="sample4" class="prettyprint source">&lt;configuration>
+  <div class="tab">
+    <button class="tablinks" id="button_sample4_legacy"
+            onclick="openTab(event, 'sample4', 'legacy')">Legacy</button>
+    <button class="tablinks" id="button_sample4_canonical"
+            onclick="openTab(event, 'sample4', 'canonical')">Canonical (1.3)</button>
+  </div>
+
+  <div id="sample4_legacy" class="tabcontent">
+    
+  <pre class="prettyprint source">&lt;configuration>
 
   &lt;appender name="STDOUT"
    class="ch.qos.logback.core.ConsoleAppender">
@@ -1127,6 +1226,11 @@ import ch.qos.logback.classic.LoggerContext;
   &lt;/root>
 
 &lt;/configuration></pre>
+  </div>
+
+  <div id="sample4_canonical" class="tabcontent">
+    <p>Requires a server call.</p>
+  </div>
 
   <p>The following table lists the loggers and their levels after
   applying the <em>sample4.xml</em> configuration file.
@@ -1233,7 +1337,15 @@ import ch.qos.logback.classic.LoggerContext;
   <p class="example">Example: Multiple loggers
   (logback-examples/src/main/resources/chapters/configuration/multiple.xml)</p>
 
-  <pre id="multiple" class="prettyprint source">&lt;configuration>
+  <div class="tab">
+    <button class="tablinks" id="button_multiple_legacy"
+            onclick="openTab(event, 'multiple', 'legacy')">Legacy</button>
+    <button class="tablinks" id="button_multiple_canonical"
+            onclick="openTab(event, 'multiple', 'canonical')">Canonical (1.3)</button>
+  </div>
+
+  <div id="multiple_legacy" class="tabcontent">
+    <pre class="prettyprint source">&lt;configuration>
 
   &lt;appender name="<b>FILE</b>" class="ch.qos.logback.core.FileAppender">
     &lt;file>myApp.log&lt;/file>
@@ -1254,7 +1366,12 @@ import ch.qos.logback.classic.LoggerContext;
     <b>&lt;appender-ref ref="STDOUT" /></b>
   &lt;/root>
 &lt;/configuration></pre>
-
+  </div>
+  
+  <div id="multiple_canonical" class="tabcontent">
+    <p>Requires a server call.</p>
+  </div>
+  
   <p>These configuration scripts define two appenders called
   <em>FILE</em> and <em>STDOUT</em>.  The <em>FILE</em> appender logs
   to a file called <em>myApp.log</em>. The encoder for this appender
@@ -1287,7 +1404,15 @@ import ch.qos.logback.classic.LoggerContext;
   <p class="example">Example: Duplicate appender
   (logback-examples/src/main/resources/chapters/configuration/duplicate.xml)</p>
 
-  <pre id="duplicate" class="prettyprint source">&lt;configuration>
+  <div class="tab">
+    <button class="tablinks" id="button_duplicate_legacy"
+            onclick="openTab(event, 'duplicate', 'legacy')">Legacy</button>
+    <button class="tablinks" id="button_duplicate_canonical"
+            onclick="openTab(event, 'duplicate', 'canonical')">Canonical (1.3)</button>
+  </div>
+
+  <div id="duplicate_legacy" class="tabcontent">
+    <pre class="prettyprint source">&lt;configuration>
 
   &lt;appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
     &lt;encoder>
@@ -1303,7 +1428,12 @@ import ch.qos.logback.classic.LoggerContext;
     &lt;appender-ref ref="STDOUT" />
   &lt;/root>
 &lt;/configuration></pre>
+  </div>
 
+  <div id="duplicate_canonical" class="tabcontent">
+    <p>Requires a server call.</p>
+  </div>
+  
   <p>Running <code>MyApp3</code> with <em>duplicate.xml</em> will
   yield the following output:
   </p>
@@ -1336,7 +1466,15 @@ import ch.qos.logback.classic.LoggerContext;
   <p class="example">Example: Multiple appender
   (logback-examples/src/main/resources/chapters/configuration/restricted.xml)</p>
 
-  <pre id="restricted" class="prettyprint source">&lt;configuration>
+  <div class="tab">
+    <button class="tablinks" id="button_restricted_legacy"
+            onclick="openTab(event, 'restricted', 'legacy')">Legacy</button>
+    <button class="tablinks" id="button_restricted_canonical"
+            onclick="openTab(event, 'restricted', 'canonical')">Canonical (1.3)</button>
+  </div>
+
+  <div id="restricted_legacy" class="tabcontent">
+    <pre class="prettyprint source">&lt;configuration>
 
   &lt;appender name="FILE" class="ch.qos.logback.core.FileAppender">
     &lt;file>myApp.log&lt;/file>
@@ -1359,6 +1497,11 @@ import ch.qos.logback.classic.LoggerContext;
     &lt;appender-ref ref="STDOUT" />
   &lt;/root>
 &lt;/configuration></pre>
+  </div>
+  
+  <div id="restricted_canonical" class="tabcontent">
+    <p>Requires a server call.</p>
+  </div>
 
   <p>In this example, the console appender will log all the messages
   (for all loggers in the system) whereas only logging requests
@@ -1379,7 +1522,15 @@ import ch.qos.logback.classic.LoggerContext;
   <p class="example">Example: Additivity flag
   (logback-examples/src/main/resources/chapters/configuration/additivityFlag.xml)</p>
 
-  <pre id="additivityFlag" class="prettyprint source">&lt;configuration>
+  <div class="tab">
+    <button class="tablinks" id="button_additivityFlag_legacy"
+            onclick="openTab(event, 'additivityFlag', 'legacy')">Legacy</button>
+    <button class="tablinks" id="button_additivityFlag_canonical"
+            onclick="openTab(event, 'additivityFlag', 'canonical')">Canonical (1.3)</button>
+  </div>
+
+  <div id="additivityFlag_legacy" class="tabcontent">    
+  <pre class="prettyprint source">&lt;configuration>
 
   &lt;appender name="FILE" class="ch.qos.logback.core.FileAppender">
     &lt;file>foo.log&lt;/file>
@@ -1402,7 +1553,12 @@ import ch.qos.logback.classic.LoggerContext;
     &lt;appender-ref ref="STDOUT" />
   &lt;/root>
 &lt;/configuration></pre>
-
+  </div>
+  
+  <div id="additivityFlag_canonical" class="tabcontent">
+    <p>Requires a server call.</p>
+  </div>
+  
   <p>This example, the appender named <em>FILE</em> is attached to the
   <em>chapters.configuration.Foo</em> logger. Moreover, the <em>chapters.configuration.Foo</em>
   logger has its additivity flag set to false such that its logging
@@ -1434,7 +1590,14 @@ import ch.qos.logback.classic.LoggerContext;
   <p class="example">Example: Set the context name and display it
   (logback-examples/src/main/resources/chapters/configuration/contextName.xml)</p>
 
-  <pre id="contextName" class="prettyprint source">&lt;configuration>
+  <div class="tab">
+    <button class="tablinks" id="button_contextName_legacy"
+            onclick="openTab(event, 'contextName', 'legacy')">Legacy</button>
+    <button class="tablinks" id="button_contextName_canonical"
+            onclick="openTab(event, 'contextName', 'canonical')">Canonical (1.3)</button>
+  </div>  
+  <div id="contextName_legacy" class="tabcontent">
+  <pre  class="prettyprint source">&lt;configuration>
   <b>&lt;contextName>myAppName&lt;/contextName></b>
   &lt;appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
     &lt;encoder>
@@ -1446,6 +1609,11 @@ import ch.qos.logback.classic.LoggerContext;
     &lt;appender-ref ref="STDOUT" />
   &lt;/root>
 &lt;/configuration></pre>
+  </div>
+
+  <div id="contextName_canonical" class="tabcontent">
+    <p>Requires a server call.</p>
+  </div>
 
   <p>This last example illustrates naming of the logger
   context. Adding the <a
@@ -1484,7 +1652,6 @@ import ch.qos.logback.classic.LoggerContext;
   </p>
 
 
-
   <p>As they often come in handy, the HOSTNAME and CONTEXT_NAME
   variables are automatically defined and have context scope. Given
   that in some environments it may take some time to compute the
@@ -1511,7 +1678,15 @@ import ch.qos.logback.classic.LoggerContext;
   (logback-examples/src/main/resources/chapters/configuration/variableSubstitution1.xml)
   </p>
 
-  <pre id="variableSubstitution1" class="prettyprint source">&lt;configuration>
+  <div class="tab">
+    <button class="tablinks" id="button_variableSubstitution1_legacy"
+            onclick="openTab(event, 'variableSubstitution1', 'legacy')">Legacy</button>
+    <button class="tablinks" id="button_variableSubstitution1_canonical"
+            onclick="openTab(event, 'variableSubstitution1', 'canonical')">Canonical (1.3)</button>
+  </div>
+
+  <div id="variableSubstitution1_legacy" class="tabcontent">
+    <pre class="prettyprint source">&lt;configuration>
 
   <b>&lt;variable name="USER_HOME" value="/home/sebastien" /></b>
 
@@ -1526,7 +1701,12 @@ import ch.qos.logback.classic.LoggerContext;
     &lt;appender-ref ref="FILE" />
   &lt;/root>
 &lt;/configuration></pre>
+  </div>
 
+  <div id="variableSubstitution1_canonical" class="tabcontent">
+    <p>Requires a server call.</p>
+  </div>
+  
   <p>The next example shows the use of a System property to achieve
   the same result. The property is not declared in the configuration
   file, thus logback will look for it in the System properties. Java
@@ -1539,7 +1719,15 @@ import ch.qos.logback.classic.LoggerContext;
   (logback-examples/src/main/resources/chapters/configuration/variableSubstitution2.xml)
   </p>
 
-  <pre id="variableSubstitution2" class="prettyprint source">&lt;configuration>
+  <div class="tab">
+    <button class="tablinks" id="button_variableSubstitution2_legacy"
+            onclick="openTab(event, 'variableSubstitution2', 'legacy')">Legacy</button>
+    <button class="tablinks" id="button_variableSubstitution2_canonical"
+            onclick="openTab(event, 'variableSubstitution2', 'canonical')">Canonical (1.3)</button>
+  </div>
+  
+  <div id="variableSubstitution2_legacy" class="tabcontent">
+  <pre class="prettyprint source">&lt;configuration>
 
   &lt;appender name="FILE" class="ch.qos.logback.core.FileAppender">
     <b>&lt;file>${USER_HOME}/myApp.log&lt;/file></b>
@@ -1552,7 +1740,11 @@ import ch.qos.logback.classic.LoggerContext;
     &lt;appender-ref ref="FILE" />
   &lt;/root>
 &lt;/configuration></pre>
+  </div>
 
+  <div id="variableSubstitution2_canonical" class="tabcontent">
+    <p>Requires a server call.</p>
+  </div>
 
   <p>When multiple variables are needed, it may be more convenient to
   create a separate file that will contain all the variables. Here is
@@ -1564,7 +1756,14 @@ import ch.qos.logback.classic.LoggerContext;
   (logback-examples/src/main/resources/chapters/configuration/variableSubstitution3.xml)
   </p>
 
-  <pre id="variableSubstitution3" class="prettyprint source">&lt;configuration>
+  <div class="tab">
+    <button class="tablinks" id="button_variableSubstitution3_legacy"
+            onclick="openTab(event, 'variableSubstitution3', 'legacy')">Legacy</button>
+    <button class="tablinks" id="button_variableSubstitution3_canonical"
+            onclick="openTab(event, 'variableSubstitution3', 'canonical')">Canonical (1.3)</button>
+  </div>
+  <div id="variableSubstitution3_legacy" class="tabcontent">
+  <pre class="prettyprint source">&lt;configuration>
 
   <b>&lt;variable file="src/main/java/chapters/configuration/variables1.properties" /></b>
 
@@ -1579,6 +1778,12 @@ import ch.qos.logback.classic.LoggerContext;
      &lt;appender-ref ref="FILE" />
    &lt;/root>
 &lt;/configuration></pre>
+   </div>
+
+   <div id="variableSubstitution3_canonical" class="tabcontent">
+     <p>Requires a server call.</p>
+   </div>
+
 
    <p>This configuration file contains a reference to a file named
    <em>variables1.properties</em>.  The variables contained in that
@@ -1588,13 +1793,21 @@ import ch.qos.logback.classic.LoggerContext;
 
    <em>Example: Variable file
    (logback-examples/src/main/resources/chapters/configuration/variables1.properties)</em>
-
+   
    <pre class="source">USER_HOME=/home/sebastien</pre>
 
    <p>You may also reference a resource on the class path instead of a
    file.</p>
 
-  <pre class="prettyprint source">&lt;configuration>
+   <div class="tab">
+     <button class="tablinks" id="button_variable1_legacy"
+             onclick="openTab(event, 'variable1', 'legacy')">Legacy</button>
+     <button class="tablinks" id="button_variable1_canonical"
+             onclick="openTab(event, 'variable1', 'canonical')">Canonical (1.3)</button>
+   </div>
+   
+   <div id="variable1_legacy" class="tabcontent">
+     <pre class="prettyprint source">&lt;configuration>
 
   <b>&lt;variable resource="resource1.properties" /></b>
 
@@ -1609,7 +1822,12 @@ import ch.qos.logback.classic.LoggerContext;
      &lt;appender-ref ref="FILE" />
    &lt;/root>
 &lt;/configuration></pre>
+   </div>
 
+   <div id="variable1_canonical" class="tabcontent">
+     <p>Requires a server call.</p>
+   </div>
+   
 
    <h4 class="doAnchor" name="scopes">Scopes</h4>
 
@@ -1664,22 +1882,35 @@ import ch.qos.logback.classic.LoggerContext;
    (logback-examples/src/main/resources/chapters/configuration/contextScopedVariable.xml)
    </p>
 
-  <pre id="contextScopedVariable" class="prettyprint source">&lt;configuration>
+   <div class="tab">
+     <button class="tablinks" id="button_contextScopedVariable_legacy"
+             onclick="openTab(event, 'contextScopedVariable', 'legacy')">Legacy</button>
+     <button class="tablinks" id="button_contextScopedVariable_canonical"
+             onclick="openTab(event, 'contextScopedVariable', 'canonical')">Canonical (1.3)</button>
+   </div>
 
-  &lt;variable <b class="big">scope="context"</b> name="nodeId" value="firstNode" />
+   <div id="contextScopedVariable_legacy" class="tabcontent">     
+     <pre class="prettyprint source">&lt;configuration&gt;
 
-  &lt;appender name="FILE" class="ch.qos.logback.core.FileAppender">
-    <b>&lt;file>/opt/${nodeId}/myApp.log&lt;/file></b>
-    &lt;encoder>
-      &lt;pattern>%msg%n&lt;/pattern>
-    &lt;/encoder>
-  &lt;/appender>
+  &lt;variable <span class="big">scope="context"</span> name="nodeId" value="firstNode" /&gt;
 
-  &lt;root level="debug">
-    &lt;appender-ref ref="FILE" />
-  &lt;/root>
-&lt;/configuration></pre>
+  &lt;appender name="FILE" class="ch.qos.logback.core.FileAppender"&gt;
+    <b>&lt;file>/opt/${nodeId}/myApp.log&lt;/file&gt;</b>
+    &lt;encoder&gt;
+      &lt;pattern>%msg%n&lt;/pattern&gt;
+    &lt;/encoder&gt;
+  &lt;/appender&gt;
 
+  &lt;root level="debug"&gt;
+    &lt;appender-ref ref="FILE" /&gt;
+  &lt;/root&gt;
+&lt;/configuration&gt;</pre>
+   </div>
+
+  <div id="contextScopedVariable_canonical" class="tabcontent">
+    <p>Requires a server call.</p>
+  </div>
+  
    <p>In the above example, given that the <em>nodeId</em> property is
    defined in the context scope, it will be available in every logging
    event, even those sent to remote hosts via serialization.</p>
@@ -1728,6 +1959,15 @@ fileName=myApp.log
     a separate file
     (logback-examples/src/main/resources/chapters/configuration/variableSubstitution4.xml)</em>
 
+    <div class="tab">
+      <button class="tablinks" id="button_variableSubstitution4_legacy"
+              onclick="openTab(event, 'variableSubstitution4', 'legacy')">Legacy</button>
+      <button class="tablinks" id="button_variableSubstitution4_canonical"
+              onclick="openTab(event, 'variableSubstitution4', 'canonical')">Canonical (1.3)</button>
+    </div>    
+
+    <div id="variableSubstitution4_legacy" class="tabcontent">
+    
     <pre class="prettyprint source">&lt;configuration>
 
   &lt;variable file="variables2.properties" />
@@ -1743,7 +1983,11 @@ fileName=myApp.log
     &lt;appender-ref ref="FILE" />
   &lt;/root>
 &lt;/configuration></pre>
+   </div>
 
+   <div id="variableSubstitution4_canonical" class="tabcontent">
+     <p>Requires a server call.</p>
+   </div>   
 
    <h4>name nesting</h4>
 
@@ -1805,6 +2049,15 @@ fileName=myApp.log
 
   <p>Here is an example.</p>
 
+  <div class="tab">
+    <button class="tablinks" id="button_propertiesOnTheFly_legacy"
+            onclick="openTab(event, 'propertiesOnTheFly', 'legacy')">Legacy</button>
+    <button class="tablinks" id="button_propertiesOnTheFly_canonical"
+            onclick="openTab(event, 'propertiesOnTheFly', 'canonical')">Canonical (1.3)</button>
+  </div>  
+
+  <div id="propertiesOnTheFly_legacy" class="tabcontent">
+  
   <pre class="prettyprint source">&lt;configuration>
 
   &lt;define name="rootLevel" class="a.class.implementing.PropertyDefiner">
@@ -1815,6 +2068,12 @@ fileName=myApp.log
 
   &lt;root level="${rootLevel}"/>
 &lt;/configuration></pre>
+
+  </div>
+
+  <div id="propertiesOnTheFly_canonical" class="tabcontent">
+    <p>Requires a server call.</p>
+  </div>
 
   <p>In the above example, shape, color and size are properties of
   "a.class.implementing.PropertyDefiner". As long as there is a setter
@@ -1922,7 +2181,16 @@ fileName=myApp.log
   <code>isNull()</code> method is provided. Example:
   <code>isNull("k")</code>.</p>
 
+  
+  <div class="tab">
+    <button class="tablinks" id="button_conditional_legacy"
+            onclick="openTab(event, 'conditional', 'legacy')">Legacy</button>
+    <button class="tablinks" id="button_conditional_canonical"
+            onclick="openTab(event, 'conditional', 'canonical')">Canonical (1.3)</button>
+  </div>
+   
 
+  <div id="conditional_legacy" class="tabcontent">
   <pre class="prettyprint source">&lt;configuration debug="true">
 
   <b>&lt;if condition='property("HOSTNAME").contains("torino")'></b>
@@ -1950,6 +2218,11 @@ fileName=myApp.log
   &lt;/root>
 &lt;/configuration></pre>
 
+  </div>
+
+  <div id="conditional_canonical" class="tabcontent">
+    <p>Requires a server call.</p>
+  </div>
 
   <p>Conditional processing is supported <em>anywhere</em> within the
   <code>&lt;configuration></code> element. Nested if-then-else
@@ -2132,6 +2405,38 @@ fileName=myApp.log
   <p>
   </p>
 
+   <h3 class="doAnchor" name="sequenceNumberGenerator">SequenceNumberGenerator</h3>    
+
+   <p><span class="label">Since 1.3.0</span>Logback supports a
+   sequence number field which is automatically populated at event
+   creation. This field is fed by a sequence number generator attached
+   to the logging context.</p>
+
+   <p>A sequence number  generatror is set as follows:</p>
+
+   <div class="tab">
+    <button class="tablinks" id="button_sequnceNumberGenerator_legacy"
+            onclick="openTab(event, 'sequnceNumberGenerator', 'legacy')">Legacy</button>
+    <button class="tablinks" id="button_sequnceNumberGenerator_canonical"
+            onclick="openTab(event, 'sequnceNumberGenerator', 'canonical')">Canonical (1.3)</button>
+  </div>
+
+    
+  <div id="sequnceNumberGenerator_legacy" class="tabcontent">
+    <pre class="prettyprint source">&lt;configuration>
+    &lt;sequenceNumberGenerator class="ch.qos.logback.core.spi.BasicSequenceNumberGenerator"/>
+
+     &lt;!-- rest of the configuration file .... --&gt;
+&lt;/configuration>
+    </pre>
+  </div>
+
+  <div id="sequnceNumberGenerator_canonical" class="tabcontent">
+    <p>Requires a server call.</p>
+  </div>
+
+  <!-- ========================================================================== -->
+  
   <script src="../templates/footer.js" type="text/javascript"></script>
   </div>
 </div>

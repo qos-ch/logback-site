@@ -20,11 +20,12 @@ function canonical(legacyId, canonicalId) {
     var inner = legacyElement.innerHTML;
     //alert("==="+inner);
     inner = inner.replace(/<pre class="prettyprint source">/gi, '');
+    inner = inner.replace(/<pre class="source prettyprint">/gi, '');    
     inner = inner.replace(/<\/pre>/gi, '');
     inner = inner.replace(/&lt;/gi, '<');
     inner = inner.replace(/&gt;/gi, '>');
     
-    inner = inner.replace(/<span class="[^"]*"?>/gi, '');
+    inner = inner.replace(/<span\s+class="[^"]*">/gi, '');
     inner = inner.replace(/<\/span>/gi, '');
     inner = inner.replace(/<br>/gi, '');
     inner = inner.replace(/&nbsp;/gi, '');
@@ -42,6 +43,8 @@ function canonical(legacyId, canonicalId) {
     
     var postData = $("#aForm").serialize();  
 
+    //alert(inner);
+    
     var canonicalElement = document.getElementById(canonicalId);
 
     

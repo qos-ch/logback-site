@@ -30,7 +30,96 @@
     the <a href="http://www.qos.ch/mailman/listinfo/announce">QOS.ch
     announce</a> mailing list.</p>
 
-    <h3>2022-08-09 Release of logback version 1.3.0-beta1</h3>
+    <h3>2022-09-14 Release of logback versions 1.3.1 and 1.4.1</h3>    
+
+
+    <p class="highlight">Logback 1.3.x supports the Java EE edition
+    whereas logback 1.4.x supports Jakarta EE, otherwise the two
+    versions are feature identical.</p>
+
+    <p>Given that downstream users are likely to depend on either Java
+    EE or (in the javax namespace) or on Jakarta EE (in the jakarta
+    namespace) in their projects, it was deemed important for logback
+    to support both alternatives.</p>
+
+    <p>As such, logback 1.3.x supports the Java EE edition whereas
+    logback 1.4.x supports Jakarta EE, otherwise the two versions are
+    feature identical. Here is a summary of the differences:</p>
+
+    <table class="bodyTable striped">
+      <tr>
+        <th>Logback version</th>
+        <th>github branch </th>
+        <th>SLF4J version </th>
+        <th>JDK </th>
+        <th>Enterprise Edition</th>        
+      </tr>
+
+      <tr>
+        <td> 1.3.x</td>
+        <td> branch_1.3.x</td>
+        <td style="text-align: right"> 2.0</td>
+        <td style="text-align: right">    8 </td>
+        <td style="text-align: right"> &nbsp;Java EE  (javax.* namespace) </td>       
+      </tr>
+
+      <tr>
+        <td> 1.4.x</td>
+        <td> master</td>
+        <td style="text-align: right"> 2.0</td>
+        <td style="text-align: right">    11 </td>
+        <td style="text-align: right"> &nbsp;Jakarta EE (jakarta.* namespace) </td>
+      </tr>
+
+    </table>
+
+    
+    <p>Logback components written for logback 1.2 should work without
+    change in version 1.3. However, Joran, logback's configuration
+    system, has been rewritten to use an internal representation model
+    which can be processed separately. Thus, code depending on Joran
+    needs to be adapted to changes in Joran (logback's internal
+    configuration mechanism).</p>
+
+
+    <p>As a result of enhancements to Joran, logback configuration
+    scripts are now largely order-free. For example, appenders can now
+    be defined after they are first referenced in a logger. Moreover,
+    unreferenced appenders are no longer instantiated. </p>
+
+    <p>&bull; Logback-classic now correctly invokes
+    <code>DefaultJoranConfigurator</code> when running in a (JPMS)
+    modular environment. This fixes <a
+    href="https://jira.qos.ch/browse/LOGBACK-1670">LOGBACK-1670</a>
+    reported by Alexey Gavrilov who also provided the relevant test
+    case. </p>
+
+    <p>&bull; Logback will now correctly retrieve its own version
+    information when running in a (JPMS) modular
+    environment. This fixes <a
+    href="https://jira.qos.ch/browse/LOGBACK-1677">LOGBACK-1677</a>.</p>
+
+
+    <p>&bull; Logback version 1.3.1 now correctly declares
+    <code>javax.servlet.ServletContainerInitializer</code> as a
+    provided service. This fixes <a
+    href="https://jira.qos.ch/browse/LOGBACK-1671">LOGBACK-1671</a> as
+    reported by Chad Wilson.</p>
+    
+    
+    <p>&bull; A bit-wise identical binary of this version can be
+    reproduced by checking out the tag v_1.3.1 (or v_1.4.1) from the
+    source code repository (GitHub). Release built using Java "18"
+    2022-03-22 build 18+36-2087 under Linux Debian 9.5.
+    </p>  
+
+
+
+    
+    <h3>2022-08-28 Release of logback versions 1.3.0 and 1.4.0</h3>
+    
+    <p>Here is a list of changes with respect to the previous
+    version.</p>
 
     <p>&bull; Logback-classic now initializes itself using a default
     <a
@@ -45,6 +134,65 @@
     <p>&bull; The <code>ch.qos.logback.classic.jmx</code> package was
     removed for security reasons and for lack of use.
     </p>
+
+    <p>&bull; Fixed incorrect initialization of
+    <code>java.time.DateTimeFormatter</code> in
+    <code>CachingDateFormat</code> class. This fixes <a
+    href="https://jira.qos.ch/browse/LOGBACK-1659">LOGBACK-1659</a>
+    kindly reported by Bertrand Renuart.
+    </p>
+
+    <p>&bull; Fixed performance issue in
+    <code>FileFilterUtil.filesInFolderMatchingStemRegex</code> method
+    reported in <a
+    href="https://jira.qos.ch/browse/LOGBACK-1409">LOGBACK-1409</a>by
+    Abdy Wilkinson with David Schlosnagle providing the relevant
+    PR.</p>
+    
+    <p>&bull; In logback-access, fixed the retreival of the response
+    status using comitted state. This issue was reported in <a
+    href="https://jira.qos.ch/browse/LOGBACK-1580">LOGBACK-1580</a> by
+    joakime Joakim Erdfelt who also provided the relevant PR.
+    </p>
+
+    <p>&bull; In logback-access, fixed error handling in the
+    <code>getRequestContent</code> and
+    <code>buildRequestParameterMap</code> methods in
+    <code>AccessEvent</code> class. Joakim Erdfelt provided the
+    relevant PR.
+    </p>
+
+    <p>&bull; Fixed a number of issues related to the <code>nanosecond</code> field
+    in <code>LoggingEvent</code>. These were reported in <a
+    href="https://jira.qos.ch/browse/LOGBACK-1657">LOGBACK-1657</a> <a
+    href="https://jira.qos.ch/browse/LOGBACK-1661">LOGBACK-1661</a> by
+    Bertrand Renuart.
+    </p>
+
+    
+    <p>&bull; Fixed a number of issues related to the
+    <code>sequenceNumber</code> field in
+    <code>LoggingEvent</code>. These were reported in <a
+    href="https://jira.qos.ch/browse/LOGBACK-1662">LOGBACK-1662</a> <a
+    href="https://jira.qos.ch/browse/LOGBACK-1663">LOGBACK-1663</a> by
+    Bertrand Renuart.
+    </p>
+
+    <p>&bull; Logback-classic now prints its version number at
+    initialization. This information is also available via the
+    <code>logbackVersion()</code> method in
+    <code>ch.qos.logback.core.util.EnvUtil</code>. This feature was
+    requested in <a
+    href="https://jira.qos.ch/browse/LOGBACK-1597">LOGBACK-1597</a> by
+    Gabe Tobias with Bertrand Renuart providing the relevant PR.</p>
+
+ 
+    <p>&bull; A bit-wise identical binary of this version can be
+    reproduced by checking out the tag v_1.3.0 (or v_1.4.0) from the
+    source code repository (GitHub). Release built using Java "18"
+    2022-03-22 build 18+36-2087 under Linux Debian 9.5.
+    </p>  
+
     
     <hr width="80%" align="center" />
 
@@ -84,23 +232,6 @@
     <hr width="80%" align="center" />
 
     <h3>2022-05-19 Release of logback version 1.3.0-alpha16</h3>
-
-    <p class="highlight">The 1.3.x series is JPMS/Jigsaw/Java&nbsp;9
-    modularized and requires slf4j-api version 2.0.x. However, the
-    1.3.x series requires Java&nbsp;8 or later at <b>runtime</b>.</p>
-
-    <p>The 1.3.x series is Jigsaw/Java&nbsp;9 modularized and requires
-    slf4j-api version 2.0.x. Moreover, the 1.3.x series requires
-    Java&nbsp;8 or later at <b>runtime</b> whereas building logback
-    from source requires Java&nbsp;9.  <br/></p>
-
-    <p>Joran, logback's configuration system, has been rewritten to
-    use an internal representation model which can be processed
-    separately. As a side effect, logback configuration scripts are
-    now largely order-free. For example, appenders can now be defined
-    after they are first referenced in a logger. Moreover,
-    unreferenced appenders are no longer instantiated. 
-    </p>
 
     <p>&bull; Restored <code>SiftingAppender</code> functionality
     which was removed during the rewrite of Joran.</p>
