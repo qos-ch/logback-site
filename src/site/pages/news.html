@@ -30,15 +30,14 @@
     the <a href="http://www.qos.ch/mailman/listinfo/announce">QOS.ch
     announce</a> mailing list.</p>
 
-    <h3>2022-09-14 Release of logback versions 1.3.1 and 1.4.1</h3>    
-
+    <h3>2022-09-14 Release of logback versions 1.3.2 and 1.4.2</h3>    
 
     <p class="highlight">Logback 1.3.x supports the Java EE edition
     whereas logback 1.4.x supports Jakarta EE, otherwise the two
     versions are feature identical.</p>
 
     <p>Given that downstream users are likely to depend on either Java
-    EE or (in the javax namespace) or on Jakarta EE (in the jakarta
+    EE (in the javax namespace) or on Jakarta EE (in the jakarta
     namespace) in their projects, it was deemed important for logback
     to support both alternatives.</p>
 
@@ -72,7 +71,6 @@
       </tr>
 
     </table>
-
     
     <p>Logback components written for logback 1.2 should work without
     change in version 1.3. However, Joran, logback's configuration
@@ -87,6 +85,40 @@
     be defined after they are first referenced in a logger. Moreover,
     unreferenced appenders are no longer instantiated. </p>
 
+    <p>&bull; Fixed issue with <code>&lt;appender-ref&gt;</code>
+    elements embedded within
+    <code>&lt;if&gt;</code>/<code>&lt;then&gt;</code>/<code>&lt;else&gt;</code> blocks. This fixes
+    <a href="https://jira.qos.ch/browse/LOGBACK-1673">LOGBACK-1673</a>
+    reported by Juan Pablo Santos Rodriguez.</p>
+
+    <p>&bull;Fixed issue with sub-elements of
+    &gt;shutdownHook&lt; element in configuration files. Joran now
+    correctly handles these elements. This fixes <a
+    href="https://jira.qos.ch/browse/LOGBACK-1672">LOGBACK-1672</a>
+    reported by Juan Pablo Santos Rodriguez.  </p>
+
+    <p>&bull;Joran now automatically renames
+    <code>ch.qos.logback.core.hook.DelayingShutdownHook</code> class name as
+    <code>ch.qos.logback.core.hook.DefaultShutdownHook</code> in configuration
+    files.  This fixes <a
+    href="https://jira.qos.ch/browse/LOGBACK-1678">LOGBACK-1678</a>.</p>
+
+    <p>&bull;In configuration files, when an appender is nested within
+    another appender, logback will now emit a warning message. This
+    change was made in response to <a
+    href="https://jira.qos.ch/browse/LOGBACK-1674">LOGBACK-1674</a>
+    reported by Luke Stephenson.</p>
+    
+    
+    
+    <p>&bull; A bit-wise identical binary of this version can be
+    reproduced by checking out the tag v_1.3.2 (or v_1.4.2) from the
+    source code repository (GitHub). Release built using Java "18"
+    2022-03-22 build 18+36-2087 under Linux Debian 9.5.
+    </p>
+    
+    <h3>2022-09-14 Release of logback versions 1.3.1 and 1.4.1</h3>    
+    
     <p>&bull; Logback-classic now correctly invokes
     <code>DefaultJoranConfigurator</code> when running in a (JPMS)
     modular environment. This fixes <a
@@ -112,9 +144,6 @@
     source code repository (GitHub). Release built using Java "18"
     2022-03-22 build 18+36-2087 under Linux Debian 9.5.
     </p>  
-
-
-
     
     <h3>2022-08-28 Release of logback versions 1.3.0 and 1.4.0</h3>
     

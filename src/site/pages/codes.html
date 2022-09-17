@@ -544,7 +544,53 @@
     FixedWindowRollingPolicy </a> for more information.
   </p>
 			
-  
+  <!-- ============================================================= -->
+  <h3 class="doAnchor" name="nested_if_element">Nested &lt;if&gt;
+  element within &lt;appender&gt;, &lt;logger&gt; or &lt;root&gt;
+  elements is disallowed
+  </h3>
+
+  <p>Ad of logback version 1.3, an &lt;if&gt; element nested within
+  &lt;appender&gt;, &lt;logger&gt; or &lt;root&gt; elements is
+  disallowed and will yield unexpected results.</p>
+
+  <p>For example, the following is considered incorrect.</p>
+
+  <pre class="prettyprint">
+&lt;root level="INFO"&gt;
+    &lt;appender-ref ref="CONSOLE" /&gt;
+    &lt;appender-ref ref="FILE" /&gt;
+    <b>&lt;!-- &lt;if&gt; nested within &lt;root&gt; disallowed --&gt;</b>
+    &lt;if condition='isDefined("A_VARIABLE")'&gt;
+      &lt;then&gt;
+        &lt;appender-ref ref="SOME_APPENDER" /&gt;
+      &lt;/then&gt;
+    &lt;/if&gt;
+&lt;/root&gt;    
+</pre>
+
+   <p>However, it can be written with the desired effect as follows.</p>
+
+<pre class="prettyprint">
+&lt;root level="INFO"&gt;
+    &lt;appender-ref ref="CONSOLE" /&gt;
+    &lt;appender-ref ref="FILE" /&gt;
+&lt;/root&gt;        
+<b>&lt;!-- &lt;if&gt; surronding &lt;root&gt; is fine --&gt;</b>
+&lt;if condition='isDefined("A_VARIABLE")'&gt;
+    &lt;then&gt;
+        &lt;root&gt;    
+            &lt;appender-ref ref="SOME_APPENDER" /&gt;
+      &lt;/root&gt;    
+    &lt;/then&gt;
+&lt;/if&gt;
+</pre>
+
+  <p>We are of the opinion that nested-if form can always be
+  transfomed into the surrounding-if form.
+  </p>
+
+
   <!-- ============================================================= -->
   <h3 class="doAnchor" name="tbr_fnp_prudent_unsupported">Prudent mode
   is not supported with <code>FixedWindowRollingPolicy</code>.
@@ -711,7 +757,11 @@ return false;</pre>
    <h3 class="doAnchor" name="appender_order">Appenders must be
    defined before they are referenced.
    </h3>
-   
+
+   <p class="bold">The restriction described below has been lifted in
+   logback version 1.3. The description is kept for users of logback
+   1.2 and earlier.</p>
+
    <p>In a configuration file, at the point where an appender is
    referenced by name, it must be defined earlier in the configuration
    file. Referencing an appender defined later in the file is not
