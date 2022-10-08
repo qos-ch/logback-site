@@ -4,7 +4,7 @@ document.write('  <table width="100%" border="0">');
 document.write('  <tr>');
 document.write('  <td>');
 document.write('     <a href="https://logback.qos.ch/">');
-document.write('       <img src="' + prefix + 'images/logos/Logback_72dpi.png" alt="" border="0" height="70"/>');
+document.write('       <img class="logo" src="' + prefix + 'images/logos/Logback_72dpi.png" alt="" border="0" height="70"/>');
 document.write('      </a>')
 document.write('  </td>')
 
