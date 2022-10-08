@@ -32,8 +32,9 @@
     the <a href="http://www.qos.ch/mailman/listinfo/announce">QOS.ch
     announce</a> mailing list.</p>
 
-    <h3 class="doAnchor" name="1.3.2">2022-09-XX Release of logback versions 1.3.2 and 1.4.2</h3>    
 
+    <h2>On the 1.3.x and 1.4.x series</h2>
+    
     <p class="highlight">Logback 1.3.x supports the Java EE edition
     whereas logback 1.4.x supports Jakarta EE, otherwise the two
     versions are feature identical.</p>
@@ -46,6 +47,7 @@
     <p>As such, logback 1.3.x supports the Java EE edition whereas
     logback 1.4.x supports Jakarta EE, otherwise the two versions are
     feature identical. Here is a summary of the differences:</p>
+
 
     <table class="bodyTable striped">
       <tr>
@@ -87,6 +89,48 @@
     be defined after they are first referenced in a logger. Moreover,
     unreferenced appenders are no longer instantiated. </p>
 
+    <h3 class="doAnchor" name="1.3.4">2022-10-07 Release of logback versions 1.3.4 and 1.4.4</h3>
+
+    <p>&bull; Fixed spurious "transitive" modifier in the requires
+    declaration on javax.mail/jakarta.mail in the logback-core
+    module. This issue was reported in <a
+    href="https://jira.qos.ch/browse/LOGBACK-1693">LOGBACK-1693</a> by
+    Sebastian Stenzel.</p>
+
+    <p>&bull; Fixed a compilation problem in the
+    <em>logback-core-blackbox</em> module. This issue is described in
+    <a
+    href="https://jira.qos.ch/browse/LOGBACK-1694">LOGBACK-1694</a>.</p>
+
+    <p>&bull; Added an "export missing for ch.qos.logback.core.layout"
+    declaration in logback-core module. This fixes <a
+    href="https://jira.qos.ch/browse/LOGBACK-1695">LOGBACK-1695</a> as
+    reported by Jeremy Landis.</p>
+    
+    
+    <p>&bull; A bit-wise identical binary of this version can be
+    reproduced by checking out the tag v_1.3.4 (or v_1.4.4) from the
+    source code repository (GitHub). Release built using Java "19"
+    2022-09-20 build 19+36-2038 under Linux Debian 9.5.
+    </p>
+    
+    <h3 class="doAnchor" name="1.3.3">2022-10-02 Release of logback versions 1.3.3 and 1.4.3</h3>
+
+    <p>&bull; Removed spurious <code>System.out.println</code> calls
+    in <code>ClassicEnvUtil</code> and <code>ContextInitializer</code>
+    classes, fixing <a
+    href="https://jira.qos.ch/browse/LOGBACK-1690">LOGBACK-1690</a>.</p>
+
+    <p>&bull; A bit-wise identical binary of this version can be
+    reproduced by checking out the tag v_1.3.3 (or v_1.4.3) from the
+    source code repository (GitHub). Release built using Java "19"
+    2022-09-20 build 19+36-2038 under Linux Debian 9.5.
+    </p>
+
+    
+    <h3 class="doAnchor" name="1.3.2">2022-10-02 Release of logback versions 1.3.2 and 1.4.2</h3>    
+
+    
     <p>&bull; Significantly improved the performance of
     <code>LogbackMDCAdapter</code>, i.e. logback's implementation of
     <a
@@ -123,8 +167,7 @@
     nested within an &lt;appender&gt;, &lt;logger&gt; or &lt;root&gt;
     elements, logback will now emit a warning message. This change is
     related to the previously mentioned issues.</p>
-    
-     
+        
     
     <p>&bull; In configuration files, when an appender is nested within
     another appender, logback will now emit a warning message. This
@@ -132,12 +175,16 @@
     href="https://jira.qos.ch/browse/LOGBACK-1674">LOGBACK-1674</a>
     reported by Luke Stephenson.</p>
     
-    
+    <p>&bull; Unit tests were migrated from Junit 4 to Junit 5. Certain tests
+    are now Jigsaw/JPMS modularized and run on the modules-path. These
+    are located in so alled "blackbox" modules, namely
+    <em>logback-core-blackbox</em> and
+    <em>logback-classic-blackbox</em>.</p>
     
     <p>&bull; A bit-wise identical binary of this version can be
     reproduced by checking out the tag v_1.3.2 (or v_1.4.2) from the
-    source code repository (GitHub). Release built using Java "18"
-    2022-03-22 build 18+36-2087 under Linux Debian 9.5.
+    source code repository (GitHub). Release built using Java "19"
+    2022-09-20 build 19+36-2038 under Linux Debian 9.5.
     </p>
     
     <h3 class="doAnchor" name="1.3.1">2022-09-14 Release of logback versions 1.3.1 and 1.4.1</h3>    
@@ -578,7 +625,7 @@
     
     <hr width="80%" align="center" />
 
-    <h3>2021-11-11 - Release of version 1.2.7</h3>
+    <h3 class="doAnchor" name="1.2.7">2021-11-11 - Release of version 1.2.7</h3>
 
     <p>&bull; Added <a
     href="manual/usingSSL.html#parametersHostnameVerification">hostnameVerification</a>
@@ -591,7 +638,7 @@
     
     <hr width="80%" align="center" />
 
-    <h3>2021-09-10 Release of version 1.2.6</h3>
+    <h3 class="doAnchor" name="1.2.6">2021-09-10 Release of version 1.2.6</h3>
 
     <p>&bull; To prevent XML eXternal Entity injection (XXE) attacks, Joran
     no longer reads external entities passed in XML files. This fixes
@@ -602,7 +649,7 @@
     
     <hr width="80%" align="center" />
 
-    <h3>2021-08-23 Release of version 1.3.0-alpha10</h3>
+    <h3 class="doAnchor" name="1.3.0-alpha10">2021-08-23 Release of version 1.3.0-alpha10</h3>
 
     <p>&bull; <code>CachingDateFormatter</code> is now
     synchronization-free and performs about 30 times faster. This fixes
@@ -647,7 +694,7 @@
 
     <hr width="80%" align="center" />
 
-    <h3>2021-08-13 Release of version 1.3.0-alpha9</h3>
+    <h3 class="doAnchor" name="1.3.0-alpha9">2021-08-13 Release of version 1.3.0-alpha9</h3>
 
     <p>&bull; In <code>ILoggingEvent</code>, added a <code>getMarker()</code>
     method with a default implementation returning the first marker in
@@ -660,7 +707,7 @@
     
     <hr width="80%" align="center" />
 
-    <h3>2021-08-12 Release of version 1.3.0-alpha8</h3>
+    <h3 class="doAnchor" name="1.3.0-alpha8">2021-08-12 Release of version 1.3.0-alpha8</h3>
 
     <p>&bull; Upped the requested slf4j-api version by
     <code>LogbackServiceProvider</code> to 2.0.99 instead of
@@ -669,7 +716,7 @@
     
     <hr width="80%" align="center" />
     
-    <h3>2021-08-10 Release of version 1.3.0-alpha7</h3>
+    <h3 class="doAnchor" name="1.3.0-alpha7">2021-08-10 Release of version 1.3.0-alpha7</h3>
 
     <p>&bull; <code>AccessEvent</code> in the logback-access module now tries
     to get a reference to a given <code>HttpRequest</code> session
@@ -719,7 +766,7 @@
     reported by Michael Skells who also provided a relevant PR.
     </p>
     
-    <h3>2021-07-28 Release of version 1.3.0-alpha6</h3>
+    <h3 class="doAnchor" name="1.3.0-alpha6">2021-07-28 Release of version 1.3.0-alpha6</h3>
 
     <p>Joran, logback's configuration system, has been rewritten to
     use an internal representation model which can be processed
@@ -739,7 +786,7 @@
     
     <hr width="80%" align="center" />
 
-    <h3>2021-07-26 Release of version 1.2.5</h3>
+    <h3 class="doAnchor" name="1.2.5">2021-07-26 Release of version 1.2.5</h3>
 
     <p>Instead of an <code>Appender</code>, the
     <code>LayoutWrappingEncoder</code> now accepts a variable of type
@@ -750,7 +797,7 @@
     
     <hr width="80%" align="center" />
 
-    <h3>2021-07-19 Release of version 1.2.4</h3>
+    <h3 class="doAnchor" name="1.2.4">2021-07-19 Release of version 1.2.4</h3>
     
     <p>Added support for minimum length in %i filename pattern. This
     fixes <a
@@ -773,7 +820,7 @@
     
     <hr width="80%" align="center" />
 
-    <h3>2019-10-11 Release of version 1.3.0-alpha5</h3>
+    <h3 class="doAnchor" name="1.3.0-alpha5">2019-10-11 Release of version 1.3.0-alpha5</h3>
     
     <p>ConsoleAppender now delegates filtering of ANSI sequences to
     Jansi. This fixes <a
@@ -783,7 +830,7 @@
     
     <hr width="80%" align="center" />
 
-    <h3>2018-02-11 Release of version 1.3.0-alpha4</h3>
+    <h3 class="doAnchor" name="1.3.0-alpha4">2018-02-11 Release of version 1.3.0-alpha4</h3>
 
     <div class="breaking">
 
@@ -814,7 +861,7 @@
 
     <hr width="80%" align="center" />
 
-    <h3>February 10th, 2018, Release of version 1.3.0-alpha3</h3>
+    <h3 class="doAnchor" name="1.3.0-alpha3">February 10th, 2018, Release of version 1.3.0-alpha3</h3>
 
     <p>Under JPMS (Java 9), allow user code to implement
     <code>ch.qos.logback.classic.spi.Configurator</code> as a
@@ -831,14 +878,14 @@
     
     <hr width="80%" align="center" />
 
-    <h3>2018-01-30 Release of version 1.3.0-alpha2</h3>
+    <h3 class="doAnchor" name="1.3.0-alpha2">2018-01-30 Release of version 1.3.0-alpha2</h3>
 
     <p>Depend on SLF4J version 1.8.0-beta1 instead of
     1.8.0-beta1-SNAPSHOT.</p>
 
     <p>Fix build under Travis.</p>
     
-    <h3>2018-01-30 Release of version 1.3.0-alpha1</h3>
+    <h3 class="doAnchor" name="1.3.0-alpha1">2018-01-30 Release of version 1.3.0-alpha1</h3>
        
     <p>In the absence of a <span class="attr">class</span> attribute,
     the <code>shutdownHook</code> configuration directive now
@@ -903,7 +950,7 @@
     
     <hr width="80%" align="center" />
 
-    <h3>2018-01-18 Release of version 1.3.0-alpha0</h3>
+    <h3 class="doAnchor" name="1.3.0-alpha0">2018-01-18 Release of version 1.3.0-alpha0</h3>
     
    
     <p>Added support for minimum length in %i filename pattern. This
@@ -924,7 +971,7 @@
     
     <hr width="80%" align="center" />
 
-    <h3>2017-03-30 Release of version 1.2.3</h3>
+    <h3 class="doAnchor" name="1.2.3">2017-03-30 Release of version 1.2.3</h3>
 
     <p>Fix unintentional dependency on
     <code>OutputStreamAppender</code> in
@@ -942,7 +989,7 @@
     href="https://jira.qos.ch/browse/LOGBACK-1282">LOGBACK-1282</a> by
     Clas Forsberg.</p>
     
-    <h3>2017-03-16 Release of version 1.2.2</h3>
+    <h3 class="doAnchor" name="1.2.2">2017-03-16 Release of version 1.2.2</h3>
 
     <p><code>AsyncAppender</code> no longer drops events when the
     current thread has its interrupt flag set. This issue was reported
@@ -968,7 +1015,7 @@
     
     <hr width="80%" align="center" />
 
-    <h3>March 1st, 2017, Release of version 1.1.11</h3>
+    <h3 class="doAnchor" name="1.1.11">March 1st, 2017, Release of version 1.1.11</h3>
     
     <p>Fix thread-safety issue with <code>PatternLayoutBase</code>
     reported in <a
@@ -978,7 +1025,7 @@
 
     <hr width="80%" align="center" />
 
-    <h3>February 9th, 2017, Release of version 1.2.1</h3>
+    <h3 class="doAnchor" name="1.2.1">February 9th, 2017, Release of version 1.2.1</h3>
 
     <p>To ensure backward compatibility of configuration files, the
     <span class="prop">immediateFlush</span> property set for a
@@ -988,7 +1035,7 @@
 
     <hr width="80%" align="center" />
 
-    <h3>2017-02-08 Release of version 1.2.0</h3>
+    <h3 class="doAnchor" name="1.2.0">2017-02-08 Release of version 1.2.0</h3>
 
     <div class="breaking">
       <h4><code>Encoder</code> interface has changed and is no longer

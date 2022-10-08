@@ -223,8 +223,6 @@ span.canonical:hover {
 
 /* ------------------------------------ */
 
-.anchor { display:none; }
-
 
 h1, h2, h3, h4 {
     color: #505050;
@@ -247,27 +245,11 @@ h4 {
     font-size: medium;
 }
 
-h1 .anchor:before {content:url(anchor24.png);}
-h2 .anchor:before {content:url(anchor20.png);}
-h3 .anchor:before {content:url(anchor16.png);}
-h4 .anchor:before {content:url(anchor12.png);}
-td .anchor:before {content:url(anchor12.png);}
-
-h1:hover .anchor { margin-left: -24px; }
-h2:hover .anchor { margin-left: -20px; }
-h3:hover .anchor { margin-left: -16px; }
-h4:hover .anchor { margin-left: -12px; }
-td:hover .anchor { margin-left: -12px; }
-
-h1:hover .anchor, 
-h2:hover .anchor,  
-h3:hover .anchor, 
-h4:hover .anchor,
-td:hover .anchor {
-  display: inline-block;
-  text-decoration: none;
-}
-
+h1 .anchor:before,
+h2 .anchor:before,
+h3 .anchor:before,
+h4 .anchor:before,
+td .anchor:before {content: "\01f517";   display: inline-block; margin-right: 1ex;}
 
 div.source {
     margin-top: 1em;
