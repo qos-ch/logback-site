@@ -4,7 +4,7 @@ document.write('  <table width="100%" border="0">');
 document.write('  <tr>');
 document.write('  <td>');
 document.write('     <a href="https://logback.qos.ch/">');
-document.write('       <img src="' + prefix + 'images/logos/Logback_72dpi.png" alt="" border="0" height="70"/>');
+document.write('       <img class="logo" src="' + prefix + 'images/logos/Logback_72dpi.png" alt="" border="0""/>');
 document.write('      </a>')
 document.write('  </td>')
 
@@ -30,10 +30,8 @@ document.write('   <tr>');
 document.write('      <td>');
 
 document.write('      <a href="' + prefix +'count/sponsor.html" style="margin-left: 0ex;">');
-document.write('        <img src="' + prefix + 'images/sponsor.png" alt="Sponsor qos-ch" height="35" style="border: 0; margin-left: 1ex;"/>');
+document.write('        <img class="sponsorIcon" src="' + prefix + 'images/sponsor.png" alt="Sponsor qos-ch" style="border: 0; margin-left: 1ex;"/>');
 document.write('      </a>');
-
-//document.write('       <iframe src="https://github.com/sponsors/qos-ch/button" title="Sponsor qos-ch" height="35" width="116" style="border: 0; margin-left: 1ex;"></iframe>');
 
 
 document.write('      <a href="' + prefix +'count/github.html" style="margin-left: 1ex;">');
@@ -41,7 +39,7 @@ document.write('       <img src="' + prefix + 'images/GitHub-Mark-32px.png" alt=
 document.write('      </a>');
 
 
-document.write('      <a href="' + prefix +'count/twitter.html" style="margin-left: 1ex; margin-right: 16em;">');
+document.write('      <a href="' + prefix +'count/twitter.html" style="margin-left: 1ex; margin-right: auto;">');
 document.write('        <img height="32px" src="' + prefix + 'images/TwitterLogo_blue.svg" alt="Follow @qos_ch on Twitter" border="0"/>');
 document.write('       </a>');
 document.write('      </td>');
