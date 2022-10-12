@@ -142,8 +142,8 @@
 		follows:
 		</p>
 		
-    <pre><code class="language-java">Logger rootLogger = LoggerFactory.getLogger(<a
-    href="http://www.slf4j.org/apidocs/constant-values.html#org.slf4j.Logger.ROOT_LOGGER_NAME">org.slf4j.Logger.ROOT_LOGGER_NAME</a>);</code></pre>
+                <pre><code class="language-java">Logger rootLogger = LoggerFactory.&#8203;getLogger(org.slf4j.Logger.&#8203;<a
+    href="http://www.slf4j.org/apidocs/constant-values.html#org.slf4j.Logger.ROOT_LOGGER_NAME">ROOT_LOGGER_NAME</a>);</code></pre>
 
 		<p>All other loggers are also retrieved with the class static
 		<code>getLogger</code> method found in the <a
@@ -461,12 +461,12 @@ import org.slf4j.LoggerFactory;
 // get a logger instance named "com.foo". Let us further assume that the
 // logger is of type  ch.qos.logback.classic.Logger so that we can
 // set its level
-ch.qos.logback.classic.Logger logger = 
-        (ch.qos.logback.classic.Logger) LoggerFactory.getLogger("com.foo");
+ch.qos.logback.&#8203;classic.Logger logger = 
+        (ch.qos.logback.&#8203;classic.Logger) LoggerFactory.&#8203;getLogger("com.foo");
 //set its Level to <span class="blue">INFO</span>. The setLevel() method requires a logback logger
 logger.setLevel(Level. <span class="blue">INFO</span>);
 
-Logger barlogger = LoggerFactory.getLogger(&#8203;"com.foo.Bar");
+Logger barlogger = LoggerFactory.&#8203;getLogger(&#8203;"com.foo.Bar");
 
 // This request is enabled, because <span class="green bold">WARN</span> &gt;= <span class="blue">INFO</span>
 logger.<span class="green bold">warn</span>("Low fuel level.");
@@ -799,7 +799,7 @@ logger.debug("The new entry is {}.", entry);</code></pre>
   <h4>3. Create a <code>LoggingEvent</code> object</h4>
 
   <p>If the request survived the previous filters, logback will
-  create a <code>ch.qos.logback.classic.LoggingEvent</code> object
+  create a <code>ch.qos.logback.&#8203;classic.&#8203;LoggingEvent</code> object
   containing all the relevant parameters of the request, such as the
   logger of the request, the request level, the message itself, the
   exception that might have been passed along with the request, the
