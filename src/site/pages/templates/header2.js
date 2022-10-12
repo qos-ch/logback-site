@@ -23,42 +23,40 @@ document.write('  <td>&nbsp;</td>');
 
 
 document.write(' <td style="vertical-align:bottom;">');
-// div style
-document.write('   <div style="display: flex; float: right; align-items: flex-end;">');
-document.write('   <table border="0">');
-document.write('   <tr>');
-document.write('      <td>');
 
-document.write('      <a href="' + prefix +'count/sponsor.html" style="margin-left: 0ex;">');
-document.write('        <img class="sponsorIcon" src="' + prefix + 'images/sponsor.png" alt="Sponsor qos-ch" style="border: 0; margin-left: 1ex;"/>');
+document.write('   <div id="header-right-grid">');
+
+document.write('      <div class="sponsor-github-twitter-grid-item">');
+
+document.write('      <a href="' + prefix +'count/sponsor.html"">');
+document.write('        <img  class="sponsorIcon" src="' + prefix + 'images/sponsor.png" alt="Sponsor qos-ch"/>');
 document.write('      </a>');
 
-
-document.write('      <a href="' + prefix +'count/github.html" style="margin-left: 1ex;">');
-document.write('       <img src="' + prefix + 'images/GitHub-Mark-32px.png" alt="Source code" border="0"/>');
+document.write('      <a href="' + prefix +'count/github.html" style="xdisplay: block;">');
+document.write('           <img style="margin-left: 1em;" src="' + prefix + 'images/GitHub-Mark-32px.png" alt="Source code" border="0"/>');
 document.write('      </a>');
 
-
-document.write('      <a href="' + prefix +'count/twitter.html" style="margin-left: 1ex; margin-right: auto;">');
-document.write('        <img height="32px" src="' + prefix + 'images/TwitterLogo_blue.svg" alt="Follow @qos_ch on Twitter" border="0"/>');
+document.write('      <a  href="' + prefix +'count/twitter.html">');
+document.write('        <img  style="margin-left: 1em;" height="32" src="' + prefix + 'images/TwitterLogo_blue.svg" alt="Follow @qos_ch on Twitter" border="0"/>');
 document.write('       </a>');
-document.write('      </td>');
-document.write('    </tr>');
-document.write('    <tr>');
-document.write('      <td>');
-document.write('        <a href="https://search.maven.org/search?q=g:ch.qos.logback%20AND%20v:1.4.%3F">');
-document.write('          <img style="margin-left: 1ex;" src="https://img.shields.io/badge/Search%20for%20logback-1.4.x-green)"/>')
-document.write('        </a>');
 
-document.write('        <a href="https://search.maven.org/search?q=g:ch.qos.logback%20AND%20v:1.3.%3F">');
-document.write('          <img style="margin-left: 1ex;" src="https://img.shields.io/badge/Search%20for%20logback-1.3.x-green)"/>')
-document.write('        </a>');
+document.write('      </div>'); // sponsor-github-twitter-item"
 
-document.write('      <td/>');
-document.write('    </tr>');
-document.write('    </table>');
+document.write('      <div class="maven-search13-grid-item">');
+document.write('      <a href="https://search.maven.org/search?q=g:ch.qos.logback%20AND%20v:1.3.%3F">');
+document.write('          <img src="https://img.shields.io/badge/Search%20for%20logback-1.3.x-green)"/>')
+document.write('      </a>');
+document.write('      </div>');
 
-// close float style div
+document.write('      <div class="maven-search14-grid-item">'); // 
+document.write('      <a href="https://search.maven.org/search?q=g:ch.qos.logback%20AND%20v:1.4.%3F">');
+document.write('          <img   src="https://img.shields.io/badge/Search%20for%20logback-1.4.x-green)"/>')
+document.write('      </a>');
+document.write('      </div>');
+
+
+
+// close div#header-right-grid
 document.write('    </div>');
 // close column
 document.write('   </td>');

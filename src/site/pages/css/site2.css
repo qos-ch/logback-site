@@ -4,49 +4,66 @@
 */
 
 
-html { 
+
+
+html {
+    --bgcolor: #FFF;
+    --max-width-on-wide-screen: 47rem;
+    --top-content--item-width: 12rem;   
 }
 
-body {
-    
+body {    
     background-color: #fff;
     font-family: Verdana, Arial, SunSans-Regular, Sans-Serif;
-    font-size: 100%;
+    font-size: 100%; 
+
     color: #000;  
     padding: 0px;
-    margin-left: auto;
-    margin-right: auto;    
     counter-reset: example;  /* Create an example counter scope */
 
     display: grid;
-    max-width: 47rem;
+
     gap: 0em;  
     grid-template-columns: 1fr;
     grid-template-areas:
         'headerArea'
         'contentArea';
+
+    background-color: var(--bgcolor);
+    /* mobile first */
+    margin-left: 1rem;
+    margin-right: 1rem;
 }
 
 #header, #content {
-    max-width: 46rem;
+    background-color: var(--bgcolor);        
+    max-width: 100%;
 }
 
+#header > table {
+    white-space: revert;
+}
 
-@media (max-width: 1000px) {
+table, pre, code {
+    word-wrap: break-word:     
+    overflow-x: auto;
+    white-space: pre-wrap;
+
+}
+
+@media (min-width: 1000px) {
+
+        
     body {
-        background-color: #800;
-        margin-left: 1rem;
-        margin-right: 1rem;        
+        max-width: var(--max-width-on-wide-screen);
+        margin-left: auto;
+        margin-right: auto;
+
     }
     #header, #content {
-        background-color: #5AA;        
-        max-width: 100%;
+        max-width: var(--max-width-on-wide-screen);
     }
 
-    pre {
-        white-space: pre-wrap !important;
-        background-color: #AFA;
-    }
 
 }
 
@@ -57,32 +74,73 @@ img.sponsorIcon { height: 4ex;}
     grid-area: headerArea;
 }
 
+#header-right-grid {
+    display: grid;
+    margin-left: auto;
+    grid-template-columns: auto auto;
+    grid-template-areas:
+        'sponsor-github-twitter-area sponsor-github-twitter-area'
+        'maven-search13-area         maven-search14-area';
+    justify-content: right;
+}
+
+div.sponsor-github-twitter-grid-item    { grid-area: sponsor-github-twitter-area; }
+div.maven-search13-grid-item { grid-area: maven-search13-area; margin-right: 1ex;}
+div.maven-search14-grid-item { grid-area: maven-search14-area; }
+
+
 #content {
     grid-area: contentArea;
 }
 
+div#top-content {
+    display: grid;
+    gap: 1rem;
+
+    grid-template-columns:  1fr 1fr  1fr;
+    grid-template-areas:
+
+ 
+        'top-content-left    top-content-creative-commons top-content-right'
+        'top-content-left    top-content-quote            top-content-quote'
+        'top-content-ad      top-content-ad               top-content-ad';
+}
+
+#ad {
+    grid-area: top-content-ad;
+    width: 100%;
+}
+#left, #right  {
+    min-width: var(--top-content-item-width);    
+}
 
 #left {
-    max-width: 10rem;
-    float: left;
-    
-    margin-right: 1rem;    
+    grid-area: top-content-left;
+    margin: 1rem;    
     padding: 0px;
-    font-size: 80%;
+    font-size: smaller;
     background-color: #ffffff;
 }
 
 
-#right, div.ad {
-    float: right;
+#right  {
+    grid-area: top-content-right;    
     color: #564b47;
     margin: 1rem;
     padding: 0px;
     background-color: #ffffff;    
-    font-size: 80%;
-    max-width: 10em;        
+    font-size: smaller;
 }
 
+
+#quote {
+    grid-area: top-content-quote;    
+    text-align: right;
+}
+
+div#creative-commons {
+    grid-area: top-content-creative-commons;
+}
 
 .footer {
     color: #564b47;
@@ -112,7 +170,6 @@ p.menu {
   padding:3px 10px;
 }
 
-
 a { 
  color: #4183c4; 
  background-color:transparent;
@@ -128,11 +185,11 @@ a {
 }
 
 #left a, #right a {
-  display: block; 
-  margin: 0px; 
-  padding: 2px;  
-  color: #0066cc; 
-  text-decoration: none;
+    display: block; 
+    margin: 0px; 
+    padding: 2px;  
+    color: #0066cc; 
+    text-decoration: none;
 }
 
 p.menu_header {
@@ -187,7 +244,6 @@ p.menu_header {
 /* ------------------------------------------- */
 
 
-
 #content img {
 	border:none;
 	margin-left: auto;
@@ -201,7 +257,7 @@ span.canonical {
    color: #0079C5;   
    font-family: "Comic Sans MS", sans-serif;
    white-space: nowrap;
-   font-size: 80%;
+   font-size: smaller;
 
    border-top:    2px solid #DDD;  
    border-left:   2px solid #DDD;  
@@ -252,6 +308,7 @@ div.source {
 }
 
 .source, .command, .console {
+    white-space: pre-wrap!important; 
     overflow-x: auto;  
     border-top: 1px solid #DDDDDD;
     border-bottom: 1px solid #DDDDDD;
@@ -271,29 +328,17 @@ div.source {
   padding-top: 0ex;
 }
 
-pre {
-    overflow-x: auto;
-    background-color: #FAA;
-}
-XXXcode {
-    overflow-x: auto;
-    font-size: inherit;
-    padding: 0px;
-    margin: 0px; 
-    background-color:transparent;
-    xxfont-family: Courier, Monaco, Monospace;
-}
-
 .alignright {
  margin-top: 0; 
  text-align: right;
 }
 
+
 /* ========== body table ============ */
 table.bodyTable {
-	padding: 0px;
-	margin-left: -2px;
-	margin-right: -2px;
+    padding: 0px;
+    margin-left: -2px;
+    margin-right: -2px;
 }
 
 table.bodyTable th {
@@ -382,29 +427,26 @@ td.word {
   font-weight: bold;	
 }
 
-code, .code {
+code, .code, .pattern {
     font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;    
+}
+
+code, .code {
     background-color: #EEE;
 }
 
+
 .pattern {
-    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;    
     background-color: #DDD;
 }
 
     
 
-.variable {
+.variable, .attr {
     font-family: Courier, monospace;
     font-style:italic;  
 }
 
-
-
-.attr {
-    font-family: Courier, monospace;
-    font-style:italic; 
-}
 
 .option, .prop {
   border-top: 1px dotted #BBBBBB;
@@ -435,10 +477,6 @@ code, .code {
   margin-bottom: 1ex;
 }
 
-.quote {
-   text-align: right;
-  padding-left: 12em;
-}
 
 /* --------- numbering --------- */
 .autoEx:before {
@@ -507,6 +545,7 @@ p.menu {
 .strong, .bold { 
   font-weight: bold;
 }
+
 
 .author {
     text-align: left;

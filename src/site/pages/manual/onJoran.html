@@ -1,30 +1,33 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
+
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
     <title>Chapter 11: Joran</title>
-    <link rel="stylesheet" type="text/css" href="../css/site.css" />    
-    <link rel="stylesheet" type="text/css" href="../css/prettify.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="../css/site2.css" />    
+    <link rel="stylesheet" type="text/css" href="../css/stackoverflow-light.min.css" />
   </head>
-  <body  onload="prettyPrint(); decorate(); enableLegacy();">
+  <body onload="hljs.highlightAll(); decorate(); enableLegacy();" >
     <script type="text/javascript">prefix='../'</script>
-    <script type="text/javascript" src="../js/prettify.js"></script>
+    <script type="text/javascript" src="../js/highlight.min.js"></script>
     <script type="text/javascript" src="../js/jquery-min.js"></script>
     <script type="text/javascript" src="../js/decorator.js"></script>
     <script type="text/javascript" src="../js/tab.js"></script>
     
-    <div id="container">
-      <script type="text/javascript" src="../templates/header.js"></script>
-          
-      <div id="left">
-        <script src="../templates/left.js" type="text/javascript"></script>
-      </div>
-      <div id="right">
-        <script src="menu.js" type="text/javascript"></script>
-      </div>
-      <div id="content">
+
+    <script type="text/javascript" src="../templates/header.js"></script>
+    
+
+    <div id="content">
+
+    <div id="left">
+      <script src="../templates/left.js" type="text/javascript"></script>
+    </div>
+
+    <div id="right">
+      <script src="menu.js" type="text/javascript"></script>
+    </div>
       
     <h1>Chapter 10: Joran</h1>
 
@@ -54,6 +57,10 @@
     and its salient features.
     </p>
 
+    <div class="ad">
+      <script type="text/javascript" src="../templates/ad.js"></script>      
+    </div>
+
     <p>Joran is actually a generic configuration system which can be
     used independently of logging. To emphasize this point, we should
     mention that the logback-core module does not have a notion of
@@ -62,7 +69,7 @@
     </p>
 
     <p>The examples presented in this chapter can be found under
-    <em>LOGBACK_HOME/logback-examples/src/main/java/chapters/onJoran/</em>
+    <em>LOGBACK_HOME/logback-examples/&#8203;src/main/java/chapters/&#8203;onJoran/</em>
     folder.
     </p>
 
@@ -184,16 +191,16 @@
     </p>
 
 
-    <pre class="prettyprint source">package ch.qos.logback.core.joran.action;
+    <pre><code>package ch.qos.logback.core.joran.action;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
-import ch.qos.logback.core.joran.spi.InterpretationContext;
+import ch.qos.logback.core.&#8203;joran.spi.InterpretationContext;
 
 public abstract class Action extends ContextAwareBase {
   /**
    * Called when the parser encounters an element matching a
-   * {@link ch.qos.logback.core.joran.spi.Pattern Pattern}.
+   * {@link ch.qos.logback.&#8203;core.joran.spi.Pattern Pattern}.
    */
   public abstract void begin(InterpretationContext ic, String name,
       Attributes attributes) throws ActionException;
@@ -208,11 +215,11 @@ public abstract class Action extends ContextAwareBase {
 
   /*
    * Called when the parser encounters an endElement event matching a
-   * {@link ch.qos.logback.core.joran.spi.Pattern Pattern}.
+   * {@link ch.qos.logback.&#8203;core.joran.spi.Pattern Pattern}.
    */
   public abstract void end(InterpretationContext ic, String name)
       throws ActionException;
-}</pre>
+}</code></pre>
 
    <p>Thus, every action must implement the <code>begin()</code> and
    <code>end()</code> methods. The implementation of the
@@ -300,25 +307,25 @@ public abstract class Action extends ContextAwareBase {
 
     <p>The <em>hello.xml</em> file contains one &lt;hello-world&gt;
     element, without any other nested elements. See the
-    <em>logback-examples/src/main/java/chapters/onJoran/helloWorld/</em>
+    <em>logback-examples/&#8203;src/main/java/chapters/&#8203;onJoran/helloWorld/</em>
     folder for exact contents.
     </p>
  
     <p>Running the HelloWorld application with <em>hello.xml</em> file
     will print "Hello World" on the console.</p>
    
-    <p class="command">java chapters.onJoran.helloWorld.HelloWorld src/main/java/chapters/onJoran/helloWorld/hello.xml</p>
+    <pre><code class="language-shell">java chapters.onJoran.&#8203;helloWorld.HelloWorld src/main/java/chapters/&#8203;onJoran/helloWorld/&#8203;hello.xml</code></pre>
 
     <p>You are highly encouraged to poke about in this example, by adding
     new rules on the rule store, modifying the XML document
     (hello.xml) and adding new actions.
     </p>
 
-    <!-- ====================================================== -->
+    <!-- =================&#8203;================&#8203;================&#8203;===== -->
 
     <h3 class="doAnchor" name="calculator">Collaborating actions</h3>
    
-    <p>The <em>logback-examples/src/main/java/joran/calculator/</em>
+    <p>The <em>logback-examples/&#8203;src/main/java/joran/&#8203;calculator/</em>
     directory includes several actions which collaborate together
     through the common object stack in order to accomplish simple
     computations.
@@ -330,12 +337,12 @@ public abstract class Action extends ContextAwareBase {
     </p>
 
     <em>Example 10.<span class="autoEx"/>: First calculator example
-    (logback-examples/src/main/java/chapters/onJoran/calculator/calculator1.xml)</em>
+    (logback-examples/&#8203;src/main/&#8203;java/chapters/&#8203;onJoran/calculator/&#8203;calculator1.xml)</em>
 
     <em> </em>
-    <pre class="prettyprint source">&lt;computation name="total">
+    <pre><code>&lt;computation name="total">
   &lt;literal value="3"/>
-&lt;/computation></pre>
+&lt;/computation></code></pre>
 
     <p>In the <a href="../xref/chapters/onJoran/calculator/Calculator1.html">
     <code>Calculator1</code></a> application, we declare various
@@ -346,7 +353,7 @@ public abstract class Action extends ContextAwareBase {
     <p> Running <code>Calculator1</code> application with
     <em>calculator1.xml</em></p>
 
-    <p class="command">java chapters.onJoran.calculator.Calculator1 src/main/java/chapters/onJoran/calculator/calculator1.xml</p>
+    <pre><code class="language-shell">java chapters.onJoran.&#8203;calculator.Calculator1 src/main/java/chapters/&#8203;onJoran/calculator/&#8203;calculator1.xml</code></pre>
 
     <p>will print:</p>
 
@@ -413,14 +420,14 @@ public abstract class Action extends ContextAwareBase {
 
     <em>Example 10.<span class="autoEx"/>: Calculator configuration
     file
-    (logback-examples/src/main/java/chapters/onJoran/calculator/calculator2.xml)</em>
-  <pre class="prettyprint source">&lt;computation name="toto"&gt;
+    (logback-examples/&#8203;src/main/java/chapters/&#8203;onJoran/calculator/&#8203;calculator2.xml)</em>
+  <pre><code>&lt;computation name="toto"&gt;
   &lt;literal value="7"/&gt;
   &lt;literal value="3"/&gt;
   &lt;add/&gt;
   &lt;literal value="3"/&gt;
   &lt;multiply/&gt;
-&lt;/computation&gt;</pre>
+&lt;/computation&gt;</code></pre>
 
 
   <p>As in the previous example, in response to the &lt;literal&gt;
@@ -445,7 +452,7 @@ public abstract class Action extends ContextAwareBase {
   object at the top of the stack. Thus, running:
   </p>
 
-  <p class="command">java chapters.onJoran.calculator.Calculator1 src/main/java/chapters/onJoran/calculator/calculator2.xml </p>
+  <pre><code class="language-shell">java chapters.onJoran.&#8203;calculator.Calculator1 src/main/java/chapters/&#8203;onJoran/calculator/&#8203;calculator2.xml </code></pre>
   
   <p>will yield</p>
 
@@ -460,9 +467,9 @@ public abstract class Action extends ContextAwareBase {
   same element. Here's the content of <em>calculator3.xml</em>:</p>
 
   <em>Example 10.<span class="autoEx"/>: Calculator configuration file
-  (logback-examples/src/main/java/chapters/onJoran/calculator/calculator3.xml)</em>
+  (logback-examples/&#8203;src/main/java/chapters/&#8203;onJoran/calculator/&#8203;calculator3.xml)</em>
 
-<pre class="prettyprint source">&lt;computation name="toto"&gt;
+<pre><code>&lt;computation name="toto"&gt;
   &lt;computation&gt;
     &lt;literal value="7"/&gt;
     &lt;literal value="3"/&gt;
@@ -471,7 +478,7 @@ public abstract class Action extends ContextAwareBase {
  
   &lt;literal value="3"/&gt;
   &lt;multiply/&gt;
-&lt;/computation&gt;</pre>
+&lt;/computation&gt;</code></pre>
 
   <p>Much like the use of parentheses in an algebraic equation, the
   presence of a <code>computation</code> element nested in another is
@@ -519,7 +526,7 @@ public abstract class Action extends ContextAwareBase {
 
   <p>You can create and register a custom implicit action as
   illustrated in the next example contained within the
-  <em>logback-examples/src/main/java/chapters/onJoran/implicit</em> folder.
+  <em>logback-examples/&#8203;src/main/java/chapters/&#8203;onJoran/implicit</em> folder.
   </p>
 
   <p>The <a
@@ -545,8 +552,8 @@ public abstract class Action extends ContextAwareBase {
   how implicit actions come into play.</p>
 
   <em>Example 10.<span class="autoEx"/>: Usage of implicit rules
-  (logback-examples/src/main/java/chapters/onJoran/implicit/implicit1.xml)</em>
-  <pre class="prettyprint source">&lt;foo&gt;
+  (logback-examples/&#8203;src/main/java/chapters/&#8203;onJoran/implicit/&#8203;implicit1.xml)</em>
+  <pre><code>&lt;foo&gt;
   &lt;xyz printme="true"&gt;
     &lt;abc printme="true"/&gt;
   &lt;/xyz&gt;
@@ -555,11 +562,11 @@ public abstract class Action extends ContextAwareBase {
 
   &lt;foo printme="true"/&gt;
 
-&lt;/foo&gt;</pre>
+&lt;/foo&gt;</code></pre>
 
   <p>Running</p>
 
-  <p class="command">java chapters.onJoran.implicit.PrintMe src/main/java/chapters/onJoran/implicit/implicit1.xml</p>
+  <pre><code class="language-shell">java chapters.onJoran.implicit.PrintMe src/main/java/chapters/&#8203;onJoran/implicit/&#8203;implicit1.xml</code></pre>
   <p>yields:</p>
 
   <p class="console">Element [xyz] asked to be printed.
@@ -658,40 +665,40 @@ Element [abc] asked to be printed.
     </tr>
 
     <tr >
-      <td>ch.qos.logback.core.AppenderBase</td>
+      <td>ch.qos.logback.&#8203;core.&#8203;AppenderBase</td>
       <td>encoder</td>
-      <td>ch.qos.logback.classic.encoder.PatternLayoutEncoder</td>
+      <td>ch.qos.logback.&#8203;classic.&#8203;encoder.&#8203;PatternLayout&#8203;Encoder</td>
     </tr>
 
     <tr class="alt">
-      <td>ch.qos.logback.core.UnsynchronizedAppenderBase</td>
+      <td>ch.qos.logback.&#8203;core.&#8203;Unsynchronized&#8203;AppenderBase</td>
       <td>encoder</td>
-      <td>ch.qos.logback.classic.encoder.PatternLayoutEncoder</td>
+      <td>ch.qos.logback.&#8203;classic.&#8203;encoder.&#8203;PatternLayout&#8203;Encoder</td>
     </tr>
 
       <tr >
-      <td>ch.qos.logback.core.AppenderBase</td>
+      <td>ch.qos.logback.&#8203;core.&#8203;AppenderBase</td>
       <td>layout</td>
-      <td>ch.qos.logback.classic.PatternLayout</td>
+      <td>ch.qos.logback.&#8203;classic.&#8203;PatternLayout</td>
     </tr>
 
     <tr class="alt">
-      <td>ch.qos.logback.core.UnsynchronizedAppenderBase</td>
+      <td>ch.qos.logback.&#8203;core.&#8203;Unsynchronized&#8203;AppenderBase</td>
       <td>layout</td>
-      <td>ch.qos.logback.classic.PatternLayout</td>
+      <td>ch.qos.logback.&#8203;classic.&#8203;PatternLayout</td>
     </tr>
 
     <tr>
-      <td>ch.qos.logback.core.filter.EvaluatorFilter</td>
+      <td>ch.qos.logback.&#8203;core.&#8203;filter.EvaluatorFilter</td>
       <td>evaluator</td>
-      <td>ch.qos.logback.classic.boolex.JaninoEventEvaluator</td>
+      <td>ch.qos.logback.&#8203;classic.&#8203;boolex.&#8203;JaninoEvent&#8203;Evaluator</td>
     </tr>
   </table>
 
   <p>This list may change in future releases. Please see
   logback-classic <a
   href="../xref/ch/qos/logback/classic/joran/JoranConfigurator.html">JoranConfigurator</a>'s
-  <code>addDefaultNestedComponentRegistryRules</code> method for the
+  <code>addDefaultNested&#8203;ComponentRegistryRules</code> method for the
   latest rules.
   </p>
 
@@ -699,7 +706,7 @@ Element [abc] asked to be printed.
   class for the nested component, the ch.qos.logback.classic package
   is replaced by ch.qos.logback.access. See logback-access <a
   href="../xref/ch/qos/logback/access/joran/JoranConfigurator.html">JoranConfigurator</a>'s
-  <code>addDefaultNestedComponentRegistryRules</code> method for the
+  <code>addDefault&#8203;NestedComponent&#8203;RegistryRules</code> method for the
   latest rules.
   </p>
   
@@ -716,7 +723,7 @@ Element [abc] asked to be printed.
   <p>Joran includes an action which allows the Joran interpreter to
   learn new rules on the fly, that is while interpreting an XML
   document.  See the
-  <em>logback-examples/src/main/java/chapters/onJoran/newRule/</em> directory
+  <em>logback-examples/&#8203;src/main/java/chapters/&#8203;onJoran/newRule/</em> directory
   for sample code. In this package, the <a
   href="../xref/chapters/onJoran/newRule/NewRuleCalculator.html">
   <code>NewRuleCalculator</code></a> application sets up just two
@@ -725,8 +732,8 @@ Element [abc] asked to be printed.
   <code>NewRuleCalculator</code>.
   </p>
 
-  <pre class="prettyprint source">ruleMap.put(new Pattern("*/computation"), new ComputationAction1());
-<b>ruleStore.addRule(new Pattern("/computation/newRule"), new NewRuleAction());</b></pre>
+  <pre><code>ruleMap.put(new Pattern("*/computation"), new ComputationAction1());
+<b>ruleStore.addRule(new Pattern("/computation/newRule"), new NewRuleAction());</b></code></pre>
 
   <p><a
   href="../xref/ch/qos/logback/core/joran/action/NewRuleAction.html"><code>NewRuleAction</code></a>,
@@ -741,8 +748,8 @@ Element [abc] asked to be printed.
 
   <p>Here is how new rules can be declared in an XML file:</p>
 
-  <pre class="prettyprint source">&lt;newRule pattern="*/computation/literal"
-          actionClass="chapters.onJoran.calculator.LiteralAction"/&gt;</pre>
+  <pre><code>&lt;newRule pattern="*/computation/literal"
+          actionClass="chapters.&#8203;onJoran.calculator.&#8203;LiteralAction"/&gt;</code></pre>
 
   <p>Using such newRule declarations, we can transform
   <code>NewRuleCalculator</code> to behave like the
@@ -751,15 +758,15 @@ Element [abc] asked to be printed.
 
   <em>Example 10..<span class="autoEx"/>: Configuration file using new
   rules on the fly
-  (logback-examples/src/main/java/chapters/onJoran/newrule/newRule.xml)</em>
+  (logback-examples/&#8203;src/main/java/chapters/&#8203;onJoran/newrule/&#8203;newRule.xml)</em>
 
-  <pre class="prettyprint source">&lt;computation name="toto"&gt;
+  <pre><code>&lt;computation name="toto"&gt;
   &lt;newRule pattern="*/computation/literal" 
-            actionClass="chapters.onJoran.calculator.LiteralAction"/&gt;
+            actionClass="chapters.&#8203;onJoran.calculator.&#8203;LiteralAction"/&gt;
   &lt;newRule pattern="*/computation/add" 
-            actionClass="chapters.onJoran.calculator.AddAction"/&gt;
+            actionClass="chapters.&#8203;onJoran.calculator.&#8203;AddAction"/&gt;
   &lt;newRule pattern="*/computation/multiply" 
-            actionClass="chapters.onJoran.calculator.MultiplyAction"/&gt;
+            actionClass="chapters.&#8203;onJoran.calculator.&#8203;MultiplyAction"/&#8203;&gt;
 
   &lt;computation&gt;
     &lt;literal value="7"/&gt;
@@ -769,10 +776,10 @@ Element [abc] asked to be printed.
  
   &lt;literal value="3"/&gt;
   &lt;multiply/&gt;
-&lt;/computation&gt;</pre>
+&lt;/computation&gt;</code></pre>
 
 
-  <p class="command">java java chapters.onJoran.newRule.NewRuleCalculator src/main/java/chapters/onJoran/newRule/newRule.xml</p>
+  <pre><code class="language-shell">java java chapters.onJoran.&#8203;newRule.NewRuleCalculator src/main/java/chapters/&#8203;onJoran/newRule/&#8203;newRule.xml</code></pre>
 
   <p>yields</p>
 
@@ -783,7 +790,8 @@ Element [abc] asked to be printed.
 
 
   <script src="../templates/footer.js" type="text/javascript"></script>
-      </div>
-</div>      
+
+
+</div>
 </body>
 </html>
