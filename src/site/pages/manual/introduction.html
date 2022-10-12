@@ -88,7 +88,8 @@
 
     <p>Let us now begin experimenting with logback.</p>
 
-<em>Example 1.1: Basic template for logging (<a href="../xref/chapters/introduction/HelloWorld1.html">logback-examples/src/main/java/chapters/introduction/HelloWorld1.java</a>)</em>
+    <em>Example 1.1: Basic template for logging (<a href="../xref/chapters/introduction/HelloWorld1.html">
+        logback-examples/src/main/java/chapters/&#8203;introduction/HelloWorld1.java</a>)</em>
 <pre><code>package chapters.introduction;
 
 import org.slf4j.Logger;
@@ -98,7 +99,7 @@ public class HelloWorld1 {
 
   public static void main(String[] args) {
 
-    Logger logger = LoggerFactory.getLogger("chapters.&#8203;introduction.HelloWorld1");
+    Logger logger = LoggerFactory.getLogger(&#8203;"chapters.introduction.&#8203;HelloWorld1");
     logger.debug("Hello world.");
 
   }
@@ -133,9 +134,9 @@ public class HelloWorld1 {
 
 
     <p>You can launch the first
-    sample application, <em>chapters.introduction.HelloWorld1</em> with the command:
+    sample application, <em>chapters.introduction.&#8203;HelloWorld1</em> with the command:
     </p>
-    <div class="source"><pre>java chapters.introduction.HelloWorld1</pre></div>
+    <div class="source"><pre>java chapters.introduction.&#8203;HelloWorld1</pre></div>
 
     <p>Launching the <code>HelloWorld1</code> application will output
     a single line on the console. By virtue of logback's default
@@ -144,7 +145,7 @@ public class HelloWorld1 {
     logger.
     </p>
 
-    <p class="source">20:49:07.962 [main] DEBUG chapters.introduction.HelloWorld1 - Hello world.</p>
+    <p class="source">20:49:07.962 [main] DEBUG chapters.introduction.&#8203;HelloWorld1 - Hello world.</p>
 
     <p>Logback can report information about its internal state using a
     built-in status system. Important events occurring during logback's
@@ -155,7 +156,8 @@ public class HelloWorld1 {
     class.
     </p>
 
-<em>Example: Printing Logger Status (<a href="../xref/chapters/introduction/HelloWorld2.html">logback-examples/src/main/java/chapters/introduction/HelloWorld2.java</a>)</em>
+    <em>Example: Printing Logger Status (<a href="../xref/chapters/introduction/HelloWorld2.html">
+        logback-examples/src/main/java/chapters/&#8203;introduction/HelloWorld2.java</a>)</em>
 <pre><code>package chapters.introduction;
 
 import org.slf4j.Logger;
@@ -166,11 +168,11 @@ import ch.qos.logback.core.&#8203;util.StatusPrinter;</b>
 public class HelloWorld2 {
 
   public static void main(String[] args) {
-    Logger logger = LoggerFactory.getLogger("chapters.&#8203;introduction.HelloWorld2");
+    Logger logger = LoggerFactory.getLogger(&#8203;"chapters.&#8203;introduction.HelloWorld2");
     logger.debug("Hello world.");
 
     // print internal state
-    <b>LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
+    <b>LoggerContext lc = (LoggerContext) LoggerFactory.&#8203;getILoggerFactory();
     StatusPrinter.print(lc);</b>
   }
 }</code></pre>
@@ -179,7 +181,7 @@ public class HelloWorld2 {
    <p>Running the <code>HelloWorld2</code> application will produce
    the following output:</p>
 
-<div class="source longline"><pre>12:49:22.203 [main] DEBUG chapters.introduction.HelloWorld2 - Hello world.
+<div class="source longline"><pre>12:49:22.203 [main] DEBUG chapters.introduction.&#8203;HelloWorld2 - Hello world.
 12:49:22,076 |-INFO in ch.qos.logback.classic.&#8203;LoggerContext[default] - Could NOT find resource [logback.groovy]
 12:49:22,078 |-INFO in ch.qos.logback.classic.&#8203;LoggerContext[default] - Could NOT find resource [logback-test.xml]
 12:49:22,093 |-INFO in ch.qos.logback.classic.&#8203;LoggerContext[default] - Could NOT find resource [logback.xml]
