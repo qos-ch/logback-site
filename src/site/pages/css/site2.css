@@ -4,12 +4,13 @@
 */
 
 
-
+/* &equiv; https://www.rapidtables.com/web/html/html-codes.html */
 
 html {
     --bgcolor: #FFF;
     --max-width-on-wide-screen: 47rem;
-    --top-content--item-width: 12rem;   
+    --min-menu-width: 12rem;
+    --max-menu-width: 14rem;
 }
 
 body {    
@@ -51,8 +52,8 @@ table, pre, code {
 
 }
 
+/** ================================================= */
 @media (min-width: 1000px) {
-
         
     body {
         max-width: var(--max-width-on-wide-screen);
@@ -66,6 +67,8 @@ table, pre, code {
 
 
 }
+/** =================================================== */
+
 
 img.logo { height: 6ex;}
 img.sponsorIcon { height: 4ex;}
@@ -106,24 +109,46 @@ div#top-content {
         'top-content-ad      top-content-ad               top-content-ad';
 }
 
-#ad {
+
+div#top-content > #ad {
     grid-area: top-content-ad;
     width: 100%;
 }
-#left, #right  {
-    min-width: var(--top-content-item-width);    
+
+#left, #right, div#content > #ad  {
+    min-width: var(--min-menu-width);
+    max-width: var(--max-menu-width);        
+}
+
+div#top-content > #left {
+    grid-area: top-content-left;
 }
 
 #left {
-    grid-area: top-content-left;
-    margin: 1rem;    
+    margin-right: 1rem;
+    margin-top: 1ex;        
+    margin-left: 0px;
+    margin-bottom: 1ex;
+    
     padding: 0px;
     font-size: smaller;
     background-color: #ffffff;
 }
 
+div#content > #left {
+    float: left;
 
-#right  {
+}
+
+div#content > #ad {
+    float: right;
+    margin-left: 1rem;
+    margin-top: 1ex;
+    margin-bottom: 1ex;            
+}
+
+
+div#top-content > #right  {
     grid-area: top-content-right;    
     color: #564b47;
     margin: 1rem;
@@ -166,8 +191,9 @@ p.menu {
   background-color:#FFD0A0;
   border:1px solid #CCCCCC;
   font-size:small;
-  margin:0 4px;
-  padding:3px 10px;
+  margin:  0px;
+
+  padding-top: 4px;
 }
 
 a { 

@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <link rel="stylesheet" type="text/css" href="css/site2.css"/>
+    <link rel="stylesheet" type="text/css" href="css/menu2.css"/>
+
+    <script type="text/javascript" src="js/menuListener.js"></script>
+    <script type="text/javascript" src="js/jquery-min.js"></script>
+    <style>
+        /*body {*/
+        /*    background-color: white;*/
+        /*}*/
+
+        /*.header {*/
+        /*    background-color: white;  !*#F3F3F3;*!*/
+        /*    display: flex;*/
+        /*    align-items: baseline;*/
+        /*    padding: .5rem;*/
+        /*    gap: 1rem;*/
+        /*}*/
+
+        /*.link {*/
+        /*    background: none;*/
+        /*    border: none;*/
+        /*    text-decoration: none;*/
+        /*    color: #777;*/
+        /*    cursor: pointer;*/
+        /*    padding: 0;*/
+        /*}*/
+
+
+        /*!*.dropdown.focus > .link,*!*/
+        /*.link:hover {*/
+        /*    zcolor: black;*/
+        /*    xborder-bottom: 3px solid #ddd;*/
+        /*}*/
+
+        /*.dropdown {*/
+        /*    position: relative;*/
+        /*    vertical-align: top;*/
+        /*}*/
+
+        /*.dropdown-menu {*/
+        /*    position: absolute;*/
+        /*    left: 0;*/
+        /*    top: calc(100% + .25rem);*/
+
+        /*    border-radius: .25rem;*/
+        /*    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .1);*/
+        /*    opacity: 0;*/
+        /*    pointer-events: none;*/
+        /*    transform: translateY(-10px);*/
+        /*    transition: opacity 150ms ease-in-out, transform 150ms ease-in-out;*/
+
+        /*    background-color: #fff8e8;*/
+        /*    color: #564b47;*/
+        /*    border: 1px solid #cccccc;*/
+        /*    border-radius: 3px;*/
+
+        /*}*/
+
+        /*.dropdown > * a {*/
+        /*    margin: 0px;*/
+        /*    padding: 2px;*/
+        /*    color: #0066cc;*/
+        /*    text-decoration: none;*/
+        /*}*/
+        /*.dropdown-heading {*/
+        /*    margin: 0px;*/
+        /*    xspadding: 2px;*/
+        /*    font-weight: normal;*/
+        /*    xbackground-color: #ffd0a0;*/
+        /*    border-top: solid 1px #CCCCCC;*/
+        /*    border-bottom: solid 1px #CCCCCC;*/
+        /*}*/
+
+        /*.dropdown.active {*/
+        /*    background-color: #2f6f44;*/
+        /*}*/
+
+        /*button.link.active + div.dropdown-menu {*/
+        /*    opacity: 1;*/
+        /*    transform: translateY(0);*/
+        /*    pointer-events: auto;*/
+        /*}*/
+
+        /*!*.dropdown.active > .link + .dropdown-menu {*!*/
+        /*!*    opacity: 1;*!*/
+        /*!*    transform: translateY(0);*!*/
+        /*!*    pointer-events: auto;*!*/
+        /*!*}*!*/
+
+
+        /*.information-grid {*/
+        /*    padding-left: 0.5em;*/
+        /*    padding-right: 0.5em;*/
+
+        /*    display: grid;*/
+        /*    grid-template-columns: repeat(1, max-content);*/
+        /*    gap: 0rem;*/
+        /*}*/
+
+        /*.dropdown-links {*/
+        /*    display: flex;*/
+        /*    flex-direction: column;*/
+        /*    gap: 0rem;*/
+
+        /*}*/
+
+        /*button.link::before {*/
+        /*    !*content: '\1A06'; *!*/
+        /*    content: '\21E3';*/
+        /*    font-size: 2em;*/
+        /*    font-weight: bold;*/
+        /*    vertical-align: text-bottom;*/
+        /*    color: #ffd0a0;*/
+        /*}*/
+
+
+        /*button.link.active::before {*/
+        /*    !*content: '\1A08';*!*/
+        /*    content: '\21E1';*/
+        /*    font-size: 2em;*/
+        /*    color: #ffd0a0;*/
+        /*}*/
+
+        /*img.logo {*/
+        /*    height: 4ex;*/
+        /*}*/
+
+
+    </style>
+
+</head>
+
+<body onLoad="enableMenuEventListeners();">
+    <script type="text/javascript">prefix='';</script>
+    <script type="text/javascript" src="templates/header2.js"></script>
+<!--<div class="header">-->
+<!--    <div class="dropdown">-->
+<!--        <button id="mainMenuButton" class="link">-->
+<!--            <img class="logo" src="https://logback.qos.ch/images/logos/Logback_72dpi.png"/>-->
+<!--        </button>-->
+<!--        <div class="dropdown-menu information-grid">-->
+<!--            <div>-->
+<!--                <div class="dropdown-heading">Logback project</div>-->
+<!--                <div class="dropdown-links">-->
+<!--                    <a href="index.html">Home page</a>-->
+<!--                    <a href="download.html">Download</a>-->
+<!--                    <a href="license.html">License</a>-->
+<!--                    <a href="news.html">News</a>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div>-->
+<!--                <div class="dropdown-heading">Support</div>-->
+<!--                <div class="dropdown-links">-->
+<!--                    <a href="mailinglist.html">Mailing Lists</a>-->
+<!--                    <a href="bugreport.html">Bug Report</a>-->
+<!--                    <a href="https://github.com/qos-ch/logback">Source Repository</a>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div>-->
+<!--                <div class="dropdown-heading">Online Tools</div>-->
+<!--                <div class="dropdown-links">-->
+<!--                    <a href="https://logback.qos.ch/translator/">log4j.properties Translator</a>-->
+<!--                    <a href="https://logback.qos.ch/translator/xml2Canon.html">logback.xml to canonical form (1.3)</a>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+
+<h1>Chapter 1</h1>
+
+<p>A mailing list is an electronic discussion forum that anyone
+    can subscribe to. When someone sends an email message to the
+    mailing list, a copy of that message is broadcast to everyone who
+    is subscribed to that mailing list. Mailing lists provide a simple
+    and effective communication mechanism. With potentially thousands
+    of subscribers, there is a common set of <a
+            href="http://www.shakthimaan.com/downloads/glv/presentations/mailing-list-etiquette.pdf">etiquette
+        guidelines</a> that you should observe.
+</p>
+
+<h3>Respect the mailing list type</h3>
+
+<p>The "User" lists are where you can send questions and comments
+    about configuration, setup, usage and other "user" types of
+    questions. The "Developer" lists are where you can send questions and
+    comments about the actual software source code and other issues
+    related to development.
+</p>
+
+<p>Some questions are appropriate for posting on both the "user"
+    and the "developer" lists. In this case, pick one and only one. Do
+    not cross post.
+</p>
+
+</body>
+</html>
