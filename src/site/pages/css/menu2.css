@@ -1,12 +1,9 @@
 
 :root {
-  --logo-height: 4em;
-  --menu-color: #ffd0a0;
-}
-
-
-img.logo {
-    height: var(--logo-height);
+    --menu-arrow-color: #ffd0a0;
+    --menu-background: #F0F0F0; /* #fff8e8 */
+    --menu-background-hover: #E0E0E0;
+    --menu-header-background: #fff8e8;
 }
 
 .link {
@@ -21,42 +18,42 @@ img.logo {
 .dropdown {
     position: relative;
     vertical-align: top;
+
 }
 
 .dropdown-menu {
     position: absolute;
     left: 0;
     top: calc(100% + .25rem);
-    
+
     border-radius: .25rem;
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .1);
     opacity: 0;
     pointer-events: none;
     transform: translateY(-10px);
     transition: opacity 150ms ease-in-out, transform 150ms ease-in-out;
-    
-    background-color: #fff8e8;
+
+    background-color: var(--menu-background);
     color: #564b47;
     border: 1px solid #cccccc;
     border-radius: 3px;
-    
+
+    z-index: 2000;
 }
- 
+
 .dropdown > * a {
     margin: 0px;
     padding: 2px;
-    color: #0066cc;
+    /*color: #0066cc;*/
     text-decoration: none;
 }
 
-.dropdown-heading {
-    margin: 0px;
-    xspadding: 2px;
+.dropdown-menu > div:nth-child(1n+1) .dropdown-heading {
+    margin-top: 0.5rem;
     font-weight: normal;
-    background-color: #ffd0a0;
-    border-top: solid 1px #CCCCCC;
-    border-bottom: solid 1px #CCCCCC;
- }
+    background-color: var(--menu-background);
+    border-bottom: 1px solid #CCCCCC;
+}
 
 .dropdown.active {
     background-color: #2f6f44;
@@ -70,14 +67,14 @@ button.link.active + div.dropdown-menu {
 
 .dropdown > * a:hover {
     /**border: solid 1px #FFFFFF; */
-    background-color: #3333CC;
-    color: #ffffff;
+    background-color: var(--menu-background-hover);
+    /*color: #ffffff;*/
 }
 
 .information-grid {
-    padding-left: 0.5em;
-    padding-right: 0.5em;
-    
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-bottom: 1rem;
     display: grid;
     grid-template-columns: repeat(1, max-content);
     gap: 0rem;
@@ -92,10 +89,10 @@ button.link.active + div.dropdown-menu {
 button.link::before {
     /*content: '\1A06'; */
     content: '\21E3';
-    font-size: var(--logo-height);
+    font-size: calc(var(--main-logo-height) * 0.9);
     font-weight: bold;
-    vertical-align: text-bottom;
-    color: var(--menu-color);
+    vertical-align: super;
+    color: var(--menu-arrow-color);
 }
 
 button.link.active::before {
