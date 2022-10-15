@@ -18,13 +18,11 @@ document.write('<p class="menu"><a href="https://github.com/qos-ch/logback">Sour
 document.write('<p class="menu_header">Online Tools</p>');
 document.write('<p class="menu"><a href="https://logback.qos.ch/translator/">log4j.properties Translator</a>');
 document.write('<p class="menu"><a href="https://logback.qos.ch/translator/xml2Canon.html">logback.xml to canonical form (1.3)</a>');
-document.write('</p>');
 document.write('</div>');
 
 //document.write('<p>&nbsp;</p>');
 //document.write('<div class="jobadd"><p><a href="https://doodle.com/poll/s7n3wk59694pmnbs">Should logback 1.3.x series upgrade to Java 8 or remain with Java 7?</a></p></div>');
 
-document.write('<p>&nbsp;</p>');
 document.write('<p class="sponsoredBy">&nbsp;Sponsored by:</p>');
 
 document.write('<div class="pub">');

@@ -1,21 +1,20 @@
-
 function enableMenuEventListeners() {
 
     var menuButtons = $("button[id$='MenuButton']");
 
 
-    if (menuButtons === null ) {
+    if (menuButtons === null) {
         alert("no menu items");
         return;
     }
 
-    if (menuButtons.length === 0 ) {
+    if (menuButtons.length === 0) {
         alert("zero  menu items");
         return;
     }
 
     var len = menuButtons.length;
-    for(i = 0; i < len; i++) {
+    for (i = 0; i < len; i++) {
         var menuButton = menuButtons[i];
         //alert(menuButton);
         menuButton.addEventListener("click", function () {
@@ -23,8 +22,12 @@ function enableMenuEventListeners() {
         });
     }
 
-    document.addEventListener("click", elem =>  { deactivateListener(elem); });
-
+    document.addEventListener("click", elem => {
+        deactivateListener(elem);
+    });
+    document.addEventListener("beforeunload", elem => {
+        unconditionalMenuButtonsDeactivate();
+    });
 }
 
 function deactivateListener(event) {
@@ -33,19 +36,23 @@ function deactivateListener(event) {
     var parentDropDownParents = target.parents("div.dropdown");
     //alert("parent "+parentDropDownParent)
 
-    if(parentDropDownParents === null || parentDropDownParents.length == 0) {
-        var menuButtons = $("button[id$='MenuButton']");
-
-        var len = menuButtons.length;
-        for(i = 0; i < len; i++) {
-            var menuButton = menuButtons[i];
-            var buttonQ = $(menuButton);
-            if(buttonQ.hasClass("active")) {
-                buttonQ.removeClass("active")
-            }
-        }
+    if (parentDropDownParents === null || parentDropDownParents.length == 0) {
+        unconditionalMenuButtonsDeactivate();
     }
 
+}
+
+function unconditionalMenuButtonsDeactivate() {
+    var menuButtons = $("button[id$='MenuButton']");
+
+    var len = menuButtons.length;
+    for (i = 0; i < len; i++) {
+        var menuButton = menuButtons[i];
+        var buttonQ = $(menuButton);
+        if (buttonQ.hasClass("active")) {
+            buttonQ.removeClass("active")
+        }
+    }
 }
 
 function menuButtonListener(button) {
@@ -54,7 +61,7 @@ function menuButtonListener(button) {
     var buttonQ = $(button);
 
     var parent = buttonQ.parent();
-    if(buttonQ.hasClass("active")) {
+    if (buttonQ.hasClass("active")) {
         buttonQ.removeClass("active")
     } else {
         buttonQ.addClass("active")
