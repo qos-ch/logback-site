@@ -81,7 +81,7 @@
 
     <p>The <a
             href="xref/ch/qos/logback/access/tomcat/LogbackValve.html">
-        <code>ch.qos.logback.access.tomcat.LogbackValve</code></a> class
+        <code>ch.qos.logback.access.&#8203;tomcat.LogbackValve</code></a> class
         extends Tomcat's <code><a
                 href="http://tomcat.apache.org/tomcat-5.5-doc/catalina/docs/api/org/apache/catalina/valves/ValveBase.html">
             ValveBase</a></code> class. Valves are usually associated together
@@ -90,9 +90,9 @@
 
     <p>To configure Tomcat in order to use <code>LogbackValve</code>,
         add the following lines to the tomcat server configuration file,
-        namely <em>$TOMCAT_HOME/conf/server.xml</em>:
+        namely <em>$TOMCAT_HOME/conf/&#8203;server.xml</em>:
     </p>
-    <pre class="source">&lt;Valve className="ch.qos.logback.access.tomcat.LogbackValve"/></pre>
+    <pre class="source">&lt;Valve className="ch.qos.&#8203;logback.access.&#8203;tomcat.LogbackValve"/></pre>
 
     <p>This line is usually nested within an <code>&lt;Engine></code>
         or <code>&lt;Host></code> element.
@@ -110,7 +110,7 @@
 
     <p>If the <code>LogbackValve</code> is not able to read a configuration file
         from the filesystem, it will attempt to load it as a resource (i.e.
-        getClassLoader().getResourceAsStream()). This might be helpful in scenarios
+        getClassLoader().&#8203;getResourceAsStream(&#8203;)). This might be helpful in scenarios
         where your application is embedding Tomcat (e.g. using Spring Boot.) As
         mentioned above, if no filename is set, it defaults to looking for a
         resource named logback-access.xml.
@@ -121,14 +121,14 @@
         initialization. Typical output would look as:
     </p>
 
-    <p class="source">21:56:09,921 |-INFO in c.q.lb.access.j.a.ConfigurationAction - Ignoring debug attribute.
-        21:56:09,921 |-INFO in c.q.lb.core.j.a.AppenderAction - About to instantiate appender of type
-        [ch.qos.logback.core.ConsoleAppender]
-        21:56:09,921 |-INFO in c.q.lb.core.j.a.AppenderAction - Naming appender as [STDOUT]
-        21:56:10,015 |-INFO in c.q.lb.core.j.a.AppenderAction - Popping appender named [STDOUT] from the object stack
-        21:56:10,015 |-INFO in c.q.lb.core.j.a.AppenderRefAction - Attaching appender named [STDOUT] to
-        ch.qos.logback.access.tomcat.LogbackValve[Catalina]
-        21:56:10,015 |-INFO in c.q.lb.access.j.a.ConfigurationAction - End of configuration.</p>
+    <p class="source">21:56:09,921 |-INFO in c.q.lb.access.j.&#8203;a.ConfigurationAction - Ignoring debug attribute.
+        21:56:09,921 |-INFO in c.q.lb.core.j.a.&#8203;AppenderAction - About to instantiate appender of type
+        [ch.qos.logback.&#8203;core.ConsoleAppender]
+        21:56:09,921 |-INFO in c.q.lb.core.j.a.&#8203;AppenderAction - Naming appender as [STDOUT]
+        21:56:10,015 |-INFO in c.q.lb.core.j.a.&#8203;AppenderAction - Popping appender named [STDOUT] from the object stack
+        21:56:10,015 |-INFO in c.q.lb.core.j.a.&#8203;AppenderRefAction - Attaching appender named [STDOUT] to
+        ch.qos.logback.access.&#8203;tomcat.LogbackValve[Catalina]
+        21:56:10,015 |-INFO in c.q.lb.access.j.&#8203;a.ConfigurationAction - End of configuration.</p>
 
     <p>It is possible to override default status printing by specifying
         the "quiet" attribute in the <code>Valve</code>
@@ -136,8 +136,8 @@
         the logback-access configuration file. Here is an example.
     </p>
 
-    <pre><code>&lt;Valve className="ch.qos.logback.access.tomcat.LogbackValve"
-        quiet="true" filename="c:/my-logback-access.xml"/></code></pre>
+    <pre><code>&lt;Valve className="ch.qos.&#8203;logback.access.&#8203;tomcat.LogbackValve"
+        quiet="true" filename="c:/my-logback-access.&#8203;xml"/></code></pre>
 
     <h3 class="doAnchor" name="viewingStatusMessages">Viewing status messages</h3>
 
@@ -156,13 +156,13 @@
         lines to its <em>WEB-INF/web.xml</em> file.</p>
 
     <pre><code>  &lt;servlet>
-    &lt;servlet-name>AccessViewStatusMessages&lt;/servlet-name>
-    &lt;servlet-class>ch.qos.logback.access.ViewStatusMessagesServlet&lt;/servlet-class>
+    &lt;servlet-name>AccessViewStatusMessages&lt;/&#8203;servlet-name>
+    &lt;servlet-class>ch.qos.logback.access.&#8203;ViewStatusMessagesServlet&lt;/&#8203;servlet-class>
   &lt;/servlet>
 
   &lt;servlet-mapping>
-    &lt;servlet-name>AccessViewStatusMessages&lt;/servlet-name>
-    &lt;url-pattern>/lbAccessStatus&lt;/url-pattern>
+    &lt;servlet-name>AccessViewStatusMessages&lt;/&#8203;servlet-name>
+    &lt;url-pattern>/lbAccessStatus&lt;/&#8203;url-pattern>
   &lt;/servlet-mapping></code></pre>
 
     <p>The <code>ViewStatusMessages</code> servlet will available
@@ -182,11 +182,11 @@
     </p>
 
     <h3>Logback's implementation of
-        <code>org.eclipse.jetty.server.RequestLog</code> interface</h3>
+        <code>org.eclipse.jetty.&#8203;server.RequestLog</code> interface</h3>
 
     <p>The <a
             href="xref/ch/qos/logback/access/jetty/RequestLogImpl.html">
-        <code>ch.qos.logback.access.jetty.RequestLogImpl</code></a> class
+        <code>ch.qos.logback.access.&#8203;jetty.RequestLogImpl</code></a> class
         implements Jetty's <code><a
                 href="http://download.eclipse.org/jetty/stable-7/apidocs/org/eclipse/jetty/server/RequestLog.html">RequestLog</a></code>
         interface. Jetty delegates the management of access logging
@@ -195,7 +195,7 @@
 
     <p>In logback, a logging destination is called an "appender" which
         can be directly attached to a
-        <code>ch.qos.logback.access.jetty.RequestLogImpl</code> instance.
+        <code>ch.qos.logback.access.&#8203;jetty.RequestLogImpl</code> instance.
     </p>
 
 
@@ -220,19 +220,19 @@
     <pre><code>&lt;Set name="handler">
   &lt;New id="Handlers" class="org.eclipse.jetty.server.handler.HandlerCollection">
     &lt;Set name="handlers">
-      &lt;Array type="org.eclipse.jetty.server.Handler">        
+      &lt;Array type="org.eclipse.&#8203;jetty.server.Handler">        
         &lt;Item>
           &lt;New id="Contexts" 
-               class="org.eclipse.jetty.server.handler.ContextHandlerCollection"/>
+               class="org.eclipse.&#8203;jetty.server.handler.&#8203;ContextHandlerCollection"/>
         &lt;/Item>
         &lt;Item>
           &lt;New id="DefaultHandler" 
-               class="org.eclipse.jetty.server.handler.DefaultHandler"/>
+               class="org.eclipse.&#8203;jetty.server.handler.&#8203;DefaultHandler"/>
         &lt;/Item>
         <b>&lt;!-- add a RequestLogHandler --&gt;</b>
         <b>&lt;Item></b>
           <b>&lt;New id="RequestLogHandler"</b>
-               <b>class="org.eclipse.jetty.server.handler.RequestLogHandler"/></b>
+               <b>class="org.eclipse.&#8203;jetty.server.handler.&#8203;RequestLogHandler"/></b>
         <b>&lt;/Item></b>
       &lt;/Array>
     &lt;/Set>
@@ -257,7 +257,7 @@
     <pre><code>&lt;Ref id="RequestLogHandler"&gt;
   &lt;Set name="requestLog"&gt;
     &lt;New id="requestLogImpl" class="ch.qos.logback.access.jetty.RequestLogImpl"&gt;
-       &lt;Set name="fileName"&gt;path/to/myaccess.xml&lt;/Set&gt;
+       &lt;Set name="fileName"&gt;path/&#8203;to/myaccess.xml&lt;/&#8203;Set&gt;
     &lt;/New&gt;   
   &lt;/Set&gt;
 &lt;/Ref&gt;</code></pre>
@@ -271,7 +271,7 @@
     <pre><code>&lt;Ref id="RequestLogHandler"&gt;
   &lt;Set name="requestLog"&gt;
     &lt;New id="requestLogImpl" class="ch.qos.logback.access.jetty.RequestLogImpl"&gt;
-       &lt;Set name="<span class="bold">resource</span>"&gt;as/classpath/resource/myaccess.xml&lt;/Set&gt;
+       &lt;Set name="<span class="bold">resource</span>"&gt;as/classpath/&#8203;resource/myaccess.&#8203;xml&lt;/Set&gt;
     &lt;/New&gt;   
   &lt;/Set&gt;
 &lt;/Ref&gt;</code></pre>
@@ -294,9 +294,9 @@
     </p>
     <pre><code>&lt;configuration&gt;
   &lt;!-- always a good activate OnConsoleStatusListener -->
-  &lt;statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener" />  
+  &lt;statusListener class="ch.qos.logback.&#8203;core.status.OnConsoleStatusListener" />  
 
-  &lt;appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender"&gt;
+  &lt;appender name="STDOUT" class="ch.qos.logback.&#8203;core.ConsoleAppender"&gt;
     &lt;encoder&gt;
       &lt;pattern>%h %l %u %user %date "%r" %s %b&lt;/pattern&gt;
     &lt;/encoder&gt;
@@ -351,16 +351,16 @@
 
     <pre><code>&lt;configuration&gt;
   &lt;!-- always a good activate OnConsoleStatusListener -->
-  &lt;statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener" />  
+  &lt;statusListener class="ch.qos.logback.&#8203;core.status.OnConsoleStatusListener" />  
 
-  &lt;appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender"&gt;
-    &lt;file&gt;access.log&lt;/file&gt;
-    &lt;rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy"&gt;
+  &lt;appender name="FILE" class="ch.qos.logback.&#8203;core.rolling.RollingFileAppender"&gt;
+    &lt;file&gt;access.&#8203;log&lt;/file&gt;
+    &lt;rollingPolicy class="ch.qos.logback.&#8203;core.rolling.TimeBasedRollingPolicy"&gt;
       &lt;fileNamePattern&gt;access.%d{yyyy-MM-dd}.log.zip&lt;/fileNamePattern&gt;
     &lt;/rollingPolicy&gt;
 
     &lt;encoder&gt;
-      &lt;pattern&gt;combined&lt;/pattern&gt;
+      &lt;pattern&gt;combined&lt;/&#8203;pattern&gt;
     &lt;/encoder&gt;
   &lt;/appender&gt;
  
@@ -396,7 +396,7 @@
 &lt;Get id="Container" name="container">
   &lt;Call name="addEventListener">
     &lt;Arg>
-      &lt;New class="org.mortbay.management.MBeanContainer">
+      &lt;New class="org.mortbay.&#8203;management.MBeanContainer">
         &lt;Arg>&lt;Ref id="MBeanServer"/>&lt;/Arg>
         &lt;Set name="managementPort">8082&lt;/Set>
         &lt;Call name="start" />
@@ -408,7 +408,7 @@
     <p>Once Jetty is started with this configuration, all available
         components can be reviewed at:
     </p>
-    <pre><code>http://localhost:8082/</pre>
+    <pre><code>http://localhost:8082/</code></pre>
 
     <p>Logback-access' <code>RequestLogImpl</code> should be
         available, including its <code>start()</code> and
@@ -416,8 +416,7 @@
     </p>
 
 
-    <h2><a name="teeFilter"
-           href="#teeFilter"><code>TeeFilter</code> <span class="small">(a servlet-filter)</span></a></h2>
+    <h2 class="doAnchor" name="teeFilter"><code>TeeFilter</code> <span class="small">(a servlet-filter)</span></h2>
 
     <p>In order to diagnose bugs in a web-application, it is often
         handy to capture the client's request as well as the server's
@@ -430,13 +429,13 @@
     </p>
 
     <pre><code>&lt;filter&gt;
-  &lt;filter-name&gt;TeeFilter&lt;/filter-name&gt;
-  &lt;filter-class&gt;ch.qos.logback.access.servlet.TeeFilter&lt;/filter-class&gt;
+  &lt;filter-name&gt;TeeFilter&lt;/&#8203;filter-name&gt;
+  &lt;filter-class&gt;ch.&#8203;qos.logback.access.&#8203;servlet.TeeFilter&lt;/&#8203;filter-class&gt;
 &lt;/filter&gt;
 
 &lt;filter-mapping&gt;
-  &lt;filter-name&gt;TeeFilter&lt;/filter-name&gt;
-  &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
+  &lt;filter-name&gt;TeeFilter&lt;/&#8203;filter-name&gt;
+  &lt;url-pattern&gt;/&#8203;*&lt;/url-pattern&gt;
 &lt;/filter-mapping&gt;</code></pre>
 
     <p>We have tested <code>TeeFilter</code> to the best of our
@@ -461,9 +460,9 @@
     </p>
 
     <pre><code>&lt;configuration&gt;
-  &lt;appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender"&gt;
+  &lt;appender name="STDOUT" class="ch.qos.logback.&#8203;core.ConsoleAppender"&gt;
     &lt;encoder&gt;      
-      &lt;pattern&gt;%fullRequest%n%n%fullResponse&lt;/pattern&gt;
+      &lt;pattern&gt;%fullRequest%n%n%fullResponse&lt;/&#8203;pattern&gt;
     &lt;/encoder&gt;
   &lt;/appender&gt;
 
@@ -474,36 +473,35 @@
             href="demo.html">logback-demo</a> application configured as shown
         above:</p>
 
-    <p class="source"><b>GET /logback-demo/index.jsp HTTP/1.1</b>
-        Host: localhost:8080
-        User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8) Gecko/20070312 Firefox/1.5.0
-        Accept: text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8
-        Accept-Language: en-us,en;q=0.5
-        Accept-Encoding: gzip,deflate
-        Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7
-        Keep-Alive: 300
-        Connection: keep-alive
-        Referer: http://localhost:8080/logback-demo/login.jsp
-        Cookie: JSESSIONID=15c7tqi9ehlwk; OID324nkzcmr=null; OID32862zgoa=null;
+    <pre><b>GET /logback-demo/index.jsp HTTP/1.1</b>
+Host: localhost:8080
+User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8) Gecko/20070312 Firefox/1.5.0
+Accept: text/xml,application/&#8203;xml,application/&#8203;xhtml+xml,text/&#8203;html;q=0.9,text/&#8203;plain;q=0.8
+Accept-Language: en-us,en;q=0.5
+Accept-Encoding: gzip,deflate
+Accept-Charset: ISO-8859-1,utf-8;q=&#8203;0.7,*;q=0.7
+Keep-Alive: 300
+Connection: keep-alive
+Referer: http://localhost:8080/logback-demo/login.jsp
+Cookie: JSESSIONID=15c7tqi9ehlwk; OID324nkzcmr=null; OID32862zgoa=null;
+
+<b>HTTP/1.1 200 OK</b>
+Content-Type: text/html; charset=iso-8859-1
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Set-Cookie: JSESSIONID=bgebt99ce9om;path=&#8203;/logback-demo
 
 
-        <b>HTTP/1.1 200 OK</b>
-        Content-Type: text/html; charset=iso-8859-1
-        Expires: Thu, 01 Jan 1970 00:00:00 GMT
-        Set-Cookie: JSESSIONID=bgebt99ce9om;path=/logback-demo
+&lt;html&gt;
+&lt;head&gt;
+&lt;LINK REL=StyleSheet HREF="css/pk.css" /&gt;
+&lt;/head&gt;
+&lt;body&gt;
 
+&lt;h2&gt;Logback demo center&lt;/h2&gt;
 
-        &lt;html&gt;
-        &lt;head&gt;
-        &lt;LINK REL=StyleSheet HREF="css/pk.css" /&gt;
-        &lt;/head&gt;
-        &lt;body&gt;
+[snip, so that text is reasonably sized]</pre>
 
-        &lt;h2&gt;Logback demo center&lt;/h2&gt;
-
-        [snip, so that text is reasonably sized]</p>
-
-    <p>&nbsp;</p>
+<p>&nbsp;</p>
 
 
     <p>As mentioned previously, while extremely useful during problem
@@ -523,7 +521,7 @@
 
     <pre><code>&lt;filter>
   &lt;filter-name>TeeFilter&lt;/filter-name>
-  &lt;filter-class>ch.qos.logback.access.servlet.TeeFilter&lt;/filter-class>
+  &lt;filter-class>ch.qos.logback.access.&#8203;servlet.TeeFilter&lt;/&#8203;filter-class>
   &lt;init-param>
     <b>&lt;param-name>includes&lt;/param-name></b>
     <b>&lt;param-value>orion, gemini&lt;/param-value></b>
@@ -535,7 +533,7 @@
 
     <pre><code>&lt;filter>
   &lt;filter-name>TeeFilter&lt;/filter-name>
-  &lt;filter-class>ch.qos.logback.access.servlet.TeeFilter&lt;/filter-class>
+  &lt;filter-class>ch.qos.logback.access.&#8203;servlet.TeeFilter&lt;/&#8203;filter-class>
   &lt;init-param>
     <b>&lt;param-name>excludes&lt;/param-name></b>
     <b>&lt;param-value>orion, gemini&lt;/param-value></b>
