@@ -9,6 +9,7 @@ function insertLogoAndMenu() {
     document.write('                <div class="dropdown-heading">Logback project</div>');
     document.write('                <div class="dropdown-links">');
     document.write('                    <a href="'+ prefix +'index.html">Home page</a>');
+    document.write('                    <a href="'+ prefix +'documentation.html">Documentation</a>');
     document.write('                    <a href="'+ prefix +'download.html">Download</a>');
     document.write('                    <a href="https://search.maven.org/search?q=g:ch.qos.logback%20AND%20v:1.3.%3F">');
     document.write('                       Search for logback 1.3.x');
@@ -71,6 +72,9 @@ document.write('</div>');
 // div close #header-grid-icons-item
 document.write('  <div id="header-grid-line-item" class="headerline"></div>');
 
+document.write('<div id="ad">');
+document.write('    <script type="text/javascript" src="templates/ad.js" ></script>');
+document.write('</div>');
 
 // close #header-grid
 document.write('</div>');

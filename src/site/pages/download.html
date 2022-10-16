@@ -1,76 +1,70 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1">
     <title>Download</title>
-    <link rel="stylesheet" type="text/css" href="css/site.css" />    
-    <link rel="stylesheet" type="text/css" href="css/popup.css" media="screen" />
-  </head>
-  <body>
-    <script type="text/javascript">prefix='';</script>
+    <link rel="stylesheet" type="text/css" href="css/site3.css"/>
+    <link rel="stylesheet" type="text/css" href="css/menu2.css"/>
+
+    <script type="text/javascript">prefix = '';</script>
+    <script type="text/javascript" src="js/menuListener.js"></script>
     <script type="text/javascript" src="js/jquery-min.js"></script>
+</head>
+<body onLoad="enableMenuEventListeners();">
 
-    <div id="container">
-      <script type="text/javascript" src="templates/header.js" ></script>
-      
-      
-      <div id="left">
-        <noscript>Please turn on Javascript to view this menu</noscript>
-        <script type="text/javascript" src="templates/left.js" ></script>
-      </div>
-      <div id="right">
-        <script type="text/javascript" src="templates/right.js" ></script>
-      </div>
+<script type="text/javascript" src="templates/header3.js"></script>
 
-    <div id="content">
+<div id="content">
+
+    <script type="text/javascript" src="templates/sponsoredBy.js"></script>
 
     <h2>STABLE version (ACTIVELY DEVELOPED)</h2>
-    
-    <p>The current actively developed version of logback supporting
-    Java EE (java.* namespace) is
-    <span class="big green">${latest.stable.javax.version}</span>. It
-    requires SLF4J version ${slf4j.version} and JDK 8.</p>
 
     <p>The current actively developed version of logback supporting
-    Jakarta EE (jakarta.* namespace) is
-    <span class="big green">${latest.stable.jakarta.version}</span>. It
-    requires SLF4J version ${slf4j.version} and JDK 11.</p>
+        Java EE (java.* namespace) is
+        <span class="big green">${latest.stable.javax.version}</span>. It
+        requires SLF4J version ${slf4j.version} and JDK 8.</p>
+
+    <p>The current actively developed version of logback supporting
+        Jakarta EE (jakarta.* namespace) is
+        <span class="big green">${latest.stable.jakarta.version}</span>. It
+        requires SLF4J version ${slf4j.version} and JDK 11.</p>
 
 
-    
     <h2>Older stable version (INACTIVE)</h2>
 
     <p>The older stable logback version is
-    <span class="big green">${old.stable.version}</span>. </p>
-    
+        <span class="big green">${old.stable.version}</span>. </p>
+
 
     <h2>Binaries in Maven central</h2>
-    
+
     <p>Logback artifacts such as <em>.jar</em>, <em>.sources.jar</em>
-    and <em>javadoc.jar</em> files can be downloaded from <a
-    href="https://repo1.maven.org/maven2/ch/qos/logback">Maven
-    central</a> under the <code>ch.qos.logback</code> groupId.</p>
+        and <em>javadoc.jar</em> files can be downloaded from <a
+                href="https://repo1.maven.org/maven2/ch/qos/logback">Maven
+            central</a> under the <code>ch.qos.logback</code> groupId.</p>
 
     <h2>Verifying contents</h2>
 
     <p>Since early 2022, all logback binaries are reproducible. To
-    verify fidelity to the source code, check out the source code from
-    github with the tag corresponding to the version you wish to
-    verify. Build and compare.</p>
+        verify fidelity to the source code, check out the source code from
+        github with the tag corresponding to the version you wish to
+        verify. Build and compare.</p>
 
-    
+
     <p>All logback artifacts published on Maven central are
-    signed. For each artifact, there is an associated signature file
-    with the .asc suffix. See <a
-    href="https://github.com/qos-ch/logback/blob/master/SECURITY.md">SECURITY.md</a>
-    for detailed instructions.
+        signed. For each artifact, there is an associated signature file
+        with the .asc suffix. See <a
+                href="https://github.com/qos-ch/logback/blob/master/SECURITY.md">SECURITY.md</a>
+        for detailed instructions.
     </p>
-    
+
     <!--
     <h3>logback-beagle: an Eclipse plug-in for viewing logs</h3>
-   
+
     <p><a href="beagle/index.html"><img style="float:left;
     margin-right: 1em;" src="beagle/images/sailing-ship-32x32.png"
     alt=""/></a>We also offer a console plugin for Eclipse called
@@ -82,139 +76,137 @@
     -->
 
     <h2>Third-party tools, extensions or forks (in chronological
-    order)</h2>
+        order)</h2>
 
     <p>If you are the author of a logback-related project and would
-    like us to add your project to the list below please drop a line
-    on the logback-dev mailing list.</p>
+        like us to add your project to the list below please drop a line
+        on the logback-dev mailing list.</p>
 
 
     <dl>
 
-      <dt>
-        <a href="https://github.com/logfellow/logstash-logback-encoder">logstash-logback-encoder</a> 
-      </dt>
+        <dt>
+            <a href="https://github.com/logfellow/logstash-logback-encoder">logstash-logback-encoder</a>
+        </dt>
 
-      <dd>
-        Provides logback encoders, layouts, and appenders to log in
-        JSON and other formats supported by Jackson.
-      </dd>
+        <dd>
+            Provides logback encoders, layouts, and appenders to log in
+            JSON and other formats supported by Jackson.
+        </dd>
 
-      <br/>
+        <br/>
 
-      <!-- ============================================================ -->
-      <dt>
-        <a href="http://lilith.huxhorn.de">Lilith</a> by Joern Huxhorn
-      </dt>
+        <!-- ============================================================ -->
+        <dt>
+            <a href="http://lilith.huxhorn.de">Lilith</a> by Joern Huxhorn
+        </dt>
 
-      <dd>
-        Lilith is a Logging- and AccessEvent viewer for logback.      
-      </dd>
+        <dd>
+            Lilith is a Logging- and AccessEvent viewer for logback.
+        </dd>
 
-      <br/>
-      <!-- ============================================================ -->
-      <dt>
-        <a
-        href="https://github.com/mojolly/logback-akka">Logback-akka</a>
-        by Ivan Porto Carrero.
-      </dt>
+        <br/>
+        <!-- ============================================================ -->
+        <dt>
+            <a
+                    href="https://github.com/mojolly/logback-akka">Logback-akka</a>
+            by Ivan Porto Carrero.
+        </dt>
 
-      <dd>
-        Consists of several akka-based logback utilities, including
-        ActorAppender, HoptoadActorAppender and Logstash redis
-        appender.
-         
-      </dd>
-      
-      <br/>
+        <dd>
+            Consists of several akka-based logback utilities, including
+            ActorAppender, HoptoadActorAppender and Logstash redis
+            appender.
 
-    <!-- ============================================================ -->
-      <dt>
-        <a
-        href="https://github.com/tony19/logback-android">Logback-android</a>
-        by Tony Trinh.
-      </dt>
+        </dd>
 
-      <dd>
-        Logback-Android brings the power of Logback to Android.        
-      </dd>
+        <br/>
 
-      <br/>
-    <!-- ============================================================ -->
-      <dt>
-        <a
-        href="http://code.google.com/p/simpledb-appender/">
-        Simpledb-appender</a> by Gabriel Nell
-      </dt>
+        <!-- ============================================================ -->
+        <dt>
+            <a
+                    href="https://github.com/tony19/logback-android">Logback-android</a>
+            by Tony Trinh.
+        </dt>
 
-      <dd>
-        Logback Appender writing to Amazon SimpleDB. See also <a
-        href="http://www.peecho.com/blog/logging-the-cloud-with-simpledb.html">Logging
-        the cloud with SimpleDB</a>.
-      </dd>
+        <dd>
+            Logback-Android brings the power of Logback to Android.
+        </dd>
 
-      <br/>
+        <br/>
+        <!-- ============================================================ -->
+        <dt>
+            <a
+                    href="http://code.google.com/p/simpledb-appender/">
+                Simpledb-appender</a> by Gabriel Nell
+        </dt>
 
-      <!-- ============================================================ -->
-      <dt>
-        <a
-        href="https://github.com/carlspring/logback-configuration/">logback-configuration</a>
-        by Martin Todorov
-      </dt>
+        <dd>
+            Logback Appender writing to Amazon SimpleDB. See also <a
+                href="http://www.peecho.com/blog/logging-the-cloud-with-simpledb.html">Logging
+            the cloud with SimpleDB</a>.
+        </dd>
 
-      <dd>
-        A service layer (using Spring) and a REST interface which
-        provides methods to: add or update loggers, resolve a log
-        file, resolve the logback configuration file, and upload a
-        logback configuration file and reload it.
-        
-      </dd>
+        <br/>
 
-      <br/>
-      <!-- ============================================================ -->
-      <!--
-      <dt>
-        <a href="http://perf4j.codehaus.org/">Perf4J</a> by Alex
-        Devine, Doran Chakraborty et al.
-      </dt>
+        <!-- ============================================================ -->
+        <dt>
+            <a
+                    href="https://github.com/carlspring/logback-configuration/">logback-configuration</a>
+            by Martin Todorov
+        </dt>
 
-      <dd>
-        Perf4J is a set of utilities for calculating and displaying
-        performance statistics for Java code.
-      </dd>
-      -->
-      
-      <!-- ============================================================ -->
-      <dt>
-        <a
-        href="https://github.com/Moocar/logback-gelf">Logback-gelf</a>
-        by Anthony Marcar
-      </dt>
+        <dd>
+            A service layer (using Spring) and a REST interface which
+            provides methods to: add or update loggers, resolve a log
+            file, resolve the logback configuration file, and upload a
+            logback configuration file and reload it.
 
-      <dd>Logback-gelf can log messages to a <a
-      href="http://graylog2.org/">Graylog2</a> server via GELF
-      messages.
-      </dd>
-      <br/>
-      <!-- ============================================================ -->
-      <dt>
-        <a
-        href="https://github.com/sbabcoc/logback-testng">Logback-testng</a>
-        by Scott Babcock
-      </dt>
+        </dd>
 
-      <dd>Logback appender for TestNG Reporter.      </dd>
+        <br/>
+        <!-- ============================================================ -->
+        <!--
+        <dt>
+          <a href="http://perf4j.codehaus.org/">Perf4J</a> by Alex
+          Devine, Doran Chakraborty et al.
+        </dt>
 
-      <!-- ============================================================ -->
+        <dd>
+          Perf4J is a set of utilities for calculating and displaying
+          performance statistics for Java code.
+        </dd>
+        -->
+
+        <!-- ============================================================ -->
+        <dt>
+            <a
+                    href="https://github.com/Moocar/logback-gelf">Logback-gelf</a>
+            by Anthony Marcar
+        </dt>
+
+        <dd>Logback-gelf can log messages to a <a
+                href="http://graylog2.org/">Graylog2</a> server via GELF
+            messages.
+        </dd>
+        <br/>
+        <!-- ============================================================ -->
+        <dt>
+            <a
+                    href="https://github.com/sbabcoc/logback-testng">Logback-testng</a>
+            by Scott Babcock
+        </dt>
+
+        <dd>Logback appender for TestNG Reporter.</dd>
+
+        <!-- ============================================================ -->
 
     </dl>
 
-    <p/>  
+    <p/>
 
-    
 
-  <script src="templates/footer.js" type="text/javascript"></script>
-    </div>
-    </div>
+    <script src="templates/footer.js" type="text/javascript"></script>
+</div>
 </body>
 </html>

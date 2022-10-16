@@ -1,7 +1,7 @@
 
 document.write('      <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>');
 //      <!-- SLF4J -->
-document.write('      <ins class="adsbygoogle"');
+document.write('      <ins class="adsbygoogle horizontal-ad"');
 document.write('           style="display:block"');
 document.write('           data-ad-client="ca-pub-7471410671306824"');
 document.write('           data-ad-slot="6377851613"');
