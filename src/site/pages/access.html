@@ -155,7 +155,7 @@
     <p>To add this servlet to your web-application, add the following
         lines to its <em>WEB-INF/web.xml</em> file.</p>
 
-    <pre class="prettyprint source">  &lt;servlet>
+    <pre><code>  &lt;servlet>
     &lt;servlet-name>AccessViewStatusMessages&lt;/servlet-name>
     &lt;servlet-class>ch.qos.logback.access.ViewStatusMessagesServlet&lt;/servlet-class>
   &lt;/servlet>
@@ -163,7 +163,7 @@
   &lt;servlet-mapping>
     &lt;servlet-name>AccessViewStatusMessages&lt;/servlet-name>
     &lt;url-pattern>/lbAccessStatus&lt;/url-pattern>
-  &lt;/servlet-mapping></pre>
+  &lt;/servlet-mapping></code></pre>
 
     <p>The <code>ViewStatusMessages</code> servlet will available
         under the URL <code>http://host/yourWebapp/lbAccessStatus</code>
@@ -204,12 +204,12 @@
         Jetty's main configuration file, namely
         <em>$JETTY_HOME/etc/jetty.xml</em>:
     </p>
-    <pre class="prettyprint source">&lt;Ref id="RequestLogHandler"&gt;
+    <pre><code>&lt;Ref id="RequestLogHandler"&gt;
   &lt;Set name="requestLog"&gt;
     &lt;New id="requestLogImpl" class="ch.qos.logback.access.jetty.RequestLogImpl"&gt;
     &lt;/New&gt;
   &lt;/Set&gt;
-&lt;/Ref&gt;</pre>
+&lt;/Ref&gt;</code></pre>
 
     <p>Please note that the above jetty configuration snippet makes
         reference to "RequestLogHandler". Check your jetty.xml
@@ -217,7 +217,7 @@
         has not been already added. Here is a configuration snipped to set
         you on the right tract.</p>
 
-    <pre class="prettyprint source">&lt;Set name="handler">
+    <pre><code>&lt;Set name="handler">
   &lt;New id="Handlers" class="org.eclipse.jetty.server.handler.HandlerCollection">
     &lt;Set name="handlers">
       &lt;Array type="org.eclipse.jetty.server.Handler">        
@@ -237,7 +237,7 @@
       &lt;/Array>
     &lt;/Set>
   &lt;/New>
-&lt;/Set></pre>
+&lt;/Set></code></pre>
 
 
     <p>By default, <code>RequestLogImpl</code> looks
@@ -254,13 +254,13 @@
         configuration file here named <em>myaccess.xml</em>.
     </p>
 
-    <pre class="prettyprint source">&lt;Ref id="RequestLogHandler"&gt;
+    <pre><code>&lt;Ref id="RequestLogHandler"&gt;
   &lt;Set name="requestLog"&gt;
     &lt;New id="requestLogImpl" class="ch.qos.logback.access.jetty.RequestLogImpl"&gt;
        &lt;Set name="fileName"&gt;path/to/myaccess.xml&lt;/Set&gt;
     &lt;/New&gt;   
   &lt;/Set&gt;
-&lt;/Ref&gt;</pre>
+&lt;/Ref&gt;</code></pre>
 
     <p>For embedded Jetty, it is helpful to lookup for the
         logback-access configuration file as a class path resource. This
@@ -349,7 +349,7 @@
         only rolled daily, but they are also automatically compressed.</p>
 
 
-    <pre class="prettyprint source">&lt;configuration&gt;
+    <pre><code>&lt;configuration&gt;
   &lt;!-- always a good activate OnConsoleStatusListener -->
   &lt;statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener" />  
 
@@ -365,7 +365,7 @@
   &lt;/appender&gt;
  
   &lt;appender-ref ref="FILE" /&gt;
-&lt;/configuration&gt;</pre>
+&lt;/configuration&gt;</code></pre>
 
     <p>These two examples should give you an idea of the possibilities
         offered by logback-access. In principle, most if not all of the
@@ -391,7 +391,7 @@
         added:
     </p>
 
-    <pre class="prettyprint source">&lt;Call id="MBeanServer" class="java.lang.management.ManagementFactory" name="getPlatformMBeanServer"/>
+    <pre><code>&lt;Call id="MBeanServer" class="java.lang.management.ManagementFactory" name="getPlatformMBeanServer"/>
 &lt;!-- initialize the Jetty MBean container -->
 &lt;Get id="Container" name="container">
   &lt;Call name="addEventListener">
@@ -403,12 +403,12 @@
       &lt;/New>
     &lt;/Arg>
   &lt;/Call>
-&lt;/Get></pre>
+&lt;/Get></code></pre>
 
     <p>Once Jetty is started with this configuration, all available
         components can be reviewed at:
     </p>
-    <pre class="prettyprint source">http://localhost:8082/</pre>
+    <pre><code>http://localhost:8082/</pre>
 
     <p>Logback-access' <code>RequestLogImpl</code> should be
         available, including its <code>start()</code> and
@@ -429,7 +429,7 @@
         your web-application's <em>web.xml</em> file:
     </p>
 
-    <pre class="prettyprint source">&lt;filter&gt;
+    <pre><code>&lt;filter&gt;
   &lt;filter-name&gt;TeeFilter&lt;/filter-name&gt;
   &lt;filter-class&gt;ch.qos.logback.access.servlet.TeeFilter&lt;/filter-class&gt;
 &lt;/filter&gt;
@@ -437,7 +437,7 @@
 &lt;filter-mapping&gt;
   &lt;filter-name&gt;TeeFilter&lt;/filter-name&gt;
   &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
-&lt;/filter-mapping&gt;</pre>
+&lt;/filter-mapping&gt;</code></pre>
 
     <p>We have tested <code>TeeFilter</code> to the best of our
         ability. However, since it duplicates the input stream of the
@@ -460,7 +460,7 @@
         output the full contents of the request and response on the console.
     </p>
 
-    <pre class="prettyprint source">&lt;configuration&gt;
+    <pre><code>&lt;configuration&gt;
   &lt;appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender"&gt;
     &lt;encoder&gt;      
       &lt;pattern&gt;%fullRequest%n%n%fullResponse&lt;/pattern&gt;
@@ -468,7 +468,7 @@
   &lt;/appender&gt;
 
   &lt;appender-ref ref="STDOUT" /&gt;
-&lt;/configuration&gt;</pre>
+&lt;/configuration&gt;</code></pre>
 
     <p>Here is the output generated when accessing the <a
             href="demo.html">logback-demo</a> application configured as shown
@@ -521,26 +521,26 @@
     <p>To enable <code>TeeFilter</code> only on the hosts named "orion"
         and "gemini" and disabled elsewhere you would write:</p>
 
-    <pre class="prettyprint source">&lt;filter>
+    <pre><code>&lt;filter>
   &lt;filter-name>TeeFilter&lt;/filter-name>
   &lt;filter-class>ch.qos.logback.access.servlet.TeeFilter&lt;/filter-class>
   &lt;init-param>
     <b>&lt;param-name>includes&lt;/param-name></b>
     <b>&lt;param-value>orion, gemini&lt;/param-value></b>
   &lt;/init-param>
-&lt;/filter>  </pre>
+&lt;/filter>  </code></pre>
 
     <p>To enable <code>TeeFilter</code> on all hosts <em>except</em>
         hosts named "orion" and "gemini" you would write:</p>
 
-    <pre class="prettyprint source">&lt;filter>
+    <pre><code>&lt;filter>
   &lt;filter-name>TeeFilter&lt;/filter-name>
   &lt;filter-class>ch.qos.logback.access.servlet.TeeFilter&lt;/filter-class>
   &lt;init-param>
     <b>&lt;param-name>excludes&lt;/param-name></b>
     <b>&lt;param-value>orion, gemini&lt;/param-value></b>
   &lt;/init-param>
-&lt;/filter>  </pre>
+&lt;/filter>  </code></pre>
 
 
     <script src="templates/footer.js" type="text/javascript"></script>
