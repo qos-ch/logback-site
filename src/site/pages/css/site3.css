@@ -45,9 +45,11 @@ body {
 }
 
 table, pre, code {
-    word-wrap: break-word;
-    overflow-x: auto;
-    /*white-space: pre-wrap;*/
+    /*word-wrap: break-word;*/
+    overflow-x: scroll;
+    white-space: pre-wrap!important;
+    max-width: 100%;
+    min-width: 100%;
 }
 
 /** ================================================= */
@@ -82,6 +84,17 @@ img.logo {
 
 img.sponsorIcon {
     height: var(--sponsor-icon-height);
+}
+
+xpre code {
+    white-space: pre-wrap!important;
+    word-wrap: break-word;
+    overflow-x: auto;
+    /*border: 3px solid chartreuse;*/
+}
+
+img.data {
+    max-width: calc(var(--max-width-on-wide-screen) * 0.5);
 }
 
 .twitter-logo,
@@ -375,7 +388,6 @@ div.license {
     background: #f5f5f5;
     font-family: Courier, "MS Courier New", Prestige, monospace;
     padding-left: 1rem;
-    white-space: pre;
 }
 
 .source {

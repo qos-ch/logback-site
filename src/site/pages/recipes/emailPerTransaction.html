@@ -3,8 +3,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <!--<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    -->
     <meta name="viewport"
           content="width=device-width, initial-scale=1">
+    <!--content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">-->
+
     <title>Email per transaction</title>
 
     <link rel="stylesheet" type="text/css" href="../css/site3.css" />
@@ -83,15 +87,15 @@
 
       <pre><code>package ch.qos.logback.demo.prime;
 
-import org.apache.struts.action.Action;
+import org.apache.struts.&#8203;action.Action;
 ...
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.&#8203;HttpServletRequest;
+import javax.servlet.http.&#8203;HttpServletResponse;
 
 public class PrimeAction extends Action {
 
-  Logger logger = LoggerFactory.getLogger(PrimeAction.class);
-  static Marker SMTP_TRIGGER = MarkerFactory.getMarker("SMTP_TRIGGER");
+  Logger logger = LoggerFactory.getLogger(&#8203;PrimeAction.class);
+  static Marker SMTP_TRIGGER = MarkerFactory.getMarker(&#8203;"SMTP_TRIGGER");
 
   public ActionForward execute(ActionMapping actionMapping,
                                ActionForm actionForm, HttpServletRequest request,
@@ -134,20 +138,20 @@ public class PrimeAction extends Action {
     <pre><code>&lt;configuration scan="true" scanPeriod="3 seconds">
 
   &lt;!-- always a good idea to have an OnConsoleStatusListener -->
-  &lt;statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener" />
+  &lt;statusListener class="ch.qos.logback.&#8203;core.status.&#8203;OnConsoleStatusListener" />
 
-  &lt;appender name="SMTP" class="ch.qos.logback.classic.net.SMTPAppender">
-    &lt;smtpHost>NAME_OF_SMTP_HOST&lt;/smtpHost>
+  &lt;appender name="SMTP" class="ch.qos.logback.&#8203;classic.net.SMTPAppender">
+    &lt;smtpHost>NAME_OF_SMTP_HOST&lt;/&#8203;smtpHost>
     &lt;to>...&lt;/to>                                         
     &lt;from>...&lt;/from>
     &lt;subject>Prime - %mdc{number} by %mdc{userid} &lt;/subject>
-    &lt;layout class="ch.qos.logback.classic.html.HTMLLayout">
-      &lt;pattern>%date%level%logger{24}%msg&lt;/pattern>
+    &lt;layout class="ch.qos.logback.&#8203;classic.html.HTMLLayout">
+      &lt;pattern>&#8203;%date%level%logger{24}%msg&#8203;&lt;/pattern>
     &lt;/layout>
     
-    <b>&lt;evaluator class="ch.qos.logback.classic.boolex.JaninoEventEvaluator"></b>
+    <b>&lt;evaluator class="ch.qos.logback.&#8203;classic.boolex.&#8203;JaninoEventEvaluator"></b>
       <b>&lt;expression></b>
-        <b>marker != null  &amp;&amp; marker.contains("SMTP_TRIGGER")</b>
+        <b>marker != null  &amp;&amp; marker.contains(&#8203;"SMTP_TRIGGER")</b>
       <b>&lt;/expression></b>
     <b>&lt;/evaluator></b>
   &lt;/appender>
@@ -215,28 +219,28 @@ MDC.put("txId", transactionId); </code></pre>
 
   <pre><code>&lt;configuration scan="true" scanPeriod="3 seconds">
 
-  &lt;statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener" />
+  &lt;statusListener class="ch.qos.logback.&#8203;core.status.OnConsoleStatusListener" />
 
-  &lt;appender name="SMTP" class="ch.qos.logback.classic.net.SMTPAppender">
-    &lt;smtpHost>NAME_OF_SMTP_HOST&lt;/smtpHost>
+  &lt;appender name="SMTP" class="ch.qos.logback.&#8203;classic.net.SMTPAppender">
+    &lt;smtpHost>NAME_OF_SMTP_HOST&lt;/&#8203;smtpHost>
     &lt;to>...&lt;/to>                                         
     &lt;from>...&lt;/from>
 
-    &lt;smtpHost>NAME_OF_SMTP_HOST&lt;/smtpHost>
+    &lt;smtpHost>NAME_OF_SMTP_HOST&lt;/&#8203;smtpHost>
     &lt;to>name@some.smtp.host&lt;/to>
     &lt;from>testing@...&lt;/from>
     &lt;subject>Prime - %mdc{number} by %mdc{userid} &lt;/subject>
-    &lt;layout class="ch.qos.logback.classic.html.HTMLLayout">
-       &lt;pattern>%date%level%logger{24}%msg&lt;/pattern>
+    &lt;layout class="ch.qos.logback.&#8203;classic.html.HTMLLayout">
+       &lt;pattern>&#8203;%date%level%logger{24}%msg&#8203;&lt;/pattern>
     &lt;/layout>
 
-    &lt;evaluator class="ch.qos.logback.classic.boolex.JaninoEventEvaluator">
+    &lt;evaluator class="ch.qos.logback.&#8203;classic.boolex.&#8203;JaninoEventEvaluator">
       &lt;expression>
-        marker != null &amp;&amp; marker.contains("SMTP_TRIGGER") 
+        marker != null &amp;&amp; marker.contains(&#8203;"SMTP_TRIGGER") 
       &lt;/expression>
     &lt;/evaluator>
 
-    <b>&lt;discriminator class="ch.qos.logback.classic.sift.MDCBasedDiscriminator"></b>
+    <b>&lt;discriminator class="ch.qos.logback.&#8203;classic.sift.MDCBasedDiscriminator"></b>
       <b>&lt;key>txId&lt;/key></b>
       <b>&lt;defaultValue>default&lt;/defaultValue></b>
     <b>&lt;/discriminator></b>
@@ -256,8 +260,10 @@ MDC.put("txId", transactionId); </code></pre>
    following email:
    </p>
 
-   <img src="images/factorEmail0.png" alt="selective email0"/>
-      
+    <a href="images/factorEmail0.png">
+   <img class="data" style="width: 400px;" src="images/factorEmail0.png" alt="selective email0"/>
+    </a>
+
    <p>Note that the above email contains the logs generated by the
    factorization of the number 123, without log pollution from any
    other "transaction".
@@ -293,29 +299,29 @@ MDC.put("txId", transactionId); </code></pre>
 
   <pre><code>&lt;configuration scan="true" scanPeriod="3 seconds">
 
-  &lt;statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener" /&gt;
+  &lt;statusListener class="ch.qos.logback.&#8203;core.status.OnConsoleStatusListener" /&gt;
 
-  &lt;appender name="SMTP" class="ch.qos.logback.classic.net.SMTPAppender">
-    &lt;SMTPHost>NAME_OF_SMTP_HOST&lt;/SMTPHost>
+  &lt;appender name="SMTP" class="ch.qos.logback.&#8203;classic.net.SMTPAppender">
+    &lt;SMTPHost>NAME_OF_SMTP_HOST&lt;/&#8203;SMTPHost>
     <b>&lt;to>%mdc{txEmail}&lt;/to></b>
     &lt;from>&lt;/from>
     &lt;subject>Prime - %mdc{number}&lt;/subject>
 
-    &lt;layout class="ch.qos.logback.classic.html.HTMLLayout">
-       &lt;pattern>%date%level%logger{24}%msg&lt;/pattern>
+    &lt;layout class="ch.qos.logback.&#8203;classic.html.HTMLLayout">
+       &lt;pattern>&#8203;%date%level%logger{24}%msg&#8203;&lt;/pattern>
     &lt;/layout>
 
-    &lt;discriminator class="ch.qos.logback.classic.sift.MDCBasedDiscriminator">
+    &lt;discriminator class="ch.qos.logback.&#8203;classic.sift.MDCBasedDiscriminator">
       &lt;key>txId&lt;/key>
       &lt;defaultValue>default&lt;/defaultValue>
     &lt;/discriminator>
 
-    &lt;evaluator class="ch.qos.logback.classic.boolex.JaninoEventEvaluator">
+    &lt;evaluator class="ch.qos.logback.&#8203;classic.boolex.&#8203;JaninoEventEvaluator">
       &lt;expression>
         <b>(mdc != null &amp;amp;&amp;amp; mdc.get("txEmail") != null &amp;amp;&amp;amp; </b>
-            <b>((String) mdc.get("txEmail")).contains("+log") )</b>
+            <b>((String) mdc.get("txEmail")).&#8203;contains("+log") )</b>
         &amp;amp;&amp;amp;
-        (marker != null  &amp;&amp; marker.contains("SMTP_TRIGGER") )
+        (marker != null  &amp;&amp; marker.contains(&#8203;"SMTP_TRIGGER") )
       &lt;/expression>
     &lt;/evaluator>
   &lt;/appender>
@@ -331,7 +337,7 @@ MDC.put("txId", transactionId); </code></pre>
      href="../manual/layouts.html#replace">%replace</a> conversion
      word. Here is the relevant configuration snippet:</p>
 
-     <pre><code>&lt;appender name="SMTP" class="ch.qos.logback.classic.net.SMTPAppender">
+     <pre><code>&lt;appender name="SMTP" class="ch.qos.logback.&#8203;classic.net.SMTPAppender">
   &lt;to>%replace(%mdc{txEmail}){'\+log', ''}&lt;/to>
   ...
 &lt;/appender></code></pre>
@@ -370,15 +376,15 @@ MDC.put("txId", transactionId); </code></pre>
 
      <pre><code>package ch.qos.logback.demo.prime;
 
-<b>import static ch.qos.logback.classic.ClassicConstants.FINALIZE_SESSION_MARKER;</b>
+<b>import static ch.qos.logback.classic.&#8203;ClassicConstants.&#8203;FINALIZE_SESSION_MARKER;</b>
 
 public class PrimeAction extends Action {
 
-  Logger logger = LoggerFactory.getLogger(PrimeAction.class);
-  static Marker SMTP_TRIGGER = MarkerFactory.getMarker("SMTP_TRIGGER");
+  Logger logger = LoggerFactory.getLogger(&#8203;PrimeAction.class);
+  static Marker SMTP_TRIGGER = MarkerFactory.getMarker(&#8203;"SMTP_TRIGGER");
   static {
      // markers can hold references to other markers
-     <b>SMTP_TRIGGER.add(FINALIZE_SESSION_MARKER);</b>
+     <b>SMTP_TRIGGER.add(&#8203;FINALIZE_SESSION_MARKER);</b>
   }
 
   public ActionForward execute(ActionMapping actionMapping, ... ) throws Exception {
@@ -400,42 +406,42 @@ public class PrimeAction extends Action {
    configuration file..
    </p>
 
-   <pre class="prettyprint   source">&lt;configuration scan="true" scanPeriod="3 seconds">
+   <pre><code>&lt;configuration scan="true" scanPeriod="3 seconds">
 
-  &lt;statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener" /&gt;
+  &lt;statusListener class="ch.qos.logback.&#8203;core.status.OnConsoleStatusListener" /&gt;
 
-  &lt;appender name="SMTP" class="ch.qos.logback.classic.net.SMTPAppender">
-    &lt;SMTPHost>NAME_OF_SMTP_HOST&lt;/SMTPHost>
+  &lt;appender name="SMTP" class="ch.qos.logback.&#8203;classic.net.SMTPAppender">
+    &lt;SMTPHost>NAME_OF_SMTP_HOST&lt;/&#8203;SMTPHost>
     &lt;to>%mdc{txEmail}&lt;/to>
     &lt;from>&lt;/from>
     &lt;subject>Prime - %mdc{number}&lt;/subject>
 
-    &lt;layout class="ch.qos.logback.classic.html.HTMLLayout">
-       &lt;pattern>%date%level%logger{24}%msg&lt;/pattern>
+    &lt;layout class="ch.qos.logback.&#8203;classic.html.HTMLLayout">
+       &lt;pattern>&#8203;%date%level%logger{24}%msg&#8203;&lt;/pattern>
     &lt;/layout>
 
-    &lt;discriminator class="ch.qos.logback.classic.sift.MDCBasedDiscriminator">
+    &lt;discriminator class="ch.qos.logback.&#8203;classic.sift.MDCBasedDiscriminator">
       &lt;key>txId&lt;/key>
       &lt;defaultValue>default&lt;/defaultValue>
     &lt;/discriminator>
 
-    <b>&lt;cyclicBufferTracker class="ch.qos.logback.core.spi.CyclicBufferTracker"></b>
-      <b>&lt;maxNumberOfBuffers>512&lt;/maxNumberOfBuffers></b>
+    <b>&lt;cyclicBufferTracker class="ch.qos.logback.&#8203;core.spi.CyclicBufferTracker"></b>
+      <b>&lt;&#8203;maxNumberOfBuffers>512&#8203;&lt;/maxNumberOfBuffers></b>
     <b>&lt;/cyclicBufferTracker></b>
 
-    &lt;evaluator class="ch.qos.logback.classic.boolex.JaninoEventEvaluator">
+    &lt;evaluator class="ch.qos.logback.&#8203;classic.boolex.&#8203;JaninoEventEvaluator">
       &lt;expression>
         (mdc != null &amp;amp;&amp;amp; mdc.get("txEmail") != null &amp;amp;&amp;amp;
-            ((String) mdc.get("txEmail")).contains("+log") )
+            ((String) mdc.get("txEmail")).&#8203;contains("+log") )
         &amp;amp;&amp;amp;
-        (marker != null  &amp;&amp; marker.contains("SMTP_TRIGGER") )
+        (marker != null  &amp;&amp; marker.contains(&#8203;"SMTP_TRIGGER") )
       &lt;/expression>
     &lt;/evaluator>
 
   &lt;root level="DEBUG">
     &lt;appender-ref ref="SMTP" /> 
   &lt;/root>
-&lt;/configuration>  </pre>
+&lt;/configuration></code></pre>
 
     <p>With these latest changes, we can selectively send isolated
     logs for selected transactions to the concerned recipient, even in
