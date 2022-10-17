@@ -1,59 +1,71 @@
 
-//var xml2CanonURL='https://logback.qos.ch/translator/dsl/xml2Canon/asText';
-var xml2CanonURL='/translator/dsl/xml2Canon/asText';
+var xml2CanonURL='https://logback.qos.ch/translator/dsl/xml2Canon/asText';
+//var xml2CanonURL='/translator/dsl/xml2Canon/asText';
 
-//var xml2CanonURL='http://localhost:8080/translator/dsl/xml2Canon/asText';
+//var xml2CanonURL = 'http://localhost:8080/translator/dsl/xml2Canon/asText';
 
 function canonical(legacyId, canonicalId) {
 
     var form = document.getElementById('aForm');
-    if(form == null) {
-        form = document.createElement("form");        
-        document.body.appendChild(form); 
+    if (form == null) {
+        form = document.createElement("form");
+        document.body.appendChild(form);
     }
 
     $(form).empty();
-    form.id = 'aForm';    
-    
+    form.id = 'aForm';
+
     var legacyElement = document.getElementById(legacyId);
-    
+
     var inner = legacyElement.innerHTML;
-    //alert("==="+inner);
+    //alert("=input=="+inner);
     inner = inner.replace(/<pre class="prettyprint source">/gi, '');
-    inner = inner.replace(/<pre class="source prettyprint">/gi, '');    
+    inner = inner.replace(/<pre class="source prettyprint">/gi, '');
+    inner = inner.replace(/<pre><code class="[^"]+">/gi, '');
+
+    inner = inner.replace(/<pre><code>/gi, '');
+    inner = inner.replace(/<\/code><\/pre>/gi, '');
     inner = inner.replace(/<\/pre>/gi, '');
     inner = inner.replace(/&lt;/gi, '<');
     inner = inner.replace(/&gt;/gi, '>');
-    
+
     inner = inner.replace(/<span\s+class="[^"]*">/gi, '');
     inner = inner.replace(/<\/span>/gi, '');
     inner = inner.replace(/<br>/gi, '');
     inner = inner.replace(/&nbsp;/gi, '');
     inner = inner.replace(/<b>/gi, '');
     inner = inner.replace(/<\/b>/gi, '');
-    
+
     form.setAttribute("method", "post");
     form.setAttribute("action", xml2CanonURL);
-    
+
     var hiddenField = document.createElement("input");
     hiddenField.setAttribute("type", "hidden");
     hiddenField.setAttribute("name", "val");
     hiddenField.setAttribute("value", inner);
     form.appendChild(hiddenField);
-    
-    var postData = $("#aForm").serialize();  
+
+    var postData = $("#aForm").serialize();
+
 
     //alert(inner);
-    
+
     var canonicalElement = document.getElementById(canonicalId);
 
-    
-    $.post(xml2CanonURL, postData, function(payload, status) {
-            payload = '<pre class="source prettyprint">'+payload+'</pre>'
-            canonicalElement.innerHTML = payload;
-            canonicalElement.innerHTML = prettyPrintOne(canonicalElement.innerHTML);
-          });
-    
+
+    $.post(xml2CanonURL, postData, function (payload, status) {
+        //payload = '<pre><core>'+payload+'</core></pre>'
+        //canonicalElement.innerHTML = payload;
+        //canonicalElement.innerHTML = prettyPrintOne(canonicalElement.innerHTML);
+
+        payload = payload.replace(/&lt;/gi, '<');
+        payload = payload.replace(/&gt;/gi, '>');
+
+        var decorated = hljs.highlight(payload, {language: 'xml'}).value
+
+        canonicalElement.innerHTML = '<pre><core>' + decorated + '</core></pre>'
+    });
+
 
 }
 
@@ -99,37 +111,37 @@ function canonical(legacyId, canonicalId) {
 
 function xxCcanonical(id) {
 
-  var form = document.getElementById('aForm');
-  if(form == null) {
-    form = document.createElement("form");
-    document.body.appendChild(form); 
-  }
-  var p = document.getElementById(id);
-  
-  var inner = legacyElementinnerHTML;
-  //alert("==="+inner);  
-  inner = inner.replace(/&lt;/gi, '<');
-  inner = inner.replace(/&gt;/gi, '>');
+    var form = document.getElementById('aForm');
+    if (form == null) {
+        form = document.createElement("form");
+        document.body.appendChild(form);
+    }
+    var p = document.getElementById(id);
 
-  inner = inner.replace(/<span class="[^"]*"?>/gi, '');
-  inner = inner.replace(/<\/span>/gi, '');
-  inner = inner.replace(/<br>/gi, '');
-  inner = inner.replace(/&nbsp;/gi, '');
-  inner = inner.replace(/<b>/gi, '');
-  inner = inner.replace(/<\/b>/gi, '');
+    var inner = legacyElementinnerHTML;
+    //alert("==="+inner);
+    inner = inner.replace(/&lt;/gi, '<');
+    inner = inner.replace(/&gt;/gi, '>');
 
-  form.setAttribute("method", "post");
-  form.setAttribute("action", xml2CanonURL);
-  
-  var hiddenField = document.createElement("input");
-  hiddenField.setAttribute("type", "hidden");
-  hiddenField.setAttribute("name", "val");
-  hiddenField.setAttribute("value", inner);
-  form.appendChild(hiddenField);
+    inner = inner.replace(/<span class="[^"]*"?>/gi, '');
+    inner = inner.replace(/<\/span>/gi, '');
+    inner = inner.replace(/<br>/gi, '');
+    inner = inner.replace(/&nbsp;/gi, '');
+    inner = inner.replace(/<b>/gi, '');
+    inner = inner.replace(/<\/b>/gi, '');
 
-  //alert("==="+inner);  
-  form.submit();
-  return false;
+    form.setAttribute("method", "post");
+    form.setAttribute("action", xml2CanonURL);
+
+    var hiddenField = document.createElement("input");
+    hiddenField.setAttribute("type", "hidden");
+    hiddenField.setAttribute("name", "val");
+    hiddenField.setAttribute("value", inner);
+    form.appendChild(hiddenField);
+
+    //alert("==="+inner);
+    form.submit();
+    return false;
 }
 
  

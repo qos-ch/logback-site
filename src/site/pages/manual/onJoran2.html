@@ -36,10 +36,10 @@
     </div>
 
     <div id="right">
-      <script src="menu.js" type="text/javascript"></script>      
+      <script type="text/javascript" src="menu.js"></script>      
     </div>
     <div class="ad">
-      <script src="../templates/ad.js" type="text/javascript"></script>      
+      <script type="text/javascript" src="../templates/ad.js"></script>      
     </div>
 
     
@@ -196,12 +196,12 @@
 
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
-import ch.qos.logback.core.joran.spi.InterpretationContext;
+import ch.qos....InterpretationContext;
 
 public abstract class Action extends ContextAwareBase {
   /**
    * Called when the parser encounters an element matching a
-   * {@link ch.qos.logback.core.joran.spi.Pattern Pattern}.
+   * Pattern.
    */
   public abstract void begin(InterpretationContext ic, String name,
       Attributes attributes) throws ActionException;
@@ -216,7 +216,7 @@ public abstract class Action extends ContextAwareBase {
 
   /*
    * Called when the parser encounters an endElement event matching a
-   * {@link ch.qos.logback.core.joran.spi.Pattern Pattern}.
+   * Pattern.
    */
   public abstract void end(InterpretationContext ic, String name)
       throws ActionException;
@@ -309,14 +309,14 @@ public abstract class Action extends ContextAwareBase {
 
     <p>The <em>hello.xml</em> file contains one &lt;hello-world&gt;
     element, without any other nested elements. See the
-    <em>logback-examples/src/main/java/chapters/onJoran/helloWorld/</em>
+    <em>logback-examples/src/main/java/ chapters/onJoran/helloWorld/</em>
     folder for exact contents.
     </p>
  
     <p>Running the HelloWorld application with <em>hello.xml</em> file
     will print "Hello World" on the console.</p>
    
-    <p class="command">java chapters.onJoran.helloWorld.HelloWorld src/main/java/chapters/onJoran/helloWorld/hello.xml</p>
+    <pre><code class="language-shell">java chapters.onJoran.&shy;helloWorld.HelloWorld .../chapters/onJoran/helloWorld/hello.xml</code></pre>
 
     <p>You are highly encouraged to poke about in this example, by adding
     new rules on the rule store, modifying the XML document
@@ -339,12 +339,12 @@ public abstract class Action extends ContextAwareBase {
     </p>
 
     <em>Example 10.<span class="autoEx"/>: First calculator example
-    (logback-examples/src/main/java/chapters/onJoran/calculator/calculator1.xml)</em>
+    (logback-examples/src/main/&shy;chapters/onJoran/calculator/calculator1.xml)</em>
 
     <em> </em>
-    <pre class="prettyprint source">&lt;computation name="total">
+    <pre><code>&lt;computation name="total">
   &lt;literal value="3"/>
-&lt;/computation></pre>
+&lt;/computation></code></pre>
 
     <p>In the <a href="../xref/chapters/onJoran/calculator/Calculator1.html">
     <code>Calculator1</code></a> application, we declare various
@@ -355,7 +355,7 @@ public abstract class Action extends ContextAwareBase {
     <p> Running <code>Calculator1</code> application with
     <em>calculator1.xml</em></p>
 
-    <p class="command">java chapters.onJoran.calculator.Calculator1 src/main/java/chapters/onJoran/calculator/calculator1.xml</p>
+    <pre><code class="language-shell">&gt;java chapters.onJoran.&shy;calculator.Calculator1 ...chapters/onJoran/calculator/calculator1.xml</code></pre>
 
     <p>will print:</p>
 
@@ -422,14 +422,14 @@ public abstract class Action extends ContextAwareBase {
 
     <em>Example 10.<span class="autoEx"/>: Calculator configuration
     file
-    (logback-examples/src/main/java/chapters/onJoran/calculator/calculator2.xml)</em>
-  <pre class="prettyprint source">&lt;computation name="toto"&gt;
+    (logback-examples/src/main/java/chapters&#8203;/onJoran/calculator/calculator2.xml)</em>
+  <pre><code>&lt;computation name="toto"&gt;
   &lt;literal value="7"/&gt;
   &lt;literal value="3"/&gt;
   &lt;add/&gt;
   &lt;literal value="3"/&gt;
   &lt;multiply/&gt;
-&lt;/computation&gt;</pre>
+&lt;/computation&gt;</code></pre>
 
 
   <p>As in the previous example, in response to the &lt;literal&gt;
@@ -454,7 +454,7 @@ public abstract class Action extends ContextAwareBase {
   object at the top of the stack. Thus, running:
   </p>
 
-  <p class="command">java chapters.onJoran.calculator.Calculator1 src/main/java/chapters/onJoran/calculator/calculator2.xml </p>
+  <pre><code>java chapters.onJoran.calculator.Calculator1 ...chapters/onJoran/calculator/calculator2.xml </code></pre>
   
   <p>will yield</p>
 
@@ -528,7 +528,7 @@ public abstract class Action extends ContextAwareBase {
 
   <p>You can create and register a custom implicit action as
   illustrated in the next example contained within the
-  <em>logback-examples/src/main/java/chapters/onJoran/implicit</em> folder.
+  <em>logback-examples/...chapters/onJoran/implicit</em> folder.
   </p>
 
   <p>The <a
@@ -554,8 +554,8 @@ public abstract class Action extends ContextAwareBase {
   how implicit actions come into play.</p>
 
   <em>Example 10.<span class="autoEx"/>: Usage of implicit rules
-  (logback-examples/src/main/java/chapters/onJoran/implicit/implicit1.xml)</em>
-  <pre class="prettyprint source">&lt;foo&gt;
+  (logback-examples/src/main/java/chapters/&shy;onJoran/implicit/implicit1.xml)</em>
+  <pre><code>&lt;foo&gt;
   &lt;xyz printme="true"&gt;
     &lt;abc printme="true"/&gt;
   &lt;/xyz&gt;
@@ -564,11 +564,11 @@ public abstract class Action extends ContextAwareBase {
 
   &lt;foo printme="true"/&gt;
 
-&lt;/foo&gt;</pre>
+&lt;/foo&gt;</code></pre>
 
   <p>Running</p>
 
-  <p class="command">java chapters.onJoran.implicit.PrintMe src/main/java/chapters/onJoran/implicit/implicit1.xml</p>
+  <pre><code>java chapters.onJoran.implicit.PrintMe ...chapters/onJoran/implicit/implicit1.xml</code></pre>
   <p>yields:</p>
 
   <p class="console">Element [xyz] asked to be printed.
@@ -666,41 +666,42 @@ Element [abc] asked to be printed.
       <th>default nested class</th>
     </tr>
 
-    <tr >
-      <td>ch.qos.logback.core.AppenderBase</td>
+    <tr>
+      <td>c.q.l.co.AppenderBase</td>
       <td>encoder</td>
-      <td>ch.qos.logback.classic.encoder.PatternLayoutEncoder</td>
+      <td>c.q.l.c.encoder. PatternLayoutEncoder</td>
     </tr>
 
     <tr class="alt">
-      <td>ch.qos.logback.core.UnsynchronizedAppenderBase</td>
+      <td>ch.qos.logback.core. Unsynchronized AppenderBase</td>
       <td>encoder</td>
-      <td>ch.qos.logback.classic.encoder.PatternLayoutEncoder</td>
+      <td>ch.qos.logback.core. encoder. PatternLayoutEncoder</td>
     </tr>
 
       <tr >
-      <td>ch.qos.logback.core.AppenderBase</td>
+      <td>c.q.l.core.AppenderBase</td>
       <td>layout</td>
-      <td>ch.qos.logback.classic.PatternLayout</td>
+      <td>ch.q.l.cl.PatternLayout</td>
     </tr>
 
     <tr class="alt">
-      <td>ch.qos.logback.core.UnsynchronizedAppenderBase</td>
+      <td>c.q.l.co.Unsynchronized AppenderBase</td>
       <td>layout</td>
-      <td>ch.qos.logback.classic.PatternLayout</td>
+      <td>c.q.l.cl.PatternLayout</td>
     </tr>
 
     <tr>
-      <td>ch.qos.logback.core.filter.EvaluatorFilter</td>
+      <td>c.q.l.core.filter. EvaluatorFilter</td>
       <td>evaluator</td>
-      <td>ch.qos.logback.classic.boolex.JaninoEventEvaluator</td>
+      <td>c.q.l.cl.boolex.JaninoEventEvaluator</td>
     </tr>
   </table>
-
+  
+  
   <p>This list may change in future releases. Please see
   logback-classic <a
   href="../xref/ch/qos/logback/classic/joran/JoranConfigurator.html">JoranConfigurator</a>'s
-  <code>addDefaultNestedComponentRegistryRules</code> method for the
+  <code>addDefaultNested&#8203;ComponentRegistryRules</code> method for the
   latest rules.
   </p>
 
@@ -708,7 +709,7 @@ Element [abc] asked to be printed.
   class for the nested component, the ch.qos.logback.classic package
   is replaced by ch.qos.logback.access. See logback-access <a
   href="../xref/ch/qos/logback/access/joran/JoranConfigurator.html">JoranConfigurator</a>'s
-  <code>addDefaultNestedComponentRegistryRules</code> method for the
+  <code>addDefaultNested&#8203;ComponentRegistryRules</code> method for the
   latest rules.
   </p>
   
@@ -734,8 +735,8 @@ Element [abc] asked to be printed.
   <code>NewRuleCalculator</code>.
   </p>
 
-  <pre class="prettyprint source">ruleMap.put(new Pattern("*/computation"), new ComputationAction1());
-<b>ruleStore.addRule(new Pattern("/computation/newRule"), new NewRuleAction());</b></pre>
+  <pre><code>ruleMap.put(new Pattern("*/computation"), new ComputationAction1());
+<b>ruleStore.addRule(new Pattern("/computation/newRule"), new NewRuleAction());</b></code></pre>
 
   <p><a
   href="../xref/ch/qos/logback/core/joran/action/NewRuleAction.html"><code>NewRuleAction</code></a>,
@@ -750,8 +751,8 @@ Element [abc] asked to be printed.
 
   <p>Here is how new rules can be declared in an XML file:</p>
 
-  <pre class="prettyprint source">&lt;newRule pattern="*/computation/literal"
-          actionClass="chapters.onJoran.calculator.LiteralAction"/&gt;</pre>
+  <pre><code>&lt;newRule pattern="*/computation/literal"
+          actionClass=&#8203;"chapters.onJoran.&#8203;calculator.LiteralAction"/&gt;</code></pre>
 
   <p>Using such newRule declarations, we can transform
   <code>NewRuleCalculator</code> to behave like the
@@ -760,15 +761,16 @@ Element [abc] asked to be printed.
 
   <em>Example 10..<span class="autoEx"/>: Configuration file using new
   rules on the fly
-  (logback-examples/src/main/java/chapters/onJoran/newrule/newRule.xml)</em>
+  (logback-examples/src/
+  /onJoran/newrule/newRule.xml)</em>
 
-  <pre class="prettyprint source">&lt;computation name="toto"&gt;
+  <pre><code>&lt;computation name="toto"&gt;
   &lt;newRule pattern="*/computation/literal" 
-            actionClass="chapters.onJoran.calculator.LiteralAction"/&gt;
+            actionClass=&#8203;"chapters.onJoran.calculator.&#8203;LiteralAction"/&gt;
   &lt;newRule pattern="*/computation/add" 
-            actionClass="chapters.onJoran.calculator.AddAction"/&gt;
+            actionClass=&#8203;"chapters.onJoran.calculator.&#8203;AddAction"/&gt;
   &lt;newRule pattern="*/computation/multiply" 
-            actionClass="chapters.onJoran.calculator.MultiplyAction"/&gt;
+            actionClass=&#8203;"chapters.onJoran.calculator.MultiplyAction"/&gt;
 
   &lt;computation&gt;
     &lt;literal value="7"/&gt;
@@ -778,14 +780,14 @@ Element [abc] asked to be printed.
  
   &lt;literal value="3"/&gt;
   &lt;multiply/&gt;
-&lt;/computation&gt;</pre>
+&lt;/computation&gt;</code></pre>
 
 
-  <p class="command">java java chapters.onJoran.newRule.NewRuleCalculator src/main/java/chapters/onJoran/newRule/newRule.xml</p>
+  <pre><code class="language-shell">java chapters.onJoran.newRule.NewRuleCalculator ...chapters/onJoran/newRule/newRule.xml</code></pre>
 
   <p>yields</p>
 
-  <p class="console">The computation named [toto] resulted in the value 30</p>
+  <pre><code>The computation named [toto] resulted in the value 30</code></pre>
 
   <p>which is identical to the output of the <a
   href="#calculator">original calculator example</a>.</p>

@@ -1,54 +1,55 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
     <title>Chapter 9: Logging separation</title>
-    <link rel="stylesheet" type="text/css" href="../css/site.css" />    
-    <link rel="stylesheet" type="text/css" href="../css/prettify.css" media="screen" />
-  </head>
-  <body onload="prettyPrint(); decorate();  enableLegacy();">
+
+    <link rel="stylesheet" type="text/css" href="../css/site3.css" />
+    <link rel="stylesheet" type="text/css" href="../css/menu2.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/stackoverflow-light.min.css" />
+
     <script type="text/javascript">prefix='../';</script>
-    <script type="text/javascript" src="../js/prettify.js"></script>
+    <script type="text/javascript" src="../js/menuListener.js"></script>
     <script type="text/javascript" src="../js/jquery-min.js"></script>
     <script type="text/javascript" src="../js/decorator.js"></script>
-    <script type="text/javascript" src="../js/tab.js"></script>    
+    <script type="text/javascript" src="../js/dsl.js"></script>
+    <script type="text/javascript" src="../js/tab.js"></script>
+    <script type="text/javascript" src="../js/highlight.min.js"></script>
+</head>
+<body onLoad="enableMenuEventListeners(); hljs.highlightAll();  decorate(); enableLegacy();">
 
-    <div id="container">
-      <script type="text/javascript" src="../templates/header.js"></script>
-      
-      <div id="left">
-        <noscript>Please turn on Javascript to view this menu</noscript>
-        <script src="../templates/left.js" type="text/javascript"></script>
-      </div>
-      <div id="right">
-        <script src="menu.js" type="text/javascript"></script>
-      </div>
-      <div id="content">	
-	
-    <h1>Chapter 9: Logging separation</h1>
+      <script type="text/javascript" src="../templates/header3.js"></script>
+
+      <div id="content">
+
+          <div id="top-content">
+
+              <script type="text/javascript" src="../templates/creative.js" ></script>
+              <script type="text/javascript" src="menu.js"></script>
+
+          <div class="quote">
+              <p><em>It is not knowledge, but the act of learning, not
+                  possession but the act of getting there, which grants the greatest
+                  enjoyment. When I have clarified and exhausted a subject, then I
+                  turn away from it, in order to go into darkness again; the
+                  never-satisfied man is so strange if he has completed a structure,
+                  then it is not in order to dwell in it peacefully, but in order to
+                  begin another. I imagine the world conqueror must feel thus, who,
+                  after one kingdom is scarcely conquered, stretches out his arms
+                  for others.</em></p>
+
+              <p>&mdash;KARL FRIEDRICH GAUSS, Letter to Bolyai, 1808.</p>
+
+              <p><em>Style, like sheer silk, too often hides eczema.</em></p>
+
+              <p>&mdash;ALBERT CAMUS, <em>The Fall</em></p>
+
+          </div>
+          </div>
+          <h1>Chapter 9: Logging separation</h1>
 
     <a href="loggingSeparation_ja.html">&#x548C;&#x8A33; (Japanese translation)</a>
-      
-    <div class="quote">
-      <p><em>It is not knowledge, but the act of learning, not
-      possession but the act of getting there, which grants the greatest
-      enjoyment. When I have clarified and exhausted a subject, then I
-      turn away from it, in order to go into darkness again; the
-      never-satisfied man is so strange if he has completed a structure,
-      then it is not in order to dwell in it peacefully, but in order to
-      begin another. I imagine the world conqueror must feel thus, who,
-      after one kingdom is scarcely conquered, stretches out his arms
-      for others.</em></p>
-
-      <p>&mdash;KARL FRIEDRICH GAUSS, Letter to Bolyai, 1808.</p>
-
-      <p><em>Style, like sheer silk, too often hides eczema.</em></p>
-      
-      <p>&mdash;ALBERT CAMUS, <em>The Fall</em></p>
-
-    </div>
 
     <script src="../templates/creative.js" type="text/javascript"></script>		
     <script src="../templates/setup.js" type="text/javascript"></script>

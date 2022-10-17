@@ -1,28 +1,29 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
   <head>
-    <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
     <title>Logback Demo</title>
-    <link rel="stylesheet" type="text/css" href="css/site.css" /> 
+    <link rel="stylesheet" type="text/css" href="css/site3.css" />
+    <link rel="stylesheet" type="text/css" href="css/menu2.css"/>
+    <link rel="stylesheet" type="text/css" href="css/stackoverflow-light.min.css" />
+
+    <script type="text/javascript">prefix='';</script>
+    <script type="text/javascript" src="js/menuListener.js"></script>
+    <script type="text/javascript" src="js/jquery-min.js"></script>
+    <script type="text/javascript" src="js/decorator.js"></script>
+    <script type="text/javascript" src="js/highlight.min.js"></script>
+
   </head>
+<body onLoad="enableMenuEventListeners(); hljs.highlightAll();  decorate();">
 
-  <body>
-    <script type="text/javascript">prefix=''; </script>
-
-    <div id="container">
-      <script src="templates/header.js" type="text/javascript"></script>
-      <div id="left">
-        <script src="templates/left.js" type="text/javascript"></script>
-      </div>
-      <div id="right">
-        <script src="templates/right.js" type="text/javascript"></script>
-      </div>
+<script type="text/javascript" src="templates/header3.js"></script>
 
     <div id="content">
-      
-	
+
+      <script type="text/javascript" src="templates/sponsoredBy.js"></script>
+
     <h2>Logback Demo</h2>
 
     <p>Welcome to the logback demo! This document will take you through
@@ -101,11 +102,11 @@
 
   <p>Remove the comments around </p>
 
-  <p class="source">&lt;!-- Basic Cyclic buffer
+  <pre><code>&lt;!-- Basic Cyclic buffer
 &lt;appender name="CYCLIC" class="ch.qos.logback.core.read.CyclicBufferAppender">
   &lt;MaxSize>512&lt;/MaxSize>
 &lt;/appender>
---&gt;</p>
+--&gt; </code></pre>
   <p>and around</p>
 
   <p class="source">&lt;!-- Part I: Basic Cyclic buffer
@@ -150,7 +151,7 @@
 
   <p>Let's take a look at the filter we've just added: </p>
 
-<p class="source">&lt;filter class="ch.qos.logback.core.filter.EvaluatorFilter">
+<pre><code>&lt;filter class="ch.qos.logback.core.filter.EvaluatorFilter">
   &lt;evaluator name="loggingTaskEval">
     &lt;expression>
       <b>logger.getName().contains("LoggingTask") &amp;amp;&amp;amp;
@@ -159,7 +160,7 @@
     &lt;/expression>
   &lt;/evaluator>
   &lt;OnMatch>DENY&lt;/OnMatch>
-&lt;/filter></p>
+&lt;/filter></code></pre>
 
   <p>The <code>&lt;expression></code> element uses the familiar
   Java language syntax. It checks that the name of the logger contains
@@ -192,11 +193,11 @@
   <p>Remove the comments around the block entitled "TurboFilter: MDC
   value".</p>
 
-  <p class="source">&lt;turboFilter class="ch.qos.logback.classic.turbo.MDCFilter">
+<pre><code>&lt;turboFilter class="ch.qos.logback.classic.turbo.MDCFilter">
   &lt;MDCKey>username&lt;/MDCKey>
   &lt;Value>sebastien&lt;/Value>
   &lt;OnMatch>ACCEPT&lt;/OnMatch>
-&lt;/turboFilter></p>
+&lt;/turboFilter></code></pre>
 
 
   <p>This <code>&lt;turboFilter></code> element adds a
@@ -212,10 +213,10 @@
   setting the root logger's level to <code>OFF</code>.
   </p>
 
-  <p class="source">&lt;root>
+<pre><code>&lt;root>
   &lt;level <b>value="OFF"</b>/>
   ...
-&lt;/root></p>
+&lt;/root></code></pre>
 
   <p>Now restart the server as before.</p>
 
@@ -297,11 +298,11 @@
   <code>TurboFilter</code> to do so:
   </p>
 
-  <p class="source">&lt;turboFilter class="ch.qos.logback.classic.turbo.MarkerFilter">
+<pre><code>&lt;turboFilter class="ch.qos.logback.classic.turbo.MarkerFilter">
     &lt;Name>HOWDY_FILTER&lt;/Name>
     &lt;Marker>HOWDY&lt;/Marker>
     &lt;OnMatch>DENY&lt;/OnMatch>
-&lt;/turboFilter> </p>
+&lt;/turboFilter> </code></pre>
   
   <p>After you have set the root logger's level back to <em>DEBUG</em>
   and uncommented the MarkerFilter block in <em>logback.xml</em>,
@@ -326,7 +327,7 @@
 
   <p>Here is a rather minimal configuration for logback-access:</p>
 
-<div class="source"><pre>&lt;configuration>
+<pre><code>&lt;configuration>
  
   &lt;appender name="STDOUT"
     class="ch.qos.logback.core.ConsoleAppender">
@@ -337,7 +338,7 @@
   
   &lt;appender-ref ref="STDOUT" />
   
-&lt;/configuration></pre></div>
+&lt;/configuration></code></pre>
 
   <p>Note that logback-classic and logback-access are configured via
   different files: <em>logback.xml</em> and
@@ -385,7 +386,7 @@
   <p>The necessary configuration lines are listed below.
   </p>
 
-  <p class="source">&lt;appender name="STDOUT_LOTTERY"
+  <pre><code>&lt;appender name="STDOUT_LOTTERY"
   class="ch.qos.logback.core.ConsoleAppender">
   &lt;filter class="ch.qos.logback.core.filter.EvaluatorFilter">
     &lt;evaluator name="lotto_eval">
@@ -405,7 +406,7 @@
       LOTTERY: %A [%r] Guess=%reqParameter{guessed_number}
     &lt;/Pattern>
   &lt;/layout>
-&lt;/appender></p>
+ &lt;/appender></code></pre>
 
   <p>This appender will use a <code>PatternLayout</code> to format its
   output.  The <em>%reqParameter</em> conversion word is used to
@@ -454,42 +455,10 @@
   the triggering event.
   </p>
 
-  <h3>JMX</h3>
 
-  <p>Logback publishes several components via JMX. This allows you to
-  see the status of certain objects, and change several configuration
-  parameters.  Publishing logback's components via JMX is possible
-  with Jetty and Tomcat. For more information about the JMXConfigurator
-  please refer to the <a href="manual/jmxConfig.html">relevant
-  chapter</a> in the manual.
-  </p>
-
-  <p>Let us test setting levels using the configurator.
-  The <em>Prime Number</em> page requests two types of logs. When the
-  calculation checks if a number is a factor, a <em>DEBUG</em> log is
-  displayed. When the calculation has found a factor, a <em>INFO</em>
-  log is displayed.
-  </p>
-
-  <p>Let us first set the level of the logger named
-  <em>ch.qos.logback.demo.prime</em> to <em>DEBUG</em>. Run a prime
-  calculation directly, without restarting the server. The <em>View
-  logs</em> page should show the <em>DEBUG</em> and <em>INFO</em> logs.
-  </p>
-  
-  <p>Now, if you set the level of the <em>ch.qos.logback.demo.prime</em>
-  logger to <em>INFO</em>, and run a prime calculation again, you should
-  not see the <em>DEBUG</em> level logs anymore.
-  </p>
-  
-  <p>This demo of logback is now over. Do not hesitate to play around
-  with the configuration files.  You might want to check the <a
-  href="http://logback.qos.ch/documentation.html"> logback documentation
-  page</a> for more information about any component you'd like to test.
-  </p>
 	
   <script src="templates/footer.js" type="text/javascript"></script>
     </div>
-    </div>
+
 </body>
 </html>

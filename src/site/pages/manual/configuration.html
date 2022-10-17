@@ -1,52 +1,54 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
     <title>Chapter 3: Configuration</title>
 
-    <link rel="stylesheet" type="text/css" href="../css/site.css" />
-    <link rel="stylesheet" type="text/css" href="../css/prettify.css" media="screen"/>        
+      <link rel="stylesheet" type="text/css" href="../css/site3.css" />
+      <link rel="stylesheet" type="text/css" href="../css/menu2.css"/>
+      <link rel="stylesheet" type="text/css" href="../css/stackoverflow-light.min.css" />
+
+
+      <script type="text/javascript">prefix='../';</script>
+      <script type="text/javascript" src="../js/menuListener.js"></script>
+      <script type="text/javascript" src="../js/jquery-min.js"></script>
+      <script type="text/javascript" src="../js/decorator.js"></script>
+      <script type="text/javascript" src="../js/dsl.js"></script>
+      <script type="text/javascript" src="../js/tab.js"></script>
+      <script type="text/javascript" src="../js/highlight.min.js"></script>
 
   </head>
-  <body onload="prettyPrint(); decorate(); enableLegacy();">
-
-    <script type="text/javascript">prefix='../'</script>
-    <script type="text/javascript" src="../js/prettify.js"></script>
-    <script type="text/javascript" src="../js/jquery-min.js"></script>
-    <script type="text/javascript" src="../js/decorator.js"></script>
-    <script type="text/javascript" src="../js/dsl.js"></script>
-    <script type="text/javascript" src="../js/tab.js"></script>    
+  <body onload="enableMenuEventListeners(); hljs.highlightAll(); decorate(); enableLegacy();">
 
 
-    <div id="container">
-      <script type="text/javascript" src="../templates/header.js"></script>
+  <script type="text/javascript" src="../templates/header3.js"></script>
 
-      <div id="left">
-        <noscript>Please turn on Javascript to view this menu</noscript>
-        <script src="../templates/left.js" type="text/javascript"></script>
+
+  <div id="content">
+
+      <div id="top-content">
+
+        <script type="text/javascript" src="../templates/creative.js" ></script>
+        <script type="text/javascript" src="menu.js"></script>
+
+          <div class="quote">
+              <p><em>In symbols one observes an advantage in discovery which
+                  is greatest when they express the exact nature of a thing
+                  briefly and, as it were, picture it; then indeed the labor of
+                  thought is wonderfully diminished.</em>
+              </p>
+              <p>&mdash;GOTTFRIED WILHELM LEIBNIZ</p>
+          </div>
+
       </div>
 
-      <div id="right">
-        <script src="menu.js" type="text/javascript"></script>
-      </div>
-
-      <div id="content">
-
-    <h1>Chapter 3: Logback configuration</h1>
-
-    <div class="quote">
-      <p><em>In symbols one observes an advantage in discovery which
-      is greatest when they express the exact nature of a thing
-      briefly and, as it were, picture it; then indeed the labor of
-      thought is wonderfully diminished.</em>
-      </p>
-      <p>&mdash;GOTTFRIED WILHELM LEIBNIZ</p>
-    </div>
 
 
-    <script src="../templates/creative.js" type="text/javascript"></script>
+
+
+          <h1>Chapter 3: Logback configuration</h1>
+
 
     <p>We start by presenting ways for configuring logback, with many
     example configuration scripts.  Joran, the configuration framework
@@ -281,7 +283,7 @@ public class Foo {
    </div>
 
    <div id="sample0_legacy" class="tabcontent">   
-   <pre class="prettyprint source">&lt;configuration>
+   <pre><code>&lt;configuration>
 
   &lt;appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
     &lt;!-- encoders are assigned the type
@@ -294,7 +296,7 @@ public class Foo {
   &lt;root level="debug">
     &lt;appender-ref ref="STDOUT" />
   &lt;/root>
-&lt;/configuration></pre>
+&lt;/configuration></code></pre>
    </div>
 
    <div id="sample0_canonical" class="tabcontent">
@@ -389,13 +391,13 @@ public static void main(String[] args) {
     </div>
     
     <div id="onConsoleStatusListener_legacy" class="tabcontent">
-   <pre class="prettyprint source">&lt;configuration>
+   <pre><code>&lt;configuration>
    &lt;!-- Recommendation: place status listeners towards the the top of the configuration file --&gt;
    <b>&lt;statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener" /></b>
 
    &lt;!-- ... the rest of the configuration file --&gt;
-     
-&lt;/configuration>
+
+&lt;/configuration></code></pre>
    </div>
 
     <div id="onConsoleStatusListener_canonical" class="tabcontent">

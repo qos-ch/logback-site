@@ -73,7 +73,7 @@ document.write('</div>');
 document.write('  <div id="header-grid-line-item" class="headerline"></div>');
 
 document.write('<div id="ad">');
-document.write('    <script type="text/javascript" src="templates/ad.js" ></script>');
+document.write('    <script type="text/javascript" src="'+prefix+'templates/ad.js" ></script>');
 document.write('</div>');
 
 // close #header-grid

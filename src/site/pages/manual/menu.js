@@ -1,4 +1,5 @@
 
+document.write('<div id="manualIndex">');
 document.write('<p class="menu_header">Chapter Index</p>')
 document.write('<p class="menu"><a href="introduction.html"><b>Ch1: Introduction to logback</b></a></p>');
 document.write('<p class="menu"><a href="architecture.html"><b>Ch2: Architecture</b></a></p>');
@@ -16,6 +17,8 @@ document.write('<p class="menu"><a href="receivers.html"><b>Ch12: Receivers</b><
 document.write('<p class="menu"><a href="usingSSL.html"><b>Ch13: Using SSL</b></a></p>');
 
 document.write('<p style="border: 1px solid #cccccc;"></p>');
+document.write('</div>');
+
 //document.write('<p style="border: 1px solid #cccccc;"></p>');
 //document.write('<p/>');
 //document.write('<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>');
