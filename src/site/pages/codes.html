@@ -25,8 +25,7 @@
 
   <div id="content">
     
-  <h2><a name="top">Logback error messages and their meanings</a></h2>
-  
+  <h2 class="doAnchor" name="top">Logback error messages and their meanings</h2>
 
   <h3 class="doAnchor" name="null_CS">The contextSelector cannot be
   null in <code>StaticLoggerBinder</code>.  
@@ -44,7 +43,7 @@
   </p>
   
 
-  <!-- =========================================================== -->
+  <!-- ================&#8203;===============&#8203;===============&#8203;============= -->
   <h3 class="doAnchor" name="layoutInsteadOfEncoder">This appender no
   longer admits a layout as a subcomponent, set an encoder instead.
   </h3>
@@ -62,20 +61,20 @@
   
   <p class="red bold">from (DEPRECATED)</p>
   
-  <pre><code>&lt;appender name="FILE" class="ch.qos.logback.core.FileAppender">
+  <pre><code>&lt;appender name="FILE" class="ch.qos.logback.&#8203;core.FileAppender">
   &lt;file>testFile.log&lt;/file>
   ...
-  &lt;layout class="ch.qos.logback.classic.PatternLayout">
+  &lt;layout class="ch.qos.logback.&#8203;classic.PatternLayout">
     &lt;pattern>%msg%n&lt;/pattern>
   &lt;/layout>
 &lt;/appender>   </code></pre>
 
   <p class="red bold">or the shorter equivalent (DEPRECATED)</p>
 
-  <pre><code>&lt;appender name="FILE" class="ch.qos.logback.core.FileAppender">
+  <pre><code>&lt;appender name="FILE" class="ch.qos.logback.&#8203;core.FileAppender">
   &lt;file>testFile.log&lt;/file>
   ...
-  &lt;!-- layout are assigned the type ch.qos.logback.classic.PatternLayout by default -->
+  &lt;!-- layout are assigned the type ch.qos.logback.classic.&#8203;PatternLayout by default -->
   &lt;layout>
     &lt;pattern>%msg%n&lt;/pattern>
   &lt;/layout>
@@ -83,21 +82,21 @@
 
 
   <p class="green bold">to (GOOD)</p>
-    <pre><code>&lt;appender name="FILE" class="ch.qos.logback.core.FileAppender">
+    <pre><code>&lt;appender name="FILE" class="ch.qos.logback.&#8203;core.FileAppender">
   &lt;file>testFile.log&lt;/file>
   ...
-  &lt;encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+  &lt;encoder class="ch.qos.logback.&#8203;classic.encoder.&#8203;PatternLayoutEncoder">
     &lt;pattern>%msg%n&lt;/pattern>
   &lt;/encoder>
 &lt;/appender>   </code></pre>
  
   <p class="green bold">or the shorter equivalent (GOOD)</p>
 
-   <pre><code>&lt;appender name="FILE" class="ch.qos.logback.core.FileAppender">
+   <pre><code>&lt;appender name="FILE" class="ch.qos.logback.&#8203;core.FileAppender">
   &lt;file>testFile.log&lt;/file>
   ...
   &lt;!-- encoders are assigned the type 
-       ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+       ch.qos.logback.classic.&#8203;encoder.PatternLayoutEncoder by default -->
   &lt;encoder>
     &lt;pattern>%msg%n&lt;/pattern>
   &lt;/encoder>
@@ -111,21 +110,21 @@
 
   <p class="red bold">from (DEPRECATED)</p>
 
-  <pre><code>&lt;appender name="FILE" class="ch.qos.logback.core.FileAppender">
+  <pre><code>&lt;appender name="FILE" class="ch.qos.logback.&#8203;core.FileAppender">
   &lt;file>testFile.log&lt;/file>
   ...
-  &lt;layout class="ch.qos.logback.classic.html.HTMLLayout">
+  &lt;layout class="ch.qos.logback.&#8203;classic.html.HTMLLayout">
     &lt;pattern>%msg%n&lt;/pattern>
   &lt;/layout>
 &lt;/appender> </code></pre>
 
 
   <p class="green bold">to (GOOD)</p>
-    <pre><code>&lt;appender name="FILE" class="ch.qos.logback.core.FileAppender">
+    <pre><code>&lt;appender name="FILE" class="ch.qos.logback.&#8203;core.FileAppender">
   &lt;file>testFile.log&lt;/file>
   ...
-  &lt;encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
-    &lt;layout class="ch.qos.logback.classic.html.HTMLLayout">
+  &lt;encoder class="ch.qos.logback.&#8203;core.encoder.LayoutWrappingEncoder">
+    &lt;layout class="ch.qos.logback.&#8203;classic.html.HTMLLayout">
       &lt;pattern>%msg%n&lt;/pattern>
     &lt;/layout>
   &lt;/encoder>
@@ -143,7 +142,7 @@
   
   
 
-  <!-- =========================================================== -->
+  <!-- ================&#8203;===============&#8203;===============&#8203;============= -->
 
   <h3 class="doAnchor" name="socket_no_host">No remote host or address
   is set for <code>SocketAppender</code>
@@ -156,7 +155,7 @@
   </p>
   
   <pre><code>&lt;appender name="SOCKET"
-  class="ch.qos.logback.classic.net.SocketAppender">
+  class="ch.qos.logback.&#8203;classic.net.SocketAppender">
   ...
   &lt;remoteHost>127.0.0.1&lt;/remoteHost>
   ...
@@ -165,7 +164,7 @@
 
   
 
-  <!-- ============================================================= -->
+  <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->
 
   <h3 class="doAnchor" name="socket_no_port">No remote port is set for
   <code>SocketAppender</code>    
@@ -177,7 +176,7 @@
   like this:
   </p>
       
-  <pre><code>&lt;appender name="SOCKET" class=&quot;ch.qos.logback.classic.net.SocketAppender&quot;&gt;
+  <pre><code>&lt;appender name="SOCKET" class=&quot;ch.qos.&#8203;logback.classic.&#8203;net.SocketAppender&quot;&gt;
   ...
   &lt;port>4560&lt;/port>
   ...
@@ -187,7 +186,7 @@
 
   
 
-  <!-- ============================================================= -->
+  <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->
 
   <h3 class="doAnchor" name="smtp_no_layout">No <code>Layout</code> is
   set for SMTPAppender
@@ -202,10 +201,10 @@
   as follows:
   </p>
       
-  <pre><code>&lt;appender name=&quot;SMTP&quot; class=&quot;ch.qos.logback.classic.net.SMTPAppender&quot;&gt;
+  <pre><code>&lt;appender name=&quot;SMTP&quot; class=&quot;ch.qos.&#8203;logback.classic.&#8203;net.SMTPAppender&quot;&gt;
   ...
-  &lt;layout class=&quot;ch.qos.logback.classic.PatternLayout&quot;&gt;
-    &lt;pattern>%date [%thread] %-5level %logger - %msg%n&quot;&gt;&lt;/pattern>
+  &lt;layout class=&quot;ch.qos.&#8203;logback.classic.&#8203;PatternLayout&quot;&gt;
+    &lt;pattern>%date [%thread] %-5level %logger - %msg%n&quot;&gt;&lt;/&#8203;pattern>
   &lt;/layout&gt;
   ...
 &lt;/appender&gt;</code></pre>
@@ -219,7 +218,7 @@
 
   
       
-  <!-- ============================================================= -->
+  <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->
 
   <h3 class="doAnchor" name="sbtp_size_format">Specified number is not
   in proper int form, or not expected format.    
@@ -240,7 +239,7 @@
   
   
       
-  <!-- ============================================================= -->
+  <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->
 
   <h3 class="doAnchor" name="rfa_no_tp">No
   <code>TriggeringPolicy</code> was set for the
@@ -275,7 +274,7 @@
   <code>RollingPolicy</code> at the same time.
   </p>
       
-  <!-- ============================================================= -->
+  <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->
 
   <h3 class="doAnchor" name="#sat_missing_integer_token">Missing
   integer token, that is %i, in FileNamePattern [...].
@@ -291,7 +290,7 @@
   </p>
 
       
-  <!-- ============================================================= -->
+  <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->
 
   <h3 class="doAnchor" name="rfa_no_rp">No <code>RollingPolicy</code>
   was set for the <code>RollingFileAppender</code>.    
@@ -327,7 +326,7 @@
   
   
 
-  <!-- ============================================================= -->
+  <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->
   <h3 class="doAnchor" name="tbr_fnp_not_set">The <span
   class="option">FileNamePattern</span> property is mandatory for both
   <code>TimeBasedRollingPolicy</code> and
@@ -350,7 +349,7 @@
 
   
 
-  <!-- ============================================================= -->
+  <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->
   <h3 class="doAnchor" name="rfa_file_after">The <span
   class="option">File</span> property must be set before any rolling
   policy or triggering policy.
@@ -364,7 +363,7 @@
   policy declarations.
   </p>
 
-  <!-- ============================================================= -->  
+  <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->  
 
   <h3 class="doAnchor" name="rfa_collision"><span
   class="option">File</span> property collides with <span
@@ -386,7 +385,7 @@
   <code>RollingFileAppender</code> will emit an error message and
   refuse to start.</p>
 
-  <!-- ============================================================= -->  
+  <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->  
 
   <h3 class="doAnchor" name="rfa_collision_in_dateFormat">The date
   format in <span class="option">fileNamePattern</span> will result in
@@ -407,7 +406,7 @@
   possible collisions and will not start if any collisions are
   detected.</p>
 
-  <!-- ============================================================= -->  
+  <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->  
 
   <h3 class="doAnchor" name="earlier_fa_collision"><span
   class="option">File</span>/<span
@@ -430,7 +429,7 @@
   RollingFileAppender. Make sure that each RollingFileAppender has a
   unique <span class="option">FileNamePattern</span> option</p>
   
-  <!-- =============================================================
+  <!-- ================&#8203;===============&#8203;===============&#8203;===============
        -->
   <h3 class="doAnchor" name="renamingError">Failed to rename file [x]
   as [y].</h3>
@@ -475,9 +474,9 @@
   snippet.
   </p>
 
-  <pre><code>&lt;appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+  <pre><code>&lt;appender name="FILE" class="ch.qos.logback.&#8203;core.rolling.RollingFileAppender">
   <b>&lt;!-- <span class="option">file</span> property left unset/blank --></b>
-  &lt;rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+  &lt;rollingPolicy class="ch.qos.logback.&#8203;core.rolling.TimeBasedRollingPolicy">
     &lt;fileNamePattern>mylog.%d{yyyy-MM-dd}.log&lt;/fileNamePattern>
   &lt;/rollingPolicy>
 
@@ -515,7 +514,7 @@
    property.
    </p>
 
-  <!-- ============================================================= -->
+  <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->
   <h3 class="doAnchor" name="fwrp_parentFileName_not_set">The <span
   class="option">File</span> property must be set before
   <code>FixedWindowRollingPolicy</code>    
@@ -532,7 +531,7 @@
     FixedWindowRollingPolicy </a> for more information.
   </p>
 			
-  <!-- ============================================================= -->
+  <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->
   <h3 class="doAnchor" name="nested_if_element">Nested &lt;if&gt;
   element within &lt;appender&gt;, &lt;logger&gt; or &lt;root&gt;
   elements is disallowed
@@ -544,42 +543,42 @@
 
   <p>For example, the following is considered incorrect.</p>
 
-  <pre class="prettyprint">
+  <pre><code>
 &lt;root level="INFO"&gt;
     &lt;appender-ref ref="CONSOLE" /&gt;
     &lt;appender-ref ref="FILE" /&gt;
     <b>&lt;!-- &lt;if&gt; nested within &lt;root&gt; disallowed --&gt;</b>
-    &lt;if condition='isDefined("A_VARIABLE")'&gt;
+    &lt;if condition='isDefined(&#8203;"A_VARIABLE")'&gt;
       &lt;then&gt;
         &lt;appender-ref ref="SOME_APPENDER" /&gt;
       &lt;/then&gt;
     &lt;/if&gt;
 &lt;/root&gt;    
-</pre>
+ </code></pre>
 
    <p>However, it can be written with the desired effect as follows.</p>
 
-<pre class="prettyprint">
+<pre><code>
 &lt;root level="INFO"&gt;
     &lt;appender-ref ref="CONSOLE" /&gt;
     &lt;appender-ref ref="FILE" /&gt;
 &lt;/root&gt;        
 <b>&lt;!-- &lt;if&gt; surronding &lt;root&gt; is fine --&gt;</b>
-&lt;if condition='isDefined("A_VARIABLE")'&gt;
+&lt;if condition='isDefined(&#8203;"A_VARIABLE")'&gt;
     &lt;then&gt;
         &lt;root&gt;    
             &lt;appender-ref ref="SOME_APPENDER" /&gt;
       &lt;/root&gt;    
     &lt;/then&gt;
 &lt;/if&gt;
-</pre>
+</code></pre>
 
   <p>We are of the opinion that nested-if form can always be
   transfomed into the surrounding-if form.
   </p>
 
 
-  <!-- ============================================================= -->
+  <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->
   <h3 class="doAnchor" name="tbr_fnp_prudent_unsupported">Prudent mode
   is not supported with <code>FixedWindowRollingPolicy</code>.
   </h3>
@@ -593,7 +592,7 @@
 
   
   
-  <!-- ============================================================= -->
+  <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->
   <h3 class="doAnchor" name="syslog_layout">SyslogAppender does not
   admit a layout.
   </h3>
@@ -612,7 +611,7 @@
 
   
 
-  <!-- ============================================================= -->
+  <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->
   <h3 class="doAnchor" name="1andOnly1">Only and only one appender can
   be nested the &lt;sift> element in
   <code>SiftingAppender</code>.</h3>
@@ -621,7 +620,7 @@
   </p>
   
 
-  <!-- ============================================================= -->
+  <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->
   <h3 class="doAnchor" name="ifJanino">Could not find Janino library
   on the class path. Skipping conditional processing.
   </h3>
@@ -633,7 +632,7 @@
   instructions</a> for adding Janino to your class path.
   </p>
 
-  <!-- ============================================================= -->
+  <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->
   <h3 class="doAnchor" name="block">As of logback version 0.9.28,
   JaninoEventEvaluator expects Java blocks.
   </h3>
@@ -655,9 +654,9 @@
   ( logger.equals("org.apache.http.wire")  &amp;&amp;
        (mdc != null &amp;&amp; mdc.get("entity") != null
          &amp;&amp;
-       ((String) mdc.get("entity")).contains("someSpecialValue"))
+       ((String) mdc.get("entity")).&#8203;contains("someSpecialValue"))
        &amp;&amp;
-     !message.contains("someSecret")
+     !message.contains(&#8203;"someSecret")
   )</code></pre>
 
   <p>whereas as its Java block equivalent is considerably easier to
@@ -673,7 +672,7 @@ String payee = (String) mdc.get("entity");
 
 if(logger.equals("org.apache.http.wire") &amp;&amp;
   payee.contains("someSpecialValue") &amp;&amp;
-  !message.contains("someSecret")) {
+  !message.contains(&#8203;"someSecret")) {
   return true;
 }
 
@@ -682,7 +681,7 @@ return false;</code></pre>
    <p>
    </p>
 
-     <!-- ============================================================= -->
+     <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->
    <h3 class="doAnchor" name="param">The &lt;param&gt; element is
    deprecated in favor of a more direct syntax.
    </h3>
@@ -691,7 +690,7 @@ return false;</code></pre>
    <p class="red bold">Instead of writing (DEPRECATED)</p>  
    
    <pre><code>
-    &lt;appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender"&gt;
+    &lt;appender name="STDOUT" class="ch.qos.logback.&#8203;core.ConsoleAppender"&gt;
       &lt;encoder>
         &lt;<b>param name="pattern" value="%logger- %msg %n"/&gt;</b>
       &lt;/encoder>
@@ -701,14 +700,14 @@ return false;</code></pre>
    <p class="green bold">prefer the direct form (GOOD)
 
    <pre><code>
-    &lt;appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    &lt;appender name="STDOUT" class="ch.qos.logback.&#8203;core.ConsoleAppender">
       &lt;encoder>
         <b>&lt;pattern>%logger - %msg %n&lt;/pattern></b>
       &lt;/encoder>
     &lt;/appender>
    </code></pre>
 
-   <!-- ============================================================= -->
+   <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->
    <h3 class="doAnchor" name="missingRightParenthesis">In a conversion
    pattern, opened parenthesis must be closed.
    </h3>
@@ -721,7 +720,7 @@ return false;</code></pre>
    <b>\(</b>%d{HH:mm:ss.SSS} [%thread]<b>\) </b>.
    </p>
   
-   <!-- ============================================================= -->
+   <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->
    <h3 class="doAnchor" name="saxParserConfiguration">Error during SAX parser configuration</h3>
 
    
@@ -729,19 +728,19 @@ return false;</code></pre>
    </p>
 
    <pre>Caused by: javax.xml.parsers.ParserConfigurationException: SAX feature 'http://xml.org/sax/features/external-general-entities' not supported.
- at oracle.xml.jaxp.JXSAXParserFactory.setFeature(JXSAXParserFactory.java:272)
- at ch.qos.logback.core.joran.event.SaxEventRecorder.buildSaxParser(SaxEventRecorder.java:82)
+ at oracle.xml.jaxp.&#8203;JXSAXParserFactory.&#8203;setFeature(JXSAXParserFactory.&#8203;java:272)
+ at ch.qos.logback.core.&#8203;joran.event.SaxEventRecorder.&#8203;buildSaxParser(&#8203;SaxEventRecorder.&#8203;java:82)
    </pre>
 
    <p>then we suggest that you specify a SAX parser that supports
    selective feature enabling/disabling. Try setting the following
    system property.</p>
 
-   <pre>-Djavax.xml.parsers.SAXParserFactory=com.sun.org.apache.xerces.internal.jaxp.SAXParserFactoryImpl</pre>
+   <pre>-Djavax.xml.parsers.&#8203;SAXParserFactory=&#8203;com.sun.org.apache.&#8203;xerces.internal.&#8203;jaxp.SAXParserFactoryImpl</pre>
 
    <p>See also <a href="https://jira.qos.ch/browse/LOGBACK-1577">LOGBACK-1577</a>.</p>
    
-   <!-- ============================================================= -->
+   <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->
    <h3 class="doAnchor" name="appender_order">Appenders must be
    defined before they are referenced.
    </h3>
@@ -765,7 +764,7 @@ return false;</code></pre>
   <p class="green bold">CORRECT ORDER</p>
   <pre><code>&lt;configuration>
   <b>&lt;!-- definition of appender STDOUT --></b>
-  &lt;appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+  &lt;appender name="STDOUT" class="ch.qos.logback.&#8203;core.ConsoleAppender">
     &lt;encoder>
       &lt;pattern>%-4relative [%thread] %-5level %logger{35} - %msg %n&lt;/pattern>
     &lt;/encoder>
@@ -789,7 +788,7 @@ return false;</code></pre>
   &lt;/root>
 
   <b>&lt;!-- definition of appender STDOUT --></b>
-  &lt;appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+  &lt;appender name="STDOUT" class="ch.qos.logback.&#8203;core.ConsoleAppender">
     &lt;encoder>
       &lt;pattern>%-4relative [%thread] %-5level %logger{35} - %msg %n&lt;/pattern>
     &lt;/encoder>
