@@ -1,0 +1,2 @@
+mvni.sh text eol=lf
+loop.sh text eol=lf
