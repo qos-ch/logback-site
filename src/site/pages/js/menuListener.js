@@ -25,7 +25,10 @@ function enableMenuEventListeners() {
     document.addEventListener("click", elem => {
         deactivateListener(elem);
     });
-    document.addEventListener("beforeunload", elem => {
+    document.body.addEventListener("beforeunload", elem => {
+        unconditionalMenuButtonsDeactivate();
+    });
+    document.body.addEventListener("onpagehide", elem => {
         unconditionalMenuButtonsDeactivate();
     });
 }

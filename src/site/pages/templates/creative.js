@@ -25,7 +25,7 @@ document.write('       <p>');
 document.write('          This document is licensed under a');
 document.write('          <a rel="license"');
 document.write('             href="http://creativecommons.org/licenses/by-nc-sa/2.5/">');
-document.write('            Creative Commons Attribution-&#8203;NonCommercial-ShareAlike 2.5 License');
+document.write('            Creative Commons Attribution-&#8203;NonCommercial-S&#233;ShareAlike 2.5 License');
 document.write('          </a>');
 
 

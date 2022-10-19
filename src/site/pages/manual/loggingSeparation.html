@@ -3,6 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Chapter 9: Logging separation</title>
 
     <link rel="stylesheet" type="text/css" href="../css/site3.css" />
@@ -28,7 +29,7 @@
               <script type="text/javascript" src="../templates/creative.js" ></script>
               <script type="text/javascript" src="menu.js"></script>
 
-          <div class="quote">
+          <div id="quote">
               <p><em>It is not knowledge, but the act of learning, not
                   possession but the act of getting there, which grants the greatest
                   enjoyment. When I have clarified and exhausted a subject, then I
@@ -112,7 +113,7 @@
     contexts. When you write:
     </p>
 
-    <pre class="prettyprint source">Logger logger = LoggerFactory.getLogger("foo");</pre>
+    <pre class="prettyprint source">Logger logger = LoggerFactory.getLogger(&#8203;"foo");</pre>
 
     <p>the <code>getLogger</code>() method in
     <code>LoggerFactory</code> class will ask the SLF4J binding for a
@@ -139,7 +140,7 @@
     <code>myPackage.myContextSelector</code> class, you would add the
     following system property: </p>
 
-    <p class="source">-Dlogback.ContextSelector=myPackage.myContextSelector</p>
+    <p class="source">-Dlogback.ContextSelector=&#8203;myPackage.myContextSelector</p>
 
     <p>The context selector needs to implement the
     <code>ContextSelector</code> interface and have a constructor
@@ -167,11 +168,11 @@
     <em>logback.ContextSelector</em> system property needs to be set
     to "JNDI", as follows:</p>
 
-    <p class="source">-Dlogback.ContextSelector=JNDI</p>
+    <p class="source">-Dlogback.ContextSelector=&#8203;JNDI</p>
 
     <p>Note that the value <code>JNDI</code> is a convenient shorthand
     for
-    <code>ch.qos.logback.classic.selector.ContextJNDISelector</code>.</p>
+    <code>ch.qos.logback.classic.&#8203;selector.ContextJNDISelector</code>.</p>
 
     <h3 class="doAnchor" name="settingJNDIVariables">Setting JNDI
     variables in applications</h3>
@@ -183,8 +184,8 @@
     the following XML element to kenobi's web.xml file:</p>
 
     <pre class="prettyprint source">&lt;env-entry>
-  &lt;env-entry-name>logback/context-name&lt;/env-entry-name>
-  &lt;env-entry-type>java.lang.String&lt;/env-entry-type>
+  &lt;env-entry-name>logback/context-name&lt;/&#8203;env-entry-name>
+  &lt;env-entry-type>java.lang.String&lt;/&#8203;env-entry-type>
   &lt;env-entry-value>kenobi&lt;/env-entry-value>
 &lt;/env-entry></pre>
 
@@ -209,9 +210,9 @@
 
 
    <pre class="prettyprint source">&lt;env-entry>
-  &lt;env-entry-name>logback/configuration-resource&lt;/env-entry-name>
-  &lt;env-entry-type>java.lang.String&lt;/env-entry-type>
-  &lt;env-entry-value>aFolder/my_config.xml&lt;/env-entry-value>
+  &lt;env-entry-name>logback/configuration-resource&lt;/&#8203;env-entry-name>
+  &lt;env-entry-type>java.lang.String&lt;/&#8203;env-entry-type>
+  &lt;env-entry-value>aFolder/my_config.&#8203;xml&lt;/env-entry-value>
 &lt;/env-entry></pre> 
 
     <p>The file <em>my_config.xml</em> should be placed under
@@ -237,7 +238,7 @@
     catalina.bat in Windows, found under <em>$TOMCAT_HOME/bin</em>
     folder.</p>
 
-    <p class="source">JAVA_OPTS="$JAVA_OPTS -Dlogback.ContextSelector=JNDI"</p>
+    <p class="source">JAVA_OPTS="$JAVA_OPTS -Dlogback.ContextSelector=&#8203;JNDI"</p>
 
 
     <h3 class="doAnchor" name="hotDeploy">Hot deploying
@@ -255,7 +256,7 @@
     file.</p>
 
     <pre class="prettyprint source">&lt;listener>
-  &lt;listener-class>ch.qos.logback.classic.selector.servlet.ContextDetachingSCL&lt;/listener-class>
+  &lt;listener-class>ch.qos.logback.classic.&#8203;selector.servlet.&#8203;ContextDetachingSCL&lt;/&#8203;listener-class>
 &lt;/listener></pre>
 
     <p><span class="label notice">Note</span> Most containers invoke
@@ -282,11 +283,11 @@
     web.xml file.</p>
 
  <pre class="prettyprint source">&lt;filter>
-  &lt;filter-name>LoggerContextFilter&lt;/filter-name>
-  &lt;filter-class>ch.qos.logback.classic.selector.servlet.LoggerContextFilter&lt;/filter-class>
+  &lt;filter-name>LoggerContextFilter&lt;/&#8203;filter-name>
+  &lt;filter-class>ch.qos.logback.classic.&#8203;selector.servlet.&#8203;LoggerContextFilter&lt;/&#8203;filter-class>
 &lt;/filter>
 &lt;filter-mapping>
-  &lt;filter-name>LoggerContextFilter&lt;/filter-name>
+  &lt;filter-name>LoggerContextFilter&lt;/&#8203;filter-name>
   &lt;url-pattern>/*&lt;/url-pattern>
 &lt;/filter-mapping></pre>
 
@@ -321,7 +322,7 @@
    </p>
 
    <pre class="prettyprint source">public class Foo {
-  <b>static</b> Logger logger = LoggerFactory.getLogger(Foo.class);
+  <b>static</b> Logger logger = LoggerFactory.getLogger(&#8203;Foo.class);
   ...
 }</pre>
 
@@ -378,10 +379,10 @@
 
     <pre class="prettyprint source">&lt;configuration>
 
-  &lt;statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener" />  
+  &lt;statusListener class="ch.qos.logback.&#8203;core.status.OnConsoleStatusListener" />  
 
-  &lt;appender name="SIFT" class="ch.qos.logback.classic.sift.SiftingAppender">
-    &lt;discriminator class="ch.qos.logback.classic.sift.JNDIBasedContextDiscriminator">
+  &lt;appender name="SIFT" class="ch.qos.logback.&#8203;classic.sift.SiftingAppender">
+    &lt;discriminator class="ch.qos.logback.&#8203;classic.sift.JNDIBasedContextDiscriminator">
       &lt;defaultValue>unknown&lt;/defaultValue>
     &lt;/discriminator>
     &lt;sift>
@@ -441,23 +442,23 @@
    <p>After <code>YodaServlet</code> is called, the contents of
    <em>yoda.log</em> file should contain</p>
  
-   <pre class="source">DEBUG ch.qos.starwars.yoda.YodaServlet             cn=yoda - in doGet()
-DEBUG ch.qos.starwars.shared.Mustafar              cn=yoda - in foo()</pre>
+   <pre class="source">DEBUG ch.qos.starwars.&#8203;yoda.YodaServlet             cn=yoda - in doGet()
+DEBUG ch.qos.starwars.&#8203;shared.Mustafar              cn=yoda - in foo()</pre>
  
    <p>Note how both log entries are associated with the "yoda" context
    name. At this stage and until the server stops, the
-   <code>ch.qos.starwars.shared.Mustafar</code> logger is attached to
+   <code>ch.qos.starwars.&#8203;shared.Mustafar</code> logger is attached to
    the 'yoda' context and will remain so until the server is stopped.
    </p>
 
    <p>Visiting <code>http://localhost:port/kenobi/servlet</code> will
    output the following in <em>kenobi.log</em>.</p>
 
-   <pre class="source">DEBUG ch.qos.starwars.kenobi.KenobiServlet          <b>cn=kenobi</b> - in doGet()
-DEBUG ch.qos.starwars.shared.Mustafar               <b>cn=yoda</b> - in foo()</pre>
+   <pre class="source">DEBUG ch.qos.starwars.&#8203;kenobi.KenobiServlet          <b>cn=kenobi</b> - in doGet()
+DEBUG ch.qos.starwars.&#8203;shared.Mustafar               <b>cn=yoda</b> - in foo()</pre>
 
    <p>Note that even if the
-   <code>ch.qos.starwars.shared.Mustafar</code> logger outputs to
+   <code>ch.qos.starwars.&#8203;shared.Mustafar</code> logger outputs to
    <em>kenobi.log</em> it is still attached to 'yoda'. Thus, we have
    two distinct logging contexts logging to the same file, in this
    case <em>kenobi.log</em>. Each of these contexts reference
@@ -472,10 +473,10 @@ DEBUG ch.qos.starwars.shared.Mustafar               <b>cn=yoda</b> - in foo()</p
 
     <pre class="prettyprint source">&lt;configuration>
 
-  &lt;statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener" />  
+  &lt;statusListener class="ch.qos.logback.&#8203;core.status.OnConsoleStatusListener" />  
 
-  &lt;appender name="SIFT" class="ch.qos.logback.classic.sift.SiftingAppender">
-    &lt;discriminator class="ch.qos.logback.classic.sift.JNDIBasedContextDiscriminator">
+  &lt;appender name="SIFT" class="ch.qos.logback.&#8203;classic.sift.SiftingAppender">
+    &lt;discriminator class="ch.qos.logback.&#8203;classic.sift.JNDIBasedContextDiscriminator">
       &lt;defaultValue>unknown&lt;/defaultValue>
     &lt;/discriminator>
     &lt;sift>

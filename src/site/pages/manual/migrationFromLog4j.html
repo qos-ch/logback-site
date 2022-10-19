@@ -3,6 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Chapter 12: Migration from log4j</title>
 
       <link rel="stylesheet" type="text/css" href="../css/site3.css" />
@@ -28,7 +29,7 @@
               <script type="text/javascript" src="../templates/creative.js" ></script>
               <script type="text/javascript" src="menu.js"></script>
 
-              <div class="quote">
+              <div id="quote">
                   <p><em>The more things change, the more they remain the
                       same. </em></p>
 
@@ -37,15 +38,15 @@
           </div>
 
 
-              <h1>Chapter 11: Migration from log4j</h1>
+              <h1>Chapter 11: Migration from log4j version 1.x</h1>
 
 
 
-    <p>This chapter deals with the topic of migrating custom log4j
+    <p>This chapter deals with the topic of migrating custom log4j 1.x
     components such as appenders or layouts to logback-classic.
     </p>
 
-    <p>Software which merely invokes log4j client API, that is the
+    <p>Software which merely invokes log4j 1.x client API, that is the
     <code>Logger</code> or <code>Category</code> classes in
     <code>org.apache.log4j</code> package, can be automatically
     migrated to use SLF4J via the <a
@@ -87,7 +88,7 @@
     <pre class="prettyprint source">package chapters.migrationFromLog4j;
 
 import org.apache.log4j.Layout;
-import org.apache.log4j.spi.LoggingEvent;
+import org.apache.log4j.&#8203;spi.LoggingEvent;
 
 public class TrivialLog4jLayout extends Layout {
 
@@ -96,7 +97,7 @@ public class TrivialLog4jLayout extends Layout {
   }
 
   public String format(LoggingEvent loggingEvent) {
-    return loggingEvent.getRenderedMessage();
+    return loggingEvent.getRenderedMessage(&#8203;);
   }
 
   public boolean ignoresThrowable() {
@@ -110,8 +111,8 @@ public class TrivialLog4jLayout extends Layout {
     
     <pre class="prettyprint source">package chapters.migrationFromLog4j;
 
-import ch.qos.logback.classic.spi.ILoggingEvent;
-import ch.qos.logback.core.LayoutBase;
+import ch.qos.logback.classic.&#8203;spi.ILoggingEvent;
+import ch.qos.logback.core.&#8203;LayoutBase;
 
 public class TrivialLogbackLayout extends <b>LayoutBase&lt;ILoggingEvent></b> {
 
@@ -155,14 +156,14 @@ public class TrivialLogbackLayout extends <b>LayoutBase&lt;ILoggingEvent></b> {
    
     <pre class="prettyprint source">package chapters.migrationFromLog4j;
 
-import org.apache.log4j.AppenderSkeleton;
-import org.apache.log4j.spi.LoggingEvent;
+import org.apache.log4j.&#8203;AppenderSkeleton;
+import org.apache.log4j.&#8203;spi.LoggingEvent;
 
 
 public class TrivialLog4jAppender extends AppenderSkeleton {
 
   protected void append(LoggingEvent loggingevent) {
-    String s = this.layout.format(loggingevent);
+    String s = this.layout.format(&#8203;loggingevent);
     System.out.println(s);
   }
 
@@ -182,8 +183,8 @@ public class TrivialLog4jAppender extends AppenderSkeleton {
 
    <pre class="prettyprint source">package chapters.migrationFromLog4j;
 
-import ch.qos.logback.classic.spi.ILoggingEvent;
-import ch.qos.logback.core.AppenderBase;
+import ch.qos.logback.classic.&#8203;spi.ILoggingEvent;
+import ch.qos.logback.core.&#8203;AppenderBase;
 
 public class TrivialLogbackAppender extends AppenderBase&lt;ILoggingEvent> {
 
@@ -201,7 +202,7 @@ public class TrivialLogbackAppender extends AppenderBase&lt;ILoggingEvent> {
     // note that AppenderBase.doAppend will invoke this method only if
     // this appender was successfully started.
     
-    String s = this.layout.doLayout(loggingevent);
+    String s = this.layout.doLayout(&#8203;loggingevent);
     System.out.println(s);
   }
 }</pre>

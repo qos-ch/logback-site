@@ -42,14 +42,11 @@ body {
 #header, #content {
     max-width: 100%;
 }
-
-table, pre, code {
-    /*word-wrap: break-word;*/
-    overflow-x: scroll;
-    white-space: pre-wrap!important;
-    max-width: 100%;
-    min-width: 100%;
+table {
+    width: 100%;
 }
+
+
 
 /** ================================================= */
 @media (min-width: 1000px) {
@@ -85,15 +82,25 @@ img.sponsorIcon {
     height: var(--sponsor-icon-height);
 }
 
-xpre code {
-    white-space: pre-wrap!important;
-    word-wrap: break-word;
-    overflow-x: auto;
-    /*border: 3px solid chartreuse;*/
+/** works kind of OK */
+/*pre code {*/
+/*    white-space: pre-wrap!important;*/
+/*    word-wrap: break-word;*/
+/*    overflow-x: auto;*/
+/*}*/
+
+.example, pre, code {
+
+    white-space: pre-wrap;
+    overflow-x: scroll;
+    overflow: scroll;
+    overflow-wrap: break-word; /* synonymous to word-wrap */
+    XXborder: 1px solid lawngreen;
 }
 
+img.reduced,
 img.data {
-    max-width: calc(var(--max-width-on-wide-screen) * 0.5);
+    max-width: calc(var(--max-width-on-wide-screen) * 0.75);
 }
 
 .twitter-logo,
@@ -113,7 +120,7 @@ img.data {
     grid-template-areas:
         'logo-menu-area   icons-area'
         'header-line-area header-line-area'
-         'ad-area         ad-area';
+        'ad-area          ad-area';
 }
 
 
@@ -189,7 +196,7 @@ div#top-content {
     grid-template-columns: auto auto;
     grid-template-areas:
         'top-content-creative-commons top-content-right'
-        'top-content-quote            top-content-right';
+        'top-content-quote            top-content-quote';
 }
 
 #manualIndex {
@@ -203,7 +210,7 @@ div#top-content > #manualIndex {
     margin: 1rem;
     padding: 0px;
     background-color: #ffffff;
-    font-size: smaller;
+    Xfont-size: smaller;
 }
 
 
@@ -222,7 +229,7 @@ div#creative-commons {
     padding: 0px;
     border-top: 1px solid #CCCCCC;
     margin-top: 3ex;
-    font-size: smaller;
+    Xfont-size: smaller;
 }
 
 
@@ -231,14 +238,14 @@ p.menu {
     padding-bottom: 0px;
     margin-top: 0px;
     margin-bottom: 0px;
-    font-size: smaller;
+    Xfont-size: smaller;
 }
 
 
 .headerline {
     background-color: #FFD0A0;
     border: 1px solid #CCCCCC;
-    font-size: small;
+    Xont-size: small;
     margin: 0px;
 
     padding-top: 4px;
@@ -295,7 +302,7 @@ span.canonical {
     color: #0079C5;
     font-family: "Comic Sans MS", sans-serif;
     white-space: nowrap;
-    font-size: smaller;
+    Xfont-size: smaller;
 
     border-top: 2px solid #DDD;
     border-left: 2px solid #DDD;
@@ -512,8 +519,8 @@ code, .code {
 .highlight {
     max-width: 16rem;
     float: right;
-    xdisplay: inline;
-    font-size: 110%;
+    display: inline;
+    xfont-size: 110%;
 
     border: 2px solid #711;
     border-radius: 4px;
@@ -555,7 +562,6 @@ code, .code {
 
 /* used in example headers */
 .example {
-    width: 90%;
     font-style: italic;
 }
 

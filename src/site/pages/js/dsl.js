@@ -63,7 +63,7 @@ function canonical(legacyId, canonicalId) {
 
         var decorated = hljs.highlight(payload, {language: 'xml'}).value
 
-        canonicalElement.innerHTML = '<pre><core>' + decorated + '</core></pre>'
+        canonicalElement.innerHTML = '<pre><code>' + decorated + '</code></pre>'
     });
 
 
