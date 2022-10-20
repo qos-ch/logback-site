@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Chapter 3: Configuration</title>
 
       <link rel="stylesheet" type="text/css" href="../css/site3.css" />
@@ -20,7 +21,6 @@
 
   </head>
   <body onload="enableMenuEventListeners(); hljs.highlightAll(); decorate(); enableLegacy();">
-
 
   <script type="text/javascript" src="../templates/header3.js"></script>
 
@@ -103,9 +103,9 @@
           such file is found,  is
       used to resolve the implementation of <a
       href="../xref/ch/qos/logback/classic/spi/Configurator.html">
-      <code>com.qos.logback.&#8203;classic.spi.Configurator</code></a>
+      <code>ch.qos.logback.&#8203;classic.spi.&#8203;Configurator</code></a>
       interface by looking up the file
-      <em>META-INF\services\&#8203;ch.qos.logback.&#8203;classic.spi.Configurator</em>
+      <em>META-INF\services\&#8203;ch.qos.logback.&#8203;classic.spi.&#8203;Configurator</em>
       in the class path. Its contents should specify the fully
       qualified class name of the desired <code>Configurator</code>
       implementation.
@@ -229,7 +229,7 @@ public class Foo {
     configuration consists of a <code>ConsoleAppender</code> attached
     to the root logger.  The output is formatted using a
     <code>PatternLayoutEncoder</code> set to the pattern
-    <em>%d{HH:mm:ss.SSS}&nbsp;[%thread]&nbsp;%-5level&nbsp;%logger{36}&nbsp;-&nbsp;%msg%n</em>. Moreover,
+    <em>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</em>. Moreover,
     by default the root logger is assigned the <code>DEBUG</code>
     level.
     </p>
@@ -335,7 +335,7 @@ public class Foo {
     href="../xref/chapters/configuration/MyApp2.html">(logback-examples/src/main/java/chapters/configuration/MyApp2.java)</a></p>
 
 
-<pre class="prettyprint lang-java source">
+<pre class="source">
 public static void main(String[] args) {
   // assume SLF4J is bound to logback in the current environment
   <b>LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory(&#8203;);</b>
@@ -556,7 +556,7 @@ public static void main(String[] args) {
   &lt;/servlet-mapping></code></pre>
 
    <p>The <code>ViewStatusMessages</code> servlet will be viewable at
-   the URL <code>http://host/yourWebapp/lbClassicStatus</code>
+   the URL <code>http://host/yourWebapp/&#8203;lbClassicStatus</code>
    </p>
 
 
@@ -604,7 +604,7 @@ public static void main(String[] args) {
    well. However, the system property must be set before any logger
    instance is created.</p>
 
-   <pre class="prettyprint lang-java source">import ch.qos.logback.classic.&#8203;util.ContextInitializer;
+   <pre><code>import ch.qos.logback.classic.&#8203;util.ContextInitializer;
 
 public class ServerMain {
     public static void main(String args[]) throws IOException, InterruptedException {
@@ -613,7 +613,7 @@ public class ServerMain {
        System.setProperty(&#8203;ContextInitializer.&#8203;CONFIG_FILE_PROPERTY, "/path/to/config.xml");
        ...
     }
-}</pre>
+}</code></pre>
 
    <h3 class="doAnchor" name="autoScan">Automatically reloading
    configuration file upon modification</h3>
@@ -636,10 +636,10 @@ public class ServerMain {
    file and automatic re-configuration
    (logback-examples/&#8203;src/main/resources/&#8203;chapters/configuration/&#8203;scan1.xml)</p>
 
-<pre id="scan1" class="prettyprint source">
+<pre id="scan1"><code>
 &lt;configuration <b>scan="true"</b>>
   ...
-&lt;/configuration> </pre>
+&lt;/configuration></code></pre>
 
 
    <p>By default, the configuration file will be scanned for changes
@@ -652,10 +652,10 @@ public class ServerMain {
   <p class="example">Example: Specifying a different scanning period
   (logback-examples/&#8203;src/main/resources/&#8203;chapters/configuration/&#8203;scan2.xml)</p>
 
-  <pre id="scan2" class="prettyprint source">
+  <pre id="scan2"><code>
 &lt;configuration scan="true" <b>scanPeriod="30 seconds"</b> >
   ...
-&lt;/configuration> </pre>
+&lt;/configuration> </code></pre>
 
    <p><span class="label">Note</span> If no unit of time is specified,
    then the unit of time is assumed to be milliseconds, which is
@@ -723,10 +723,10 @@ java.lang.Exception: 99 is invalid
    method in <code>LoggerContext</code>, as shown next:</p>
 
 
-<pre class="prettyprint lang-java source">
+<pre><code>
   LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory(&#8203;);
   <b>lc.setPackagingDataEnabled(&#8203;true);</b>
-</pre>
+</code></pre>
 
    <h3 class="doAnchor" name="joranDirectly">Invoking
    <code>JoranConfigurator</code> directly</h3>
@@ -873,11 +873,11 @@ import ch.qos.logback.classic.&#8203;LoggerContext;
 
    <p><span class="label">since 1.1.10</span> Logback-classic will
    <b>automatically</b> ask the web-server to install a <code><a
-   href="../apidocs/ch/qos/logback/classic/servlet/LogbackServletContainerInitializer.html">LogbackServletContainerInitializer</a></code>
-   implementing the <code>ServletContainerInitializer</code> interface
+   href="../apidocs/ch/qos/logback/classic/servlet/LogbackServletContainerInitializer.html">LogbackServlet&#8203;ContainerInitializer</a></code>
+   implementing the <code>ServletContainer&#8203;Initializer</code> interface
    (available in servlet-api 3.x and later). This initializer will in
    turn install and instance of <code><a
-   href="../apidocs/ch/qos/logback/classic/servlet/LogbackServletContextListener.html">LogbackServletContextListener</a></code>.
+   href="../apidocs/ch/qos/logback/classic/servlet/LogbackServletContextListener.html">LogbackServlet&#8203;ContextListener</a></code>.
    This listener will stop the current logback-classic context when
    the web-app is stopped or reloaded.
    </p>
@@ -885,7 +885,7 @@ import ch.qos.logback.classic.&#8203;LoggerContext;
    <p>You may disable the automatic the installation of
    <code>LogbackServletContextListener</code> by setting a
    &lt;context-param> named
-   <code>logbackDisableServletContainerInitializer</code> in your
+   <code>logbackDisable&#8203;ServletContainerInitializer</code> in your
    web-application's web.xml file. Here is the relevant snippet.</p>
 
 

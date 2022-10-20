@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Chapter 10: Introduction</title>
+
+    <!--<link rel="stylesheet" type="text/css" href="../css/site3.css"/>-->
+    <link rel="stylesheet" type="text/css" href="../css/menu2.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/stackoverflow-light.min.css"/>
+
+
+    <script type="text/javascript">prefix = '../';</script>
+    <script type="text/javascript" src="../js/menuListener.js"></script>
+    <script type="text/javascript" src="../js/jquery-min.js"></script>
+    <script type="text/javascript" src="../js/decorator.js"></script>
+    <script type="text/javascript" src="../js/dsl.js"></script>
+    <script type="text/javascript" src="../js/tab.js"></script>
+    <script type="text/javascript" src="../js/highlight.min.js"></script>
+    <style>
+        :root {
+            --bgcolor: #FFF;
+            --max-width-on-wide-screen: 47rem;
+            --min-menu-width: 12rem;
+            --max-menu-width: 14rem;
+
+            --main-logo-height: 2rem;
+            --sponsor-icon-height: calc(var(--main-logo-height) * 0.5);
+            --x-logo-height: calc(var(--main-logo-height) * 0.5);
+        }
+        html {
+            text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        body {
+        }
+
+        #header {
+        }
+
+        #content {
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        img.logo {
+            height: var(--main-logo-height);
+        }
+
+        img.sponsorIcon {
+            height: var(--x-logo-height);
+        }
+
+        .twitter-logo,
+        .github-logo {
+            height: var(--x-logo-height);
+        }
+        pre {
+            overflow: auto;
+            word-wrap: normal;
+        }
+
+        pre > code {
+            word-break: normal;
+            white-space: pre;
+            overflow: visible;
+        }
+
+        #header-grid {
+            display: grid;
+            grid-template-columns: auto auto;
+            grid-template-areas:
+        'logo-menu-area   icons-area'
+        'header-line-area header-line-area'
+        'ad-area          ad-area';
+        }
+
+        #header-grid-logo-item {
+            grid-area: logo-menu-area;
+            /*  ensure that arrow and log stay together */
+            /* min-width: 18rem; */
+            /* left align */
+            justify-self: left;
+            /* ensure that log clamps to the baseline */
+            align-self: end;
+        }
+
+        #header-grid-icons-item {
+            grid-area: icons-area;
+            justify-self: right;
+            align-self: end;
+        }
+
+        #header-grid-line-item {
+            grid-area: header-line-area;
+        }
+
+        div#ad {
+            grid-area: ad-area;
+        }
+
+        div#ad,
+        .horizontal-ad {
+            width: 100%;
+        }
+
+        .headerline {
+            background-color: #FFD0A0;
+            border: 1px solid #CCCCCC;
+            Xont-size: small;
+            margin: 0px;
+
+            padding-top: 4px;
+        }
+
+
+        div#top-content {
+            display: grid;
+            gap: 1rem;
+
+            grid-template-columns: auto auto;
+            grid-template-areas:
+        'top-content-creative-commons top-content-right'
+        'top-content-quote            top-content-quote';
+        }
+
+        #manualIndex {
+            min-width: var(--min-menu-width);
+            max-width: var(--max-menu-width);
+        }
+
+        div#top-content > #manualIndex {
+            grid-area: top-content-right;
+            color: #564b47;
+            margin: 1rem;
+            padding: 0px;
+            background-color: #ffffff;
+            Xfont-size: smaller;
+        }
+
+
+        #quote {
+            grid-area: top-content-quote;
+            text-align: right;
+        }
+
+        div#creative-commons {
+            grid-area: top-content-creative-commons;
+        }
+    </style>
+</head>
+<body onload="enableMenuEventListeners(); hljs.highlightAll(); decorate(); enableLegacy();">
+
+
+<script src="../templates/header4.js" type="text/javascript"></script>
+<div id="content">
+
+    <div id="top-content">
+
+        <script type="text/javascript" src="../templates/creative.js"></script>
+        <script type="text/javascript" src="menu.js"></script>
+
+
+        <div id="quote">
+            <p><em> The morale effects are startling. Enthusiasm jumps when
+                there is a running system, even a simple one. Efforts redouble when
+                the first picture from a new graphics software system appears on the
+                screen, even if it is only a rectangle. One always has, at every
+                stage in the process, a working system. I find that teams can grow
+                much more complex entities in four months than they can
+                build.</em></p>
+
+            <p>&mdash;FREDERICK P. BROOKS, JR., <em>The Mythical Man-Month</em></p>
+        </div>
+
+    </div>
+
+
+    <p style="border: 1px solid brown;">aasd</p>
+    <h1>Chapter 1: Introduction</h1>
+
+
+    <h2>What is logback?</h2>
+
+    <p>Logback is intended as a successor to the popular log4j
+        project. It was designed by Ceki G&#252;lc&#252;, log4j's
+        founder. It builds upon a decade of experience gained in
+        designing industrial-strength logging systems. The resulting
+        product, i.e. logback, is faster and has a smaller footprint than
+        all existing logging systems, sometimes by a wide margin. Just as
+        importantly, logback offers <a
+                href="../reasonsToSwitch.html">unique and rather useful
+            features</a> missing in other logging systems.
+    </p>
+
+    <h2>First Baby Step</h2>
+
+    <!--    <script src="../templates/setup.js" type="text/javascript"></script>-->
+
+    <a name="Requirements"></a>
+    <h3>Requirements</h3>
+    <p>Logback-classic module requires the presence of
+        <em>slf4j-api.jar</em> and <em>logback-core.jar</em> in addition to
+        <em>logback-classic.jar</em> on the classpath.
+    </p>
+
+    <p>The <em>logback-*.jar</em> files are part of the logback
+        distribution whereas <em>slf4j-api-${slf4j.version}.jar</em> ships
+        with <a href="http://www.slf4j.org">SLF4J</a>, a separate project.
+    </p>
+
+    <p>Let us now begin experimenting with logback.</p>
+
+    <em>Example 1.1: Basic template for logging (<a href="../xref/chapters/introduction/HelloWorld1.html">
+        logback-examples/src/main/java/chapters/&#8203;introduction/HelloWorld1.java</a>)</em>
+
+    <pre><code>package chapters.introduction;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class HelloWorld1 {
+
+  public static void main(String[] args) {
+
+    Logger logger = LoggerFactory.getLogger(&#8203;"chapters.introduction.&#8203;HelloWorld1");
+    logger.debug("Hello world.");
+
+  }
+}</code></pre>
+
+    <script src="../templates/footer.js" type="text/javascript"></script>
+</div>
+</body>
+</html>
