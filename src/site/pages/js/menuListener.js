@@ -25,12 +25,19 @@ function enableMenuEventListeners() {
     document.addEventListener("click", elem => {
         deactivateListener(elem);
     });
-    document.body.addEventListener("beforeunload", elem => {
+    window.onbeforeunload = function() {
         unconditionalMenuButtonsDeactivate();
-    });
-    document.body.addEventListener("onpagehide", elem => {
-        unconditionalMenuButtonsDeactivate();
-    });
+    };
+
+
+    //document.body.addEventListener("onpagehide", elem => {
+    //    unconditionalMenuButtonsDeactivate();
+    //});
+
+    //document.body.addEventListener("beforeunload", elem => {
+      //  unconditionalMenuButtonsDeactivate();
+    //});
+
 }
 
 function deactivateListener(event) {

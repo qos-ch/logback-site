@@ -97,7 +97,8 @@
       to refer to a component that is acting in the client role.
             
       <h2 class="doAnchor">SSL and X.509 Certificates</h2>
-      
+
+
       <p>In order to use SSL-enabled Logback components, you will need an
          X.509 credential (a private key, corresponding certificate,
          and CA certification chain) to identify your components
@@ -160,6 +161,9 @@
       
       <h4><a name="basicConfig.keyStore"></a>
           System Properties for Server Key Store Configuration</h4>
+
+          <div class="bodyTable">
+
       <table class="bodyTable striped">
         <tr>
           <th>Property Name</th>
@@ -182,6 +186,7 @@
           </td>
         </tr>
       </table>
+          </div>
 
       <p>See <a href="#Examples">Examples</a> below for examples of
          setting these system properties when starting an application
@@ -214,6 +219,8 @@
         
       <h4><a name="basicConfig.trustStore"></a>
           System Properties for Client Trust Store Configuration</h4>
+
+          <div class="bodyTable">
       <table class="bodyTable striped">
         <tr>
           <th>Property Name</th>
@@ -238,6 +245,7 @@
           </td>
         </tr>
       </table>
+          </div>
 
       <p>See <a href="#Examples">Examples</a> below for examples of
          setting these system properties when starting an application 
@@ -270,7 +278,15 @@
          following.
       </p>
 
-      <pre id="logback-ssl-serverKeyStore" class="prettyprint source">&lt;configuration>
+<div class="tab">
+    <button class="tablinks" id="button_logback-ssl-serverKeyStore_legacy"
+            onclick="openTab(event, 'logback-ssl-serverKeyStore', 'legacy')">Legacy</button>
+    <button class="tablinks" id="button_logback-ssl-serverKeyStore_canonical"
+            onclick="openTab(event, 'logback-ssl-serverKeyStore', 'canonical')">Canonical (1.3)</button>
+</div>
+
+<div id="logback-ssl-serverKeyStore_legacy" class="tabcontent">
+      <pre><code>&lt;configuration>
 
   &lt;appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
     &lt;encoder>
@@ -291,7 +307,14 @@
     &lt;/ssl>
   &lt;/receiver> 
 
-&lt;/configuration></pre>
+&lt;/configuration></code></pre>
+
+</div>
+
+<div id="logback-ssl-serverKeyStore_canonical" class="tabcontent">
+  <p>Requires a server call. Please wait a few seconds.</p>
+</div>
+
 
       <p>This configuration specifies the location of the key store
          as <em>logging-server-keystore.jks</em> at the root of
@@ -304,10 +327,17 @@
          the application's default trust store using the JSSE
          <code>javax.net.ssl.trustStore</code> property, you could 
          configure the appender as follows.
-      </p>          
+      </p>
 
+<div class="tab">
+    <button class="tablinks" id="button_logback-ssl-clientTrustStore_legacy"
+            onclick="openTab(event, 'logback-ssl-clientTrustStore', 'legacy')">Legacy</button>
+    <button class="tablinks" id="button_logback-ssl-clientTrustStore_canonical"
+            onclick="openTab(event, 'logback-ssl-clientTrustStore', 'canonical')">Canonical (1.3)</button>
+</div>
 
-      <pre id="logback-ssl-clientTrustStore" class="prettyprint source">&lt;configuration>
+<div id="logback-ssl-clientTrustStore_legacy" class="tabcontent">
+      <pre><code>&lt;configuration>
   &lt;appender name="SOCKET" class="ch.qos.logback.classic.net.SSLSocketAppender">
     &lt;ssl>
       &lt;trustStore>
@@ -321,8 +351,14 @@
     &lt;appender-ref ref="SOCKET" />
   &lt;/root>
 
-&lt;/configuration></pre>
+&lt;/configuration></code></pre>
+</div>
 
+<div id="logback-ssl-clientTrustStore_canonical" class="tabcontent">
+  <p>Requires a server call. Please wait a few seconds.</p>
+</div>
+
+          
       <p>This configuration specifies the location of the trust store
          as <em>logging-server-truststore.jks</em> at the root of
          the application's classpath.  You could alternatively 
@@ -354,7 +390,7 @@
          subproperties, which are described in tables that follow 
          after the top-level properties are described.
       </p>
-            
+          <div class="bodyTable">
       <table class="bodyTable striped">
         <tr>
           <th>Property Name</th>
@@ -495,7 +531,8 @@
           </td>
         </tr>
       </table>
-      
+          </div>
+
       <h4 class="doAnchor"><a name="KeyStoreFactoryBean"></a>
           Key Store Configuration</h4>
           
@@ -510,7 +547,8 @@
          <a href="#ssl.trustStore"><span class="prop" container="ssl">trustStore</span></a>
          properties of the <a href="#SSLConfiguration">SSL Configuration</a>.
       </p>
- 
+
+          <div clas="bodyTable">
       <table class="bodyTable striped">
         <tr>
           <th>Property Name</th>
@@ -554,7 +592,8 @@
           </td>
         </tr>
       </table>
-      
+          </div>
+
       <h4><a name="KeyManagerFactoryFactoryBean"></a>
           Key Manager Factory Configuration</h4>
           
@@ -567,6 +606,7 @@
          default factory is adequate for most needs.
       </p>
 
+          <div clas="bodyTable">
       <table class="bodyTable striped">
         <tr>
           <th>Property Name</th>
@@ -594,6 +634,7 @@
           </td>
         </tr>
       </table>
+          </div>
 
       <h4 class="doAnchor"><a name="SecureRandomFactoryBean"></a>
           Secure Random Generator Configuration</h4>
@@ -606,7 +647,8 @@
          to explicitly configure the secure random generator, as the platform's
          default generator is adequate for most needs.
       </p>
- 
+
+      <div class="bodyTable">
       <table class="bodyTable striped">
         <tr>
           <th>Property Name</th>
@@ -635,7 +677,8 @@
           </td>
         </tr>
       </table>
-      
+       </div>
+
       <h4><a name="SSLParametersConfiguration"></a>
           SSL Parameters Configuration</h4>
           
@@ -645,6 +688,7 @@
          options. 
       </p>
 
+          <div class="bodyTable">
       <table class="bodyTable striped">
         <tr>
           <th>Property Name</th>
@@ -766,7 +810,8 @@
           </td>
         </tr>
       </table>
-      
+          </div>
+
       <h4><a name="TrustManagerFactoryFactoryBean"></a>
           Trust Manager Factory Configuration</h4>
           
@@ -779,6 +824,7 @@
          default factory is adequate for most needs.
       </p>
 
+          <div class="bodyTable">
       <table class="bodyTable striped">
         <tr>
           <th>Property Name</th>
@@ -806,7 +852,8 @@
           </td>
         </tr>
       </table>
-      
+          </div>
+
       <h2 class="doAnchor"><a name="Examples"></a>Examples</h2>
 
       <h3>Using JSSE System Properties</h3>
@@ -935,7 +982,7 @@ Trust this certificate? [no]:  &lt;Enter "yes">
       appropriate.  An example server configuration follows:</p>
 
       <p class="example">Example: Server Component Configuration</p>
-      <pre class="prettyprint source">&lt;configuration debug="true">
+      <pre><code>&lt;configuration debug="true">
   &lt;appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
     &lt;encoder>
       &lt;pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n&lt;/pattern>
@@ -954,7 +1001,7 @@ Trust this certificate? [no]:  &lt;Enter "yes">
       &lt;/keyStore>
     &lt;/ssl>
   &lt;/server>
-&lt;/configuration></pre>
+&lt;/configuration></code></pre>
       
       <p>This example assumes that the key store is located at the root
       of the application's classpath.</p>
@@ -980,7 +1027,7 @@ Trust this certificate? [no]:  &lt;Enter "yes">
 
       <p class="example">Example: Appender Client Configuration</p>
 
-      <pre class="prettyprint source">&lt;configuration debug="true">
+      <pre><code>&lt;configuration debug="true">
   &lt;appender name="SOCKET" class="ch.qos.logback.classic.net.SSLSocketAppender">
     &lt;remoteHost>${host}&lt;/remoteHost>
     &lt;ssl>
@@ -994,7 +1041,7 @@ Trust this certificate? [no]:  &lt;Enter "yes">
   &lt;root level="DEBUG">
     &lt;appender-ref ref="SOCKET" />
   &lt;/root>
-&lt;/configuration></pre>
+&lt;/configuration></code></pre>
 
       <p>This example assumes that the trust store is located at the root
       of the application's classpath.</p>
@@ -1017,11 +1064,11 @@ Trust this certificate? [no]:  &lt;Enter "yes">
       enable audit logging using the <code>debug</code> property in the
       configuration:</p>
       
-      <pre class="prettyprint source">&lt;configuration debug="true">
+      <pre><code>&lt;configuration debug="true">
   
   ...
   
-&lt;/configuration></pre>
+&lt;/configuration></code></pre>
 
       <p>With the debug property enabled, all of the relevant aspects of
       the resulting SSL configuration will be logged when the logging
@@ -1124,6 +1171,7 @@ Trust this certificate? [no]:  &lt;Enter "yes">
          code that indicates why the client rejected the server's
          certificate.
       </p>
+          <div class="bodyTable">
       <table class="bodyTable striped">
         <tr>
           <th>Code</th>
@@ -1149,7 +1197,8 @@ Trust this certificate? [no]:  &lt;Enter "yes">
           </td>
         </tr>
       </table>
-        
+          </div>
+
       <h4>Solutions</h4>
       <p>If the server's log message is reporting <code>certificate_unknown</code>
          then using either the <a href="#basicConfig.trustStore">Trust Store system
@@ -1191,6 +1240,8 @@ Trust this certificate? [no]:  &lt;Enter "yes">
          code that indicates why the server rejected the client's
          certificate.
       </p>
+
+          <div class="bodyTable">
       <table class="bodyTable striped">
         <tr>
           <th>Code</th>
@@ -1216,7 +1267,8 @@ Trust this certificate? [no]:  &lt;Enter "yes">
           </td>
         </tr>
       </table>
-        
+          </div>
+
       <h4>Solutions</h4>
       <p>If the client's log message is reporting <code>bad_certificate</code>
          then using either the <a href="#basicConfig.trustStore">Trust Store system

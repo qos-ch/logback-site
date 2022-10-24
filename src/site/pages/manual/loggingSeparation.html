@@ -11,8 +11,8 @@
     <link rel="stylesheet" type="text/css" href="../css/stackoverflow-light.min.css" />
 
     <script type="text/javascript">prefix='../';</script>
-    <script type="text/javascript" src="../js/menuListener.js"></script>
     <script type="text/javascript" src="../js/jquery-min.js"></script>
+    <script type="text/javascript" src="../js/menuListener.js"></script>
     <script type="text/javascript" src="../js/decorator.js"></script>
     <script type="text/javascript" src="../js/dsl.js"></script>
     <script type="text/javascript" src="../js/tab.js"></script>
@@ -50,9 +50,7 @@
           </div>
           <h1>Chapter 9: Logging separation</h1>
 
-    <a href="loggingSeparation_ja.html">&#x548C;&#x8A33; (Japanese translation)</a>
-
-    <script src="../templates/creative.js" type="text/javascript"></script>		
+    <script src="../templates/creative.js" type="text/javascript"></script>
     <script src="../templates/setup.js" type="text/javascript"></script>
 
     <h2>The problem: Logging Separation</h2>
@@ -113,7 +111,7 @@
     contexts. When you write:
     </p>
 
-    <pre class="prettyprint source">Logger logger = LoggerFactory.getLogger(&#8203;"foo");</pre>
+    <pre><code>Logger logger = LoggerFactory.getLogger(&#8203;"foo");</pre>
 
     <p>the <code>getLogger</code>() method in
     <code>LoggerFactory</code> class will ask the SLF4J binding for a
@@ -183,11 +181,11 @@
     file. If "kenobi" was the name of your application, you would add
     the following XML element to kenobi's web.xml file:</p>
 
-    <pre class="prettyprint source">&lt;env-entry>
+    <pre><code>&lt;env-entry>
   &lt;env-entry-name>logback/context-name&lt;/&#8203;env-entry-name>
   &lt;env-entry-type>java.lang.String&lt;/&#8203;env-entry-type>
   &lt;env-entry-value>kenobi&lt;/env-entry-value>
-&lt;/env-entry></pre>
+&lt;/env-entry></code></pre>
 
     <p>Assuming you have enabled <code>ContextJNDISelector</code>,
     logging for Kenobi will be done using a logger context named
@@ -209,11 +207,11 @@
     </p>
 
 
-   <pre class="prettyprint source">&lt;env-entry>
+   <pre><code>&lt;env-entry>
   &lt;env-entry-name>logback/configuration-resource&lt;/&#8203;env-entry-name>
   &lt;env-entry-type>java.lang.String&lt;/&#8203;env-entry-type>
   &lt;env-entry-value>aFolder/my_config.&#8203;xml&lt;/env-entry-value>
-&lt;/env-entry></pre> 
+&lt;/env-entry></code></pre> 
 
     <p>The file <em>my_config.xml</em> should be placed under
     <em>WEB-INF/classes/aFolder/</em>. The important point to remember
@@ -255,9 +253,9 @@
     following lines into your web-applications <em>web.xml</em>
     file.</p>
 
-    <pre class="prettyprint source">&lt;listener>
+    <pre><code>&lt;listener>
   &lt;listener-class>ch.qos.logback.classic.&#8203;selector.servlet.&#8203;ContextDetachingSCL&lt;/&#8203;listener-class>
-&lt;/listener></pre>
+&lt;/listener></code></pre>
 
     <p><span class="label notice">Note</span> Most containers invoke
     the <code>contextInitialized()</code> method of listeners in the
@@ -282,14 +280,14 @@
     be installed by adding the following lines to your application's
     web.xml file.</p>
 
- <pre class="prettyprint source">&lt;filter>
+ <pre><code>&lt;filter>
   &lt;filter-name>LoggerContextFilter&lt;/&#8203;filter-name>
   &lt;filter-class>ch.qos.logback.classic.&#8203;selector.servlet.&#8203;LoggerContextFilter&lt;/&#8203;filter-class>
 &lt;/filter>
 &lt;filter-mapping>
   &lt;filter-name>LoggerContextFilter&lt;/&#8203;filter-name>
   &lt;url-pattern>/*&lt;/url-pattern>
-&lt;/filter-mapping></pre>
+&lt;/filter-mapping></code></pre>
 
    <p>At the beginning of each http-request,
    <code>LoggerContextFilter</code> will obtain the logger context
@@ -321,10 +319,10 @@
    reference. For example,
    </p>
 
-   <pre class="prettyprint source">public class Foo {
+   <pre><code>public class Foo {
   <b>static</b> Logger logger = LoggerFactory.getLogger(&#8203;Foo.class);
   ...
-}</pre>
+}</code></pre>
 
     <p>Static logger references are both memory and CPU
     efficient. Only one logger reference is used for all instances of
@@ -377,7 +375,7 @@
     separate appenders for each web-application.
     </p>
 
-    <pre class="prettyprint source">&lt;configuration>
+    <pre><code>&lt;configuration>
 
   &lt;statusListener class="ch.qos.logback.&#8203;core.status.OnConsoleStatusListener" />  
 
@@ -398,7 +396,7 @@
   &lt;root level="DEBUG">
     &lt;appender-ref ref="SIFT" />
   &lt;/root>
-&lt;/configuration></pre>
+&lt;/configuration></code></pre>
 
 
    <p>If kenobi and yoda are web-applications, then the above
@@ -471,7 +469,7 @@ DEBUG ch.qos.starwars.&#8203;shared.Mustafar               <b>cn=yoda</b> - in f
    
    <p>Here is the configuration file enabling prudent mode:</p>
 
-    <pre class="prettyprint source">&lt;configuration>
+    <pre><code>&lt;configuration>
 
   &lt;statusListener class="ch.qos.logback.&#8203;core.status.OnConsoleStatusListener" />  
 
@@ -493,7 +491,7 @@ DEBUG ch.qos.starwars.&#8203;shared.Mustafar               <b>cn=yoda</b> - in f
   &lt;root level="DEBUG">
     &lt;appender-ref ref="SIFT" />
   &lt;/root>
-&lt;/configuration></pre>
+&lt;/configuration></code></pre>
 
 
    <p>If you were able to keep up with the discussion thus far and

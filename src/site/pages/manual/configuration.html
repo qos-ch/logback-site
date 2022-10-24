@@ -4,6 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Access-Control-Allow-Origin" content="http://localhost:8080/translator/dsl/xml2Canon/asText">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
     <title>Chapter 3: Configuration</title>
 
       <link rel="stylesheet" type="text/css" href="../css/site3.css" />
@@ -15,11 +17,19 @@
       <script type="text/javascript" src="../js/menuListener.js"></script>
       <script type="text/javascript" src="../js/jquery-min.js"></script>
       <script type="text/javascript" src="../js/decorator.js"></script>
+
+      <script type="text/javascript" src="../js/sjcl.js"></script>
+      <script type="text/javascript" src="../js/bitArray.js"></script>
+      <script type="text/javascript" src="../js/codecString.js"></script>
+      <script type="text/javascript" src="../js/codecHex.js"></script>
+      <script type="text/javascript" src="../js/sha1.js"></script>
+
       <script type="text/javascript" src="../js/dsl.js"></script>
       <script type="text/javascript" src="../js/tab.js"></script>
       <script type="text/javascript" src="../js/highlight.min.js"></script>
 
-  </head>
+
+</head>
   <body onload="enableMenuEventListeners(); hljs.highlightAll(); decorate(); enableLegacy();">
 
   <script type="text/javascript" src="../templates/header3.js"></script>
@@ -173,7 +183,7 @@
 
     <p class="example">Example: Simple example of
     <code>BasicConfigurator</code> usage <a
-    href="../xref/chapters/configuration/MyApp1.html">(logback-examples/src/main/java/chapters/configuration/MyApp1.java)</a></p>
+    href="../xref/chapters/configuration/MyApp1.html">(logback-examples/&#8203;src/main/&#8203;java/chapters/&#8203;configuration/MyApp1.java)</a></p>
 
     <pre><code>package chapters.configuration;
 
@@ -198,7 +208,7 @@ public class MyApp1 {
   </p>
 
   <p class="example">Example: Small class doing logging
-  <a href="../xref/chapters/configuration/Foo.html">(logback-examples/src/main/java/chapters/configuration/Foo.java)</a>
+  <a href="../xref/chapters/configuration/Foo.html">(logback-examples/src/&#8203;main/java/&#8203;chapters/&#8203;configuration/Foo.java)</a>
   </p>
 
   <pre><code>package chapters.configuration;
@@ -285,9 +295,9 @@ public class Foo {
    <div id="sample0_legacy" class="tabcontent">   
    <pre><code>&lt;configuration>
 
-  &lt;appender name="STDOUT" class="ch.qos.logback.&#8203;core.ConsoleAppender">
+  &lt;appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
     &lt;!-- encoders are assigned the type
-         ch.qos.logback.classic.&#8203;encoder.PatternLayoutEncoder by default -->
+         ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
     &lt;encoder>
       &lt;pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n&lt;/pattern>
     &lt;/encoder>
@@ -302,8 +312,11 @@ public class Foo {
    <div id="sample0_canonical" class="tabcontent">
     <p>Requires a server call.</p>
    </div>
-   
-   <p>After you have renamed <em>sample0.xml</em> as
+
+
+
+
+      <p>After you have renamed <em>sample0.xml</em> as
    <em>logback.xml</em> (or <em>logback-test.xml</em>) place it into a
    directory accessible from the class path. Running the <em>MyApp1</em>
    application should give identical results to its previous run.</p>
@@ -332,7 +345,7 @@ public class Foo {
 
    <p class="example" id="MyApp2">Example: Print logback's internal status
     information <a
-    href="../xref/chapters/configuration/MyApp2.html">(logback-examples/src/main/java/chapters/configuration/MyApp2.java)</a></p>
+    href="../xref/chapters/configuration/MyApp2.html">(logback-examples/src/&#8203;main/java/&#8203;chapters/&#8203;configuration/MyApp2.java)</a></p>
 
 
 <pre class="source">
@@ -742,7 +755,7 @@ java.lang.Exception: 99 is invalid
 
    <p class="example">Example: Invoking <code>JoranConfigurator</code>
    directly <a
-   href="../xref/chapters/configuration/MyApp3.html">(logback-examples/src/main/java/chapters/configuration/MyApp3.java)</a></p>
+   href="../xref/chapters/configuration/MyApp3.html">(logback-examples/src/&#8203;main/java/chapters/&#8203;configuration/MyApp3.java)</a></p>
 
 <pre><code>package chapters.configuration;
 
@@ -800,19 +813,19 @@ public class MyApp3 {
    context and stop any active threads in an orderly way. Please also
    read the section on "shutdown hooks" just below.</p>
 
-<pre class="prettyprint lang-java source">
+<pre><code>
 import org.sflf4j.LoggerFactory;
 import ch.qos.logback.classic.&#8203;LoggerContext;
 ...
 
 // assume SLF4J is bound to logback-classic in the current environment
 <b>LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory(&#8203;);</b>
-<b>loggerContext.stop();</b></pre>
+<b>loggerContext.stop();</b></code></pre>
 
    <p>In web-applications the above code could be invoked from within
    the <a
    href="http://docs.oracle.com/javaee/6/api/javax/servlet/ServletContextListener.html#contextDestroyed(javax.servlet.ServletContextEvent)">contextDestroyed</a>
-   method of <code>ServletContextListener</code> in order to stop
+   method of <code>Servlet&#8203;ContextListener</code> in order to stop
    logback-classic and release resources. Starting with version
    1.1.10, the appropriate <code>ServletContextListener</code> is
    installed automatically for you (<a href="#webShutdownHook">see just below</a>).
@@ -1152,7 +1165,8 @@ import ch.qos.logback.classic.&#8203;LoggerContext;
    <em>sample3.xml</em> configuration file.
    </p>
 
-   <table class="bodyTable">
+      <div class="bodyTable">
+   <table class="bodyTable striped">
      <tr>
        <th>Logger name</th>
        <th>Assigned Level</th>
@@ -1163,7 +1177,7 @@ import ch.qos.logback.classic.&#8203;LoggerContext;
        <td><code>DEBUG</code></td>
        <td><code>DEBUG</code></td>
      </tr>
-     <tr class="alt">
+     <tr>
        <td>chapters.configuration</td>
        <td><code>INFO</code></td>
        <td><code>INFO</code></td>
@@ -1173,13 +1187,13 @@ import ch.qos.logback.classic.&#8203;LoggerContext;
        <td><code>null</code></td>
        <td><code>INFO</code></td>
      </tr>
-     <tr class="alt">
+     <tr>
        <td>chapters.configuration.Foo</td>
        <td><code>DEBUG</code></td>
        <td><code>DEBUG</code></td>
      </tr>
    </table>
-
+      </div>
   <p>It follows that the two logging statements of level
   <code>INFO</code> in the <code>MyApp3</code> class as well as the
   DEBUG messages in <code>Foo.doIt()</code> are all enabled. Note that
@@ -1306,10 +1320,10 @@ import ch.qos.logback.classic.&#8203;LoggerContext;
   support for properties is not visible.
   </p>
 
-  <p align="left">
-    <img src="images/chapters/configuration/appenderSyntax.png"
+  <a href="images/chapters/configuration/appenderSyntax.png">
+    <img class="reduced" src="images/chapters/configuration/appenderSyntax.png"
          alt="Appender Syntax" title="Appender element syntax"/>
-  </p>
+  </a>
 
   <p>The <code>&lt;layout></code> element takes a mandatory class
   attribute specifying the fully qualified name of the layout class to
@@ -1466,7 +1480,7 @@ import ch.qos.logback.classic.&#8203;LoggerContext;
   </p>
 
   <p class="example">Example: Multiple appender
-  (logback-examples/&#8203;src/main/resources/&#8203;chapters/configuration/&#8203;restricted.xml)</p>
+  (logback-examples/&#8203;src/main/resources/&#8203;chapters/&#8203;configuration/&#8203;restricted.xml)</p>
 
   <div class="tab">
     <button class="tablinks" id="button_restricted_legacy"
@@ -1599,7 +1613,7 @@ import ch.qos.logback.classic.&#8203;LoggerContext;
             onclick="openTab(event, 'contextName', 'canonical')">Canonical (1.3)</button>
   </div>  
   <div id="contextName_legacy" class="tabcontent">
-  <pre  class="prettyprint source">&lt;configuration>
+  <pre><code>&lt;configuration>
   <b>&lt;contextName>myAppName&lt;/contextName></b>
   &lt;appender name="STDOUT" class="ch.qos.logback.&#8203;core.ConsoleAppender">
     &lt;encoder>
@@ -1610,7 +1624,7 @@ import ch.qos.logback.classic.&#8203;LoggerContext;
   &lt;root level="debug">
     &lt;appender-ref ref="STDOUT" />
   &lt;/root>
-&lt;/configuration></pre>
+&lt;/configuration></code></pre>
   </div>
 
   <div id="contextName_canonical" class="tabcontent">
@@ -2097,7 +2111,7 @@ fileName=myApp.log
 
     <tr>
       <td><a
-      href="../apidocs/ch/qos/logback/core/property/CanonicalHostNamePropertyDefiner.html"><code>CanonicalHostNamePropertyDefiner</code></a>
+      href="../apidocs/ch/qos/logback/core/property/CanonicalHostNamePropertyDefiner.html"><code>Canonical&#8203;HostName&#8203;PropertyDefiner</code></a>
       </td>
       <td>Set the named variable to the canonical host name of the
       local host. Note that obtaining the canonical host name may take several seconds.
@@ -2106,7 +2120,7 @@ fileName=myApp.log
 
     <tr>
       <td><a
-      href="../apidocs/ch/qos/logback/core/property/FileExistsPropertyDefiner.html"><code>FileExistsPropertyDefiner</code></a>
+      href="../apidocs/ch/qos/logback/core/property/FileExistsPropertyDefiner.html"><code>FileExists&#8203;PropertyDefiner</code></a>
       </td>
       <td>Set the named variable to "true" if the file specified by
       <span class="prop">path</span> property exists, to "false"
@@ -2116,7 +2130,7 @@ fileName=myApp.log
 
     <tr>
       <td><a
-      href="../apidocs/ch/qos/logback/core/property/FileExistsPropertyDefiner.html"><code>ResourceExistsPropertyDefiner</code></a>
+      href="../apidocs/ch/qos/logback/core/property/FileExistsPropertyDefiner.html"><code>ResourceExists&#8203;PropertyDefiner</code></a>
       </td>
 
       <td>Set the named variable to "true" if the <span
@@ -2255,13 +2269,13 @@ fileName=myApp.log
    (logback-examples/&#8203;src/main/resources/&#8203;chapters/configuration/&#8203;insertFromJNDI.&#8203;xml)</p>
 
 <div class="tab">
-    <button class="tablinks" id="button_nsertFromJNDI_legacy"
-            onclick="openTab(event, 'nsertFromJNDI', 'legacy')">Legacy</button>
-    <button class="tablinks" id="button_nsertFromJNDI_canonical"
-            onclick="openTab(event, 'nsertFromJNDI', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_insertFromJNDI_legacy"
+            onclick="openTab(event, 'insertFromJNDI', 'legacy')">Legacy</button>
+    <button class="tablinks" id="button_insertFromJNDI_canonical"
+            onclick="openTab(event, 'insertFromJNDI', 'canonical')">Canonical (1.3)</button>
 </div>
 
-<div id="nsertFromJNDI_legacy" class="tabcontent">
+<div id="insertFromJNDI_legacy" class="tabcontent">
 
    <pre><code>&lt;configuration>
   <b>&lt;insertFromJNDI env-entry-name="java:comp/&#8203;env/appName" as="<span class="green">appName"</span> /></b>
@@ -2280,7 +2294,7 @@ fileName=myApp.log
 
 </div>
 
-<div id="nsertFromJNDI_canonical" class="tabcontent">
+<div id="insertFromJNDI_canonical" class="tabcontent">
   <p>Requires a server call. Please wait a few seconds.</p>
 </div>
 
@@ -2303,13 +2317,13 @@ fileName=myApp.log
   (logback-examples/&#8203;src/main/resources/&#8203;chapters/configuration/&#8203;containingConfig.&#8203;xml)</p>
 
 <div class="tab">
-    <button class="tablinks" id="button_ontainingConfig_legacy"
-            onclick="openTab(event, 'ontainingConfig', 'legacy')">Legacy</button>
-    <button class="tablinks" id="button_ontainingConfig_canonical"
-            onclick="openTab(event, 'ontainingConfig', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_containingConfig_legacy"
+            onclick="openTab(event, 'containingConfig', 'legacy')">Legacy</button>
+    <button class="tablinks" id="button_containingConfig_canonical"
+            onclick="openTab(event, 'containingConfig', 'canonical')">Canonical (1.3)</button>
 </div>
 
-<div id="ontainingConfig_legacy" class="tabcontent">
+<div id="containingConfig_legacy" class="tabcontent">
   <pre><code>&lt;configuration>
   <b>&lt;include file="src/main/java/&#8203;chapters/configuration/&#8203;includedConfig.&#8203;xml"/></b>
 
@@ -2321,7 +2335,7 @@ fileName=myApp.log
 
 </div>
 
-<div id="ontainingConfig_canonical" class="tabcontent">
+<div id="containingConfig_canonical" class="tabcontent">
   <p>Requires a server call. Please wait a few seconds.</p>
 </div>
 
@@ -2418,13 +2432,13 @@ fileName=myApp.log
 
   <p>The contextListener element can be used to install <code>LevelChangePropagator</code> as shown next.</p>
 <div class="tab">
-    <button class="tablinks" id="button_evelChangePropagator__legacy"
-            onclick="openTab(event, 'evelChangePropagator_', 'legacy')">Legacy</button>
-    <button class="tablinks" id="button_evelChangePropagator__canonical"
-            onclick="openTab(event, 'evelChangePropagator_', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_levelChangePropagator_legacy"
+            onclick="openTab(event, 'levelChangePropagator', 'legacy')">Legacy</button>
+    <button class="tablinks" id="button_levelChangePropagator_canonical"
+            onclick="openTab(event, 'levelChangePropagator', 'canonical')">Canonical (1.3)</button>
 </div>
 
-<div id="evelChangePropagator__legacy" class="tabcontent">
+<div id="levelChangePropagator_legacy" class="tabcontent">
   <pre><code>&lt;configuration debug="true">
   <b>&lt;contextListener class="ch.qos.logback.&#8203;classic.jul.LevelChangePropagator"/></b>
    &lt;!-- rest of the configuration file .... --&gt;
@@ -2432,7 +2446,7 @@ fileName=myApp.log
 
 </div>
 
-<div id="evelChangePropagator_canonical" class="tabcontent">
+<div id="levelChangePropagator_canonical" class="tabcontent">
   <p>Requires a server call. Please wait a few seconds.</p>
 </div>
 
@@ -2443,13 +2457,13 @@ fileName=myApp.log
   left untouched.</p>
 
 <div class="tab">
-    <button class="tablinks" id="button_evelChangePropagator_RESET_legacy"
-            onclick="openTab(event, 'evelChangePropagator_RESET', 'legacy')">Legacy</button>
-    <button class="tablinks" id="button_evelChangePropagator_RESET_canonical"
-            onclick="openTab(event, 'evelChangePropagator_RESET', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_levelChangePropagator_RESET_legacy"
+            onclick="openTab(event, 'levelChangePropagator_RESET', 'legacy')">Legacy</button>
+    <button class="tablinks" id="button_levelChangePropagator_RESET_canonical"
+            onclick="openTab(event, 'levelChangePropagator_RESET', 'canonical')">Canonical (1.3)</button>
 </div>
 
-<div id="evelChangePropagator_RESET_legacy" class="tabcontent">
+<div id="levelChangePropagator_RESET_legacy" class="tabcontent">
   <pre><code>&lt;configuration debug="true">
   &lt;contextListener class="ch.qos.logback.&#8203;classic.jul.LevelChangePropagator">
     <b>&lt;resetJUL>true&lt;/resetJUL></b>
@@ -2459,7 +2473,7 @@ fileName=myApp.log
 
 </div>
 
-<div id="evelChangePropagator_RESET_canonical" class="tabcontent">
+<div id="levelChangePropagator_RESET_canonical" class="tabcontent">
   <p>Requires a server call. Please wait a few seconds.</p>
 </div>
 

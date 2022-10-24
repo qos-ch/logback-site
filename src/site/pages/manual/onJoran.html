@@ -3,6 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Chapter 11: Joran</title>
     <link rel="stylesheet" type="text/css" href="../css/site3.css" />
     <link rel="stylesheet" type="text/css" href="../css/menu2.css"/>
@@ -660,6 +661,7 @@ Element [abc] asked to be printed.
   parent class/property name pairs to a default class. These are
   listed in the table below.</p>
 
+        <div class="bodyTable">
   <table class="bodyTable">
     <tr>
       <th>Parent class </th>
@@ -668,35 +670,36 @@ Element [abc] asked to be printed.
     </tr>
 
     <tr >
-      <td>ch.qos.logback.&#8203;core.&#8203;AppenderBase</td>
+      <td>ch.qos.logback.core.AppenderBase</td>
       <td>encoder</td>
-      <td>ch.qos.logback.&#8203;classic.&#8203;encoder.&#8203;PatternLayout&#8203;Encoder</td>
+      <td>ch.qos.logback.classic.encoder.PatternLayoutEncoder</td>
     </tr>
 
     <tr class="alt">
-      <td>ch.qos.logback.&#8203;core.&#8203;Unsynchronized&#8203;AppenderBase</td>
+      <td>ch.qos.logback.core.UnsynchronizedAppenderBase</td>
       <td>encoder</td>
-      <td>ch.qos.logback.&#8203;classic.&#8203;encoder.&#8203;PatternLayout&#8203;Encoder</td>
+      <td>ch.qos.logback.classic.encoder.PatternLayoutEncoder</td>
     </tr>
 
       <tr >
-      <td>ch.qos.logback.&#8203;core.&#8203;AppenderBase</td>
+      <td>ch.qos.logback.core.AppenderBase</td>
       <td>layout</td>
-      <td>ch.qos.logback.&#8203;classic.&#8203;PatternLayout</td>
+      <td>ch.qos.logback.classic.PatternLayout</td>
     </tr>
 
     <tr class="alt">
-      <td>ch.qos.logback.&#8203;core.&#8203;Unsynchronized&#8203;AppenderBase</td>
+      <td>ch.qos.logback.core.UnsynchronizedAppenderBase</td>
       <td>layout</td>
-      <td>ch.qos.logback.&#8203;classic.&#8203;PatternLayout</td>
+      <td>ch.qos.logback.classic.PatternLayout</td>
     </tr>
 
     <tr>
-      <td>ch.qos.logback.&#8203;core.&#8203;filter.EvaluatorFilter</td>
+      <td>ch.qos.logback.core.filter.EvaluatorFilter</td>
       <td>evaluator</td>
-      <td>ch.qos.logback.&#8203;classic.&#8203;boolex.&#8203;JaninoEvent&#8203;Evaluator</td>
+      <td>ch.qos.logback.classic.boolex.JaninoEventEvaluator</td>
     </tr>
   </table>
+        </div>
 
   <p>This list may change in future releases. Please see
   logback-classic <a

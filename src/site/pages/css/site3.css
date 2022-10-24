@@ -15,6 +15,7 @@
     --main-logo-height: 2rem;
     --sponsor-icon-height: calc(var(--main-logo-height) * 0.5);
     --x-logo-height: calc(var(--main-logo-height) * 0.5);
+    --logo-in-menu-height: 2.5ex;
 }
 
 body {
@@ -98,9 +99,8 @@ img.sponsorIcon {
 /*    overflow-wrap: break-word; !* synonymous to word-wrap *!*/
 /*}*/
 
-code {
-}
-pre {
+
+pre, div.bodyTable {
     overflow: auto;
     overflow-wrap: normal;
 }
@@ -112,7 +112,12 @@ pre {
     /*overflow-wrap: normal; !* synonymous to word-wrap *!*!*/
     /*white-space: pre;*/
 }
-
+p.example {
+    white-space: pre-wrap;
+    overflow-wrap: normal;
+    min-height: 2ex;
+    overflow: visible;
+}
 img.reduced,
 img.data {
     max-width: 100%;
@@ -122,9 +127,11 @@ img.data {
     /*max-width: calc(var(--max-width-on-wide-screen) * 0.75);*/
 }
 
-.twitter-logo,
-.github-logo {
+.twitter-logo{
     height: var(--x-logo-height);
+}
+.github-logo {
+    height: var(--logo-in-menu-height);
 }
 
 /*-----------------------------------------*/
@@ -165,6 +172,7 @@ img.data {
 
 div#ad {
     grid-area: ad-area;
+    margin: 0.5rem;
 }
 
 div#ad,
@@ -411,6 +419,7 @@ div.license {
 
 /* ========== body table ============ */
 table.bodyTable {
+
     padding: 0px;
     margin-left: -2px;
     margin-right: -2px;
