@@ -3,78 +3,38 @@
 
 var xml2CanonURL = 'http://localhost:8080/translator/dsl/xml2Canon/asText2';
 
+function loopOn() {
+
+    var contents = $("div.tabcontent");
+
+    if(contents === null)
+        return;
+
+    contents.each( function(i, e) {
+        if(this.id.endsWith('_legacy')) {
+            var textContent = this.textContent;
+            var sanitizedText = sanitize(textContent);
+            var bitArrayForInner = sjcl.hash.sha1.hash((sanitizedText));
+            var sha1Str = sjcl.codec.hex.fromBits(bitArrayForInner);
+
+            console.log('ID_SHA1_MAP.put("' +this.id +'", "'+ sha1Str+ '");');
+        }
+    });
+
+}
+
+
 
 function canonical(legacyId, canonicalId) {
-
-    var form = document.getElementById('aForm');
-    if (form == null) {
-        form = document.createElement("form");
-        document.body.appendChild(form);
-    }
-
-    $(form).empty();
-    form.id = 'aForm';
-
     var legacyElement = document.getElementById(legacyId);
-
     var textContent = legacyElement.textContent;
-    //alert("=input=="+inner);
-    // textContent = textContent.replace(/<pre class="prettyprint source">/gi, '');
-    // textContent = textContent.replace(/<pre class="source prettyprint">/gi, '');
-    // textContent = textContent.replace(/<pre><code class="[^"]+">/gi, '');
-    //
-    // textContent = textContent.replace(/<pre><code>/gi, '');
-    // textContent = textContent.replace(/<\/code><\/pre>/gi, '');
-    // textContent = textContent.replace(/<\/pre>/gi, '');
-    textContent = textContent.replace(/&lt;/gi, '<');
-    textContent = textContent.replace(/&gt;/gi, '>');
-
-    textContent = textContent.replace(/&#8203;/gi, '');
-
-    textContent = textContent.replace(/<span\s+class="[^"]*">/gi, '');
-    textContent = textContent.replace(/<\/span>/gi, '');
-    textContent = textContent.replace(/<br>/gi, '');
-    textContent = textContent.replace(/&nbsp;/gi, '');
-    textContent = textContent.replace(/<b>/gi, '');
-    textContent = textContent.replace(/<\/b>/gi, '');
-
-    // var bitArray = sjcl.hash.sha1.hash('abc');
-    //
-    // alert("sha1('abc')="+sjcl.codec.hex.fromBits(bitArray));
-
-    var bitArrayForInner = sjcl.hash.sha1.hash((textContent));
+    var sanitizedText = sanitize(textContent);
+    var bitArrayForInner = sjcl.hash.sha1.hash((sanitizedText));
     var sha1Str = sjcl.codec.hex.fromBits(bitArrayForInner);
 
-    form.setAttribute("method", "post");
-    form.setAttribute("action", xml2CanonURL);
-
-    var jsonText = JSON.stringify({"payload": textContent, "id": legacyId, "sha1": sha1Str});
-
-    var hiddenField = document.createElement("input");
-    hiddenField.setAttribute("type", "hidden");
-    hiddenField.setAttribute("name", "configurationText");
-    hiddenField.setAttribute("value", jsonText);
-    form.appendChild(hiddenField);
-
-
-
-    var hiddenSHA1Field = document.createElement("input");
-    hiddenSHA1Field.setAttribute("type", "hidden");
-    hiddenSHA1Field.setAttribute("name", "sha1");
-    hiddenSHA1Field.setAttribute("value", sha1Str);
-    //form.appendChild(hiddenSHA1Field);
-
-
-    var postData = $("#aForm").serialize();
-
-
-
-    //alert(md5Str);
+    var jsonText = JSON.stringify({"payload": sanitizedText, "id": legacyId, "sha1": sha1Str});
 
     var canonicalElement = document.getElementById(canonicalId);
-
-    //$.post({url: xml2CanonURL, data: postData,
-
 
     $.ajax({
         type: "POST",
@@ -84,9 +44,26 @@ function canonical(legacyId, canonicalId) {
         "contentType": 'application/json',
         "dataType": 'json',
         success: cback});
+}
+function sanitize(text) {
+    var inputText = text;
 
-    form.removeChild(hiddenField);
-    //form.removeChild(hiddenSHA1Field);
+    inputText = inputText.replace(/&lt;/gi, '<');
+    inputText = inputText.replace(/&gt;/gi, '>');
+
+
+    var l1 = inputText.length;
+    inputText = inputText.replace(/&#8203;/gi, '');
+    var l2 = inputText.length;
+
+    inputText = inputText.replace(/<span\s+class="[^"]*">/gi, '');
+    inputText = inputText.replace(/<\/span>/gi, '');
+    inputText = inputText.replace(/<br>/gi, '');
+    inputText = inputText.replace(/&nbsp;/gi, '');
+    inputText = inputText.replace(/<b>/gi, '');
+    inputText = inputText.replace(/<\/b>/gi, '');
+    return inputText;
+
 }
 
 function cback (data, status) {
@@ -101,7 +78,7 @@ function cback (data, status) {
     var decorated = hljs.highlight(payloadStr, {language: 'xml'}).value
 
     var canonicalElement = this; //document.getElementById(canonicalId);
-    canonicalElement.innerHTML = '<pre><code>' + decorated + '</code></pre>'
+    canonicalElement.innerHTML = '<pre><code class="hljs language-xml">' + decorated + '</code></pre>'
 }
 
 function ConfigurationText(aPayload) {

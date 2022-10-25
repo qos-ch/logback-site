@@ -46,11 +46,29 @@ function insertLogoAndMenu() {
     document.write('    </div>');
 }
 
-
-document.write('<div id="header">');
+document.write('<link rel="stylesheet" type="text/css" href="'+prefix+'css/site3.css" />');
+document.write('<link rel="stylesheet" type="text/css" href="'+prefix+'css/menu2.css"/>');
+document.write('<link rel="stylesheet" type="text/css" href="'+prefix+'css/stackoverflow-light.min.css" />');
 document.write('<link rel="stylesheet" type="text/css" href="'+prefix+'css/font/fontawesome.min.css"/>');
 document.write('<link rel="stylesheet" type="text/css" href="'+prefix+'css/font/brands.min.css"/>');
 document.write('<link rel="stylesheet" type="text/css" href="'+prefix+'css/font/solid.min.css"/>');
+
+document.write('<script type="text/javascript" src="'+prefix+'js/menuListener.js"></script>');
+document.write('<script type="text/javascript" src="'+prefix+'js/jquery-min.js"></script>');
+document.write('<script type="text/javascript" src="'+prefix+'js/decorator.js"></script>');
+
+document.write('<script type="text/javascript" src="'+prefix+'js/sjcl/sjcl.js"></script>');
+document.write('<script type="text/javascript" src="'+prefix+'js/sjcl/bitArray.js"></script>');
+document.write('<script type="text/javascript" src="'+prefix+'js/sjcl/codecString.js"></script>');
+document.write('<script type="text/javascript" src="'+prefix+'js/sjcl/codecHex.js"></script>');
+document.write('<script type="text/javascript" src="'+prefix+'js/sjcl/sha1.js"></script>');
+
+document.write('<script type="text/javascript" src="'+prefix+'js/dsl.js"></script>');
+document.write('<script type="text/javascript" src="'+prefix+'js/tab.js"></script>');
+document.write('<script type="text/javascript" src="'+prefix+'js/highlight.min.js"></script>');
+
+document.write('<div id="header">');
+
 
 document.write('<div id="header-grid">');
 
