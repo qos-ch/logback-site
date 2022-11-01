@@ -48,6 +48,7 @@ function insertLogoAndMenu() {
 
 document.write('<link rel="stylesheet" type="text/css" href="'+prefix+'css/site3.css" />');
 document.write('<link rel="stylesheet" type="text/css" href="'+prefix+'css/menu2.css"/>');
+document.write('<link rel="stylesheet" type="text/css" href="'+prefix+'css/popup.css"/>');
 document.write('<link rel="stylesheet" type="text/css" href="'+prefix+'css/stackoverflow-light.min.css" />');
 document.write('<link rel="stylesheet" type="text/css" href="'+prefix+'css/font/fontawesome.min.css"/>');
 document.write('<link rel="stylesheet" type="text/css" href="'+prefix+'css/font/brands.min.css"/>');
@@ -56,6 +57,7 @@ document.write('<link rel="stylesheet" type="text/css" href="'+prefix+'css/font/
 document.write('<script type="text/javascript" src="'+prefix+'js/menuListener.js"></script>');
 document.write('<script type="text/javascript" src="'+prefix+'js/jquery-min.js"></script>');
 document.write('<script type="text/javascript" src="'+prefix+'js/decorator.js"></script>');
+document.write('<script type="text/javascript" src="'+prefix+'js/cookies.js"></script>');
 
 document.write('<script type="text/javascript" src="'+prefix+'js/sjcl/sjcl.js"></script>');
 document.write('<script type="text/javascript" src="'+prefix+'js/sjcl/bitArray.js"></script>');
@@ -68,7 +70,6 @@ document.write('<script type="text/javascript" src="'+prefix+'js/tab.js"></scrip
 document.write('<script type="text/javascript" src="'+prefix+'js/highlight.min.js"></script>');
 
 document.write('<div id="header">');
-
 
 document.write('<div id="header-grid">');
 
@@ -98,7 +99,7 @@ document.write('</div>');
 
 // close #header-grid
 document.write('</div>');
-
 // close #header
 document.write('</div>');
 
+document.write('    <script type="text/javascript" src="'+prefix+'templates/popup.js" ></script>');

@@ -1,10 +1,13 @@
-//var xml2CanonURL='https://logback.qos.ch/translator/dsl/xml2Canon/asText';
-//var xml2CanonURL='/translator/dsl/xml2Canon/asText';
 
-var xml2CanonURL = 'http://localhost:8080/translator/dsl/xml2Canon/asText2';
+var xml2CanonURL='https://logback.qos.ch/translator/rest/dsl/xml2Canon/asJSON';
+
+//var xml2CanonURL = 'http://localhost:8080/translator/rest/dsl/xml2Canon/asJSON';
+
+const success = "success";
 
 function loopOn() {
-
+    if(1==1)
+        return;
     var contents = $("div.tabcontent");
 
     if(contents === null)
@@ -27,14 +30,17 @@ function loopOn() {
 
 function canonical(legacyId, canonicalId) {
     var legacyElement = document.getElementById(legacyId);
+    var canonicalElement = document.getElementById(canonicalId);
+
+    if($(canonicalElement).hasClass(success))
+        return;
+
     var textContent = legacyElement.textContent;
     var sanitizedText = sanitize(textContent);
     var bitArrayForInner = sjcl.hash.sha1.hash((sanitizedText));
     var sha1Str = sjcl.codec.hex.fromBits(bitArrayForInner);
 
     var jsonText = JSON.stringify({"payload": sanitizedText, "id": legacyId, "sha1": sha1Str});
-
-    var canonicalElement = document.getElementById(canonicalId);
 
     $.ajax({
         type: "POST",
@@ -43,7 +49,9 @@ function canonical(legacyId, canonicalId) {
         "context": canonicalElement,
         "contentType": 'application/json',
         "dataType": 'json',
-        success: cback});
+        "success": successCallback,
+        "error": errorCallback}
+    );
 }
 function sanitize(text) {
     var inputText = text;
@@ -66,11 +74,7 @@ function sanitize(text) {
 
 }
 
-function cback (data, status) {
-    //payload = '<pre><core>'+payload+'</core></pre>'
-    //canonicalElement.innerHTML = payload;
-    //canonicalElement.innerHTML = prettyPrintOne(canonicalElement.innerHTML);
-
+function successCallback (data, status) {
     var payloadStr = data.payload;
     payloadStr = payloadStr.replace(/&lt;/gi, '<');
     payloadStr = payloadStr.replace(/&gt;/gi, '>');
@@ -79,6 +83,35 @@ function cback (data, status) {
 
     var canonicalElement = this; //document.getElementById(canonicalId);
     canonicalElement.innerHTML = '<pre><code class="hljs language-xml">' + decorated + '</code></pre>'
+    $(canonicalElement).addClass(success);
+}
+
+function errorCallback (jqXHR, textStatus, errorThrown) {
+
+    const readyState = jqXHR.readyState;
+    var canonicalElement = this;
+
+    if(readyState == 0) {
+        canonicalElement.innerHTML = '<pre><code>Server unreachable</code></pre>';
+    } else if(readyState == 4) {
+        const status = jqXHR.status;
+        var responseDom = jqXHR.responseText;
+        var parts = responseDom.split('####');
+        if(parts != null || parts.length == 3) {
+            var msg = parts[1];
+            msg = msg.replace(/&lt;/gi, '<');
+            msg = msg.replace(/&gt;/gi, '>');
+            msg = msg.replace(/&#47;/gi, '/');
+
+
+            canonicalElement.innerHTML = '<pre>' + msg +'</pre>';
+        } else {
+            canonicalElement.innerHTML = '<pre>server returned error code '+status+'</pre>';
+        }
+    } else {
+        canonicalElement.innerHTML = '<pre><code>Unknown error</code></pre>';
+    }
+
 }
 
 function ConfigurationText(aPayload) {
