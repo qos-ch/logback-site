@@ -1,3 +1,24 @@
+function xgetCookie(cname) {
+    let name = cname + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(';');
+    for(let i = 0; i <ca.length; i++) {
+        let c = ca[i];
+        c = xremoveLeadingSpaces(c);
+        if (c.indexOf(name) == 0) {
+            console.log("found cookie "+c)
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+
+function xremoveLeadingSpaces(input) {
+    while (input.charAt(0) == ' ') {
+        input = input.substring(1);
+    }
+    return input;
+}
 
 function insertLogoAndMenu() {
     document.write('    <div class="dropdown">');
@@ -36,10 +57,10 @@ function insertLogoAndMenu() {
     document.write('            <div>');
     document.write('                <div class="dropdown-heading">Online Tools</div>');
     document.write('                <div class="dropdown-links">');
-    document.write('                    <a href="https://logback.qos.ch/translator/"><i class="fa-regular fa-cloud"></i> log4j.properties Translator</a>');
-    document.write('                    <a href="https://logback.qos.ch/translator/xml2Canon.html">');
-    document.write('                             <i class="fa-regular fa-cable-car"></i> logback.xml to canonical form (1.3)');
-    document.write('                    </a>');
+    document.write('                    <a href="https://logback.qos.ch/translator/"><i class="fa-regular fa-cloud"></i> Translation services</a>');
+   // document.write('                    <a href="https://logback.qos.ch/translator/xml2Canon.html">');
+    //document.write('                             <i class="fa-regular fa-cable-car"></i> logback.xml to canonical form (1.3)');
+    //document.write('                    </a>');
     document.write('                </div>');
     document.write('            </div>');
     document.write('        </div>');
@@ -79,14 +100,33 @@ document.write('</div>');
 
 document.write('<div id="header-grid-icons-item">');
 
-document.write('      <a href="' + prefix +'count/sponsor.html"">');
-document.write('        <img  class="sponsorIcon" src="' + prefix + 'images/sponsor.png" alt="Sponsor qos-ch"/>');
-document.write('      </a>');
+const avatarUrl = xgetCookie('AVATAR_URL');
 
+document.write('<div id="header-grid-icons-item-flex-container">');
+
+if(avatarUrl != null && avatarUrl.length != 0) {
+
+    document.write('      <div class="avatar">');
+    document.write('      <a href="/translator/userInfo.jsp">');
+    document.write('        <img  class="avatar-icon" src="' + avatarUrl+'" alt="Sponsor qos-ch"/>');
+    document.write('      </a>');
+    document.write('      </div>');
+}
+
+document.write('      <div class="sponsor">');
+document.write('      <a href="' + prefix +'count/sponsor.html"">');
+document.write('        <img  class="sponsor-icon" src="' + prefix + 'images/sponsor.png" alt="Sponsor qos-ch"/>');
+document.write('      </a>');
+document.write('      </div>');
+
+document.write('      <div class="twitter">');
 document.write('      <a  href="' + prefix +'count/twitter.html">');
 document.write('        <img  class="twitter-logo" src="' + prefix + 'images/TwitterLogo_blue.svg" alt="Follow @qos_ch on Twitter"/>');
 document.write('       </a>');
+document.write('      </div>');
 
+// close header-grid-icons-item-flex-container
+document.write('</div>');
 // close #header-grid-icons-item
 document.write('</div>');
 

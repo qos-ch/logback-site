@@ -30,8 +30,7 @@
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .1);
     opacity: 0;
     pointer-events: none;
-    transform: translateY(-10px);
-    transition: opacity 150ms ease-in-out, transform 150ms ease-in-out;
+    transition: opacity 150ms ease-in-out;
 
     background-color: var(--menu-background);
     color: #564b47;
@@ -61,7 +60,6 @@
 
 button.link.active + div.dropdown-menu {
     opacity: 1;
-    transform: translateY(0);
     pointer-events: auto;
 }
 
@@ -89,7 +87,7 @@ button.link.active + div.dropdown-menu {
 button.link::before {
     /*content: '\1A06'; */
     content: '\21E3';
-    font-size: calc(var(--main-logo-height) * 0.9);
+    font-size: calc(var(--main-logo-height) * 1);
     font-weight: bold;
     vertical-align: super;
     color: var(--menu-arrow-color);

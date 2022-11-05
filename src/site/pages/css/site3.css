@@ -9,13 +9,12 @@
 :root {
     --bgcolor: #FFF;
     --max-width-on-wide-screen: 47rem;
+
     --min-menu-width: 12rem;
     --max-menu-width: 14rem;
+    --icons-area-width: 12rem;
+    --main-logo-height: 1.5rem;
 
-    --main-logo-height: 2rem;
-    --sponsor-icon-height: calc(var(--main-logo-height) * 0.5);
-    --x-logo-height: calc(var(--main-logo-height) * 0.5);
-    --logo-in-menu-height: 2.5ex;
 }
 
 body {
@@ -27,19 +26,14 @@ body {
     padding: 0px;
     counter-reset: example; /* Create an example counter scope */
 
-    /*display: grid;*/
-
-    /*gap: 0rem;*/
-    /*grid-template-columns: 1fr;*/
-    /*grid-template-areas:*/
-    /*    'headerArea'*/
-    /*    'contentArea';*/
-
     /* mobile first */
     margin-left: 1rem;
     margin-right: 1rem;
 }
 
+#header {
+    max-height: fit-content;
+}
 #header, #content {
     max-width: 100%;
 }
@@ -53,9 +47,11 @@ table {
 @media (min-width: 1000px) {
 
     :root {
-        --main-logo-height: 3rem;
-        --sponsor-icon-height: calc(var(--main-logo-height) * 0.7);
-        --x-logo-height: calc(var(--main-logo-height) * 0.7);
+        --main-logo-height: 2.5rem;
+
+        --D-main-logo-height: 100%;
+        --D-sponsor-icon-height: calc(var(--main-logo-height) * 0.7);
+        --D-logo-height: calc(var(--main-logo-height) * 0.7);
     }
 
     body {
@@ -76,13 +72,23 @@ table {
 
 /** =================================================== */
 img.logo {
-    height: var(--main-logo-height);
+    max-height: var(--main-logo-height);
 }
 
-img.sponsorIcon {
-    height: var(--sponsor-icon-height);
+img.avatar-icon,
+img.sponsor-icon,
+img.twitter-logo{
+    max-height: calc(var(--main-logo-height))
 }
 
+div.spotify {
+    margin: 3px;
+}
+div.twitter,
+div.avatar {
+    width:  calc(var(--main-logo-height) );
+    margin: 3px;
+}
 
 pre, div.bodyTable {
     overflow: auto;
@@ -113,12 +119,7 @@ img.data {
     height: auto;
 }
 
-.twitter-logo{
-    height: var(--x-logo-height);
-}
-.github-logo {
-    height: var(--logo-in-menu-height);
-}
+
 
 /*-----------------------------------------*/
 
@@ -128,7 +129,8 @@ img.data {
 
 #header-grid {
     display: grid;
-    grid-template-columns: auto auto;
+    /*grid-template-columns:  auto var(--icons-area-width);*/
+    grid-template-columns:  auto 1fr;
     grid-template-areas:
         'logo-menu-area   icons-area'
         'header-line-area header-line-area'
@@ -138,6 +140,7 @@ img.data {
 
 #header-grid-logo-item {
     grid-area: logo-menu-area;
+    /*min-width: 18rem;*/
     /*  ensure that arrow and log stay together */
     /* min-width: 18rem; */
     /* left align */
@@ -150,6 +153,13 @@ img.data {
     grid-area: icons-area;
     justify-self: right;
     align-self: end;
+}
+
+#header-grid-icons-item-flex-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center; /* vertical alignment: */
+    /*justify-content: flex-end;*/
 }
 
 #header-grid-line-item {

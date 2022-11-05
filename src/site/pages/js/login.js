@@ -1,5 +1,4 @@
 
-
 function setCookie(cname, cvalue, exdays) {
     const d = new Date();
     d.setTime(d.getTime() + (exdays*24*60*60*1000));
@@ -15,7 +14,6 @@ function getCookie(cname) {
         let c = ca[i];
         c = removeLeadingSpaces(c);
         if (c.indexOf(name) == 0) {
-            console.log("found cookie "+c)
             return c.substring(name.length, c.length);
         }
     }

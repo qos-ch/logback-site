@@ -3,7 +3,7 @@ var xml2CanonURL='https://logback.qos.ch/translator/rest/dsl/xml2Canon/asJSON';
 
 //var xml2CanonURL = 'http://localhost:8080/translator/rest/dsl/xml2Canon/asJSON';
 
-const success = "success";
+const successClass = "success";
 
 function loopOn() {
     if(1==1)
@@ -32,7 +32,7 @@ function canonical(legacyId, canonicalId) {
     var legacyElement = document.getElementById(legacyId);
     var canonicalElement = document.getElementById(canonicalId);
 
-    if($(canonicalElement).hasClass(success))
+    if($(canonicalElement).hasClass(successClass))
         return;
 
     var textContent = legacyElement.textContent;
@@ -83,7 +83,7 @@ function successCallback (data, status) {
 
     var canonicalElement = this; //document.getElementById(canonicalId);
     canonicalElement.innerHTML = '<pre><code class="hljs language-xml">' + decorated + '</code></pre>'
-    $(canonicalElement).addClass(success);
+    $(canonicalElement).addClass(successClass);
 }
 
 function errorCallback (jqXHR, textStatus, errorThrown) {

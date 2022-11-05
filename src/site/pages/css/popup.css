@@ -4,7 +4,8 @@ div#popup_rgpd {
   width: 100%;
   top: 0;
   left: 0;
-  display: none;
+  opacity: 0;
+  visibility: hidden;
 }
 #popup_rgpd div.popuptext {
   position: relative;
@@ -15,27 +16,34 @@ div#popup_rgpd {
   border-radius: 8px;
   align-self: center;
 
-  left: calc(50% - var(--max-width-on-wide-screen) * 0.25);
-  top: 10rem;
+  left: calc(55% - var(--max-width-on-wide-screen) * 0.25);
+  top: 0rem;
   padding: 1rem;
 
-  max-width: calc(var(--max-width-on-wide-screen) * 0.5);
-  width:  calc(var(--max-width-on-wide-screen) * 0.5);
+  max-width: calc(var(--max-width-on-wide-screen) * 0.4);
+  width:  calc(var(--max-width-on-wide-screen) * 0.4);
 
   height: 17rem;
 }
 div#popup_rgpd.show {
-  display: block;
-  animation: fadeIn 2s;
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(10rem);
+  transition: all 500ms ease-in-out;
 }
-.popup_rgpd_link {
+p.popup_rgpd_link {
+  margin-top: 1.5rem;
+  text-align: right;
+}
+
+a.popup_rgpd_link {
   border: 1px solid white;
   border-radius: 4px;
-  padding: 1rem;
+  padding: 0.75rem;
   background-color: var(--menu-background);
 }
 
-.popup_rgpd_link:hover {
+a.popup_rgpd_link:hover {
   background-color: var(--menu-background-hover);
 }
 
