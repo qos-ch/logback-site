@@ -12,7 +12,7 @@ document.write('<p class="menu"><a href="mdc.html"><b>Ch8: Mapped Diagnostic Con
 document.write('<p class="menu"><a href="loggingSeparation.html"><b>Ch9: Logging Separation</b></a></p>');
 //document.write('<p class="menu"><a href="jmxConfig.html"><b>Ch10: JMX Configurator</b></a></p>');
 document.write('<p class="menu"><a href="onJoran.html"><b>Ch10: Joran</b></a></p>');
-document.write('<p class="menu"><a href="migrationFromLog4j.html"><b>Ch11: Migration from log4j</b></a></p>');
+document.write('<p class="menu"><a href="migrationFromLog4j.html"><b>Ch11: Migration from log4j 1.x</b></a></p>');
 document.write('<p class="menu"><a href="receivers.html"><b>Ch12: Receivers</b></a></p>');
 document.write('<p class="menu"><a href="usingSSL.html"><b>Ch13: Using SSL</b></a></p>');
 
