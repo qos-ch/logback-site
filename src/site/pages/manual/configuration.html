@@ -83,22 +83,18 @@
         
       </p></li>
       
-      <li><p>If no custom <code>Configurator</code> was found, then <a
-      href="https://github.com/qos-ch/logback/blob/master/logback-classic/src/main/java/ch/qos/logback/classic/util/DefaultJoranConfigurator.java"><code>DefaultJoranConfigurator</code>.</a>
-        
-
-
-          such file is found,  is
-      used to resolve the implementation of <a
-      href="../xref/ch/qos/logback/classic/spi/Configurator.html">
-      <code>ch.qos.logback.&#8203;classic.spi.&#8203;Configurator</code></a>
-      interface by looking up the file
-      <em>META-INF\services\&#8203;ch.qos.logback.&#8203;classic.spi.&#8203;Configurator</em>
-      in the class path. Its contents should specify the fully
-      qualified class name of the desired <code>Configurator</code>
-      implementation.
-      </p>
-      </li>
+      <li><p><code>ServiceLoader</code> tries to resolve the implementation of <a
+          href="../xref/ch/qos/logback/classic/spi/Configurator.html">
+          <code>ch.qos.logback.&#8203;classic.spi.&#8203;Configurator</code></a>
+          interface by looking up the file
+          <em>META-INF\services\&#8203;ch.qos.logback.&#8203;classic.spi.&#8203;Configurator</em>
+          in the class path. Its contents should specify the fully
+          qualified class name of the desired <code>Configurator</code>
+          implementation.
+          If no custom <code>Configurator</code> was found, then <a
+          href="https://github.com/qos-ch/logback/blob/master/logback-classic/src/main/java/ch/qos/logback/classic/util/DefaultJoranConfigurator.java"><code>DefaultJoranConfigurator</code>.</a>
+          is used.
+      </p></li>
 
       <li>
         <p>Logback tries to find a file called
