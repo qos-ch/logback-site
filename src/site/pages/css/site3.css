@@ -99,7 +99,6 @@ pre {
     min-height: 2ex;
 }
 
-
 .example, pre > code {
     word-break: normal;
     white-space: pre;
@@ -673,7 +672,7 @@ p.menu {
 /* Style the tab content */
 .tabcontent {
     display: none;
-    padding: 6px 12px;
+    padding: 0px;
     border: 1px solid #ccc;
     border-top: none;
 }

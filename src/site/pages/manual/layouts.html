@@ -555,6 +555,9 @@ WARN  [main]: Message 2</p>
           <b>date</b>{<em>pattern</em>} <br />
           <b>d</b>{<em>pattern</em>, <em>timezone</em>} <br />
           <b>date</b>{<em>pattern</em>,&nbsp;<em>timezone</em>} <br />
+          <b>d</b>{<em>pattern</em>, <em>timezone</em>,&nbsp;<em>locale</em>} <br />
+          <b>date</b>{<em>pattern</em>,&nbsp;<em>timezone</em>,&nbsp;<em>locale</em>} <br />
+          
         </td>
         <td>
          <p>Used to output the date of the logging event.  The date
@@ -604,19 +607,29 @@ WARN  [main]: Message 2</p>
          </table>
 
           <p>The second parameter specifies a timezone. For example,
-          the '%date{HH:mm:ss.SSS,&nbsp;Australia/Perth} would print
-          the time in the time zone of Perth, Australia, the world's
-          most isolated city.  Note that in the absence of the
-          timezone parameter, the default timezone of the host Java
-          platform is used.  If the specified timezone identifier is
-          unknown or misspelled, the GMT timezone is assumed as
+          the pattern '%date{HH:mm:ss.SSS,&nbsp;Australia/Perth}'
+          would print the time in the time zone of Perth, Australia,
+          the most isolated city on Earth.  Note that in the absence
+          of the timezone parameter, the default timezone of the host
+          Java platform is used.  If the specified timezone identifier
+          is unknown or misspelled, the GMT timezone is assumed as
           dictated by the <a
           href="http://docs.oracle.com/javase/6/docs/api/java/util/TimeZone.html#getTimeZone(java.lang.String)">TimeZone.getTimeZone(String)</a>
           method specification.
           </p>
 
-
-          If the option includes special characters such as a braces, spaces or commas, you can enclose it between single or double quotes.
+          <p><span class="label notice">Since 1.3.6/1.4.6</span> The
+          third parameter specifies the locale. For example, writing
+          '%date{HH:mm:ss.SSS,&nbsp;Australia/Perth,&nbsp;<b>en-AU</b>}'
+          would print the date in the time zone of Perth,
+          Australia, using the english australian locale. If the
+          locale parameter is absent, then the system's default locale
+          is used.</p>
+          
+          
+          <p>If an option includes special characters such as a braces,
+          spaces or commas, you can enclose it between single <b>or</b>
+          double quotes.</p>
 
           <p><span class="label">common error</span> Given that the
           comma ',' character is interpreted as the parameter

@@ -79,42 +79,56 @@
       href="http://docs.oracle.com/javase/6/docs/api/java/util/ServiceLoader.html">
           service-provider loading facility</a> (introduced in JDK
           1.6). If any such custom provider is found, it takes
-          precedence over logback's <code>DefaultJoranConfigurator</code> (see next).
-        
-      </p></li>
+          precedence over logback's own <code>DefaultJoranConfigurator</code> (see next).        
+        </p>
+
+        <p>A custom <code>Configurator</code> is an implementation of
+        <a
+        href="../xref/ch/qos/logback/classic/spi/Configurator.html">
+        <code>ch.qos.logback.&#8203;classic.spi.&#8203;Configurator</code></a>
+        interface. Custom configurators are searched by looking up
+        file resources located under
+        <em>META-INF/services/&#8203;ch.qos.logback.&#8203;classic.spi.&#8203;Configurator</em>. The
+        contents of this file should specify the fully qualified class
+        name of the desired <code>Configurator</code> implementation.
+        </p>
+      </li>
+
+
       
-      <li><p>If no custom <code>Configurator</code> was found, then <a
-      href="https://github.com/qos-ch/logback/blob/master/logback-classic/src/main/java/ch/qos/logback/classic/util/DefaultJoranConfigurator.java"><code>DefaultJoranConfigurator</code>.</a>
-        
+      <li>
+
+        <p>If no custom <code>Configurator</code> was found in the
+        previous step, then <a
+        href="https://github.com/qos-ch/logback/blob/master/logback-classic/src/main/java/ch/qos/logback/classic/util/DefaultJoranConfigurator.java"><code>DefaultJoranConfigurator</code></a>
+        will be instantiated and invoked.
+      </p>
+
+       <p>&bull; If the system property "logback.configurationFile" is
+       set, then <code>DefaultJoranConfigurator</code> will try to
+       locate the file specified the aforementioned system property.
+       </p>
+      
+      
+      <p>&bull; If the previous step fails,
+      <code>DefaultJoranConfigurator</code> will try to locate the
+      configuration file <em>logback-test.xml</em> <a
+      href="../faq.html#configFileLocation">in the classpath</a>.</p>
 
 
-          such file is found,  is
-      used to resolve the implementation of <a
-      href="../xref/ch/qos/logback/classic/spi/Configurator.html">
-      <code>ch.qos.logback.&#8203;classic.spi.&#8203;Configurator</code></a>
-      interface by looking up the file
-      <em>META-INF\services\&#8203;ch.qos.logback.&#8203;classic.spi.&#8203;Configurator</em>
-      in the class path. Its contents should specify the fully
-      qualified class name of the desired <code>Configurator</code>
-      implementation.
+      <p>&bull; If no such file is found, it will try to locate the
+      configuration file <em>logback.xml</em> <a
+      href="../faq.html#configFileLocation">in the classpath</a>. Note
+      that this is the <b>nominal</b> configuration step.</p>
+
+      <p>&bull; If neither file can be located,
+      <code>DefaultJoranConfigurator</code> will return without
+      further processing.
       </p>
       </li>
 
-      <li>
-        <p>Logback tries to find a file called
-        <em>logback-test.xml</em> <a
-        href="../faq.html#configFileLocation">in the
-        classpath</a>.</p> </li>
-
-
-      <li><p>If no such file is found, it checks for the file
-      <em>logback.xml</em>  <a
-        href="../faq.html#configFileLocation">in the
-        classpath</a>..</p>
-      </li>
-
       
-      <li><p>If none of the above succeeds, logback configures itself
+      <li><p>If none of the above succeeds, logback-classic will configure itself
       automatically using the <a
       href="../xref/ch/qos/logback/classic/BasicConfigurator.html"><code>BasicConfigurator</code></a>
       which will cause logging output to be directed to the console.
@@ -130,26 +144,30 @@
 
     <p><span class="label notice">Groovy</span> Given that Groovy is a
     full-fledged language, we have dropped support for
-    <em>logback.groovy</em> in order to protect the innocent.
+    <em>logback.groovy</em> in order to protect the innocent. However,
+    groovy support was picked up at <a
+    href="https://github.com/virtualdogbert/logback-groovy-config">virtualdogbert/logback-groovy-config</a>
+    by Tucker Pelletier.
     </p>
 
-    <p>If you are using Maven and if you place the
-    <em>logback-test.xml</em> under the <em>src/test/resources</em>
-    folder, Maven will ensure that it won't be included in the
-    artifact produced. Thus, you can use a different configuration
-    file, namely <em>logback-test.xml</em> during testing, and another
-    file, namely, <em>logback.xml</em>, in production.
+    <p>If you are using a build tool according to Maven's folder
+    structure, then if you place the <em>logback-test.xml</em> under
+    the <em>src/test/resources</em> folder, Maven will ensure that it
+    won't be included in the artifact produced. Thus, you can use a
+    different configuration file, namely <em>logback-test.xml</em>
+    during testing, and another file, namely, <em>logback.xml</em>, in
+    production.
     </p>
 
     <p><span class="label">Fast start-up</span> It takes about 100
     milliseconds for Joran to parse a given logback configuration
     file. To shave off those milliseconds at application start up, you
-    can use the service-provider loading facility (item 4 above) to
+    can use the service-provider loading facility (item 1 above) to
     load your own custom <code>Configurator</code> class with <a
     href="../xref/ch/qos/logback/classic/BasicConfigurator.html">BasicConfigurator</a>
     serving as a good starting point.</p>
 
-
+ 
     <h3 class="doAnchor" name="automaticConf">Automatically
     configuring logback</h3>
 
@@ -217,7 +235,7 @@ public class Foo {
     configuration consists of a <code>ConsoleAppender</code> attached
     to the root logger.  The output is formatted using a
     <code>PatternLayoutEncoder</code> set to the pattern
-    <em>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</em>. Moreover,
+    <em>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} -%kvp- %msg%n</em>. Moreover,
     by default the root logger is assigned the <code>DEBUG</code>
     level.
     </p>
@@ -226,9 +244,9 @@ public class Foo {
     should be similar to:
     </p>
 
-    <p class="source">16:06:09.031 [main] INFO  chapters.configuration.&#8203;MyApp1 - Entering application.
-16:06:09.046 [main] DEBUG chapters.configuration.Foo - Did it again!
-16:06:09.046 [main] INFO  chapters.configuration.&#8203;MyApp1 - Exiting application.</p>
+    <p class="source">16:06:09.031 [main] INFO  chapters.configuration.&#8203;MyApp1 -- Entering application.
+16:06:09.046 [main] DEBUG chapters.configuration.Foo -- Did it again!
+16:06:09.046 [main] INFO  chapters.configuration.&#8203;MyApp1 -- Exiting application.</p>
 
 
    <p class="highlight">Except code that configures logback (if such
@@ -277,7 +295,7 @@ public class Foo {
     &lt;!-- encoders are assigned the type
          ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
     &lt;encoder>
-      &lt;pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n&lt;/pattern>
+      &lt;pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} -%kvp- %msg%n&lt;/pattern>
     &lt;/encoder>
   &lt;/appender>
 
@@ -345,9 +363,9 @@ public static void main(String[] args) {
 17:44:58,812 |-INFO in ch.qos.logback.classic.&#8203;joran.action.LevelAction - root level set to DEBUG
 17:44:58,812 |-INFO in ch.qos.logback.core.&#8203;joran.action.AppenderRefAction - Attaching appender named [STDOUT] to Logger[root]
 
-17:44:58.828 [main] INFO  chapters.configuration.&#8203;MyApp2 - Entering application.
-17:44:58.828 [main] DEBUG chapters.configuration.Foo - Did it again!
-17:44:58.828 [main] INFO  chapters.configuration.&#8203;MyApp2 - Exiting application.
+17:44:58.828 [main] INFO  chapters.configuration.&#8203;MyApp2 -- Entering application.
+17:44:58.828 [main] DEBUG chapters.configuration.Foo -- Did it again!
+17:44:58.828 [main] INFO  chapters.configuration.&#8203;MyApp2 -- Exiting application.
 </div>
 
   <p>At the end of this output, you can recognize the lines that were
@@ -450,14 +468,13 @@ public static void main(String[] args) {
   </div>
     
   <div id="sample1_legacy" class="tabcontent">
-   <pre><code>
-&lt;configuration <b>debug="true"</b>>
+   <pre><code>&lt;configuration <b>debug="true"</b>>
 
   &lt;appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
     &lt;!-- encoders are  by default assigned the type
          ch.qos.logback.classic.encoder.PatternLayoutEncoder --&gt;
     &lt;encoder>
-      &lt;pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n&lt;/pattern>
+      &lt;pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} -%kvp- %msg%n&lt;/pattern>
     &lt;/encoder>
   &lt;/appender>
 
@@ -627,8 +644,7 @@ public class ServerMain {
    file and automatic re-configuration
    (logback-examples/&#8203;src/main/resources/&#8203;chapters/configuration/&#8203;scan1.xml)</p>
 
-<pre id="scan1"><code>
-&lt;configuration <b>scan="true"</b>>
+<pre id="scan1"><code>&lt;configuration <b>scan="true"</b>>
   ...
 &lt;/configuration></code></pre>
 
@@ -643,8 +659,7 @@ public class ServerMain {
   <p class="example">Example: Specifying a different scanning period
   (logback-examples/&#8203;src/main/resources/&#8203;chapters/configuration/&#8203;scan2.xml)</p>
 
-  <pre id="scan2"><code>
-&lt;configuration scan="true" <b>scanPeriod="30 seconds"</b> >
+  <pre id="scan2"><code>&lt;configuration scan="true" <b>scanPeriod="30 seconds"</b> >
   ...
 &lt;/configuration> </code></pre>
 
@@ -703,8 +718,7 @@ java.lang.Exception: 99 is invalid
   <p>Packaging data is disabled by default but can be enabled by
   configuration:</p>
 
-<pre><code>
-&lt;configuration <span class="big bold">packagingData="true"</span>>
+<pre><code>&lt;configuration <span class="big bold">packagingData="true"</span>>
   ...
 &lt;/configuration></code></pre>
 
@@ -714,8 +728,7 @@ java.lang.Exception: 99 is invalid
    method in <code>LoggerContext</code>, as shown next:</p>
 
 
-<pre><code>
-  LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
+<pre><code>  LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
   <b>lc.setPackagingDataEnabled(true);</b>
 </code></pre>
 
@@ -1057,7 +1070,7 @@ import ch.qos.logback.classic.LoggerContext;
     &lt;!-- encoders are assigned the type
          ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
     &lt;encoder>
-      &lt;pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n&lt;/pattern>
+      &lt;pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} -%kvp- %msg%n&lt;/pattern>
     &lt;/encoder>
   &lt;/appender>
 
@@ -1081,8 +1094,8 @@ import ch.qos.logback.classic.LoggerContext;
   <em>MyApp3</em> application, it will yield the following output:
   </p>
 
-<pre class="source">17:34:07.578 [main] INFO  chapters.configuration.MyApp3 - Entering application.
-17:34:07.578 [main] INFO  chapters.configuration.MyApp3 - Exiting application.</pre>
+<pre class="source">17:34:07.578 [main] INFO  chapters.configuration.MyApp3 -- Entering application.
+17:34:07.578 [main] INFO  chapters.configuration.MyApp3 -- Exiting application.</pre>
 
   <p>Note that the message of level DEBUG generated by the <a
   href="../xref/chapters/configuration/Foo.html">"chapters.configuration.Foo"</a>
@@ -1111,7 +1124,7 @@ import ch.qos.logback.classic.LoggerContext;
   &lt;appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender"&gt;
     &lt;encoder&gt;
       &lt;pattern&gt;
-        %d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n
+        %d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} -%kvp- %msg%n
      &lt;/pattern&gt;
     &lt;/encoder&gt;
   &lt;/appender&gt;
@@ -1134,9 +1147,9 @@ import ch.qos.logback.classic.LoggerContext;
   result in the following output on the console:
   </p>
 
-<pre><code>17:39:27.593 [main] INFO  chapters.configuration.MyApp3 - Entering application.
-17:39:27.593 [main] DEBUG chapters.configuration.Foo - Did it again!
-17:39:27.593 [main] INFO  chapters.configuration.MyApp3 - Exiting application.</code></pre>
+<pre><code>17:39:27.593 [main] INFO  chapters.configuration.MyApp3 -- Entering application.
+17:39:27.593 [main] DEBUG chapters.configuration.Foo -- Did it again!
+17:39:27.593 [main] INFO  chapters.configuration.MyApp3 -- Exiting application.</code></pre>
 
    <p>The table below list the loggers and their levels, after
    <code>JoranConfigurator</code> has configured logback with the
@@ -1207,13 +1220,13 @@ import ch.qos.logback.classic.LoggerContext;
    class="ch.qos.logback.core.ConsoleAppender">
    &lt;encoder>
      &lt;pattern>
-        %d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n
+        %d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} -%kvp- %msg%n
       &lt;/pattern>
     &lt;/encoder>
   &lt;/appender>
 
   <b>&lt;logger name="chapters.configuration" level="INFO" /></b>
-
+ 
   &lt;!-- turn OFF all logging (children can override) -->
   &lt;root <b>level="OFF"</b>>
     &lt;appender-ref ref="STDOUT" />
@@ -1295,7 +1308,7 @@ import ch.qos.logback.classic.LoggerContext;
   component is one of the major strengths of <a
   href="onJoran.html">Joran</a> as discussed in a later chapter. The
   following diagram illustrates the common structure. Note that
-  support for properties is not visible.
+  support for properties is not shown in the diagram below.
   </p>
 
   <a href="images/chapters/configuration/appenderSyntax.png">
@@ -1345,13 +1358,13 @@ import ch.qos.logback.classic.LoggerContext;
     &lt;file>myApp.log&lt;/file>
 
     &lt;encoder>
-      &lt;pattern>%date %level [%thread] %logger{10} [%file:%line] %msg%n&lt;/pattern>
+      &lt;pattern>%date %level [%thread] %logger{10} [%file:%line] -%kvp- %msg%n&lt;/pattern>
     &lt;/encoder>
   &lt;/appender>
 
   &lt;appender name="<b>STDOUT</b>" class="ch.qos.logback.core.ConsoleAppender">
     &lt;encoder>
-      &lt;pattern>%msg%n&lt;/pattern>
+      &lt;pattern>%kvp %msg%n&lt;/pattern>
     &lt;/encoder>
   &lt;/appender>
 
@@ -1410,7 +1423,7 @@ import ch.qos.logback.classic.LoggerContext;
 
   &lt;appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
     &lt;encoder>
-      &lt;pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n&lt;/pattern>
+      &lt;pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} -%kvp- %msg%n&lt;/pattern>
     &lt;/encoder>
   &lt;/appender>
 
@@ -1432,12 +1445,12 @@ import ch.qos.logback.classic.LoggerContext;
   yield the following output:
   </p>
 
-<p class="source">14:25:36.343 [main] INFO  chapters.configuration.MyApp3 - Entering application.
-14:25:36.343 [main] INFO  chapters.configuration.MyApp3 - Entering application.
-14:25:36.359 [main] DEBUG chapters.configuration.Foo - Did it again!
-14:25:36.359 [main] DEBUG chapters.configuration.Foo - Did it again!
-14:25:36.359 [main] INFO  chapters.configuration.MyApp3 - Exiting application.
-14:25:36.359 [main] INFO  chapters.configuration.MyApp3 - Exiting application.</p>
+<p class="source">14:25:36.343 [main] INFO  chapters.configuration.MyApp3 -- Entering application.
+14:25:36.343 [main] INFO  chapters.configuration.MyApp3 -- Entering application.
+14:25:36.359 [main] DEBUG chapters.configuration.Foo -- Did it again!
+14:25:36.359 [main] DEBUG chapters.configuration.Foo -- Did it again!
+14:25:36.359 [main] INFO  chapters.configuration.MyApp3 -- Exiting application.
+14:25:36.359 [main] INFO  chapters.configuration.MyApp3 -- Exiting application.</p>
 
   <p>Notice the duplicated output. The appender named <em>STDOUT</em>
   is attached to two loggers, to root and to
@@ -1473,13 +1486,13 @@ import ch.qos.logback.classic.LoggerContext;
   &lt;appender name="FILE" class="ch.qos.logback.core.FileAppender">
     &lt;file>myApp.log&lt;/file>
     &lt;encoder>
-      &lt;pattern>%date %level [%thread] %logger{10} [%file:%line] %msg%n&lt;/pattern>
+      &lt;pattern>%date %level [%thread] %logger{10} [%file:%line] -%kvp- %msg%n&lt;/pattern>
     &lt;/encoder>
   &lt;/appender>
 
   &lt;appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
     &lt;encoder>
-      &lt;pattern>%msg%n&lt;/pattern>
+      &lt;pattern>%kvp %msg%n&lt;/pattern>
     &lt;/encoder>
   &lt;/appender>
 
@@ -1529,8 +1542,8 @@ import ch.qos.logback.classic.LoggerContext;
   &lt;appender name="FILE" class="ch.qos.logback.core.FileAppender">
     &lt;file>foo.log&lt;/file>
     &lt;encoder>
-      &lt;pattern>%date %level [%thread] %logger{10} [%file : %line] %msg%n&lt;/pattern>
-    &lt;/encoder>
+      &lt;pattern>%date %level [%thread] %logger{10} [%file : %line] -%kvp- %msg%n&lt;/pattern>
+    &lt;/encoder> 
   &lt;/appender>
 
   &lt;appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
@@ -1595,7 +1608,7 @@ import ch.qos.logback.classic.LoggerContext;
   <b>&lt;contextName>myAppName&lt;/contextName></b>
   &lt;appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
     &lt;encoder>
-      &lt;pattern>%d <b>%contextName</b> [%t] %level %logger{36} - %msg%n&lt;/pattern>
+      &lt;pattern>%d <b>%contextName</b> [%t] %level %logger{36} -%kvp- %msg%n&lt;/pattern>
     &lt;/encoder>
   &lt;/appender>
 
@@ -1687,7 +1700,7 @@ import ch.qos.logback.classic.LoggerContext;
   &lt;appender name="FILE" class="ch.qos.logback.core.FileAppender">
     <b>&lt;file>${USER_HOME}/myApp.log&lt;/file></b>
     &lt;encoder>
-      &lt;pattern>%msg%n&lt;/pattern>
+      &lt;pattern>%kvp %msg%n&lt;/pattern>
     &lt;/encoder>
   &lt;/appender>
 
@@ -1726,7 +1739,7 @@ import ch.qos.logback.classic.LoggerContext;
   &lt;appender name="FILE" class="ch.qos.logback.core.FileAppender">
     <b>&lt;file>${USER_HOME}/myApp.log&lt;/file></b>
     &lt;encoder>
-      &lt;pattern>%msg%n&lt;/pattern>
+      &lt;pattern>%kvp %msg%n&lt;/pattern>
     &lt;/encoder>
   &lt;/appender>
 
@@ -1764,7 +1777,7 @@ import ch.qos.logback.classic.LoggerContext;
   &lt;appender name="FILE" class="ch.qos.logback.core.FileAppender">
      <b>&lt;file>${USER_HOME}/myApp.log&lt;/file></b>
      &lt;encoder>
-       &lt;pattern>%msg%n&lt;/pattern>
+       &lt;pattern>%kvp %msg%n&lt;/pattern>
      &lt;/encoder>
    &lt;/appender>
 
@@ -1808,7 +1821,7 @@ import ch.qos.logback.classic.LoggerContext;
   &lt;appender name="FILE" class="ch.qos.logback.core.FileAppender">
      <b>&lt;file>${USER_HOME}/myApp.log&lt;/file></b>
      &lt;encoder>
-       &lt;pattern>%msg%n&lt;/pattern>
+       &lt;pattern>%kvp %msg%n&lt;/pattern>
      &lt;/encoder>
    &lt;/appender>
 
@@ -1891,7 +1904,7 @@ import ch.qos.logback.classic.LoggerContext;
   &lt;appender name="FILE" class="ch.qos.logback.core.FileAppender"&gt;
     <b>&lt;file>/opt/${nodeId}/myApp.log&lt;/file&gt;</b>
     &lt;encoder&gt;
-      &lt;pattern>%msg%n&lt;/pattern&gt;
+      &lt;pattern>%kvp %msg%n&lt;/pattern&gt;
     &lt;/encoder&gt;
   &lt;/appender&gt;
 
@@ -1969,7 +1982,7 @@ fileName=myApp.log
   &lt;appender name="FILE" class="ch.qos.logback.core.FileAppender">
     <b>&lt;file>${destination}&lt;/file></b>
     &lt;encoder>
-      &lt;pattern>%msg%n&lt;/pattern>
+      &lt;pattern>%kvp %msg%n&lt;/pattern>
     &lt;/encoder>
   &lt;/appender>
 
@@ -2191,7 +2204,7 @@ fileName=myApp.log
     <b>&lt;then></b>
       &lt;appender name="CON" class="ch.qos.logback.core.ConsoleAppender">
         &lt;encoder>
-          &lt;pattern>%d %-5level %logger{35} - %msg %n&lt;/pattern>
+          &lt;pattern>%d %-5level %logger{35} -%kvp- %msg %n&lt;/pattern>
         &lt;/encoder>
       &lt;/appender>
       &lt;root>
@@ -2203,7 +2216,7 @@ fileName=myApp.log
   &lt;appender name="FILE" class="ch.qos.logback.core.FileAppender">
     &lt;file>${randomOutputDir}/conditional.log&lt;/file>
     &lt;encoder>
-      &lt;pattern>%d %-5level %logger{35} - %msg %n&lt;/pattern>
+      &lt;pattern>%d %-5level %logger{35} -%kvp- %msg %n&lt;/pattern>
    &lt;/encoder>
   &lt;/appender>
 
@@ -2261,7 +2274,7 @@ fileName=myApp.log
 
   &lt;appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
     &lt;encoder>
-      &lt;pattern>%d ${CONTEXT_NAME} %level %msg %logger{50}%n&lt;/pattern>
+      &lt;pattern>%d ${CONTEXT_NAME} %level -%kvp- %msg %logger{50}%n&lt;/pattern>
     &lt;/encoder>
   &lt;/appender>
 
@@ -2299,7 +2312,7 @@ fileName=myApp.log
             onclick="openTab(event, 'containingConfig', 'legacy')">Legacy</button>
     <button class="tablinks" id="button_containingConfig_canonical"
             onclick="openTab(event, 'containingConfig', 'canonical')">Canonical (1.3)</button>
-</div>
+</div> 
 
 <div id="containingConfig_legacy" class="tabcontent">
   <pre><code>&lt;configuration>
@@ -2329,7 +2342,7 @@ fileName=myApp.log
   <pre class="source"><b class="green big">&lt;included></b>
   &lt;appender name="includedConsole" class="ch.qos.logback.core.ConsoleAppender">
     &lt;encoder>
-      &lt;pattern>"%d - %m%n"&lt;/pattern>
+      &lt;pattern>"%d -%kvp- %m%n"&lt;/pattern>
     &lt;/encoder>
   &lt;/appender>
 <b class="green big">&lt;/included></b></pre>
