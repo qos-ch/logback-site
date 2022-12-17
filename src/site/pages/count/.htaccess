@@ -3,3 +3,5 @@ Redirect 302 /count/exoscale.html https://www.exoscale.com/
 Redirect 302 /count/twitter.html  https://twitter.com/qos_ch
 Redirect 302 /count/github.html   https://github.com/qos-ch/logback
 Redirect 302 /count/lisette.html  https://www.facebook.com/Lise-Martins-Graphic-Designer-102159252581148/
+Redirect 302 /count/sponsor.html  https://github.com/sponsors/qos-ch
+Redirect 302 /count/tidelift.html https://tidelift.com/subscription/pkg/maven-ch.qos.logback.logback-classic

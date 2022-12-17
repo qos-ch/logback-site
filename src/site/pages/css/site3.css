@@ -81,9 +81,7 @@ img.twitter-logo{
     max-height: calc(var(--main-logo-height))
 }
 
-div.spotify {
-    margin: 3px;
-}
+
 div.twitter,
 div.avatar {
     width:  calc(var(--main-logo-height) );
@@ -198,6 +196,10 @@ p.sponsoredBy {
     border-bottom: solid 1px #CCCCCC;
 }
 
+div.spotify {
+    margin: 3px;
+    background-color: #FFEEDD;
+}
 img.spotify {
     max-height: calc(var(--main-logo-height));
 }
@@ -267,10 +269,8 @@ p.menu {
 .headerline {
     background-color: #FFD0A0;
     border: 1px solid #CCCCCC;
-    Xont-size: small;
     margin: 0px;
-
-    padding-top: 4px;
+    padding-top: 2px;
 }
 
 a {

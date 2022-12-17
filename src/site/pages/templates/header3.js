@@ -48,10 +48,15 @@ function insertLogoAndMenu() {
     document.write('                    <a href="'+ prefix +'mailinglist.html"><i class="fa-regular fa-envelope"></i> Mailing Lists</a>');  //&#9993;
     document.write('                    <a href="'+ prefix +'bugreport.html"><i class="fa-regular fa-bug"></i> Bug Report</a>'); //&#129440; &#128027;
 
-    document.write('                    <a  style=" xtext-align: center;" href="' + prefix + 'count/github.html">'); // &#11153;
+    document.write('                    <a href="' + prefix + 'count/github.html">');
     document.write('                           <i class="fa-regular fa-code-branch"></i> Source Repository');
-    //document.write('                        <img style="vertical-align: middle;" class="github-logo" src="' + prefix + 'images/GitHub-Mark-32px.png" alt="Source code" /> Source Repository</a>');
     document.write('                     </a>');
+
+    document.write('                    <a href="' + prefix + 'count/tidelift.html">');
+    document.write('                           <i class="fa-regular fa-t"></i> Tidelift');
+    document.write('                     </a>');
+
+
     document.write('                </div>');
     document.write('            </div>');
     document.write('            <div>');
@@ -133,9 +138,9 @@ document.write('</div>');
 // div close #header-grid-icons-item
 document.write('  <div id="header-grid-line-item" class="headerline"></div>');
 
-document.write('<div id="ad">');
-document.write('    <script type="text/javascript" src="'+prefix+'templates/ad.js" ></script>');
-document.write('</div>');
+// document.write('<div id="ad">');
+// document.write('    <script type="text/javascript" src="'+prefix+'templates/ad.js" ></script>');
+// document.write('</div>');
 
 // close #header-grid
 document.write('</div>');
