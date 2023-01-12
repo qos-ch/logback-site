@@ -165,12 +165,20 @@ img.data {
 
 div#ad {
     grid-area: ad-area;
-    margin: 0.5rem;
+    /*margin: 0.5rem;*/
 }
 
 div#ad,
 .horizontal-ad {
     max-height: calc(var(--main-logo-height) * 2);
+}
+
+.top-message {
+    background-color: #f9f9f9;
+    color: #999;
+    text-align: center;
+    border-bottom: 1px solid #EEE;
+    border-radius: 3px;
 }
 
 div#sponsor {

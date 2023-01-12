@@ -138,6 +138,10 @@ document.write('</div>');
 // div close #header-grid-icons-item
 document.write('  <div id="header-grid-line-item" class="headerline"></div>');
 
+document.write('<div id="ad" class="top-message">');
+document.write('    <p>Need an issue fixed as soon as possible? Consider <a href="'+prefix+'count/champion.html"><i class="fa-regular fa-trophy"></i> championing a release</a>.</p>');
+document.write('</div>');
+
 // document.write('<div id="ad">');
 // document.write('    <script type="text/javascript" src="'+prefix+'templates/ad.js" ></script>');
 // document.write('</div>');
