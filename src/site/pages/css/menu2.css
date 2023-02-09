@@ -1,6 +1,6 @@
 
 :root {
-    --menu-arrow-color: #ffd0a0;
+    --menu-bars-color: #4183c4;
     --menu-background: #F0F0F0; /* #fff8e8 */
     --menu-background-hover: #E0E0E0;
     --menu-header-background: #fff8e8;
@@ -83,27 +83,13 @@ button.link.active + div.dropdown-menu {
     gap: 0rem;
 }
 
-button.link::before {
-    content: '\21E3';
-    font-size: calc(var(--main-logo-height) * 1);
+span.bar {
+    font-size: calc(var(--main-logo-height) * 0.9);
     font-weight: bold;
     vertical-align: super;
-    color: var(--menu-arrow-color);
-
-    animation-name: bounce-arrow;
-    animation-duration: 300ms;
-    animation-direction: alternate;
-    animation-iteration-count: 30;
+    color: var(--menu-bars-color);
 }
 
-@keyframes bounce-arrow {
-    0%   {  color: var(--menu-arrow-color); }  /* #ffd0a0 */
-    /*100%  { color: #ffb090;}*/
-    100% {  color: #ff9070; }
+span.bar:hover {
+    color: #26b;
 }
-
-button.link.active::before {
-    content: '\21E1';
-}
-
-

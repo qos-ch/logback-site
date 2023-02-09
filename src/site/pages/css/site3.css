@@ -12,7 +12,6 @@
 
     --min-menu-width: 12rem;
     --max-menu-width: 14rem;
-    --icons-area-width: 12rem;
     --main-logo-height: 1.5rem;
 
 }
@@ -48,21 +47,12 @@ table {
 
     :root {
         --main-logo-height: 2.5rem;
-
-        --D-main-logo-height: 100%;
-        --D-sponsor-icon-height: calc(var(--main-logo-height) * 0.7);
-        --D-logo-height: calc(var(--main-logo-height) * 0.7);
     }
 
     body {
         max-width: var(--max-width-on-wide-screen);
         margin-left: auto;
         margin-right: auto;
-    }
-
-    div#ad,
-    .horizontal-ad {
-        max-height: calc(var(--main-logo-height) * 2);
     }
 
     #header, #content {
@@ -126,7 +116,6 @@ img.data {
 
 #header-grid {
     display: grid;
-    /*grid-template-columns:  auto var(--icons-area-width);*/
     grid-template-columns:  auto 1fr;
     grid-template-areas:
         'logo-menu-area   icons-area'
@@ -166,11 +155,6 @@ img.data {
 div#ad {
     grid-area: ad-area;
     /*margin: 0.5rem;*/
-}
-
-div#ad,
-.horizontal-ad {
-    max-height: calc(var(--main-logo-height) * 2);
 }
 
 .top-message {

@@ -1,10 +1,10 @@
-function xgetCookie(cname) {
+function hGetCookie(cname) {
     let name = cname + "=";
     let decodedCookie = decodeURIComponent(document.cookie);
     let ca = decodedCookie.split(';');
     for(let i = 0; i <ca.length; i++) {
         let c = ca[i];
-        c = xremoveLeadingSpaces(c);
+        c = hRemoveLeadingSpaces(c);
         if (c.indexOf(name) == 0) {
             console.log("found cookie "+c)
             return c.substring(name.length, c.length);
@@ -13,7 +13,7 @@ function xgetCookie(cname) {
     return "";
 }
 
-function xremoveLeadingSpaces(input) {
+function hRemoveLeadingSpaces(input) {
     while (input.charAt(0) == ' ') {
         input = input.substring(1);
     }
@@ -23,7 +23,7 @@ function xremoveLeadingSpaces(input) {
 function insertLogoAndMenu() {
     document.write('    <div class="dropdown">');
     document.write('        <button id="mainMenuButton" class="link">');
-    document.write('            <img class="logo" src="'+ prefix +'images/logos/Logback_72dpi.png"/>');
+    document.write('            <span class="bar">&#x2630;&nbsp;</span> <img class="logo" src="'+ prefix +'images/logos/Logback_72dpi.png"/>');
     document.write('        </button>');
     document.write('        <div class="dropdown-menu information-grid">');
     document.write('            <div>');
@@ -105,7 +105,7 @@ document.write('</div>');
 
 document.write('<div id="header-grid-icons-item">');
 
-const avatarUrl = xgetCookie('AVATAR_URL');
+const avatarUrl = hGetCookie('AVATAR_URL');
 
 document.write('<div id="header-grid-icons-item-flex-container">');
 
