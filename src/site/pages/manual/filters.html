@@ -147,7 +147,7 @@ public class SampleFilter extends Filter&lt;ILoggingEvent> {
 
     &lt;encoder>
       &lt;pattern>
-        %-4relative [%thread] %-5level %logger - %msg%n
+        %-4relative [%thread] %-5level %logger -%kvp -%msg%n
       &lt;/pattern>
     &lt;/encoder>
   &lt;/appender>
@@ -221,7 +221,7 @@ public class SampleFilter extends Filter&lt;ILoggingEvent> {
     &lt;/filter></b>
     &lt;encoder>
       &lt;pattern>
-        %-4relative [%thread] %-5level %logger{30} - %msg%n
+        %-4relative [%thread] %-5level %logger{30} -%kvp -%msg%n
       &lt;/pattern>
     &lt;/encoder>
   &lt;/appender>
@@ -269,7 +269,7 @@ public class SampleFilter extends Filter&lt;ILoggingEvent> {
     &lt;/filter></b>
     &lt;encoder>
       &lt;pattern>
-        %-4relative [%thread] %-5level %logger{30} - %msg%n
+        %-4relative [%thread] %-5level %logger{30} -%kvp -%msg%n
       &lt;/pattern>
     &lt;/encoder>
   &lt;/appender>
@@ -495,7 +495,7 @@ public class SampleFilter extends Filter&lt;ILoggingEvent> {
     &lt;/filter></b>
     &lt;encoder>
       &lt;pattern>
-        %-4relative [%thread] %-5level %logger - %msg%n
+        %-4relative [%thread] %-5level %logger -%kvp -%msg%n
       &lt;/pattern>
     &lt;/encoder>
   &lt;/appender>
@@ -649,7 +649,7 @@ java chapters.filters.FilterEvents src/main/java/chapters/filters/basicConfigura
       &lt;OnMatch>DENY&lt;/OnMatch>
     &lt;/filter>
     &lt;encoder>
-      &lt;pattern>%-4relative [%thread] %-5level %logger - %msg%n&lt;/pattern>
+      &lt;pattern>%-4relative [%thread] %-5level %logger -%kvp -%msg%n&lt;/pattern>
     &lt;/encoder>
   &lt;/appender>
 
@@ -812,7 +812,7 @@ public class SampleTurboFilter extends TurboFilter {
   &lt;appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
     &lt;encoder>
       &lt;pattern>
-        %-4relative [%thread] %-5level %logger - %msg%n
+        %-4relative [%thread] %-5level %logger -%kvp -%msg%n
       &lt;/pattern>
     &lt;/encoder>
   &lt;/appender>
@@ -873,7 +873,7 @@ public class SampleTurboFilter extends TurboFilter {
 
   &lt;appender name="console" class="ch.qos.logback.core.ConsoleAppender">
     &lt;encoder>
-      &lt;pattern>%date [%thread] %-5level %logger - %msg%n&lt;/pattern>
+      &lt;pattern>%date [%thread] %-5level %logger -%kvp -%msg%n&lt;/pattern>
     &lt;/encoder>
   &lt;/appender>
 
@@ -1009,7 +1009,7 @@ logger.debug("Hello {}.", name1);</code></pre>
 
   &lt;appender name="console" class="ch.qos.logback.core.ConsoleAppender">
     &lt;encoder>
-      &lt;pattern>%date [%thread] %-5level %logger - %msg%n&lt;/pattern>
+      &lt;pattern>%date [%thread] %-5level %logger -%kvp -%msg%n&lt;/pattern>
     &lt;/encoder>
   &lt;/appender>
 

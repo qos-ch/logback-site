@@ -379,7 +379,7 @@ public interface Appender&lt;E> extends LifeCycle, ContextAware, FilterAttachabl
     &lt;!-- encoders are assigned the type
          ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
     &lt;encoder>
-      &lt;pattern>%-4relative [%thread] %-5level %logger{35} - %msg %n&lt;/pattern>
+      &lt;pattern>%-4relative [%thread] %-5level %logger{35} -%kvp- %msg %n&lt;/pattern>
     &lt;/encoder>
   &lt;/appender></b>
 
@@ -563,7 +563,7 @@ public interface Appender&lt;E> extends LifeCycle, ContextAware, FilterAttachabl
     &lt;!-- encoders are assigned the type
          ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
     &lt;encoder>
-      &lt;pattern>%-4relative [%thread] %-5level %logger{35} - %msg%n&lt;/pattern>
+      &lt;pattern>%-4relative [%thread] %-5level %logger{35} -%kvp- %msg%n&lt;/pattern>
     &lt;/encoder>
   &lt;/appender></b>
 
@@ -621,7 +621,7 @@ public interface Appender&lt;E> extends LifeCycle, ContextAware, FilterAttachabl
          named log file -->
     &lt;file><b>log-${bySecond}.txt</b>&lt;/file>
     &lt;encoder>
-      &lt;pattern>%logger{35} - %msg%n&lt;/pattern>
+      &lt;pattern>%logger{35} -%kvp- %msg%n&lt;/pattern>
     &lt;/encoder>
   &lt;/appender>
 
@@ -1259,7 +1259,7 @@ public interface RollingPolicy extends LifeCycle {
     &lt;/rollingPolicy></b>
 
     &lt;encoder>
-      &lt;pattern>%-4relative [%thread] %-5level %logger{35} - %msg%n&lt;/pattern>
+      &lt;pattern>%-4relative [%thread] %-5level %logger{35} -%kvp- %msg%n&lt;/pattern>
     &lt;/encoder>
   &lt;/appender> 
 
@@ -1304,7 +1304,7 @@ public interface RollingPolicy extends LifeCycle {
     &lt;/rollingPolicy>
 
     &lt;encoder>
-      &lt;pattern>%-4relative [%thread] %-5level %logger{35} - %msg%n&lt;/pattern>
+      &lt;pattern>%-4relative [%thread] %-5level %logger{35} -%kvp -%msg%n&lt;/pattern>
     &lt;/encoder>
   &lt;/appender> 
 
@@ -1583,7 +1583,7 @@ public interface RollingPolicy extends LifeCycle {
       &lt;maxFileSize>5MB&lt;/maxFileSize>
     &lt;/triggeringPolicy>
     &lt;encoder>
-      &lt;pattern>%-4relative [%thread] %-5level %logger{35} - %msg%n&lt;/pattern>
+      &lt;pattern>%-4relative [%thread] %-5level %logger{35} -%kvp -%msg%n&lt;/pattern>
     &lt;/encoder>
   &lt;/appender>
 	
@@ -1687,7 +1687,7 @@ public interface TriggeringPolicy&lt;E&gt; extends LifeCycle {
       &lt;maxFileSize>5MB&lt;/maxFileSize>
     &lt;/triggeringPolicy></b>
     &lt;encoder>
-      &lt;pattern>%-4relative [%thread] %-5level %logger{35} - %msg%n&lt;/pattern>
+      &lt;pattern>%-4relative [%thread] %-5level %logger{35} -%kvp -%msg%n&lt;/pattern>
     &lt;/encoder>
   &lt;/appender>
 	
@@ -4214,7 +4214,7 @@ logger.debug("Alice says hello"); </p>
         <b>&lt;file><span class="green">${userid}</span>.log&lt;/file></b>
         <b>&lt;append>false&lt;/append></b>
         <b>&lt;layout class="ch.qos.logback.classic.PatternLayout"></b>
-          <b>&lt;pattern>%d [%thread] %level %mdc %logger{35} - %msg%n&lt;/pattern></b>
+          <b>&lt;pattern>%d [%thread] %level %mdc %logger{35} -%kvp -%msg%n&lt;/pattern></b>
         <b>&lt;/layout></b>
       <b>&lt;/appender></b>
     <b>&lt;/sift></b>
@@ -4499,7 +4499,7 @@ import static ch.qos.logback.classic.&#8203;ClassicConstants.&#8203;FINALIZE_SES
   &lt;appender name="<b>FILE</b>" class="ch.qos.logback.core.FileAppender">
     &lt;file>myapp.log&lt;/file>
     &lt;encoder>
-      &lt;pattern>%logger{35} - %msg%n&lt;/pattern>
+      &lt;pattern>%logger{35} -%kvp -%msg%n&lt;/pattern>
     &lt;/encoder>
   &lt;/appender>
 

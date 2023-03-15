@@ -6,8 +6,8 @@ var xml2CanonURL='https://logback.qos.ch/translator/rest/dsl/xml2Canon/asJSON';
 const successClass = "success";
 
 function loopOn() {
-    if(1==1)
-        return;
+    //if(1==2)
+    //    return;
     var contents = $("div.tabcontent");
 
     if(contents === null)

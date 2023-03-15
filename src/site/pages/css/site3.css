@@ -671,4 +671,13 @@ p.menu {
 
 /* tab END ================================ */
 
+.champion {
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    vertical-align: middle;
+    background-color: cornsilk;
+    border-style: dotted;
+    border-color: #F00;
+}
 
