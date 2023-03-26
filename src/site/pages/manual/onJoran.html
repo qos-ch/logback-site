@@ -125,7 +125,7 @@
     exact matches and wildcard matches.
     </p>
 
-    <h3 class="doAnchor" name="saxOrDom">SAX or DOM?</h3>
+    <h3 class="doAnchor" id="saxOrDom">SAX or DOM?</h3>
 
     <p>Due to the event-based architecture of the SAX API, a tool based
     on SAX cannot easily deal with forward references, that is,
@@ -159,7 +159,7 @@
     </p>
 
 
-    <h3 class="doAnchor" name="pattern">Pattern</h3>
+    <h3 class="doAnchor" id="pattern">Pattern</h3>
 
     <p>A Joran pattern is essentially a string. There are two kind of
     patterns, <em>exact</em> and <em>wildcard</em>. The pattern "a/b"
@@ -176,7 +176,7 @@
     <code>&lt;a></code> element.
     </p>
 
-    <h3 class="doAnchor" name="action">Actions</h3>
+    <h3 class="doAnchor" id="action">Actions</h3>
     
     <p>As mentioned above, Joran parsing rules consists of the
     association of patterns. Actions extend the <a
@@ -222,7 +222,7 @@ public abstract class Action extends ContextAwareBase {
    empty/nop implementation provided by <code>Action</code>.</p>
 
 
-   <h3 class="doAnchor" name="ruleStore">RuleStore </h3>
+   <h3 class="doAnchor" id="ruleStore">RuleStore </h3>
 
    <p>As mentioned previously, the invocation of actions according to
    matching patterns is a central concept in Joran. A rule is an
@@ -249,7 +249,7 @@ public abstract class Action extends ContextAwareBase {
    </p>
    
 
-   <h3 class="doAnchor" name="interpretationContext">Interpretation
+   <h3 class="doAnchor" id="interpretationContext">Interpretation
    context</h3>
 
    <p>To allow various actions to collaborate, the invocation of begin
@@ -269,7 +269,7 @@ public abstract class Action extends ContextAwareBase {
    <code>StatusManager</code>.
    </p>
    
-   <h3 class="doAnchor" name="helloWorld">Hello world</h3>
+   <h3 class="doAnchor" id="helloWorld">Hello world</h3>
    
    <p>The first example in this chapter illustrates the minimal
    plumbing required for using Joran. The example consists of a
@@ -318,7 +318,7 @@ public abstract class Action extends ContextAwareBase {
 
     <!-- =================&#8203;================&#8203;================&#8203;===== -->
 
-    <h3 class="doAnchor" name="calculator">Collaborating actions</h3>
+    <h3 class="doAnchor" id="calculator">Collaborating actions</h3>
    
     <p>The <em>logback-examples/&#8203;src/main/java/joran/&#8203;calculator/</em>
     directory includes several actions which collaborate together
@@ -485,7 +485,7 @@ public abstract class Action extends ContextAwareBase {
   <code>end()</code> method.</p>
   -->
 
-  <h3 class="doAnchor" name="implicit">Implicit actions</h3>
+  <h3 class="doAnchor" id="implicit">Implicit actions</h3>
 
   <p>The rules defined thus far are called explicit actions because a
   pattern/action association could be found in the rule store for the
@@ -586,7 +586,7 @@ Element [abc] asked to be printed.
   above (see previous paragraph).
   </p>
 
-  <h3 class="doAnchor" name="iaPractice">Implicit actions in
+  <h3 class="doAnchor" id="iaPractice">Implicit actions in
   practice</h3>
   
   <p>The respective Joran configurators of logback-classic and
@@ -645,7 +645,7 @@ Element [abc] asked to be printed.
     </li>
   </ol>
 
-  <h4 class="doAnchor" name="defaultClassMapping">Default class
+  <h4 class="doAnchor" id="defaultClassMapping">Default class
   mapping</h4>
 
   <p>In logback-classic, there are a handful of internal rules mapping
@@ -715,7 +715,7 @@ Element [abc] asked to be printed.
   properties, be they simple or complex. Instead of a setter method,
   the property is specified by an "adder" method.</p>
 
-  <h3 class="doAnchor" name="newRule">New rules on the fly</h3>
+  <h3 class="doAnchor" id="newRule">New rules on the fly</h3>
 
   <p>Joran includes an action which allows the Joran interpreter to
   learn new rules on the fly, that is while interpreting an XML

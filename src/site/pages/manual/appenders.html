@@ -35,7 +35,7 @@
             <script src="../templates/setup.js"    type="text/javascript"></script>
 
 
-    <h2 class="doAnchor" name="whatIsAnAppender">What is an Appender?</h2>
+    <h2 class="doAnchor" id="whatIsAnAppender">What is an Appender?</h2>
     
     <p>Logback delegates the task of writing a logging event to
       components called appenders.  Appenders must implement
@@ -91,7 +91,7 @@ public interface Appender&lt;E> extends LifeCycle, ContextAware, FilterAttachabl
 	</p>
 	
 	
-	<h2 class="doAnchor" name="AppenderBase">AppenderBase</h2>
+	<h2 class="doAnchor" id="AppenderBase">AppenderBase</h2>
 	
 	<p>The <a href="../xref/ch/qos/logback/core/AppenderBase.html">
 	<code>ch.qos.logback.core.&#8203;AppenderBase</code></a> class is an
@@ -228,7 +228,7 @@ public interface Appender&lt;E> extends LifeCycle, ContextAware, FilterAttachabl
 
 	
 	<h2 class="doAnchor"
-	name="OutputStreamAppender">OutputStreamAppender
+	id="OutputStreamAppender">OutputStreamAppender
   </h2>
 	
 	<p><a
@@ -253,7 +253,7 @@ public interface Appender&lt;E> extends LifeCycle, ContextAware, FilterAttachabl
     </tr>
     
     <tr>
-      <td><span class="prop" name="osaEncoder">encoder</span></td>
+      <td><span class="prop" id="osaEncoder">encoder</span></td>
 
       <td><a
       href="../xref/ch/qos/logback/core/encoder/Encoder.html"><code>Encoder</code></a></td>
@@ -264,7 +264,7 @@ public interface Appender&lt;E> extends LifeCycle, ContextAware, FilterAttachabl
 			</td>
     </tr>
    <tr>
-     <td><span class="prop" name="immediateFlush">immediateFlush</span></td>
+     <td><span class="prop" id="immediateFlush">immediateFlush</span></td>
      <td><code>boolean</code></td>
      
      <td>The default value for <span
@@ -293,7 +293,7 @@ public interface Appender&lt;E> extends LifeCycle, ContextAware, FilterAttachabl
 	<img src="images/chapters/appenders/appenderClassDiagram.jpg" alt="A UML diagram showing OutputStreamAppender and subclasses"/>
 	
 
-	<h2 class="doAnchor" name="ConsoleAppender">ConsoleAppender</h2>
+	<h2 class="doAnchor" id="ConsoleAppender">ConsoleAppender</h2>
 	
   <p>The <a href="../xref/ch/qos/logback/core/ConsoleAppender.html">
   <code>ConsoleAppender</code></a>, as the name indicates, appends on
@@ -406,7 +406,7 @@ public interface Appender&lt;E> extends LifeCycle, ContextAware, FilterAttachabl
    href="../xref/chapters/appenders/ConfigurationTester.html">chapters.appenders.&#8203;ConfigurationTester</a> src/main/java/chapters/&#8203;appenders/conf/&#8203;logback-Console.xml</p>
 	
 	
-   <h2 class="doAnchor" name="FileAppender">FileAppender</h2>
+   <h2 class="doAnchor" id="FileAppender">FileAppender</h2>
 	
    <p>The <a
    href="../xref/ch/qos/logback/core/FileAppender.html"><code>FileAppender</code></a>,
@@ -587,7 +587,7 @@ public interface Appender&lt;E> extends LifeCycle, ContextAware, FilterAttachabl
    src/main/java/chapters/&#8203;appenders/conf/&#8203;logback-fileAppender.&#8203;xml</p>
 	
 	
-   <h3 class="doAnchor" name="uniquelyNamed">Uniquely named files (by
+   <h3 class="doAnchor" id="uniquelyNamed">Uniquely named files (by
    timestamp)</h3>
    
    <p>During the application development phase or in the case of
@@ -677,7 +677,7 @@ public interface Appender&lt;E> extends LifeCycle, ContextAware, FilterAttachabl
   ...
 &lt;/configuration></code></pre>
 
-   <h2 class="doAnchor" name="RollingFileAppender">RollingFileAppender
+   <h2 class="doAnchor" id="RollingFileAppender">RollingFileAppender
    </h2>
    
    <p><a
@@ -755,7 +755,7 @@ public interface Appender&lt;E> extends LifeCycle, ContextAware, FilterAttachabl
        </td>
      </tr>	
      <tr>
-       <td valign="top"><span class="prop" name="prudentWithRolling">prudent</span></td>
+       <td valign="top"><span class="prop" id="prudentWithRolling">prudent</span></td>
 
        <td valign="top"><code>boolean</code></td>
 
@@ -788,7 +788,7 @@ public interface Appender&lt;E> extends LifeCycle, ContextAware, FilterAttachabl
      </tr>
    </table>
 	
-   <h3 class="doAnchor" name="onRollingPolicies">Overview of rolling
+   <h3 class="doAnchor" id="onRollingPolicies">Overview of rolling
    policies</h3>
 	
    <p><a
@@ -825,7 +825,7 @@ public interface RollingPolicy extends LifeCycle {
         ================= -->
 
 	
-   <h4 class="doAnchor" name="TimeBasedRollingPolicy">TimeBasedRollingPolicy </h4>
+   <h4 class="doAnchor" id="TimeBasedRollingPolicy">TimeBasedRollingPolicy </h4>
 
    <p><a
    href="../xref/ch/qos/logback/core/rolling/TimeBasedRollingPolicy.html">
@@ -1319,7 +1319,7 @@ public interface RollingPolicy extends LifeCycle {
    </div>
   
 
-    <h3 class="doAnchor" name="SizeAndTimeBasedRollingPolicy">Size and
+    <h3 class="doAnchor" id="SizeAndTimeBasedRollingPolicy">Size and
     time based rolling policy</h3>
 
     
@@ -1407,7 +1407,7 @@ public interface RollingPolicy extends LifeCycle {
     <code>SizeAndTimeBasedRollingPolicy</code> is implemented with a
     <code>SizeAndTimeBasedFNATP</code> subcomponent.</p>
 
-   <h4 class="doAnchor" name="FixedWindowRollingPolicy">FixedWindowRollingPolicy</h4>
+   <h4 class="doAnchor" id="FixedWindowRollingPolicy">FixedWindowRollingPolicy</h4>
 
    <p>When rolling over, <a
    href="../xref/ch/qos/logback/core/rolling/FixedWindowRollingPolicy.html">
@@ -1598,7 +1598,7 @@ public interface RollingPolicy extends LifeCycle {
      </div>
 
 
-    <h2 class="doAnchor" name="TriggeringPolicy">Overview of triggering policies</h2>
+    <h2 class="doAnchor" id="TriggeringPolicy">Overview of triggering policies</h2>
 		
     <p><a
     href="../xref/ch/qos/logback/core/rolling/TriggeringPolicy.html"><code>TriggeringPolicy</code></a>
@@ -1703,8 +1703,7 @@ public interface TriggeringPolicy&lt;E&gt; extends LifeCycle {
 
 	
     <!-- XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXx -->
-    <a name="Classic"></a>
-    <h2>Logback Classic</h2>
+    <h2 id="Classic">Logback Classic</h2>
     
     
     <p>While logging events are generic in logback-core, within
@@ -1715,7 +1714,7 @@ public interface TriggeringPolicy&lt;E&gt; extends LifeCycle {
     
     </p>
     
-    <h3 class="doAnchor" name="SocketAppender">SocketAppender and
+    <h3 class="doAnchor" id="SocketAppender">SocketAppender and
     SSLSocketAppender
     </h3>
     
@@ -1910,7 +1909,7 @@ public interface TriggeringPolicy&lt;E&gt; extends LifeCycle {
       </li>
     </ul>
     
-    <h4><a name="simpleSocketServer"></a>Using SimpleSocketServer</h4>
+    <h4 id="simpleSocketServer">Using SimpleSocketServer</h4>
     <p>
     The <code>SimpleSocketServer</code> application takes two command-line
     arguments: <em>port</em> and <em>configFile</em>; 
@@ -2055,7 +2054,7 @@ public interface TriggeringPolicy&lt;E&gt; extends LifeCycle {
 		its clients to a second server.
 		</p>
 		
-		<h4><a name="simpleSSLSocketServer"></a>Using SimpleSSLSocketServer</h4>
+		<h4 id="simpleSSLSocketServer">Using SimpleSSLSocketServer</h4>
 
     <p>The <code>SimpleSSLSocketServer</code> requires the same
     <em>port</em> and <em>configFile</em> command-line arguments used
@@ -2175,7 +2174,7 @@ public interface TriggeringPolicy&lt;E&gt; extends LifeCycle {
     </p>
  	  
  	  
-    <h3 class="doAnchor" name="serverSocketAppender">
+    <h3 class="doAnchor" id="serverSocketAppender">
       ServerSocketAppender and SSLServerSocketAppender</h3>
     
     <p>The <code>SocketAppender</code> component (and its SSL-enabled
@@ -2399,7 +2398,7 @@ public interface TriggeringPolicy&lt;E&gt; extends LifeCycle {
       </tr>
       
       <tr>
-        <td><span class="prop" name="smtpTo">to</span></td>
+        <td><span class="prop" id="smtpTo">to</span></td>
         <td><code>String</code></td>
         <td>The email address of the recipient as a
         <em>pattern</em>. The pattern is evaluated anew with the
@@ -2470,7 +2469,7 @@ public interface TriggeringPolicy&lt;E&gt; extends LifeCycle {
         </td>
       </tr>
       <tr>
-        <td><span class="prop" name="smtpAppender_Evaluator">evaluator</span></td>
+        <td><span class="prop" id="smtpAppender_Evaluator">evaluator</span></td>
         <td><code><a
         href="../xref/ch/qos/logback/classic/boolex/IEvaluator.html">IEvaluator</a></code></td>
         <td>
@@ -2796,7 +2795,7 @@ public interface TriggeringPolicy&lt;E&gt; extends LifeCycle {
     <code>HTMLLayout</code> does not use inline CSS.
     </p>
 
-    <h3 class="doAnchor" name="cyclicBufferSize">Custom buffer
+    <h3 class="doAnchor" id="cyclicBufferSize">Custom buffer
     size</h3>
 
     <p>By default, the outgoing message will contain the last 256
@@ -2954,7 +2953,7 @@ public class CounterBasedEvaluator extends ContextAwareBase implements EventEval
     </div>
 
 
-    <h3 class="doAnchor" name="OnMarkerEvaluator">Marker based
+    <h3 class="doAnchor" id="OnMarkerEvaluator">Marker based
     triggering </h3>
 
     <p>Although reasonable, the default triggering policy whereby every
@@ -3027,7 +3026,7 @@ logger.error(<b>notifyAdmin</b>,
 
 
     <h4 class="doAnchor"
-    name="marker_JaninoEventEvaluator">Marker-based triggering with
+    id="marker_JaninoEventEvaluator">Marker-based triggering with
     JaninoEventEvaluator</h4>
 
     <p>Note that instead of using the marker-centric
@@ -3073,7 +3072,7 @@ logger.error(<b>notifyAdmin</b>,
    </div>
    
 
-    <h3 class="doAnchor" name="smtpAuthentication">Authentication/STARTTLS/SSL</h3>
+    <h3 class="doAnchor" id="smtpAuthentication">Authentication/STARTTLS/SSL</h3>
 
     <p><code>SMTPAppender</code> supports authentication via plain
     user passwords as well as both the STARTTLS and SSL
@@ -3084,7 +3083,7 @@ logger.error(<b>notifyAdmin</b>,
     connection is encrypted right from the start.
     </p>
 
-    <h3 class="doAnchor" name="gmailSSL">SMTPAppender configuration
+    <h3 class="doAnchor" id="gmailSSL">SMTPAppender configuration
     for Gmail (SSL)</h3>
 
     <p>The next example shows you how to configure
@@ -3130,7 +3129,7 @@ logger.error(<b>notifyAdmin</b>,
       <p>Requires a server call. Please wait a few seconds.</p>
     </div>
     
-    <h3 class="doAnchor" name="gmailSTARTTLS">SMTPAppender for Gmail
+    <h3 class="doAnchor" id="gmailSTARTTLS">SMTPAppender for Gmail
     (STARTTLS)</h3>
 
     <p>The next example shows you how to configure
@@ -3176,7 +3175,7 @@ logger.error(<b>notifyAdmin</b>,
       <p>Requires a server call. Please wait a few seconds.</p>
     </div>
 
-    <h3 class="doAnchor" name="smtpDiscriminator">SMTPAppender with MDCDiscriminator</h3>
+    <h3 class="doAnchor" id="smtpDiscriminator">SMTPAppender with MDCDiscriminator</h3>
 
 
     <p>As mentioned earlier, by specifying a discriminator other than
@@ -3284,7 +3283,7 @@ logger.error(<b>notifyAdmin</b>,
     <!-- ================&#8203;=========================================== -->
 
 
-    <h3 class="doAnchor" name="DBAppender">DBAppender</h3>
+    <h3 class="doAnchor" id="DBAppender">DBAppender</h3>
 		
 		<p>The <a
 		href="../xref/ch/qos/logback/classic/db/DBAppender.html"><code>DBAppender</code></a>
@@ -3783,7 +3782,7 @@ logger.error(<b>notifyAdmin</b>,
 		-->
 
     <h4 class="doAnchor"
-    name="JNDIConnectionSource">JNDIConnectionSource</h4>
+    id="JNDIConnectionSource">JNDIConnectionSource</h4>
 
 		<p><a
 		href="../xref/ch/qos/logback/core/db/JNDIConnectionSource.html">
@@ -3980,7 +3979,7 @@ logger.error(<b>notifyAdmin</b>,
      improvement in performance.
      </p>
 
-     <h3 class="doAnchor" name="SyslogAppender">SyslogAppender</h3>
+     <h3 class="doAnchor" id="SyslogAppender">SyslogAppender</h3>
 
      <p>The syslog protocol is a very simple protocol: a syslog sender
      sends a small message to a syslog receiver.  The receiver is
@@ -4119,7 +4118,7 @@ logger.error(<b>notifyAdmin</b>,
     </p>
 		
 
-    <h3 class="doAnchor" name="SiftingAppender">SiftingAppender</h3>
+    <h3 class="doAnchor" id="SiftingAppender">SiftingAppender</h3>
 
     <p>As its name implies, a <code>SiftingAppender</code> can be used
     to separate (or sift) logging according to a given runtime
@@ -4276,7 +4275,7 @@ logger.debug("Alice says hello"); </p>
     also supported.
     </p>
 
-    <h4 class="doAnchor" name="siftGettingTimeoutRight">Getting the
+    <h4 class="doAnchor" id="siftGettingTimeoutRight">Getting the
     <span class="prop">timeout</span> right</h4>
 
     <p>For certain types of applications, it may be difficult to get
@@ -4327,7 +4326,7 @@ import static ch.qos.logback.classic.&#8203;ClassicConstants.&#8203;FINALIZE_SES
 
 </code></pre>
 
-    <h3 class="doAnchor" name="AsyncAppender">AsyncAppender</h3>
+    <h3 class="doAnchor" id="AsyncAppender">AsyncAppender</h3>
 
     <p>AsyncAppender logs <a
     href="../apidocs/ch/qos/logback/classic/spi/ILoggingEvent.html">ILoggingEvent</a>s
@@ -4519,7 +4518,7 @@ import static ch.qos.logback.classic.&#8203;ClassicConstants.&#8203;FINALIZE_SES
     </div>
 
 
-    <h3 class="doAnchor" name="WriteYourOwnAppender">Writing your own
+    <h3 class="doAnchor" id="WriteYourOwnAppender">Writing your own
     Appender</h3>
     
 
@@ -4638,7 +4637,7 @@ public class CountingConsoleAppender extends AppenderBase&lt;ILoggingEvent> {
 		</p>
   
 
-		<h2 class="doAnchor" name="logback_access">Logback Access</h2>
+		<h2 class="doAnchor" id="logback_access">Logback Access</h2>
 		
 		<p>Most of the appenders found in logback-classic have their
 		equivalent in logback-access. These work essentially in the same
@@ -4646,7 +4645,7 @@ public class CountingConsoleAppender extends AppenderBase&lt;ILoggingEvent> {
 		will cover their use.
 		</p>
 		
-		<h3 class="doAnchor" name="AccessSocketAppender">SocketAppender
+		<h3 class="doAnchor" id="AccessSocketAppender">SocketAppender
 		and SSLSocketAppender</h3>
 		
 		<p>The <a
@@ -4671,7 +4670,7 @@ public class CountingConsoleAppender extends AppenderBase&lt;ILoggingEvent> {
 		</p>
 
     <h3 class="doAnchor"
-    name="AccessServerSocketAppender">ServerSocketAppender and
+    id="AccessServerSocketAppender">ServerSocketAppender and
     SSLServerSocketAppender</h3>
     
     <p>Like <code>SocketAppender</code>, the <a
@@ -4696,7 +4695,7 @@ public class CountingConsoleAppender extends AppenderBase&lt;ILoggingEvent> {
     </p>
     
 	 	
-		<h3 class="doAnchor" name="AccessSMTPAppender">SMTPAppender</h3>
+		<h3 class="doAnchor" id="AccessSMTPAppender">SMTPAppender</h3>
 		
 		<p>Access' <a
 		href="../xref/ch/qos/logback/access/net/SMTPAppender.html">
@@ -4739,7 +4738,7 @@ public class CountingConsoleAppender extends AppenderBase&lt;ILoggingEvent> {
 		included in the email.
 		</p>
 
-		<h3 class="doAnchor" name="AccessDBAppender">DBAppender</h3>
+		<h3 class="doAnchor" id="AccessDBAppender">DBAppender</h3>
 		
 		<p><a
 		href="../xref/ch/qos/logback/access/db/DBAppender.html"><code>DBAppender</code></a>
@@ -4907,7 +4906,7 @@ public class CountingConsoleAppender extends AppenderBase&lt;ILoggingEvent> {
 
 
     <h3 class="doAnchor"
-    name="AccessSiftingAppender">SiftingAppender</h3>
+    id="AccessSiftingAppender">SiftingAppender</h3>
    
     <p>The SiftingAppender in logback-access is quite similar to its
     logback-classic counterpart. The main difference is that in

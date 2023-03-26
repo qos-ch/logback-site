@@ -57,7 +57,7 @@
 		and turbo filters.
 		</p>
 		
-    <h3 class="doAnchor" name="filter">Regular filters</h3>
+    <h3 class="doAnchor" id="filter">Regular filters</h3>
 
 		<p>Regular logback-classic filters extend the <a
 		href="../xref/ch/qos/logback/core/filter/Filter.html"><code>Filter</code></a>
@@ -91,7 +91,7 @@
     of day or any other part of the logging event.
     </p>
     
-		<h3 class="doAnchor" name="yourOwnFilter">Implementing your own
+		<h3 class="doAnchor" id="yourOwnFilter">Implementing your own
 		Filter</h3>
 		
 		<p>Creating your own filter is easy. All you have to do is extend
@@ -189,7 +189,7 @@ public class SampleFilter extends Filter&lt;ILoggingEvent> {
     <code>AbstractMatcherFilter</code>.
     </p>
 		
-		<h3 class="doAnchor" name="levelFilter">LevelFilter</h3>
+		<h3 class="doAnchor" id="levelFilter">LevelFilter</h3>
 		
 		<p><a href="../xref/ch/qos/logback/classic/filter/LevelFilter.html">
 		<code>LevelFilter</code></a> filters events based on exact level
@@ -236,7 +236,7 @@ public class SampleFilter extends Filter&lt;ILoggingEvent> {
 </div>
 
 
-    <h3 class="doAnchor" name="thresholdFilter">ThresholdFilter</h3>
+    <h3 class="doAnchor" id="thresholdFilter">ThresholdFilter</h3>
 
 		<p>The <a
 		href="../xref/ch/qos/logback/classic/filter/ThresholdFilter.html">
@@ -285,7 +285,7 @@ public class SampleFilter extends Filter&lt;ILoggingEvent> {
 </div>
 
 
-    <h2 class="doAnchor" name="evaluatorFilter">EvaluatorFilter</h2>
+    <h2 class="doAnchor" id="evaluatorFilter">EvaluatorFilter</h2>
 
     <p><a
     href="../xref/ch/qos/logback/core/filter/EvaluatorFilter.html"><code>EvaluatorFilter</code></a>
@@ -309,7 +309,7 @@ public class SampleFilter extends Filter&lt;ILoggingEvent> {
     <!-- ==================== JaninoEventEvaluator ======================== -->
     
     <h3 class="doAnchor"
-    name="JaninoEventEvaluator">JaninoEventEvaluator</h3>
+    id="JaninoEventEvaluator">JaninoEventEvaluator</h3>
     
 
     <p>Logback-classic ships with another concrete
@@ -607,7 +607,7 @@ java chapters.filters.FilterEvents src/main/java/chapters/filters/basicConfigura
 &lt;/evaluator></code></pre>
 
 
- 	  <h2 class="doAnchor" name="matcher">Matchers</h2>
+ 	  <h2 class="doAnchor" id="matcher">Matchers</h2>
 
     <p>While it is possible to do pattern matching by invoking the <a
     href="http://java.sun.com/j2se/1.5.0/docs/api/java/lang/String.html#matches%28java.lang.String%29">matches()</a>
@@ -686,7 +686,7 @@ java chapters.filters.FilterEvents src/main/java/chapters/filters/basicConfigura
     <!-- ===================== TURBO FILTER ============================= -->
     <!-- ================================================================ -->
 
-    <h2 class="doAnchor" name="TurboFilter">TurboFilters</h2>
+    <h2 class="doAnchor" id="TurboFilter">TurboFilters</h2>
     
     <p><code>TurboFilter</code> objects all extend the
     	<a href="../xref/ch/qos/logback/classic/turbo/TurboFilter.html">
@@ -715,7 +715,7 @@ java chapters.filters.FilterEvents src/main/java/chapters/filters/basicConfigura
     </p>
 
    	
-   	<h3 class="doAnchor" name="yourOwnTurboFilter">Implementing your
+   	<h3 class="doAnchor" id="yourOwnTurboFilter">Implementing your
    	own TurboFilter</h3>
     
     <p>To create your own <code>TurboFilter</code> component, just
@@ -942,7 +942,7 @@ public class SampleTurboFilter extends TurboFilter {
 
 		  
     <h3 class="doAnchor"
-    name="DuplicateMessageFilter">DuplicateMessageFilter</h3>
+    id="DuplicateMessageFilter">DuplicateMessageFilter</h3>
 
     <p>The <code>DuplicateMessageFilter</code> merits a separate
     presentation.  This filter detects duplicate messages, and beyond
@@ -1053,7 +1053,7 @@ logger.debug("Hello {}.", name1);</code></pre>
     because only 5 repetitions are allowed by default.
     </p>
 
-    <h1 class="doAnchor" name="logback-access">In logback-access</h1>
+    <h1 class="doAnchor" id="logback-access">In logback-access</h1>
     
     <p>Logback-access offers most of the features available with
     logback-classic. In particular, <code>Filter</code> objects are
@@ -1068,7 +1068,7 @@ logger.debug("Hello {}.", name1);</code></pre>
     </p>
 
 		<h2 class="doAnchor"
-		name="countingFilter"><code>CountingFilter</code></h2>
+		id="countingFilter"><code>CountingFilter</code></h2>
 		
 		<p>With the help of <a
 		href="../xref/ch/qos/logback/access/filter/CountingFilter.html"><code>CountingFilter</code></a>
@@ -1123,7 +1123,7 @@ logger.debug("Hello {}.", name1);</code></pre>
     <img alt="CountingFilter via jconsole" src="images/chapters/filters/countingFilter.png" />
 	
 
-    <h3 class="doAnchor" name="access_EvaluatorFilter">EvaluatorFilter</h3>
+    <h3 class="doAnchor" id="access_EvaluatorFilter">EvaluatorFilter</h3>
 
     
     <p><a

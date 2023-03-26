@@ -34,7 +34,7 @@ function decoratePropertiesInTables(anchor) {
 
    var tmpHTML = p.innerHTML;
    var propName = e.innerHTML;
-   var nameAttr = $(e).attr('name')
+   var nameAttr = $(e).attr('id')
     
    if(nameAttr == null) {
      var containerAttr = $(e).attr('container')
@@ -44,7 +44,7 @@ function decoratePropertiesInTables(anchor) {
        nameAttr = propName;
    }
    
-   p.innerHTML = "<a name='" + nameAttr + "' href='#" + nameAttr +
+   p.innerHTML = "<a href='#" + nameAttr +
                 "'><span class='anchor'/></a><b>" +tmpHTML +"</b>";
    scrollIfMatch(p, nameAttr, anchor);
  } // for 
@@ -55,10 +55,10 @@ function decorateConversionWordInTables(anchor) {
  for(var i = 0; i < elems.length; i++) {
    var e = elems[i];
    var tmpHTML = e.innerHTML;
-   var nameAttr = $(e).attr('name')
+   var nameAttr = $(e).attr('id')
    if(nameAttr == null) 
      continue;
-   e.innerHTML = "<a name='" + nameAttr + "' href='#" + nameAttr +
+   e.innerHTML = "<a href='#" + nameAttr +
                 "'><span class='anchor'/></a>" +tmpHTML;
    scrollIfMatch(e, nameAttr, anchor);
  }
@@ -70,11 +70,11 @@ function decorateDoAnchor(anchor) {
    for(var i = 0; i < elems.length; i++) {
      var e = elems[i];
      var tmpHTML = e.innerHTML;
-     var nameAttr = $(e).attr('name')
+     var nameAttr = $(e).attr('id')
      if(nameAttr == null) {
        nameAttr = camelCase($.trim(tmpHTML))
      }
-     e.innerHTML = "<a name='" + nameAttr + "' href='#" + nameAttr +
+     e.innerHTML = "<a href='#" + nameAttr +
                 "'><span class='anchor'/></a>" +tmpHTML;
      scrollIfMatch(e, nameAttr, anchor);
    }

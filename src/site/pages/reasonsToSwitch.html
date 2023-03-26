@@ -33,14 +33,14 @@
     </p>
 
 
-    <h3 class="doAnchor" name="fasterImpl">Faster implementation</h3>
+    <h3 class="doAnchor" id="fasterImpl">Faster implementation</h3>
 
     <p>Based on our previous work on log4j 1.x, logback internals have
         been re-written to perform about ten times faster on certain
         critical execution paths. Not only are logback components faster,
         they have a smaller memory footprint as well.</p>
 
-    <h3 class="doAnchor" name="tdd">Extensive battery of tests</h3>
+    <h3 class="doAnchor" id="tdd">Extensive battery of tests</h3>
 
     <p>Logback comes with a very extensive battery of tests developed
         over the course of several years and untold hours of work. While
@@ -51,7 +51,7 @@
         conditions.
     </p>
 
-    <h3 class="doAnchor" name="slf4j">logback-classic speaks SLF4J
+    <h3 class="doAnchor" id="slf4j">logback-classic speaks SLF4J
         natively</h3>
 
     <p>Since the <code>Logger</code> class in logback-classic
@@ -65,12 +65,12 @@
         in switching logging frameworks.
     </p>
 
-    <h3 class="doAnchor" name="docs">Extensive documentation</h3>
+    <h3 class="doAnchor" id="docs">Extensive documentation</h3>
 
     <p>Logback ships with detailed and constantly updated
         documentation.</p>
 
-    <h3 class="doAnchor" name="autoScan">Automatic reloading of
+    <h3 class="doAnchor" id="autoScan">Automatic reloading of
         configuration files</h3>
 
     <p>Logback-classic can <a
@@ -83,7 +83,7 @@
         of a separate thread for scanning.
     </p>
 
-    <h3 class="doAnchor" name="grace">Graceful recovery from I/O
+    <h3 class="doAnchor" id="grace">Graceful recovery from I/O
         failures</h3>
 
     <p>Logback's <code>FileAppender</code> and all its subclasses,
@@ -95,7 +95,7 @@
         from the previous error condition.
     </p>
 
-    <h3 class="doAnchor" name="maxHistory">Automatic removal of old
+    <h3 class="doAnchor" id="maxHistory">Automatic removal of old
         log archives</h3>
 
     <p>By setting the <span class="option">maxHistory</span> property
@@ -110,7 +110,7 @@
         files older than 12 months will be automatically removed.
     </p>
 
-    <h3 class="doAnchor" name="compression">Automatic compression of
+    <h3 class="doAnchor" id="compression">Automatic compression of
         archived log files</h3>
 
     <p><a
@@ -121,7 +121,7 @@
         duration of the compression.
     </p>
 
-    <h3 class="doAnchor" name="prudent">Prudent mode</h3>
+    <h3 class="doAnchor" id="prudent">Prudent mode</h3>
 
     <p>In <a href="manual/appenders.html#prudent">prudent mode</a>,
         multiple <code>FileAppender</code> instances running on multiple
@@ -131,7 +131,7 @@
     </p>
 
 
-    <h3 class="doAnchor" name="conditional">Conditional processing of
+    <h3 class="doAnchor" id="conditional">Conditional processing of
         configuration files</h3>
 
     <p>Developers often need to juggle between several logback
@@ -147,7 +147,7 @@
     </p>
 
 
-    <h3 class="doAnchor" name="filters">Filters</h3>
+    <h3 class="doAnchor" id="filters">Filters</h3>
 
     <p>Logback comes with a wide array of <a
             href="manual/filters.html">filtering capabilities</a> going much
@@ -180,7 +180,7 @@
     </p>
 
 
-    <h3 class="doAnchor" name="sift">SiftingAppender</h3>
+    <h3 class="doAnchor" id="sift">SiftingAppender</h3>
 
     <p><a
             href="manual/appenders.html#SiftingAppender">SiftingAppender</a>
@@ -191,7 +191,7 @@
         user go into distinct log files, one log file per user.
     </p>
 
-    <h3 class="doAnchor" name="packagingData">Stack traces with
+    <h3 class="doAnchor" id="packagingData">Stack traces with
         packaging data</h3>
 
     <p>When logback prints an exception, the stack trace will include
@@ -230,7 +230,7 @@ java.lang.Exception: 99 is invalid
             their IDE</a>.
     </p>
 
-    <h3 class="doAnchor" name="logbackAccess">Logback-access,
+    <h3 class="doAnchor" id="logbackAccess">Logback-access,
         i.e. HTTP-access logging with brains, is an integral part of
         logback</h3>
 
@@ -241,7 +241,7 @@ java.lang.Exception: 99 is invalid
         design, all the logback-classic features you love are
         available in logback-access as well.</p>
 
-    <h3 class="doAnchor" name="inSummary">In summary</h3>
+    <h3 class="doAnchor" id="inSummary">In summary</h3>
 
     <p>We have listed a number of reasons for preferring logback over
         log4j 1.x. Given that logback builds upon on our previous work on
