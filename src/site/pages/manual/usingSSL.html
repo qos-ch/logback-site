@@ -152,7 +152,7 @@
          certificate.
       </p>
       
-      <h4><a name="basicConfig.keyStore"></a>
+      <h4 id="basicConfig.keyStore">
           System Properties for Server Key Store Configuration</h4>
 
           <div class="bodyTable">
@@ -210,7 +210,7 @@
          client component</strong>.
       </p>
         
-      <h4><a name="basicConfig.trustStore"></a>
+      <h4 id="basicConfig.trustStore">
           System Properties for Client Trust Store Configuration</h4>
 
           <div class="bodyTable">
@@ -245,7 +245,7 @@
          that utilizes Logback's SSL-enabled client components.
       </p>         
             
-      <h3 class="doAnchor"><a name="SSLConfiguration"></a>
+      <h3 class="doAnchor" id="SSLConfiguration">
          Advanced SSL Configuration</h3>
       <p>In certain situations, the basic SSL configuration using 
          JSSE system properties is not adequate.  For example, if you
@@ -405,7 +405,7 @@
           </td>
         </tr>
         <tr>
-          <td><a name="ssl.keyStore"></a><span class="prop" container="ssl">keyStore</span></td>
+          <td id="ssl.keyStore"><span class="prop" container="ssl">keyStore</span></td>
           <td><a href="../xref/ch/qos/logback/core/net/ssl/KeyStoreFactoryBean.html">
               <code>KeyStoreFactoryBean</code></a>
           </td>
@@ -500,7 +500,7 @@
           </td>
         </tr>
         <tr>
-          <td><a name="ssl.trustStore"></a><span class="prop" container="ssl">trustStore</span></td>
+          <td id="ssl.trustStore"><span class="prop" container="ssl">trustStore</span></td>
           <td><a href="../xref/ch/qos/logback/core/net/ssl/KeyStoreFactoryBean.html">
               <code>KeyStoreFactoryBean</code></a>
           </td>
@@ -526,7 +526,7 @@
       </table>
           </div>
 
-      <h4 class="doAnchor"><a name="KeyStoreFactoryBean"></a>
+      <h4 class="doAnchor" id="KeyStoreFactoryBean">
           Key Store Configuration</h4>
           
       <p>The <a href="../xref/ch/qos/logback/core/net/ssl/KeyStoreFactoryBean.html">
@@ -587,7 +587,7 @@
       </table>
           </div>
 
-      <h4><a name="KeyManagerFactoryFactoryBean"></a>
+      <h4 id="KeyManagerFactoryFactoryBean">
           Key Manager Factory Configuration</h4>
           
       <p>The <a href="../xref/ch/qos/logback/core/net/ssl/KeyManagerFactoryFactoryBean.html">
@@ -629,7 +629,7 @@
       </table>
           </div>
 
-      <h4 class="doAnchor"><a name="SecureRandomFactoryBean"></a>
+      <h4 class="doAnchor" id="SecureRandomFactoryBean">
           Secure Random Generator Configuration</h4>
           
       <p>The <a href="../xref/ch/qos/logback/core/net/ssl/SecureRandomFactoryBean.html">
@@ -672,7 +672,7 @@
       </table>
        </div>
 
-      <h4><a name="SSLParametersConfiguration"></a>
+      <h4 id="SSLParametersConfiguration">
           SSL Parameters Configuration</h4>
           
       <p>The <a href="../xref/ch/qos/logback/core/net/ssl/SSLParametersConfiguration.html">
@@ -690,7 +690,7 @@
         </tr>
 
         <tr>
-          <td><a name="parameters.hostnameVerification"></a>
+          <td id="parameters.hostnameVerification">
               <span class="prop" container="parameters">hostnameVerification</span></td>
           <td><code>boolean</code></td>
           <td>
@@ -701,7 +701,7 @@
         </tr>
 
         <tr>
-          <td><a name="parameters.excludedCipherSuites"></a>
+          <td id="parameters.excludedCipherSuites">
               <span class="prop" container="parameters">excludedCipherSuites</span></td>
           <td><code>String</code></td>
           <td>
@@ -721,7 +721,7 @@
           </td>
         </tr>
         <tr>
-          <td><a name="parameters.includedCipherSuites"></a>
+          <td id="parameters.includedCipherSuites">
               <span class="prop" container="parameters">includedCipherSuites</span></td>
           <td><code>String</code></td>
           <td>
@@ -742,7 +742,7 @@
           </td>
         </tr>
         <tr>
-          <td><a name="parameters.excludedProtocols"></a>
+          <td id="parameters.excludedProtocols">
               <span class="prop" container="parameters">excludedProtocols</span></td>
           <td><code>String</code></td>
           <td>
@@ -762,7 +762,7 @@
           </td>
         </tr>
         <tr>
-          <td><a name="parameters.includedProtocols"></a>
+          <td id="parameters.includedProtocols">
               <span class="prop" container="parameters">includedProtocols</span></td>
           <td><code>String</code></td>
           <td>
@@ -783,7 +783,7 @@
           </td>
         </tr>
         <tr>
-          <td><a name="parameters.needClientAuth"></a>
+          <td id="parameters.needClientAuth">
               <span class="prop" container="parameters">needClientAuth</span></td>
           <td><code>boolean</code></td>
           <td>Set this property to the value <code>true</code> to 
@@ -793,7 +793,7 @@
           </td>
         </tr>
         <tr>
-          <td><a name="parameters.wantClientAuth"></a>
+          <td id="parameters.wantClientAuth">
               <span class="prop" container="parameters">wantClientAuth</span></td>
           <td><code>boolean</code></td>
           <td>Set this property to the value <code>true</code> to 
@@ -805,7 +805,7 @@
       </table>
           </div>
 
-      <h4><a name="TrustManagerFactoryFactoryBean"></a>
+      <h4 id="TrustManagerFactoryFactoryBean">
           Trust Manager Factory Configuration</h4>
           
       <p>The <a href="../xref/ch/qos/logback/core/net/ssl/TrustManagerFactoryFactoryBean.html">
@@ -847,7 +847,7 @@
       </table>
           </div>
 
-      <h2 class="doAnchor"><a name="Examples"></a>Examples</h2>
+      <h2 class="doAnchor" id="Examples">Examples</h2>
 
       <h3>Using JSSE System Properties</h3>
       <p>JSSE system properties can be used to specify the location and 

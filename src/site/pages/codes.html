@@ -16,9 +16,9 @@
 
   <div id="content">
     
-  <h2 class="doAnchor" name="top">Logback error messages and their meanings</h2>
+  <h2 class="doAnchor" id="top">Logback error messages and their meanings</h2>
 
-  <h3 class="doAnchor" name="null_CS">The contextSelector cannot be
+  <h3 class="doAnchor" id="null_CS">The contextSelector cannot be
   null in <code>StaticLoggerBinder</code>.  
   </h3>
 
@@ -35,7 +35,7 @@
   
 
   <!-- ================&#8203;===============&#8203;===============&#8203;============= -->
-  <h3 class="doAnchor" name="layoutInsteadOfEncoder">This appender no
+  <h3 class="doAnchor" id="layoutInsteadOfEncoder">This appender no
   longer admits a layout as a subcomponent, set an encoder instead.
   </h3>
 
@@ -135,7 +135,7 @@
 
   <!-- ================&#8203;===============&#8203;===============&#8203;============= -->
 
-  <h3 class="doAnchor" name="socket_no_host">No remote host or address
+  <h3 class="doAnchor" id="socket_no_host">No remote host or address
   is set for <code>SocketAppender</code>
     
   </h3>
@@ -157,7 +157,7 @@
 
   <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->
 
-  <h3 class="doAnchor" name="socket_no_port">No remote port is set for
+  <h3 class="doAnchor" id="socket_no_port">No remote port is set for
   <code>SocketAppender</code>    
   </h3>
     
@@ -179,7 +179,7 @@
 
   <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->
 
-  <h3 class="doAnchor" name="smtp_no_layout">No <code>Layout</code> is
+  <h3 class="doAnchor" id="smtp_no_layout">No <code>Layout</code> is
   set for SMTPAppender
   </h3>
 
@@ -211,7 +211,7 @@
       
   <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->
 
-  <h3 class="doAnchor" name="sbtp_size_format">Specified number is not
+  <h3 class="doAnchor" id="sbtp_size_format">Specified number is not
   in proper int form, or not expected format.    
   </h3>
     
@@ -232,7 +232,7 @@
       
   <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->
 
-  <h3 class="doAnchor" name="rfa_no_tp">No
+  <h3 class="doAnchor" id="rfa_no_tp">No
   <code>TriggeringPolicy</code> was set for the
   <code>RollingFileAppender</code>.
     
@@ -267,7 +267,7 @@
       
   <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->
 
-  <h3 class="doAnchor" name="#sat_missing_integer_token">Missing
+  <h3 class="doAnchor" id="sat_missing_integer_token">Missing
   integer token, that is %i, in FileNamePattern [...].
     
   </h3>
@@ -283,7 +283,7 @@
       
   <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->
 
-  <h3 class="doAnchor" name="rfa_no_rp">No <code>RollingPolicy</code>
+  <h3 class="doAnchor" id="rfa_no_rp">No <code>RollingPolicy</code>
   was set for the <code>RollingFileAppender</code>.    
   </h3>
   
@@ -318,7 +318,7 @@
   
 
   <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->
-  <h3 class="doAnchor" name="tbr_fnp_not_set">The <span
+  <h3 class="doAnchor" id="tbr_fnp_not_set">The <span
   class="option">FileNamePattern</span> property is mandatory for both
   <code>TimeBasedRollingPolicy</code> and
   <code>FixedWindowRollingPolicy</code>.    
@@ -341,7 +341,7 @@
   
 
   <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->
-  <h3 class="doAnchor" name="rfa_file_after">The <span
+  <h3 class="doAnchor" id="rfa_file_after">The <span
   class="option">File</span> property must be set before any rolling
   policy or triggering policy.
     
@@ -356,7 +356,7 @@
 
   <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->  
 
-  <h3 class="doAnchor" name="rfa_collision"><span
+  <h3 class="doAnchor" id="rfa_collision"><span
   class="option">File</span> property collides with <span
   class="option">fileNamePattern</span>. Aborting.
   </h3>
@@ -378,7 +378,7 @@
 
   <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->  
 
-  <h3 class="doAnchor" name="rfa_collision_in_dateFormat">The date
+  <h3 class="doAnchor" id="rfa_collision_in_dateFormat">The date
   format in <span class="option">fileNamePattern</span> will result in
   collisions in the names of archived log files.
   </h3>
@@ -399,7 +399,7 @@
 
   <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->  
 
-  <h3 class="doAnchor" name="earlier_fa_collision"><span
+  <h3 class="doAnchor" id="earlier_fa_collision"><span
   class="option">File</span>/<span
   class="option">FileNamePattern</span> option has the same value "..." as
   that given for appender [...] defined earlier.
@@ -422,7 +422,7 @@
   
   <!-- ================&#8203;===============&#8203;===============&#8203;===============
        -->
-  <h3 class="doAnchor" name="renamingError">Failed to rename file [x]
+  <h3 class="doAnchor" id="renamingError">Failed to rename file [x]
   as [y].</h3>
 
   <b>On Windows</b>
@@ -480,7 +480,7 @@
    class="option">file</span> property is mandatory.
    </p>
  
-   <h4 class="doAnchor" name="renamingErrorOnUnix">On Unix-*</h4>
+   <h4 class="doAnchor" id="renamingErrorOnUnix">On Unix-*</h4>
   
    <p>On the Unix platform, the basic/quick rename method supplied by
    the JDK does not work if the source and target files are located on
@@ -506,7 +506,7 @@
    </p>
 
   <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->
-  <h3 class="doAnchor" name="fwrp_parentFileName_not_set">The <span
+  <h3 class="doAnchor" id="fwrp_parentFileName_not_set">The <span
   class="option">File</span> property must be set before
   <code>FixedWindowRollingPolicy</code>    
   </h3>
@@ -523,7 +523,7 @@
   </p>
 			
   <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->
-  <h3 class="doAnchor" name="nested_if_element">Nested &lt;if&gt;
+  <h3 class="doAnchor" id="nested_if_element">Nested &lt;if&gt;
   element within &lt;appender&gt;, &lt;logger&gt; or &lt;root&gt;
   elements is disallowed
   </h3>
@@ -570,7 +570,7 @@
 
 
   <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->
-  <h3 class="doAnchor" name="tbr_fnp_prudent_unsupported">Prudent mode
+  <h3 class="doAnchor" id="tbr_fnp_prudent_unsupported">Prudent mode
   is not supported with <code>FixedWindowRollingPolicy</code>.
   </h3>
 
@@ -584,7 +584,7 @@
   
   
   <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->
-  <h3 class="doAnchor" name="syslog_layout">SyslogAppender does not
+  <h3 class="doAnchor" id="syslog_layout">SyslogAppender does not
   admit a layout.
   </h3>
 
@@ -603,7 +603,7 @@
   
 
   <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->
-  <h3 class="doAnchor" name="1andOnly1">Only and only one appender can
+  <h3 class="doAnchor" id="1andOnly1">Only and only one appender can
   be nested the &lt;sift> element in
   <code>SiftingAppender</code>.</h3>
   
@@ -612,7 +612,7 @@
   
 
   <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->
-  <h3 class="doAnchor" name="ifJanino">Could not find Janino library
+  <h3 class="doAnchor" id="ifJanino">Could not find Janino library
   on the class path. Skipping conditional processing.
   </h3>
   
@@ -624,7 +624,7 @@
   </p>
 
   <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->
-  <h3 class="doAnchor" name="block">As of logback version 0.9.28,
+  <h3 class="doAnchor" id="block">As of logback version 0.9.28,
   JaninoEventEvaluator expects Java blocks.
   </h3>
 
@@ -673,7 +673,7 @@ return false;</code></pre>
    </p>
 
      <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->
-   <h3 class="doAnchor" name="param">The &lt;param&gt; element is
+   <h3 class="doAnchor" id="param">The &lt;param&gt; element is
    deprecated in favor of a more direct syntax.
    </h3>
 
@@ -699,7 +699,7 @@ return false;</code></pre>
    </code></pre>
 
    <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->
-   <h3 class="doAnchor" name="missingRightParenthesis">In a conversion
+   <h3 class="doAnchor" id="missingRightParenthesis">In a conversion
    pattern, opened parenthesis must be closed.
    </h3>
    
@@ -712,7 +712,7 @@ return false;</code></pre>
    </p>
   
    <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->
-   <h3 class="doAnchor" name="saxParserConfiguration">Error during SAX parser configuration</h3>
+   <h3 class="doAnchor" id="saxParserConfiguration">Error during SAX parser configuration</h3>
 
    
    <p>If you see the following error is thrown during logback configuration
@@ -732,7 +732,7 @@ return false;</code></pre>
    <p>See also <a href="https://jira.qos.ch/browse/LOGBACK-1577">LOGBACK-1577</a>.</p>
    
    <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->
-   <h3 class="doAnchor" name="appender_order">Appenders must be
+   <h3 class="doAnchor" id="appender_order">Appenders must be
    defined before they are referenced.
    </h3>
 

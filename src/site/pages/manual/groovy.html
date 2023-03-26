@@ -113,14 +113,14 @@
     <em>info</em> without a static import statement.</p>
 
 
-    <h2 class="doAnchor" name="sift">SiftingAppender no longer supported</h2>
+    <h2 class="doAnchor" id="sift">SiftingAppender no longer supported</h2>
 
     <p><span class="label">Since version 1.0.12</span>
     <code>SiftingAppender</code> is no longer supported within groovy
     configuration files. However, in case there is demand, it may be
     re-introduced.</p>
 
-    <h2 class="doAnchor" name="extensions">Extensions specific to
+    <h2 class="doAnchor" id="extensions">Extensions specific to
     <em>logback.groovy</em></h2>
 
     <p><span class="green">Essentially, <em>Logback.groovy</em> syntax
@@ -359,7 +359,7 @@ root(DEBUG, ["STDOUT"])</pre>
 
     <!-- ========================================================== -->
 
-    <h2 class="doAnchor" name="internalDSL">Internal DSL, i.e. it's
+    <h2 class="doAnchor" id="internalDSL">Internal DSL, i.e. it's
     all groovy baby!</h2>
 
     <p>The <em>logback.groovy</em> is an internal DSL meaning that its
@@ -373,7 +373,7 @@ root(DEBUG, ["STDOUT"])</pre>
     </p>
 
 
-    <h3 class="doAnchor" name="varedef">Variable definitions and
+    <h3 class="doAnchor" id="varedef">Variable definitions and
     GStrings</h3>
 
     <p>You can define variables anywhere within a
@@ -394,7 +394,7 @@ appender("FILE", FileAppender) {
 root(DEBUG, ["FILE"])</pre>
 
 
-    <h3 class="doAnchor" name="printing">Printing on the console</h3>
+    <h3 class="doAnchor" id="printing">Printing on the console</h3>
 
     <p>You can invoke Groovy's <code>println</code> method to print on
     the console. Here is an example.</p>
@@ -412,10 +412,10 @@ appender("FILE", FileAppender) {
 root(DEBUG, ["FILE"])</pre>
 
 
-   <h3 class="doAnchor" name="automaticallyExported">Automatically
+   <h3 class="doAnchor" id="automaticallyExported">Automatically
    exported fields</h3>
 
-   <h4 class="doAnchor" name="hostname">'hostname' variable</h4>
+   <h4 class="doAnchor" id="hostname">'hostname' variable</h4>
 
    <p>The 'hostname' variable contains the name of the current
    host. However, due to scoping rules that the authors cannot fully
@@ -447,7 +447,7 @@ appender("STDOUT", ConsoleAppender) {
 }</pre>
 
 
-   <h3 class="doAnchor" name="everythingIsContext">Everything is
+   <h3 class="doAnchor" id="everythingIsContext">Everything is
    context aware with a reference to the current context</h3>
 
    <p>The execution of the <em>logback.groovy</em> script is done

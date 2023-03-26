@@ -63,7 +63,7 @@
     of the container itself.
     </p>
 
-    <h2 class="doAnchor" name="easy">The simplest and easiest
+    <h2 class="doAnchor" id="easy">The simplest and easiest
     approach</h2>
 
     <p>Assuming your container supports child-first class loading,
@@ -94,7 +94,7 @@
     separation impossible. All hope is not lost. Please read on.
     </p>
 
-    <h2 class="doAnchor" name="contextSelectors">Context
+    <h2 class="doAnchor" id="contextSelectors">Context
     Selectors</h2>
 
     <p>Logback provides a mechanism for a single instance of SLF4J and
@@ -139,7 +139,7 @@
 
 
     <h3 class="doAnchor"
-    name="ContextJNDISelector">ContextJNDISelector</h3>
+    id="ContextJNDISelector">ContextJNDISelector</h3>
 
     <p>Logback-classic ships with a selector called
     <code>ContextJNDISelector</code> which selects the logger context
@@ -163,7 +163,7 @@
     for
     <code>ch.qos.logback.classic.&#8203;selector.ContextJNDISelector</code>.</p>
 
-    <h3 class="doAnchor" name="settingJNDIVariables">Setting JNDI
+    <h3 class="doAnchor" id="settingJNDIVariables">Setting JNDI
     variables in applications</h3>
     
     <p>In each of your applications, you need to name the logging
@@ -211,7 +211,7 @@
     </p>
     
 
-    <h3 class="doAnchor" name="jndiTomcat">Configuring Tomcat for
+    <h3 class="doAnchor" id="jndiTomcat">Configuring Tomcat for
     ContextJNDISelector</h3>
 
     <p>First, place the logback jars (that is
@@ -230,7 +230,7 @@
     <p class="source">JAVA_OPTS="$JAVA_OPTS -Dlogback.ContextSelector=&#8203;JNDI"</p>
 
 
-    <h3 class="doAnchor" name="hotDeploy">Hot deploying
+    <h3 class="doAnchor" id="hotDeploy">Hot deploying
     applications</h3>
 
     <p>When the web-application is recycled or shutdown, we strongly
@@ -259,7 +259,7 @@
     <code>contextDestroyed()</code> method is invoked <em>last</em>
     during application shutdown. </p>
 
-    <h3 class="doAnchor" name="betterPerf">Better performance</h3>
+    <h3 class="doAnchor" id="betterPerf">Better performance</h3>
 
     <p>When <code>ContextJNDISelector</code> is active, each time a
     logger is retrieved, a JNDI lookup must be performed. This can
@@ -296,7 +296,7 @@
    recycled.</p>
 
 
-   <h2 class="doAnchor" name="tamingStaticRefs">Taming static
+   <h2 class="doAnchor" id="tamingStaticRefs">Taming static
    references in shared libraries</h2>
 
    <p><code>ContextJNDISelector</code> works nicely to create logging

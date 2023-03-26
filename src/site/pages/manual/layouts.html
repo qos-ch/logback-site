@@ -69,7 +69,7 @@
       <code>ch.qos.logback.classic.&#8203;spi.ILoggingEvent</code></a>.  This
 			fact will be apparent throughout this section.</p>
 
-		<h2 class="doAnchor" name="writingYourOwnLayout">Writing your own
+		<h2 class="doAnchor" id="writingYourOwnLayout">Writing your own
 		custom Layout</h2>
 
 		<p>Let us implement a simple yet functional layout for the
@@ -142,7 +142,7 @@ public class MySampleLayout extends LayoutBase&lt;ILoggingEvent> {
 		contents of exceptions as well.
 		</p>
 
-    <h3 class="doAnchor" name="configuringYourOwnLayout">Configuring
+    <h3 class="doAnchor" id="configuringYourOwnLayout">Configuring
     your custom layout</h3>
 
 		<p>Custom layouts are configured as any other component. As
@@ -308,7 +308,7 @@ public class MySampleLayout2 extends LayoutBase&lt;ILoggingEvent> {
    <p></p>
 
 
-     <h2 class="doAnchor" name="ClassicPatternLayout">PatternLayout</h2>
+     <h2 class="doAnchor" id="ClassicPatternLayout">PatternLayout</h2>
 
      <p>Logback classic ships with a flexible layout called <a
      href="../xref/ch/qos/logback/classic/PatternLayout.html">
@@ -439,8 +439,7 @@ WARN  [main]: Message 2</p>
       </tr>
 
 			<tr>
-				<td class="word" name="logger">
-          <a name="logger" href="#logger"><span class="anchor"/></a>
+				<td class="word" id="logger">
 					<b>c</b>{<em>length</em>} <br />
 					<b>lo</b>{<em>length</em>} <br />
 					<b>logger</b>{<em>length</em>} <br />
@@ -518,7 +517,7 @@ WARN  [main]: Message 2</p>
 			</tr>
 
 			<tr>
-				<td class="word" name="class">
+				<td class="word" id="class">
 					<b>C</b>{<em>length</em>} <br />
 					<b>class</b>{<em>length</em>} <br />
 				</td>
@@ -543,14 +542,14 @@ WARN  [main]: Message 2</p>
 			</tr>
 
       <tr>
-        <td class="word" name="contextName">
+        <td class="word" id="contextName">
           <b>contextName</b><br/>
           <b>cn</b><br/></td>
           <td>Outputs the name of the logger context to which the
           logger at the origin of the event was attached to. </td>
       </tr>
       <tr>
-        <td class="word" name="date">
+        <td class="word" id="date">
           <b>d</b>{<em>pattern</em>} <br />
           <b>date</b>{<em>pattern</em>} <br />
           <b>d</b>{<em>pattern</em>, <em>timezone</em>} <br />
@@ -645,7 +644,7 @@ WARN  [main]: Message 2</p>
          </tr>
 
         <tr>
-          <td class="word" name="micros">
+          <td class="word" id="micros">
             <b>micros / ms</b>
           </td>
           <td><p><span class="label notice">Since 1.3</span> Outputs the microseconds of the timestamp included in
@@ -658,7 +657,7 @@ WARN  [main]: Message 2</p>
 
 
 			<tr>
-				<td class="word" name="file">
+				<td class="word" id="file">
 					<b>F / file</b>
 				</td>
 
@@ -675,7 +674,7 @@ WARN  [main]: Message 2</p>
 			</tr>
 
 			<tr >
-				<td class="word" name="caller">
+				<td class="word" id="caller">
 					<b>caller{depth}</b>
 					<b>caller{depthStart..depthEnd}</b>
 					<b>caller{depth, evaluator-1, ... evaluator-n}</b>
@@ -735,7 +734,7 @@ Caller+0   at mainPackage.sub.;sample.Bar.createLoggingRequest(;Bar.java:17)</pr
 			</tr>
 
 		<tr>
-		  <td class="word" name="kvp">
+		  <td class="word" id="kvp">
 		    <b>kvp{NONE,SINGLE,DOUBLE}</b>
 		  </td>
 		  <td>
@@ -773,7 +772,7 @@ Caller+0   at mainPackage.sub.;sample.Bar.createLoggingRequest(;Bar.java:17)</pr
 
 
 		<tr>
-		  <td class="word" name="line">
+		  <td class="word" id="line">
 		    <b>L / line</b>
 		  </td>
 
@@ -789,7 +788,7 @@ Caller+0   at mainPackage.sub.;sample.Bar.createLoggingRequest(;Bar.java:17)</pr
 
 
 		<tr>
-		  <td class="word" name="message">
+		  <td class="word" id="message">
 		    <b>m / msg / message</b>
 		  </td>
 		  <td>
@@ -800,7 +799,7 @@ Caller+0   at mainPackage.sub.;sample.Bar.createLoggingRequest(;Bar.java:17)</pr
 		</tr>
 
 		<tr>
-		  <td class="word" name="method">
+		  <td class="word" id="method">
 		    <b>M / method</b>
 		  </td>
 
@@ -814,7 +813,7 @@ Caller+0   at mainPackage.sub.;sample.Bar.createLoggingRequest(;Bar.java:17)</pr
 		</tr>
 
 		<tr>
-		  <td class="word" name="newline">
+		  <td class="word" id="newline">
 		    <b>n</b>
 		  </td>
 
@@ -831,7 +830,7 @@ Caller+0   at mainPackage.sub.;sample.Bar.createLoggingRequest(;Bar.java:17)</pr
 			</tr>
 
 			<tr>
-				<td class="word" name="level">
+				<td class="word" id="level">
 					<b>p / le / level</b>
 				</td>
 				<td>Outputs the level of the logging event.</td>
@@ -839,7 +838,7 @@ Caller+0   at mainPackage.sub.;sample.Bar.createLoggingRequest(;Bar.java:17)</pr
 
 			<tr>
 
-				<td class="word" name="relative">
+				<td class="word" id="relative">
 					<b>r / relative</b>
 				</td>
 
@@ -850,7 +849,7 @@ Caller+0   at mainPackage.sub.;sample.Bar.createLoggingRequest(;Bar.java:17)</pr
 
 
 			<tr>
-				<td class="word" name="relative">
+				<td class="word" id="relative">
 					<b>t / thread</b>
 				</td>
 
@@ -861,7 +860,7 @@ Caller+0   at mainPackage.sub.;sample.Bar.createLoggingRequest(;Bar.java:17)</pr
 			</tr>
 
 			<tr>
-				<td class="word" name="mdc">
+				<td class="word" id="mdc">
 					<b>X</b>{<em>key:-defaultVal</em>} <br />
 					<b>mdc</b>{<em>key:-defaultVal</em>} <br />
 				</td>
@@ -892,7 +891,7 @@ Caller+0   at mainPackage.sub.;sample.Bar.createLoggingRequest(;Bar.java:17)</pr
 				</td>
 			</tr>
 			<tr>
-				<td class="word" name="ex">
+				<td class="word" id="ex">
 					<b>ex</b>{<em>depth</em>} <br />
           	<b>exception</b>{<em>depth</em>} <br />
 					<b>throwable</b>{<em>depth</em>} <br />
@@ -975,7 +974,7 @@ Caller+0   at mainPackage.sub.;sample.Bar.createLoggingRequest(;Bar.java:17)</pr
       </tr>
 
       <tr>
-	<td class="word" name="xThrowable">
+	<td class="word" id="xThrowable">
 	  <b>xEx</b>{<em>depth</em>} <br />
           <b>xException</b>{<em>depth</em>} <br />
 					<b>xThrowable</b>{<em>depth</em>} <br />
@@ -1043,7 +1042,7 @@ Caller+0   at mainPackage.sub.;sample.Bar.createLoggingRequest(;Bar.java:17)</pr
       </tr>
 
       <tr>
-        <td class="word" name="nopex">
+        <td class="word" id="nopex">
           <b>nopex</b> <br />
           <b>nopexception</b>
         </td>
@@ -1063,7 +1062,7 @@ Caller+0   at mainPackage.sub.;sample.Bar.createLoggingRequest(;Bar.java:17)</pr
       </tr>
 
       <tr >
-        <td class="word" name="marker">
+        <td class="word" id="marker">
           <b>marker</b>
         </td>
 
@@ -1083,7 +1082,7 @@ Caller+0   at mainPackage.sub.;sample.Bar.createLoggingRequest(;Bar.java:17)</pr
 
 
       <tr>
-        <td class="word" name="property">
+        <td class="word" id="property">
           <b>property{key}</b>
         </td>
 
@@ -1109,7 +1108,7 @@ Caller+0   at mainPackage.sub.;sample.Bar.createLoggingRequest(;Bar.java:17)</pr
       </tr>
 
       <tr>
-        <td class="word" name="replace">
+        <td class="word" id="replace">
           <b>replace(<em>p</em>){r, t}</b>
         </td>
 
@@ -1131,7 +1130,7 @@ Caller+0   at mainPackage.sub.;sample.Bar.createLoggingRequest(;Bar.java:17)</pr
       </tr>
 
       <tr>
-        <td class="word" name="prefix">
+        <td class="word" id="prefix">
           <b>prefix(<em>p</em>)</b>
         </td>
 
@@ -1161,7 +1160,7 @@ Caller+0   at mainPackage.sub.;sample.Bar.createLoggingRequest(;Bar.java:17)</pr
 
 
       <tr>
-        <td class="word" name="rootException">
+        <td class="word" id="rootException">
           <b>rEx</b>{<em>depth</em>} <br />
           <b>rootException</b>{<em>depth</em>} <br />
           <br />
@@ -1202,7 +1201,7 @@ Wrapped by: org.springframework.;BeanCreationException: Error creating bean with
 		</table>
 
 
-    <h4 class="doAnchor" name="percentIsSpecial">% character has special meaning</h4>
+    <h4 class="doAnchor" id="percentIsSpecial">% character has special meaning</h4>
 
     <p>Given that in the context of conversion patterns the percent
     sign carries special meaning, in order to include it as a literal,
@@ -1210,7 +1209,7 @@ Wrapped by: org.springframework.;BeanCreationException: Error creating bean with
     %m%n".
     </p>
 
-    <h4 class="doAnchor" name="restrictionsOnLiterals">Restrictions on
+    <h4 class="doAnchor" id="restrictionsOnLiterals">Restrictions on
     literals immediately following conversion words</h4>
 
     <p>In most cases literals naturally contain spaces or other
@@ -1232,7 +1231,7 @@ Wrapped by: org.springframework.;BeanCreationException: Error creating bean with
 
     </p>
 
-    <h2 class="doAnchor" name="formatModifiers">Format modifiers</h2>
+    <h2 class="doAnchor" id="formatModifiers">Format modifiers</h2>
 
 		<p>By default the relevant information is output as-is.  However,
 		with the aid of format modifiers it is possible to change the
@@ -1386,7 +1385,7 @@ Wrapped by: org.springframework.;BeanCreationException: Error creating bean with
 			</tr>
 		</table>
 
-    <h3 class="doAnchor" name="oneLetterLevel">Output just one letter
+    <h3 class="doAnchor" id="oneLetterLevel">Output just one letter
     for the level</h3>
 
     <p>Instead of printing TRACE, DEBUG, WARN, INFO or ERROR for the
@@ -1398,7 +1397,7 @@ Wrapped by: org.springframework.;BeanCreationException: Error creating bean with
     "<code>%.-1level</code>".
     </p>
 
-		<h2 class="doAnchor" name="cwOptions">Conversion word options</h2>
+		<h2 class="doAnchor" id="cwOptions">Conversion word options</h2>
 
 		<p>A conversion specifier can be followed by options. They are
 		always declared between braces. We have already seen some of the
@@ -1430,7 +1429,7 @@ Wrapped by: org.springframework.;BeanCreationException: Error creating bean with
     previous item at least 14 but at most 16 times.
     </p>
 
-    <h2 class="doAnchor" name="grouping">Grouping with
+    <h2 class="doAnchor" id="grouping">Grouping with
       parentheses</h2>
 
     <p>In logback, parentheses within the pattern string are treated
@@ -1480,7 +1479,7 @@ Wrapped by: org.springframework.;BeanCreationException: Error creating bean with
     [%thread]<b>\)</b>.
     </p>
 
-    <h2 class="doAnchor" name="coloring">Coloring</h2>
+    <h2 class="doAnchor" id="coloring">Coloring</h2>
 
     <p>Grouping by <a href="#Parentheses">parentheses</a> as explained
     above allows coloring of sub-patterns. As of version 1.0.5,
@@ -1560,7 +1559,7 @@ Wrapped by: org.springframework.;BeanCreationException: Error creating bean with
     specifier</a> discusses the steps necessary for registering a
     conversion word in your configuration file.</p>
 
-		<h2 class="doAnchor" name="Evaluators">Evaluators</h2>
+		<h2 class="doAnchor" id="Evaluators">Evaluators</h2>
 
 		<p>As mentioned above, option lists come in handy when a
 		conversion specifier is required to behave dynamically based on
@@ -1853,7 +1852,7 @@ java.lang.Exception: display
 
 
 
-		<h2 class="doAnchor" name="customConversionSpecifier">Creating a
+		<h2 class="doAnchor" id="customConversionSpecifier">Creating a
 		custom conversion specifier</h2>
 
 		<p>Up to this point we have presented the built-in conversion
@@ -1964,7 +1963,7 @@ java.lang.Exception: display
 
 
 
-    <h2 class="doAnchor" name="ClassicHTMLLayout">HTMLLayout</h2>
+    <h2 class="doAnchor" id="ClassicHTMLLayout">HTMLLayout</h2>
 
 	  <p><a
 	  href="../xref/ch/qos/logback/classic/html/HTMLLayout.html"><code>HTMLLayout</code></a>
@@ -2099,7 +2098,7 @@ java.lang.Exception: display
 		</p>
 
 
-    <h2 class="doAnchor" name="log4jXMLLayout">Log4j XMLLayout</h2>
+    <h2 class="doAnchor" id="log4jXMLLayout">Log4j XMLLayout</h2>
 
     <p><a
     href="../xref/ch/qos/logback/classic/log4j/XMLLayout.html">XMLLayout</a>
@@ -2155,7 +2154,7 @@ java.lang.Exception: display
   <p>Requires a server call. Please wait a few seconds.</p>
 </div>
 
-		<h1 class="doAnchor" name="logback-access">Logback access</h1>
+		<h1 class="doAnchor" id="logback-access">Logback access</h1>
 
 		<p>Most logback-access layouts are mere adaptations of
 		logback-classic layouts. Logback-classic and logback-access
@@ -2169,7 +2168,7 @@ java.lang.Exception: display
 		logback-classic.</p>
 
 
-		<h3 class="doAnchor" name="AccessPatternLayout">PatternLayout</h3>
+		<h3 class="doAnchor" id="AccessPatternLayout">PatternLayout</h3>
 
 		<p><a href="../xref/ch/qos/logback/access/PatternLayout.html">
 		<code>PatternLayout</code></a> in logback-access can be configured
@@ -2188,7 +2187,7 @@ java.lang.Exception: display
         <th align="center">Effect</th>
       </tr>
       <tr>
-        <td class="word" name="remoteIP">
+        <td class="word" id="remoteIP">
           <b>a / remoteIP</b>
         </td>
         <td>
@@ -2196,13 +2195,13 @@ java.lang.Exception: display
         </td>
       </tr>
       <tr>
-        <td class="word" name="localIP"><b>A / localIP</b></td>
+        <td class="word" id="localIP"><b>A / localIP</b></td>
         <td>
           <p>Local IP address.</p>
         </td>
       </tr>
       <tr>
-        <td class="word" name="bytesSent"><b>b / B / bytesSent</b></td>
+        <td class="word" id="bytesSent"><b>b / B / bytesSent</b></td>
         <td>
           <p>
             Response's content length.
@@ -2210,7 +2209,7 @@ java.lang.Exception: display
         </td>
       </tr>
       <tr>
-        <td class="word" name="clientHost"><b>h / clientHost</b></td>
+        <td class="word" id="clientHost"><b>h / clientHost</b></td>
         <td>
           <p>
             Remote host.
@@ -2218,13 +2217,13 @@ java.lang.Exception: display
         </td>
       </tr>
       <tr>
-        <td class="word" name="protocol"><b>H / protocol</b></td>
+        <td class="word" id="protocol"><b>H / protocol</b></td>
         <td>
           <p>Request protocol.</p>
         </td>
       </tr>
       <tr>
-        <td class="word" name="remoteLogName"><b>l</b></td>
+        <td class="word" id="remoteLogName"><b>l</b></td>
         <td>
           <p>
             Remote log name. In logback-access, this converter always
@@ -2234,7 +2233,7 @@ java.lang.Exception: display
       </tr>
 
       <tr>
-        <td class="word" name="reqParameter"><b>reqParameter{paramName}</b></td>
+        <td class="word" id="reqParameter"><b>reqParameter{paramName}</b></td>
         <td>
           <p>Parameter of the response.</p>
           <p>This conversion word takes the first option in braces and looks
@@ -2244,7 +2243,7 @@ java.lang.Exception: display
         </td>
       </tr>
       <tr>
-        <td class="word" name="header"><b>i{header} / header{header}</b></td>
+        <td class="word" id="header"><b>i{header} / header{header}</b></td>
         <td>
           <p>Request header.</p>
           <p>This conversion word takes the first option in braces and looks
@@ -2256,13 +2255,13 @@ java.lang.Exception: display
         </td>
       </tr>
       <tr >
-        <td class="word" name="requestMethod"><b>m / requestMethod</b></td>
+        <td class="word" id="requestMethod"><b>m / requestMethod</b></td>
         <td>
           <p>Request method.</p>
         </td>
       </tr>
       <tr>
-        <td class="word" name="requestURL"><b>r / requestURL</b></td>
+        <td class="word" id="requestURL"><b>r / requestURL</b></td>
         <td>
           <p>
             URL requested.
@@ -2270,7 +2269,7 @@ java.lang.Exception: display
         </td>
       </tr>
       <tr>
-        <td class="word" name="statusCode"><b>s / statusCode</b></td>
+        <td class="word" id="statusCode"><b>s / statusCode</b></td>
         <td>
           <p>
             Status code of the request.
@@ -2278,7 +2277,7 @@ java.lang.Exception: display
         </td>
       </tr>
       <tr>
-          <td class="word" name="elapsedTime"><b>D / elapsedTime</b></td>
+          <td class="word" id="elapsedTime"><b>D / elapsedTime</b></td>
           <td>
               <p>
                   The time taken to serve the request, in milliseconds.
@@ -2286,7 +2285,7 @@ java.lang.Exception: display
           </td>
       </tr>
       <tr>
-        <td class="word" name="elapsedSeconds"><b>T / elapsedSeconds</b></td>
+        <td class="word" id="elapsedSeconds"><b>T / elapsedSeconds</b></td>
         <td>
           <p>
             The time taken to serve the request, in seconds.
@@ -2294,7 +2293,7 @@ java.lang.Exception: display
         </td>
       </tr>
       <tr>
-        <td class="word" name="dateAccess"><b>t / date</b></td>
+        <td class="word" id="dateAccess"><b>t / date</b></td>
         <td>
           <p>Outputs the date of the logging event.  The date
           conversion specifier may be followed by a set of braces
@@ -2310,7 +2309,7 @@ java.lang.Exception: display
         </td>
       </tr>
       <tr>
-        <td class="word" name="httpUser"><b>u / user</b></td>
+        <td class="word" id="httpUser"><b>u / user</b></td>
         <td>
           <p>
             Remote user.
@@ -2318,7 +2317,7 @@ java.lang.Exception: display
         </td>
       </tr>
       <tr>
-        <td class="word" name="queryString"><b>q / queryString</b></td>
+        <td class="word" id="queryString"><b>q / queryString</b></td>
         <td>
           <p>
             Request query string, prepended with a '?'.
@@ -2326,7 +2325,7 @@ java.lang.Exception: display
         </td>
       </tr>
       <tr>
-        <td class="word" name="requestURI"><b>U / requestURI</b></td>
+        <td class="word" id="requestURI"><b>U / requestURI</b></td>
         <td>
           <p>
             Requested URI.
@@ -2334,31 +2333,31 @@ java.lang.Exception: display
         </td>
       </tr>
       <tr>
-        <td class="word" name="sessionID"><b>S / sessionID</b></td>
+        <td class="word" id="sessionID"><b>S / sessionID</b></td>
         <td>
           <p>Session ID.</p>
         </td>
       </tr>
       <tr >
-        <td class="word" name="server"><b>v / server</b></td>
+        <td class="word" id="server"><b>v / server</b></td>
         <td>
           <p>Server name.</p>
         </td>
       </tr>
       <tr>
-        <td class="word" name="threadName"><b>I / threadName</b></td>
+        <td class="word" id="threadName"><b>I / threadName</b></td>
         <td>
           <p>Name of the thread which processed the request.</p>
         </td>
       </tr>
       <tr class="b">
-        <td class="word" name="localPort"><b>localPort</b></td>
+        <td class="word" id="localPort"><b>localPort</b></td>
         <td>
           <p>Local port.</p>
         </td>
       </tr>
       <tr class="a">
-        <td class="word" name="reqAttribute"><b>reqAttribute{attributeName}</b></td>
+        <td class="word" id="reqAttribute"><b>reqAttribute{attributeName}</b></td>
         <td>
           <p>Attribute of the request.</p>
           <p>This conversion word takes the first option in braces and looks
@@ -2368,7 +2367,7 @@ java.lang.Exception: display
         </td>
       </tr>
       <tr class="b">
-        <td class="word" name="reqCookie"><b>reqCookie{cookie}</b></td>
+        <td class="word" id="reqCookie"><b>reqCookie{cookie}</b></td>
         <td>
           <p>Request cookie.</p>
           <p>This conversion word takes the first option in braces and looks
@@ -2377,7 +2376,7 @@ java.lang.Exception: display
         </td>
       </tr>
       <tr class="a">
-        <td class="word" name="responseHeader"><b>responseHeader{header}</b></td>
+        <td class="word" id="responseHeader"><b>responseHeader{header}</b></td>
         <td>
           <p>
             Header of the response.
@@ -2388,7 +2387,7 @@ java.lang.Exception: display
         </td>
       </tr>
       <tr class="b">
-        <td class="word" name="requestContent"><b>requestContent</b></td>
+        <td class="word" id="requestContent"><b>requestContent</b></td>
         <td>
           <p>This conversion word displays the content of the request,
           that is the request's <code>InputStream</code>. It is used
@@ -2405,7 +2404,7 @@ java.lang.Exception: display
         </td>
       </tr>
       <tr class="a">
-        <td class="word" name="fullRequest"><b>fullRequest</b></td>
+        <td class="word" id="fullRequest"><b>fullRequest</b></td>
         <td>
           <p>This converter outputs the data associated with the
           request, including all headers and request contents.
@@ -2413,7 +2412,7 @@ java.lang.Exception: display
         </td>
       </tr>
       <tr class="b">
-        <td class="word" name="responseContent"><b>responseContent</b></td>
+        <td class="word" id="responseContent"><b>responseContent</b></td>
         <td>
           <p>This conversion word displays the content of the
           response, that is the response's
@@ -2430,7 +2429,7 @@ java.lang.Exception: display
         </td>
       </tr>
       <tr class="a">
-        <td class="word" name="fullResponse"><b>fullResponse</b></td>
+        <td class="word" id="fullResponse"><b>fullResponse</b></td>
         <td>
           <p>This conversion word takes all the available data
           associated with the response, including all headers of the
@@ -2469,7 +2468,7 @@ java.lang.Exception: display
 	 	begins much like the <em>common</em> pattern but also displays two
 	 	request headers, namely referer, and user-agent.</p>
 
-		<h3 class="doAnchor" name="AccessHTMLLayout">HTMLLayout</h3>
+		<h3 class="doAnchor" id="AccessHTMLLayout">HTMLLayout</h3>
 
 		<p>The <a
 		href="../xref/ch/qos/logback/access/html/HTMLLayout.html"><code>HTMLLayout</code></a>
