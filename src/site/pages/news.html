@@ -93,6 +93,94 @@
       </div>
     </div>
 
+    <!--
+    <hr width="80%" align="center" />
+    <h3 class="doAnchor" name="1.3.8">2023-05-xx Release of logback versions 1.3.8 and 1.4.8</h3>
+
+    <p>&bull; OSGi service-loader requirement for spi.Configurator is
+    now optional. This
+    fixes <a href="https://jira.qos.ch/browse/LOGBACK-1736">LOGBACK-1736</a>
+    reported by Hannes Wellmann who also provided the relevant PR.</p>
+
+    <p>&bull; Fixed <code>NoSuchMethodError</code> issue in
+    ConsoleAppender under java 8. This
+    fixes <a href="https://jira.qos.ch/browse/LOGBACK-1737">LOGBACK-1737</a>
+    reported by Wolfgang F. Riedl.
+    </p>
+
+    <p>&bull; A bit-wise identical binary of this version can be
+    reproduced by checking out the tag v_1.3.8 (or v_1.4.8) from the
+    source code repository (GitHub). Release built using Java "20"
+    2023-03-21 build 20+36-2344 under Linux Debian 11.6.
+    </p>
+
+    -->
+    
+    <hr width="80%" align="center" />
+    <h3 class="doAnchor" name="1.3.7">2023-04-19 Release of logback versions 1.3.7 and 1.4.7</h3>
+
+    <p>&bull; Add support for Jansi library version 2.4.0. This was
+    requested in <a
+    href="https://jira.qos.ch/browse/LOGBACK-1595">LOGBACK-1595</a> by
+    Nils Renaud with Benjamin Marwell providing the relevant PR.</p>
+
+
+    <p>&bull; Fixed incorrect OSGi execution-environment requirements
+    in MANIFEST.MF files. This issue was reported in
+    in <a href="https://jira.qos.ch/browse/LOGBACK-1728">LOGBACK-1728</a>
+    by Hannes Well who also provided the relevant PR.</p>
+
+    <p>&bull; Addded OSGi Service Loader Mediator entries to load
+    logback Configurators. This enhacement was requested in
+    in <a href="https://jira.qos.ch/browse/LOGBACK-1729">LOGBACK-1729</a>
+    by Hannes Well who also provided the relevant PR.</p>
+
+    <p>&bull; Fixed incorrect use of <code>ExecutionService</code>
+    preventing <code>ServerSocketAppender</code> from serving
+    requests. This issue was reported in <a
+    href="https://jira.qos.ch/browse/LOGBACK-1716">LOGBACK-1716</a> by
+    Grzegorz Grzybek.</p>
+
+    <p>&bull; A bit-wise identical binary of this version can be
+    reproduced by checking out the tag v_1.3.7 (or v_1.4.7) from the
+    source code repository (GitHub). Release built using Java "20"
+    2023-03-21 build 20+36-2344 under Linux Debian 11.6.
+    </p>
+    
+    <hr width="80%" align="center" />
+
+    <h3 class="doAnchor" name="1.2.12">2023-03-23 Release of logback versions 1.2.12</h3>
+
+    <p>&bull; Fixed NPE in <code>ThrowableProxy</code> if
+    <code>extractSupressedThrowables</code> method returns null. This
+    fixes <a
+    href="https://jira.qos.ch/browse/LOGBACK-1623">LOGBACK-1623</a>
+    reported by Oyvind Horneland.</p>
+
+    <p>&bull; Fixed incorrect use of HttpServletResponse.getStatus in
+    logback-access as reported in <a
+    href="https://jira.qos.ch/browse/LOGBACK-1580">LOGBACK-1580</a> by
+    Joakim Erdfelt who also provided the relevant PR.</p>
+
+    <p>&bull; Fixed incorrect use of HttpServletRequest.getParameterNames()
+    logback-access as reported in <a
+    href="https://jira.qos.ch/browse/LOGBACK-1581">LOGBACK-1581</a> by
+    Joakim Erdfelt who also provided the relevant PR.</p>
+    
+    <p>&bull; Fixed incorrect SCP URL in Maven <em>pom.xml</em>. This
+    issue was reported in <a
+    href="https://jira.qos.ch/browse/LOGBACK-1633">LOGBACK-1633</a>
+    by Rayk Bajohr who also provided the relevant PR.</p>
+
+    
+    <p>&bull; A bit-wise identical binary of this version can be
+    reproduced by checking out the tag v_1.2.12 from the source code
+    repository (GitHub). Release built using Java "1.8.0_311" 
+    build 1.8.0_311-b11 under Linux Debian 9.5.
+    </p>
+    
+    <hr width="80%" align="center" />
+
     <h3 class="doAnchor" name="1.3.6">2023-03-15 Release of logback versions 1.3.6 and 1.4.6</h3>
 
     <p class="champion">This release was kindly championed
@@ -105,7 +193,7 @@
     within an &lt;if&gt; element, is now supported. This
     fixes <a href="https://jira.qos.ch/browse/LOGBACK-1713">LOGBACK-1713</a>
     reported by Andree Worthmuth with valuable input from Sébastien
-    Philippon and Frank Upgang..
+    Philippon and Frank Upgang.
     </p>
 
         

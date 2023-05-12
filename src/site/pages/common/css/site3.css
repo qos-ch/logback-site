@@ -126,7 +126,7 @@ img.data {
 
 #header-grid-logo-item {
     grid-area: logo-menu-area;
-    /*min-width: 18rem;*/
+
     /*  ensure that arrow and log stay together */
     /* min-width: 18rem; */
     /* left align */
@@ -151,11 +151,11 @@ img.data {
 #header-grid-line-item {
     grid-area: header-line-area;
 }
-
 div#ad {
     grid-area: ad-area;
-    /*margin: 0.5rem;*/
 }
+div#ad,
+.horizontal-ad {max-height: calc(var(--main-logo-height) * 2);}
 
 .top-message {
     background-color: #f9f9f9;
@@ -245,7 +245,7 @@ div#creative-commons {
     padding: 0px;
     border-top: 1px solid #CCCCCC;
     margin-top: 3ex;
-    Xfont-size: smaller;
+
 }
 
 
@@ -254,7 +254,7 @@ p.menu {
     padding-bottom: 0px;
     margin-top: 0px;
     margin-bottom: 0px;
-    Xfont-size: smaller;
+
 }
 
 

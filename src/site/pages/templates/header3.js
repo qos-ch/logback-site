@@ -151,4 +151,5 @@ document.write('</div>');
 // close #header
 document.write('</div>');
 
-document.write('    <script type="text/javascript" src="'+prefix+'templates/popup.js" ></script>');
+// disable popup
+//document.write('    <script type="text/javascript" src="'+prefix+'templates/popup.js" ></script>');

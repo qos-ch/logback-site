@@ -42,7 +42,7 @@ document.write('<div id="popup_rgpd">');
 document.write('  <div class="popuptext">');
 document.write('    <h3>Accept cookies from QOS.CH Sarl (Switzerland) on this browser?</h3> ');
 document.write('    <p>This site uses cookies to track authenticated, aka logged in, users.</p>  ');
-document.write('    <p>Moreover, this site includes adds from Google, which may also use cookies.</p>');
+//document.write('    <p>Moreover, this site includes adds from Google, which may also use cookies.</p>');
 //document.write('    <p>&nbsp;</p>');
 
 document.write('    <p class="popup_rgpd_link" >');

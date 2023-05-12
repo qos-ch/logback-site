@@ -6,7 +6,7 @@
 
   <groupId>ch.qos.logback</groupId>
   <artifactId>logback-site</artifactId>  
-  <version>1.3.3</version>
+  <version>1.3.7</version>
 
 
   <!-- is not intended for deployment on Maven central -->
@@ -18,9 +18,9 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <old.stable.version>1.2.11</old.stable.version>
-    <latest.stable.javax.version>1.3.6</latest.stable.javax.version>
-    <latest.stable.jakarta.version>1.4.6</latest.stable.jakarta.version>
+    <old.stable.version>1.2.12</old.stable.version>
+    <latest.stable.javax.version>1.3.7</latest.stable.javax.version>
+    <latest.stable.jakarta.version>1.4.7</latest.stable.jakarta.version>
     
     <slf4j.version>2.0.4</slf4j.version>
     
