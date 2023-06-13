@@ -72,7 +72,7 @@ function insertLogoAndMenu() {
     document.write('    </div>');
 }
 
-document.write('<link rel="stylesheet" type="text/css" href="'+prefix+'css/site3.css" />');
+document.write('<link rel="stylesheet" type="text/css" href="'+prefix+'common/css/site3.css" />');
 document.write('<link rel="stylesheet" type="text/css" href="'+prefix+'css/menu2.css"/>');
 document.write('<link rel="stylesheet" type="text/css" href="'+prefix+'css/popup.css"/>');
 document.write('<link rel="stylesheet" type="text/css" href="'+prefix+'css/stackoverflow-light.min.css" />');

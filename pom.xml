@@ -6,7 +6,7 @@
 
   <groupId>ch.qos.logback</groupId>
   <artifactId>logback-site</artifactId>  
-  <version>1.3.7</version>
+  <version>1.3.8</version>
 
 
   <!-- is not intended for deployment on Maven central -->
@@ -19,16 +19,20 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <old.stable.version>1.2.12</old.stable.version>
-    <latest.stable.javax.version>1.3.7</latest.stable.javax.version>
-    <latest.stable.jakarta.version>1.4.7</latest.stable.jakarta.version>
+    <latest.stable.javax.version>1.3.8</latest.stable.javax.version>
+    <latest.stable.jakarta.version>1.4.8</latest.stable.jakarta.version>
     
-    <slf4j.version>2.0.4</slf4j.version>
-    
+    <slf4j.version>2.0.7</slf4j.version>
+
+    <janino.version>3.1.8</janino.version>
+
     <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
     <maven-site-plugin.version>3.7.1</maven-site-plugin.version>
     <maven-resources-plugin.version>3.1.0</maven-resources-plugin.version>
     <maven-deploy-plugin.version>3.0.0-M1</maven-deploy-plugin.version>
     <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
+
+    <javax.mail.version>1.6.2</javax.mail.version>
 
     <mail-api.javax.version>1.6.2</mail-api.javax.version>
     <servlet-api.javax.version>4.0.1</servlet-api.javax.version>
@@ -40,7 +44,6 @@
     <tomcat.jakarta.version>10.0.10</tomcat.jakarta.version>    
     <jetty.jakarta.version>11.0.6</jetty.jakarta.version>
 
-    
   </properties>
   
   <build>
