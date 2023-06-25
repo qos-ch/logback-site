@@ -1,4 +1,17 @@
 
+function addClipboardListener() {
+    //const source = document.querySelector("div.source");
+    document.addEventListener("copy", removeInvisibleSpaces);
+}
+
+function removeInvisibleSpaces(event) {
+    // event of type ClipboardEvent
+
+    // remove invisible spaces, i.e the U200b &#8203; characters 
+    var cleanedText = window.getSelection().toString().replace(/\u200b/g, '');
+    event.clipboardData.setData("text/plain", cleanedText);    
+    event.preventDefault();
+}
 
 //   <h3><a name="LoggerContext" href="#LoggerContext"><span
 //    class="anchor"/></a>Logger context</h3>

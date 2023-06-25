@@ -9,7 +9,7 @@
     <script type="text/javascript">prefix='../';</script>
 
 </head>
-<body onload="loopOn(); enableMenuEventListeners(); hljs.highlightAll(); decorate(); enableLegacy();">
+<body onload="enableMenuEventListeners(); hljs.highlightAll(); decorate(); addClipboardListener(); enableLegacy();">
 
     <script type="text/javascript" src="../templates/header3.js"></script>
 
@@ -1409,6 +1409,12 @@ public interface RollingPolicy extends LifeCycle {
 
    <h4 class="doAnchor" name="FixedWindowRollingPolicy">FixedWindowRollingPolicy</h4>
 
+   
+   <p><b>Given that file renaming is a releatively slow process and is
+   frought with problems, we consider
+   <code>FixedWindowRollingPolicy</code> as a deprecated policy and do
+   not recommend its use</b>.</p>
+    
    <p>When rolling over, <a
    href="../xref/ch/qos/logback/core/rolling/FixedWindowRollingPolicy.html">
    <code>FixedWindowRollingPolicy</code></a> renames files according
