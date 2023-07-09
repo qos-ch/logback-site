@@ -502,8 +502,14 @@ public static void main(String[] args) {
    the listener class you wish to register. For example,
    </p>
 
-   <p class="source">java <b>-Dlogback.statusListenerClass</b>=ch.qos.logback.&#8203;core.status.OnConsoleStatusListener&nbsp;.&#8203;..</p>
+   <p class="source">java <b>-Dlogback.statusListenerClass</b>=ch.qos.logback.&#8203;core.status.OnConsoleStatusListener&nbsp;.&#8203;...</p>
 
+   <p>As a shorthand, the string "ch.qos.logback.&#8203;core.status.OnConsoleStatusListener" can be replaced by the case insensitive string "STDOUT". For example:
+   
+   <p class="source">java -Dlogback.statusListenerClass=<b>stdout</b>&nbsp;...</p>
+   
+
+   
    <p>Logback ships with several status listener implementations. <a
    href="../xref/ch/qos/logback/core/status/OnConsoleStatusListener.html">OnConsoleStatusListener</a>
    prints incoming status messages on the console, i.e. on
@@ -521,7 +527,7 @@ public static void main(String[] args) {
    system. Thus, by setting <code>NopStatusListener</code> as a status
    listener, you can silence internal status printing altogether. </p>
 
-   <p class="source">java <b>-Dlogback.statusListenerClass</b>=ch.qos.logback.&#8203;core.status.NopStatusListener&nbsp;.&#8203;..</p>
+   <p class="source">java -Dlogback.statusListenerClass=ch.qos.logback.&#8203;core.status.<b>NopStatusListener</b>&nbsp;.&#8203;..</p>
 
    <h3 class="doAnchor" name="viewingStatusMessages">Viewing status
    messages </h3>
