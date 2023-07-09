@@ -463,6 +463,24 @@ public interface Appender&lt;E> extends LifeCycle, ContextAware, FilterAttachabl
      </tr>
 
      <tr>
+       <td><span class="prop" name="bufferSize">bufferSize</span></td>
+       <td><code>FileSize</code></td>
+       <td><p>The <span class="prop">bufferSize</span> option set the
+       size of the output buffer in case <span
+       class="prop">immediateFlush</span> option is set to
+       false. Default value for <span class="prop">bufferSize</span>
+       is 8192. The value 256KKB seems to sufficient even in cases of
+       very heavy and persistent loads.</p>
+
+       <p>Options in defined in units of "FileSize" can be specified
+       in bytes, kilobytes, megabytes or gigabytes by suffixing a
+       numeric value with KB, MB and respectively GB. For example,
+       5000000, 5000KB, 5MB and 2GB are all valid values, with the
+       first three being equivalent.
+       </p>
+       </td>
+     </tr> 
+     <tr>
        <td><span class="prop" name="prudent">prudent</span></td>
        <td><code>boolean</code></td>
 
