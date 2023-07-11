@@ -504,11 +504,27 @@ public static void main(String[] args) {
 
    <p class="source">java <b>-Dlogback.statusListenerClass</b>=ch.qos.logback.&#8203;core.status.OnConsoleStatusListener&nbsp;.&#8203;...</p>
 
-   <p>As a shorthand, the string "ch.qos.logback.&#8203;core.status.OnConsoleStatusListener" can be replaced by the case insensitive string "SYSOUT". For example:
+   <p>As a shorthand, the string
+   "ch.qos.logback.&#8203;core.status.OnConsoleStatusListener" can be
+   replaced by the case insensitive strings "SYSOUT". For
+   example:
    
    <p class="source">java -Dlogback.statusListenerClass=<b>sysout</b>&nbsp;...</p>
+
    
-  
+   <!--
+   <p>As a shorthand, the string
+   "ch.qos.logback.&#8203;core.status.OnConsoleStatusListener" can be
+   replaced by the case insensitive strings "STDOUT" or "SYSOUT". For
+   example:
+   
+   <p class="source">java -Dlogback.statusListenerClass=<b>stdout</b>&nbsp;...</p>
+
+   <p>or equivalently:</p>
+
+   <p class="source">java -Dlogback.statusListenerClass=<b>sysout</b>&nbsp;...</p>
+   -->
+   
    <p>Logback ships with several status listener implementations. <a
    href="../xref/ch/qos/logback/core/status/OnConsoleStatusListener.html">OnConsoleStatusListener</a>
    prints incoming status messages on the console, i.e. on
