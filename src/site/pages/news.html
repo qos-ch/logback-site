@@ -94,12 +94,23 @@
     </div>
 
 
-
-        <!--
+    
     <hr width="80%" align="center" />
 
-    <h3 class="doAnchor" name="1.3.9">2023-07-xx Release of logback versions 1.3.9 and 1.4.9</h3>
+    <h3 class="doAnchor" name="1.3.9">2023-08-04 Release of logback versions 1.3.9 and 1.4.9</h3>
 
+     <p>&bull; Added an additional configuration step during
+     initialization using <a
+     href="https://github.com/qos-ch/logback/blob/master/logback-classic/src/main/java/ch/qos/logback/classic/joran/SerializedModelConfigurator.java"><code>SerializedModelConfigurator</code></a>. See
+     <a
+     href="manual/configuration.html#auto_configuration">configuration
+     at initialization</a> section in the manual for further
+     details. Configuration from a serialized model file was added
+     because it executes faster and does not require any XML
+     libraries. In conjuction with GraalVM, this may yield smaller
+     executables that start faster.</p>
+ 
+          
     <p>&bull; In <code>JsonEncoder</code> added support for throwable "cause" and
     "suppressed" throwables. This fixes <a
     href="https://jira.qos.ch/browse/LOGBACK-1749">LOGBACK-1749</a>
@@ -119,8 +130,16 @@
     who also provided the relevant PR.
     </p>
 
+    <p>The default implementation of <code>getInstant</code> method in
+    <code>ILoggingEvent</code> now returns
+    <code>Instant.ofEpochMills(getTimeStamp())</code> instead of
+    <code>null</code>.  This issue was reported in <a
+    href="https://jira.qos.ch/browse/LOGBACK-1735">LOGBACK-1735</a> by
+    "wreulicke" who also provided the relevant PR.
+    </p>
+    
     <p>The "logback.statusListenerClass" system property now admits
-    the case insensitive string "STDOUT in addition to the string
+    the case insensitive string "STDOUT" in addition to the string
     "SYSOUT" as shorthands for the class name
     "ch.qos.logback.core.status.OnConsoleStatusListener".</p>
     
@@ -130,8 +149,6 @@
     2023-03-21 build 20+36-2344 under Linux Debian 11.6.
     </p>
     
-
-    -->
     
     <hr width="80%" align="center" />
     <h3 class="doAnchor" name="1.3.8">2023-06-13 Release of logback versions 1.3.8 and 1.4.8</h3>

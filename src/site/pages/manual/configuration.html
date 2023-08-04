@@ -45,8 +45,8 @@
     </p>
 
 
-    <h2 class="doAnchor" name="auto_configuration">Configuration in
-    logback</h2>
+    <h2 class="doAnchor" name="auto_configuration">Configuration at
+    initialization</h2>
 
     <p>Inserting log requests into the application code requires a
     fair amount of planning and effort. Observation shows that
@@ -58,8 +58,8 @@
     </p>
 
     <p>Logback can be configured either programmatically or with a
-    configuration script expressed in XML or Groovy format. By the
-    way, existing log4j users can convert their
+    configuration script expressed in XML, Groovy or serialized model
+    format. By the way, existing log4j users can convert their
     <em>log4j.properties</em> files to <em>logback.xml</em> using our
     <a
     href="http://logback.qos.ch/translator/">PropertiesTranslator</a>
@@ -77,9 +77,10 @@
       providers using
         <a
       href="http://docs.oracle.com/javase/6/docs/api/java/util/ServiceLoader.html">
-          service-provider loading facility</a> (introduced in JDK
-          1.6). If any such custom provider is found, it takes
-          precedence over logback's own <code>DefaultJoranConfigurator</code> (see next).        
+          service-provider loading facility</a>. If any such custom
+          provider is found, it takes precedence over logback's own
+          configurators, e.g. <code>DefaultJoranConfigurator</code>
+          (see below).
         </p>
 
         <p>A custom <code>Configurator</code> is an implementation of
@@ -95,41 +96,87 @@
       </li>
 
 
+      <li><p><span class="label notice">Since 1.3.9/1.4.9</span> If no
+      user-supplied custom <code>Configurator</code> was found in the
+      previous step, logback will instantiate a <a
+      href="https://github.com/qos-ch/logback/blob/master/logback-classic/src/main/java/ch/qos/logback/classic/joran/SerializedModelConfigurator.java">SerializedModelConfigurator</a>.</p>
+
+
+       <p>&bull; If the system property "logback.serializedModelFile"
+       is set, then <code>SerializedModelConfigurator</code> will try
+       to locate the file specified the aforementioned system
+       property. If this file can be located, it will be read and
+       interpreted for configuration.
+       </p>
+
+
+       <p>&bull; <code>SerializedModelConfigurator</code> will search
+       for the serialized configuration model file
+       <em>logback-test.scmo</em> in the classpath. If this file can
+       be located, it will be read and interpreted for
+       configuration. If this file can be located, it will be read and
+       interpreted for configuration.</p>
+
+
+       <p>&bull; If the aforementioned file cannot be found,
+       <code>SerializedModelConfigurator</code> will search for the
+       serialized configuration model file <em>logback.scmo</em> in
+       the classpath.</p>
+        
+
+       <p>&bull; If no serialized configuration model file could be
+       located, <code>SerializedModelConfigurator</code> will return
+       with an execution status asking for the next available
+       configurator, i.e. <code>DefaultJoranConfigurator</code></a>,
+       to be invoked.      </p>
+
+       <p>Configuration from a serialized model file executes faster
+       and does not require any XML libraries. In conjunction with
+       GraalVM, this may yield smaller executables that start faster.
+       </p>
+      </li> 
       
       <li>
 
-        <p>If no custom <code>Configurator</code> was found in the
-        previous step, then <a
+        <p><span class="label notice">Nominal step</span> If the previous configurators could not locate their
+        required resources, then <a
         href="https://github.com/qos-ch/logback/blob/master/logback-classic/src/main/java/ch/qos/logback/classic/util/DefaultJoranConfigurator.java"><code>DefaultJoranConfigurator</code></a>
         will be instantiated and invoked.
       </p>
 
        <p>&bull; If the system property "logback.configurationFile" is
        set, then <code>DefaultJoranConfigurator</code> will try to
-       locate the file specified the aforementioned system property.
+       locate the file specified the aforementioned system
+       property. If this file can be located, it will be read and
+       interpreted for configuration.
        </p>
       
       
       <p>&bull; If the previous step fails,
       <code>DefaultJoranConfigurator</code> will try to locate the
       configuration file <em>logback-test.xml</em> <a
-      href="../faq.html#configFileLocation">in the classpath</a>.</p>
+      href="../faq.html#configFileLocation">in the classpath</a>. If
+      this file can be located, it will be read and interpreted for
+      configuration.</p>
 
 
       <p>&bull; If no such file is found, it will try to locate the
       configuration file <em>logback.xml</em> <a
-      href="../faq.html#configFileLocation">in the classpath</a>. Note
-      that this is the <b>nominal</b> configuration step.</p>
+      href="../faq.html#configFileLocation">in the classpath</a>. If
+      this file can be located, it will be read and interpreted for
+      configuration. Note that this is the <b>nominal</b>
+      configuration step.</p>
 
-      <p>&bull; If neither file can be located,
-      <code>DefaultJoranConfigurator</code> will return without
-      further processing.
+      <p>&bull; If  no   configuration   file   could  be   located,
+      <code>DefaultJoranConfigurator</code>   will   return  with   an
+      execution  status asking  for the  next available  configurator,
+      i.e. <code>BasicConfigurator</code></a>, to be invoked.
       </p>
       </li>
 
       
-      <li><p>If none of the above succeeds, logback-classic will configure itself
-      automatically using the <a
+      <li><p>If none of the above succeeds, logback-classic will
+      configure itself using the <a
       href="../xref/ch/qos/logback/classic/BasicConfigurator.html"><code>BasicConfigurator</code></a>
       which will cause logging output to be directed to the console.
       </p>
@@ -167,7 +214,12 @@
     href="../xref/ch/qos/logback/classic/BasicConfigurator.html">BasicConfigurator</a>
     serving as a good starting point.</p>
 
- 
+    <p>Converting an XML file to <a href="#serializeModel">serialized
+    model</a> format is a quick and convenient way of improving
+    configuration times.
+    </p>
+
+    
     <h3 class="doAnchor" name="automaticConf">Automatically
     configuring logback</h3>
 
@@ -268,7 +320,7 @@ public class Foo {
    large bodies of code from one logging framework to another.
    </p>
 
-   <h3>Automatic configuration with <em>logback-test.xml</em> or
+   <h3>Configuration with <em>logback-test.xml</em> or
    <em>logback.xml</em></h3>
 
    <p>As mentioned earlier, logback will try to configure itself using
@@ -504,6 +556,7 @@ public static void main(String[] args) {
 
    <p class="source">java <b>-Dlogback.statusListenerClass</b>=ch.qos.logback.&#8203;core.status.OnConsoleStatusListener&nbsp;.&#8203;...</p>
 
+   <!--
    <p>As a shorthand, the string
    "ch.qos.logback.&#8203;core.status.OnConsoleStatusListener" can be
    replaced by the case insensitive strings "SYSOUT". For
@@ -511,8 +564,7 @@ public static void main(String[] args) {
    
    <p class="source">java -Dlogback.statusListenerClass=<b>sysout</b>&nbsp;...</p>
 
-   
-   <!--
+   -->
    <p>As a shorthand, the string
    "ch.qos.logback.&#8203;core.status.OnConsoleStatusListener" can be
    replaced by the case insensitive strings "STDOUT" or "SYSOUT". For
@@ -523,8 +575,9 @@ public static void main(String[] args) {
    <p>or equivalently:</p>
 
    <p class="source">java -Dlogback.statusListenerClass=<b>sysout</b>&nbsp;...</p>
-   -->
-   
+
+   <h3>Other <code>StatusListener</code> implementations</h3>
+
    <p>Logback ships with several status listener implementations. <a
    href="../xref/ch/qos/logback/core/status/OnConsoleStatusListener.html">OnConsoleStatusListener</a>
    prints incoming status messages on the console, i.e. on
@@ -2318,6 +2371,30 @@ fileName=myApp.log
   directive.
   </p>
 
+  <h3 class="doAnchor" name="serializeModel">Serialize model</h3>
+
+  <p><span class="label">Since 1.3.9/1.4.9</span> As for version
+  1.3.9/1.4.9, logback-classic can create a serialized version of
+  configuration model matching the XML configuration file.
+  </p>
+
+  <p>This is accompished by adding a <code>&lt;serializeModel></code>
+  element and specifying the path to the serialized model file.</p>
+  
+   <pre><code>&lt;configuration debug="false">
+
+  &lt;serializeModel file="path/to/logback.scmo"/></span>
+  ...
+&lt;/configuration>
+   </code></pre>
+
+  <p>Note that <a
+  href="https://github.com/qos-ch/logback/blob/master/logback-classic/src/main/java/ch/qos/logback/classic/joran/SerializedModelConfigurator.java"><code>SerializedModelConfigurator</code></a>
+  which is invoked during logback-classic initialization can read such
+  files. See the earlier section on <a
+  href="#auto_configuration">configuration at initialization</a>.</p>
+   
+    
   <h3 class="doAnchor" name="fileInclusion">File inclusion</h3>
 
   <p>Joran supports including parts of a configuration file from
