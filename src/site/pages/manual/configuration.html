@@ -105,17 +105,17 @@
        <p>&bull; If the system property "logback.serializedModelFile"
        is set, then <code>SerializedModelConfigurator</code> will try
        to locate the file specified the aforementioned system
-       property. If this file can be located, it will be read and
-       interpreted for configuration.
+       property. If the designated file could be located, it will be
+       read and interpreted for configuration.
        </p>
 
-
-       <p>&bull; <code>SerializedModelConfigurator</code> will search
-       for the serialized configuration model file
-       <em>logback-test.scmo</em> in the classpath. If this file can
-       be located, it will be read and interpreted for
-       configuration. If this file can be located, it will be read and
-       interpreted for configuration.</p>
+ 
+       <p>&bull; If the aforementioned system property was not set or
+       if the designated file could not be found,
+       <code>SerializedModelConfigurator</code> will search for the
+       serialized configuration model file <em>logback-test.scmo</em>
+       in the classpath. If this file can be located, it will be read
+       and interpreted for configuration.</p>
 
 
        <p>&bull; If the aforementioned file cannot be found,
@@ -134,14 +134,15 @@
        and does not require any XML libraries. In conjunction with
        GraalVM, this may yield smaller executables that start faster.
        </p>
-      </li> 
+      </li>
       
       <li>
 
-        <p><span class="label notice">Nominal step</span> If the previous configurators could not locate their
-        required resources, then <a
+        <p><span class="label notice">Nominal step</span> If the
+        previous configurators could not locate their required
+        resources, then an instance of <a
         href="https://github.com/qos-ch/logback/blob/master/logback-classic/src/main/java/ch/qos/logback/classic/util/DefaultJoranConfigurator.java"><code>DefaultJoranConfigurator</code></a>
-        will be instantiated and invoked.
+        will be created and invoked.
       </p>
 
        <p>&bull; If the system property "logback.configurationFile" is
@@ -154,14 +155,14 @@
       
       <p>&bull; If the previous step fails,
       <code>DefaultJoranConfigurator</code> will try to locate the
-      configuration file <em>logback-test.xml</em> <a
-      href="../faq.html#configFileLocation">in the classpath</a>. If
+      configuration file "<em>logback-test.xml</em>" <a
+      href="../faq.html#configFileLocation">on the classpath</a>. If
       this file can be located, it will be read and interpreted for
       configuration.</p>
 
 
       <p>&bull; If no such file is found, it will try to locate the
-      configuration file <em>logback.xml</em> <a
+      configuration file "<em>logback.xml</em>" <a
       href="../faq.html#configFileLocation">in the classpath</a>. If
       this file can be located, it will be read and interpreted for
       configuration. Note that this is the <b>nominal</b>
@@ -2388,10 +2389,12 @@ fileName=myApp.log
 &lt;/configuration>
    </code></pre>
 
-  <p>Note that <a
+  <p>Note that an instance of <a
   href="https://github.com/qos-ch/logback/blob/master/logback-classic/src/main/java/ch/qos/logback/classic/joran/SerializedModelConfigurator.java"><code>SerializedModelConfigurator</code></a>
-  which is invoked during logback-classic initialization can read such
-  files. See the earlier section on <a
+  is created and invoked during logback-classic
+  initialization. <code>SerializedModelConfigurator</code> instances
+  can read and configure logback-classic from serialized configuration
+  model (.scmo) files. See the earlier section on <a
   href="#auto_configuration">configuration at initialization</a>.</p>
    
     
