@@ -80,6 +80,8 @@
     be defined after they are first referenced in a logger. Moreover,
     unreferenced appenders are no longer instantiated. </p>
 
+    <h3>Reproducible builds</h3>
+    
     <div style="display: flex;">
       <div style="margin-right: 1rem;">
          <a href="https://github.com/jvm-repo-rebuild/reproducible-central/">
@@ -93,12 +95,44 @@
       </div>
     </div>
 
+    <!--
+    <hr width="80%" align="center" />
+ 
+    <h3 class="doAnchor" name="1.3.12">2023-08-xx Release of logback versions 1.3.12 and 1.4.12</h3>
+
+    
+    <p>Better error reporting in case archived log files slated for
+    deletion could not be deleted. This may occur if another process
+    has an open handle on the file under Windows OS. </p>
+
+    <p>&bull; A bit-wise identical binary of this version can be
+    reproduced by checking out the tag v_1.3.12 (or v_1.4.12) from the
+    source code repository (GitHub). Releases built using Java "20"
+    2023-03-21 build 20+36-2344 under Linux Debian 11.6.
+    </p>
+    -->
+    
+    <hr width="80%" align="center" />
+ 
+    <h3 class="doAnchor" name="1.3.11">2023-08-09 Release of logback versions 1.3.11 and 1.4.11</h3>
+
+    <p>&bull; Changes made to the <code>configure</code> method in
+    the <code>Configurator</code> interface in version 1.3.9/1.4.9
+    were reverted. 
+    </p>
+
+    <p>&bull; A bit-wise identical binary of this version can be
+    reproduced by checking out the tag v_1.3.11 (or v_1.4.11) from the
+    source code repository (GitHub). Release built using Java "20"
+    2023-03-21 build 20+36-2344 under Linux Debian 11.6.
+    </p>
+
     <hr width="80%" align="center" />
 
     <h3 class="doAnchor" name="1.3.10">2023-08-09 Release of logback versions 1.3.10 and 1.4.10</h3>
 
-    <p>&bull; The <code>Configurator</code> interface moved back to the
-    logback-classic package instead of logback-core. This reverts the
+    <p>&bull; The <code>Configurator</code> interface is moved back to the
+    logback-classic module instead of logback-core. This reverts the
     change made in versions 1.3.9/1.4.9.
     </p>
 
