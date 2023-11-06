@@ -105,6 +105,13 @@
     deletion could not be deleted. This may occur if another process
     has an open handle on the file under Windows OS. </p>
 
+    <p>Better handlinng of classloading in case the logback jar files
+    are loaded by the system classloader. This
+    fixes <a href="https://github.com/qos-ch/logback/issues/715">gh
+    issue 715</a> reported
+    by <a href="https://github.com/Nowheresly">Sylvere Richard</a>.
+
+
     <p>&bull; A bit-wise identical binary of this version can be
     reproduced by checking out the tag v_1.3.12 (or v_1.4.12) from the
     source code repository (GitHub). Releases built using Java "20"

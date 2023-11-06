@@ -1353,9 +1353,67 @@ public interface RollingPolicy extends LifeCycle {
     <code>TimeBasedRollingPolicy</code> described above and setting
     the <a href="#tbrpTotalSizeCap"><span
     class="option">totalSizeCap</span></a> property should be amply
-    sufficient.
-    </p>
+    sufficient. Moreover, given that file renaming is a releatively
+    slow process and is frought with problems, we discourage the use
+    of <code>SizeAndTimeBasedRollingPolicy</code> unless you have a
+    real-world use case.</p>
 
+    <p>The roll over based on size relies on the <b>"%i"</b>
+    conversion token in addition to <b>"%d"</b>. Both the %i and %d
+    tokens are mandatory. Each time the current log file reaches <span
+    class="prop">maxFileSize</span> before the current time period
+    ends, it will be archived with an increasing index, starting at
+    0.</p>
+
+
+    <p>The table below lists the properties applicable for
+    <code>SizeAndTimeBasedRollingPolicy</code>. Note these properties
+    complement those applicable for <a
+    href="#TimeBasedRollingPolicy"><code>TimeBasedRollingPolicy</code></a>.
+    
+    <table class="bodyTable striped">
+     <tr>
+       <th>Property Name</th>
+       <th>Type</th>
+       <th>Description</th>
+     </tr>
+
+
+       
+     <tr>
+       <td><span class="prop">maxFileSize</span></td>
+       <td><code><a href="../apidocs/ch/qos/logback/core/util/FileSize.html">FileSize</a></code> </td>
+       <td>
+         <p> Each time the current log file reaches <span
+         class="prop">maxFileSize</span> before the current time
+         period ends, it will be archived with an increasing index,
+         starting at 0.</p>
+       
+
+         <p>Options in defined in units of "FileSize" can be specified
+         in bytes, kilobytes, megabytes or gigabytes by suffixing a
+         numeric value with KB, MB and respectively GB. For example,
+         5000000, 5000KB, 5MB and 2GB are all valid values, with the
+         first three being equivalent.</p>
+       </td>
+
+     </tr>
+
+     <tr>
+       <td><span class="prop">checkIncrement</span></span></td>
+       <td><code><a href="../apidocs/ch/qos/logback/core/util/Duration.html">Duration</a></code></td>
+
+       <td><p><span class="label notice">since 1.3.12/1.4.12</span> Given
+       that checking for file size is a relatively costly operation,
+       by default it is performed once every 60 seconds.  However, you
+       can set a different check increment as a <a
+       href="../apidocs/ch/qos/logback/core/util/Duration.html">duration</a>.</p>       
+       </td>
+     </tr>
+
+    </table>
+
+    
     <p>Here is a sample configuration file demonstrating time and size
     based log file archiving.</p>
     
