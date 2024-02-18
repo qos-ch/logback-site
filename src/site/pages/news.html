@@ -16,9 +16,11 @@
 
     <div id="content">
 
-        <p class="highlight">Logback 1.3.x supports the Java EE edition
-        whereas logback 1.4.x supports Jakarta EE, otherwise the two
-        versions are feature identical.</p>
+        <p class="highlight">Logback 1.3.x supports the Java EE
+        edition whereas logback 1.4.x supports Jakarta EE, otherwise
+        the two versions are feature identical. The 1.5.x continues
+        the 1.4.x series but with logback-access relocated to its own
+        repository.</p>
 
     <h2>Logback News</h2>
 
@@ -26,15 +28,40 @@
     the <a href="http://www.qos.ch/mailman/listinfo/announce">QOS.ch
     announce</a> mailing list.</p>
 
+    <h2>On the 1.5.x series</h2>
 
+    <p>The 1.5.x series is a direct descendant of and a drop-in
+    replacement for the 1.4.x series. It differs from the 1.4.x series
+    by the relocation of the <em>logback-access</em> module which was
+    moved to its <a
+    href="https://github.com/qos-ch/logback-access">own separate github
+    repository</a>.
+
+    <p>Here is a summary of 1.5.x dependencies:</p>
+    
+     <table class="bodyTable striped">
+      <tr>
+        <th>Logback version</th>
+        <th>github branch </th>
+        <th>SLF4J version </th>
+        <th>JDK </th>
+        <th>Enterprise Edition (optional)</th>        
+      </tr>
+      <tr> 
+        <td> 1.5.x</td>
+        <td> master</td>
+        <td style="text-align: right"> 2.0.x</td>
+        <td style="text-align: right">    11 </td>
+        <td style="text-align: right"> Jakarta EE (jakarta.* namespace) </td>
+      </tr>
+     </table>
+    
     <h2>On the 1.3.x and 1.4.x series</h2>
 
     <p>Given that downstream users are likely to depend on either Java
     EE (in the javax namespace) or on Jakarta EE (in the jakarta
     namespace) in their projects, it was deemed important for logback
     to support both alternatives.</p>
-
-
 
     <p>As such, logback 1.3.x supports the Java EE edition whereas
     logback 1.4.x supports Jakarta EE, otherwise the two versions are
@@ -47,7 +74,7 @@
         <th>github branch </th>
         <th>SLF4J version </th>
         <th>JDK </th>
-        <th>Enterprise Edition</th>        
+        <th>Enterprise Edition (optional)</th>        
       </tr>
 
       <tr>
@@ -60,7 +87,7 @@
 
       <tr>
         <td> 1.4.x</td>
-        <td> master</td>
+        <td> branch_1.4.x</td>
         <td style="text-align: right"> 2.0.x</td>
         <td style="text-align: right">    11 </td>
         <td style="text-align: right"> Jakarta EE (jakarta.* namespace) </td>
@@ -88,20 +115,72 @@
           <img style="max-height: 5rem;" src="images/reproducible.svg"/>
          </a> 
       </div>
-      <div><p>Starting early 2022, logback artifacts are binary reproducible, as
-         <a  href="https://github.com/jvm-repo-rebuild/reproducible-central/tree/master/content/ch/qos/logback"> independently attested
-          </a>  by reproducible-central.
+      <div><p>Starting early 2022, logback artifacts for versions
+      1.3.x and later are binary reproducible, as <a
+      href="https://github.com/jvm-repo-rebuild/reproducible-central/tree/master/content/ch/qos/logback">
+      independently attested </a> by reproducible-central.
        </p>
       </div>
     </div> 
 
     <hr width="80%" align="center" />
     
-    <h3 class="doAnchor" name="1.2.13">2023-12-01 Release of logback versions 1.2.13</h3>
+    <h3 class="doAnchor" name="1.5.0">2024-02-16 Release of logback
+    version 1.5.0</h3>
 
-    <p>&bull; Port of fix for <a
-    href="https://www.cve.org/cverecord?id=CVE-2023-6378">CVE-2023-6378</a>
-    into the 1.2.x branch.<p>
+    <p>&bull; When running under JDK 21 and attempting to use virtual
+    threads <code>ExecutorServiceUtil</code> caused
+    <code>IllegalAccessException</code> to be thrown, then caught it
+    and fell back to using regular threads. In version 1.5.0, the code
+    fixes this problem via JEP-238, i.e. a multi-release jar. This
+    issue was reported in <a
+    href="https://github.com/qos-ch/logback/issues/779">issue/779</a>
+    by Joao Silva.
+    </p>
+    
+    </p>
+    <p>&bull; When the name of the current thread is null, which is
+    typically the case for virtual threads, <code>LoggingEvent</code>
+    now extracts the <code>threadId</code> to construct the thread
+    name. This solves <a
+    href="https://github.com/qos-ch/logback/issues/710">issues/710</a>
+    with Danish Nawab providing the relevant code..
+    </p>
+
+    <p>&bull; <code>JsonEncoder</code> now allows enabling/disabling
+    of all top-level json members. Moreover, a new member called
+    "formattedMessage" can be enabled but is disabled by default.
+    This fixes <a
+    href="https://github.com/qos-ch/logback/issues/731">issue/731</a>
+    reported by Madis Pink.
+    </p>
+
+    <p>&bull;
+    <code>TimeBasedArchiveRemover.ArchiveRemoverRunnable</code> inner
+    class is now public.</p>
+    
+    <p>&bull; A bit-wise identical binary of this version can be
+    reproduced by checking out the tag v_1.5.0 from the
+    source code repository (GitHub). Releases built using Java "21"
+    2023-10-17 LTS build 21.0.1.+12-LTS-29 under Linux Debian 11.6.
+    </p>
+    
+    
+    
+    <hr width="80%" align="center" />
+    
+    <h3 class="doAnchor" name="1.2.13">2023-12-01 Release of logback version 1.2.13</h3>
+
+   
+    <p>&bull; Fixes for <a
+    href="https://www.cve.org/cverecord?id=CVE-2023-6481">CVE-2023-6481</a>
+    as well CVE-2023-6378 were back-ported into the 1.2.x
+    branch. Fixes will be effective only when run under Java 9 and
+    later.</p>
+
+    <p>Note that a successful exploitation of
+    CVE-2023-6378/CVE-2023-6381 requires that logback-receiver
+    component is enabled and also reachable by the attacker.</p>
     
     <hr width="80%" align="center" />
     
@@ -110,13 +189,27 @@
  
     <p>&bull; More complete fix for <a
     href="https://www.cve.org/cverecord?id=CVE-2023-6378">CVE-2023-6378</a>
-    both for the 1.4.x series and the 1.3.x series. Many thanks to Camilo
-    Aparecido Ferri Moreira for pointing out the incomplete fix via
-    private email.<p>
+    both for the 1.4.x series and the 1.3.x series. Many thanks to
+    Camilo Aparecido Ferri Moreira for pointing out the incomplete fix
+    via private email. In order to encourage users to upgrade to
+    versions 1.3.14/1.4.14 <a
+    href="https://www.cve.org/cverecord?id=CVE-2023-6481">CVE-2023-6481</a>
+    has been created even though the underlying vulnerability for both
+    CVE records is identical.</p>
 
-    <p>Note that a successful exploitation of CVE-2023-6378
-    requires that logback-receiver is enabled and also reachable by
-    the attacker.</p>
+    <p class="highlight">Note that the underlying vulnerability for <a
+    href="https://www.cve.org/cverecord?id=CVE-2023-6378">CVE-2023-6378</a>
+    and <a
+    href="https://www.cve.org/cverecord?id=CVE-2023-6481">CVE-2023-6481</a>
+    is identical. The latter CVE record was created in order to
+    encourage users toe upgrade to logback versions 1.3.14/.4.14 or
+    later. The fixes require JDK 9 to be effective.</p>
+
+    
+
+    <p>Note that a successful exploitation of
+    CVE-2023-6378/CVE-2023-6481 requires that logback-receiver
+    component is enabled and also reachable by the attacker.</p>
     
     <p>&bull; A bit-wise identical binary of this version can be
     reproduced by checking out the tag v_1.3.14 (or v_1.4.14) from the
@@ -126,7 +219,8 @@
     
     <hr width="80%" align="center" />
  
-    <h3 class="doAnchor" name="1.3.13">2023-11-28 Release of logback versions 1.3.13 and 1.4.13</h3>
+    <h3 class="doAnchor" name="1.3.13">2023-11-28 Release of logback
+    versions 1.3.13 and 1.4.13</h3>
 
     <p>&bull; Removed superflous <code>System.out.println</code> call
     in <code>ExecutorServiceUtil</code> class. This problem was
@@ -161,8 +255,11 @@
     href="https://www.cve.org/cverecord?id=CVE-2023-6378">CVE-2023-6378</a>.     
     </p>
 
-    <p><b>Note that versions 1.3.14/1.4.14 provide more complete
-    fixes for this vulnerability.</b></p>
+    <p><b>Note that logback versions 1.3.14/1.4.14 provide more
+    complete fixes for this vulnerability,
+    i.e. CVE-2023-6378. Moreover, logback version <a
+    href="#1.2.13">1.2.13</a> also fixes CVE-2023-6378 as well as
+    CVE-2023-6481.</b></p>
 
     
     <p>&bull; Better error reporting in case archived log files slated for
@@ -175,7 +272,7 @@
     715</a> reported
     by <a href="https://github.com/Nowheresly">Sylvere Richard</a>.
 
-    <p>&bull; Added
+    <p>&bull; Added 
     a <a href="manual/appenders.html#checkIncrement">checkIncrement</a>
     property to <code>SizeAndTimeBasedRollingPolicy</code>.</p>
 

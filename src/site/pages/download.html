@@ -16,27 +16,35 @@
 <body onLoad="enableMenuEventListeners();">
 
 <script type="text/javascript" src="templates/header3.js"></script>
-
+ 
 <div id="content">
 
     <script type="text/javascript" src="common/templates/sponsoredBy.js"></script>
-
+ 
     <h2>STABLE version (ACTIVELY DEVELOPED)</h2>
 
     <p>The current actively developed version of logback supporting
-        Java EE (java.* namespace) is
-        <span class="big green">${latest.stable.javax.version}</span>. It
-        requires SLF4J version ${slf4j.version} and JDK&nbsp;8.</p>
+      Jakarta EE (jakarta.* namespace) is
+      <span class="big green">${latest.stable.jakarta.version}</span>. It
+      requires SLF4J version ${slf4j.version} and JDK 11.</p>
+    
 
-    <p>The current actively developed version of logback supporting
-        Jakarta EE (jakarta.* namespace) is
-        <span class="big green">${latest.stable.jakarta.version}</span>. It
-        requires SLF4J version ${slf4j.version} and JDK 11.</p>
+    <h2>Older stable versions (INACTIVE)</h2>
 
-    <h2>Older stable version (INACTIVE)</h2>
+    <p>&bull; Logback version <span class="big green">1.4.14</span> is
+    the latest in the 1.4.x series. It is the direct ancestor of the
+    1.5.x series. It supports Jakarta EE (jakarta.* namespace) and
+    requires SLF4J version 2.0.x and JDK 11. The 1.4.x series is no
+    loger actively developed.</p>
 
-    <p>The older stable logback version is
-        <span class="big green">${old.stable.version}</span>. </p>
+    <p>&bull; Logback version <span class="big green">1.3.14</span> is
+    the latest in the 1.3.x series. It supports Java EE (java.*
+    namespace) but otherwise is feature identical to 1.4.14. It
+    requires SLF4J version 2.0.x and JDK&nbsp;8. The 1.3.x series is
+    no loger actively developed.</p>
+    
+    <p>&bull; The 1.2.x series has been deprecated for several years and is
+    no longer actively developed. </p>
 
 
     <h2>Binaries in Maven central</h2>

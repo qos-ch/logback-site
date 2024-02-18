@@ -32,11 +32,8 @@ function insertLogoAndMenu() {
     document.write('                    <a href="'+ prefix +'index.html"><i class="fa-regular fa-house"></i>  Home page</a>'); // &#127968;
     document.write('                    <a href="'+ prefix +'documentation.html"><i class="fa-regular fa-book"></i> Documentation</a>'); // &#128214; &#128195;
     document.write('                    <a href="'+ prefix +'download.html"><i class="fa-regular fa-download"></i> Download</a>'); // &#128229;
-    document.write('                    <a href="https://search.maven.org/search?q=g:ch.qos.logback%20AND%20v:1.3.%3F">');
-    document.write('                       <i class="fa-regular fa-magnifying-glass"></i> Search for logback 1.3.x'); // &#128270;
-     document.write('                    <a href="https://search.maven.org/search?q=g:ch.qos.logback%20AND%20v:1.4.%3F">');
-    document.write('                       <i class="fa-regular fa-magnifying-glass"></i> Search for logback 1.4.x');
-    document.write('                     </a>');
+    document.write('                    <a href="https://central.sonatype.com/search?namespace=ch.qos.logback">');
+    document.write('                       <i class="fa-regular fa-magnifying-glass"></i> Search for logback'); // &#128270;
     document.write('                     </a>');
     document.write('                    <a href="'+ prefix +'license.html"><i class="fa-regular fa-copyright"></i> License</a>');
     document.write('                    <a href="'+ prefix +'news.html"><i class="fa-regular fa-bullhorn"></i> News</a>'); // &#127908;

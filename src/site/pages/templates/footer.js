@@ -3,7 +3,7 @@ document.write('<table class="footer" border="0">');
 document.write('<tr>');
 
 document.write('<td valign="top">');
-document.write('Copyright &copy; 2023  <a href="http://www.qos.ch/">QOS.ch Sarl (Switzerland)</a>');
+document.write('Copyright &copy; 2024 <a href="http://www.qos.ch/">QOS.ch Sarl (Switzerland)</a>');
 document.write('</td>');
 
 document.write('<td align="right">');
