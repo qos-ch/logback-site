@@ -1,7 +1,9 @@
 
-var xml2CanonURL='https://logback.qos.ch/translator/rest/dsl/xml2Canon/asJSON';
+//var xml2CanonURL='https://logback.qos.ch/translator/rest/dsl/xml2Canon/asJSON';
 
-//var xml2CanonURL = 'http://localhost:8080/translator/rest/dsl/xml2Canon/asJSON';
+var xml2CanonURL = 'http://localhost:8080/translator/rest/dsl/xml2Canon/asJSON';
+
+var xml2JavaURL = 'http://localhost:8080/translator/rest/dsl/xml2Java/asJSON';
 
 const successClass = "success";
 
@@ -49,10 +51,44 @@ function canonical(legacyId, canonicalId) {
         "context": canonicalElement,
         "contentType": 'application/json',
         "dataType": 'json',
-        "success": successCallback,
+        "success": function(data, status) {
+            successCallback(data, status, canonicalElement, 'xml');
+        },
+        "error": errorCallback
+        }
+    );
+}
+
+function tyler(legacyId, tylerId) {
+
+    var legacyElement = document.getElementById(legacyId);
+    var tylerElement = document.getElementById(tylerId);
+
+    if($(tylerElement).hasClass(successClass))
+        return;
+
+    var textContent = legacyElement.textContent;
+    var sanitizedText = sanitize(textContent);
+    var bitArrayForInner = sjcl.hash.sha1.hash((sanitizedText));
+    var sha1Str = sjcl.codec.hex.fromBits(bitArrayForInner);
+
+    var jsonText = JSON.stringify({"payload": sanitizedText, "id": legacyId, "sha1": sha1Str});
+
+    $.ajax({
+        type: "POST",
+        url: xml2JavaURL,
+        "data": jsonText,
+        "context": tylerElement,
+        "contentType": 'application/json',
+        "dataType": 'json',
+        "success": function(data, status) {
+            successCallback(data, status, tylerElement, 'java');
+        },
         "error": errorCallback}
     );
 }
+
+
 function sanitize(text) {
     var inputText = text;
 
@@ -74,17 +110,20 @@ function sanitize(text) {
 
 }
 
-function successCallback (data, status) {
+function successCallback (data, status, targetElement, lang) {
     var payloadStr = data.payload;
     payloadStr = payloadStr.replace(/&lt;/gi, '<');
     payloadStr = payloadStr.replace(/&gt;/gi, '>');
 
-    var decorated = hljs.highlight(payloadStr, {language: 'xml'}).value
+    var decorated = hljs.highlight(payloadStr, {language: lang}).value
 
-    var canonicalElement = this; //document.getElementById(canonicalId);
-    canonicalElement.innerHTML = '<pre><code class="hljs language-xml">' + decorated + '</code></pre>'
-    $(canonicalElement).addClass(successClass);
+    //var targetElement = this; //document.getElementById(canonicalId);
+    targetElement.innerHTML = '<pre><code class="hljs">' + decorated + '</code></pre>'
+    $(targetElement).addClass(successClass);
+
 }
+
+
 
 function errorCallback (jqXHR, textStatus, errorThrown) {
 

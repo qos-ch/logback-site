@@ -1,7 +1,7 @@
 
 function openTab(evt, anId, subId) {
 
-    var idList = `#${anId}_legacy, #${anId}_canonical`;
+    var idList = `#${anId}_legacy, #${anId}_canonical, #${anId}_tyler`;
     
     var contents = $(idList);
 
@@ -21,7 +21,7 @@ function openTab(evt, anId, subId) {
         toActivate.css('display', 'block');
     }
 
-    var buttonListStr = `#button_${anId}_legacy, #button_${anId}_canonical`;
+    var buttonListStr = `#button_${anId}_legacy, #button_${anId}_canonical, #button_${anId}_tyler`;
     var buttonList = $(buttonListStr);
     
     buttonList.each( function(i, e) {
@@ -34,7 +34,11 @@ function openTab(evt, anId, subId) {
     if(subId == 'canonical') {
         canonical(`${anId}_legacy`, `${anId}_canonical`);
     }
-    
+
+    if(subId == 'tyler') {
+        tyler(`${anId}_legacy`, `${anId}_tyler`);
+    }
+
 } 
 
 function enableLegacy() {
