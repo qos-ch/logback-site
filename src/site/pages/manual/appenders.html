@@ -369,6 +369,8 @@ public interface Appender&lt;E> extends LifeCycle, ContextAware, FilterAttachabl
             onclick="openTab(event, 'logback_Console', 'legacy')">Legacy</button>
     <button class="tablinks" id="button_logback_Console_canonical"
             onclick="openTab(event, 'logback_Console', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_logback_Console_tyler"
+            onclick="openTab(event, 'logback_Console', 'tyler')">Tyler</button>
   </div>
     
 
@@ -393,7 +395,9 @@ public interface Appender&lt;E> extends LifeCycle, ContextAware, FilterAttachabl
   <div id="logback_Console_canonical" class="tabcontent">
     <p>Requires a server call.</p>
   </div>
-
+  <div id="logback_Console_tyler" class="tabcontent">
+            <p>Requires a server call.</p>
+  </div>
 
 
    <p>After you have set your current path to the
