@@ -339,6 +339,8 @@ public class Foo {
              onclick="openTab(event, 'sample0', 'legacy')">Legacy</button>
      <button class="tablinks" id="button_sample0_canonical"
              onclick="openTab(event, 'sample0', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_sample0_tyler"
+             onclick="openTab(event, 'sample0', 'tyler')">Tyler</button>
    </div>
 
    <div id="sample0_legacy" class="tabcontent">   
@@ -361,6 +363,7 @@ public class Foo {
    <div id="sample0_canonical" class="tabcontent">
     <p>Requires a server call.</p>
    </div>
+   <div id="sample0_tyler" class="tabcontent"><p>Requires a server call.</p></div>
 
 
 
@@ -450,6 +453,8 @@ public static void main(String[] args) {
             onclick="openTab(event, 'onConsoleStatusListener', 'legacy')">Legacy</button>
     <button class="tablinks" id="button_onConsoleStatusListener_canonical"
             onclick="openTab(event, 'onConsoleStatusListener', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_onConsoleStatusListener_tyler"
+             onclick="openTab(event, 'onConsoleStatusListener', 'tyler')">Tyler</button>
     </div>
     
     <div id="onConsoleStatusListener_legacy" class="tabcontent">
@@ -465,6 +470,7 @@ public static void main(String[] args) {
     <div id="onConsoleStatusListener_canonical" class="tabcontent">
     <p>Requires a server call.</p>
     </div>     
+   <div id="onConsoleStatusListener_tyler" class="tabcontent"><p>Requires a server call.</p></div>
 
    <p>A <code>StatusListener</code> can be installed using a
    configuration file assuming that:
@@ -518,6 +524,8 @@ public static void main(String[] args) {
             onclick="openTab(event, 'sample1', 'legacy')">Legacy</button>
     <button class="tablinks" id="button_sample1_canonical"
             onclick="openTab(event, 'sample1', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_sample1_tyler"
+             onclick="openTab(event, 'sample1', 'tyler')">Tyler</button>
   </div>
     
   <div id="sample1_legacy" class="tabcontent">
@@ -540,6 +548,7 @@ public static void main(String[] args) {
   <div id="sample1_canonical" class="tabcontent">
     <p>Requires a server call.</p>
   </div>
+   <div id="sample1_tyler" class="tabcontent"><p>Requires a server call.</p></div>
 
    <p>By the way, setting <code>debug="true"</code> is strictly
    equivalent to installing an <code>OnConsoleStatusListener</code> as
@@ -909,6 +918,8 @@ import ch.qos.logback.classic.LoggerContext;
             onclick="openTab(event, 'shutdownHook', 'legacy')">Legacy</button>
     <button class="tablinks" id="button_shutdownHook_canonical"
             onclick="openTab(event, 'shutdownHook', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_shutdownHook_tyler"
+             onclick="openTab(event, 'shutdownHook', 'tyler')">Tyler</button>
    </div>
 
     
@@ -927,6 +938,7 @@ import ch.qos.logback.classic.LoggerContext;
   <div id="shutdownHook_canonical" class="tabcontent">
     <p>Requires a server call.</p>
   </div>
+   <div id="shutdownHook_tyler" class="tabcontent"><p>Requires a server call.</p></div>
   
    <p>Note that you may install a shutdown hook of your own making by
    setting the <span class="attr">class</span> attribute to correspond
@@ -1134,6 +1146,8 @@ import ch.qos.logback.classic.LoggerContext;
             onclick="openTab(event, 'sample2', 'legacy')">Legacy</button>
     <button class="tablinks" id="button_sample2_canonical"
             onclick="openTab(event, 'sample2', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_sample2_tyler"
+             onclick="openTab(event, 'sample2', 'tyler')">Tyler</button>
   </div>
 
     
@@ -1163,6 +1177,7 @@ import ch.qos.logback.classic.LoggerContext;
   <div id="sample2_canonical" class="tabcontent">
     <p>Requires a server call.</p>
   </div>
+   <div id="sample2_tyler" class="tabcontent"><p>Requires a server call.</p></div>
 
 
   <p>When the above configuration file is given as argument to the
@@ -1190,6 +1205,8 @@ import ch.qos.logback.classic.LoggerContext;
             onclick="openTab(event, 'sample3', 'legacy')">Legacy</button>
     <button class="tablinks" id="button_sample3_canonical"
             onclick="openTab(event, 'sample3', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_sample3_tyler"
+             onclick="openTab(event, 'sample3', 'tyler')">Tyler</button>
   </div>
 
     
@@ -1217,6 +1234,7 @@ import ch.qos.logback.classic.LoggerContext;
   <div id="sample3_canonical" class="tabcontent">
     <p>Requires a server call.</p>
   </div>
+   <div id="sample3_tyler" class="tabcontent"><p>Requires a server call.</p></div>
 
   <p>Running <code>MyApp3</code> with this configuration file will
   result in the following output on the console:
@@ -1285,6 +1303,8 @@ import ch.qos.logback.classic.LoggerContext;
             onclick="openTab(event, 'sample4', 'legacy')">Legacy</button>
     <button class="tablinks" id="button_sample4_canonical"
             onclick="openTab(event, 'sample4', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_sample4_tyler"
+             onclick="openTab(event, 'sample4', 'tyler')">Tyler</button>
   </div>
 
   <div id="sample4_legacy" class="tabcontent">
@@ -1313,6 +1333,7 @@ import ch.qos.logback.classic.LoggerContext;
   <div id="sample4_canonical" class="tabcontent">
     <p>Requires a server call.</p>
   </div>
+   <div id="sample4_tyler" class="tabcontent"><p>Requires a server call.</p></div>
 
   <p>The following table lists the loggers and their levels after
   applying the <em>sample4.xml</em> configuration file.
@@ -1424,6 +1445,8 @@ import ch.qos.logback.classic.LoggerContext;
             onclick="openTab(event, 'multiple', 'legacy')">Legacy</button>
     <button class="tablinks" id="button_multiple_canonical"
             onclick="openTab(event, 'multiple', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_multiple_tyler"
+             onclick="openTab(event, 'multiple', 'tyler')">Tyler</button>
   </div>
 
   <div id="multiple_legacy" class="tabcontent">
@@ -1453,6 +1476,7 @@ import ch.qos.logback.classic.LoggerContext;
   <div id="multiple_canonical" class="tabcontent">
     <p>Requires a server call.</p>
   </div>
+   <div id="multiple_tyler" class="tabcontent"><p>Requires a server call.</p></div>
   
   <p>These configuration scripts define two appenders called
   <em>FILE</em> and <em>STDOUT</em>.  The <em>FILE</em> appender logs
@@ -1491,6 +1515,8 @@ import ch.qos.logback.classic.LoggerContext;
             onclick="openTab(event, 'duplicate', 'legacy')">Legacy</button>
     <button class="tablinks" id="button_duplicate_canonical"
             onclick="openTab(event, 'duplicate', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_duplicate_tyler"
+             onclick="openTab(event, 'duplicate', 'tyler')">Tyler</button>
   </div>
 
   <div id="duplicate_legacy" class="tabcontent">
@@ -1515,6 +1541,7 @@ import ch.qos.logback.classic.LoggerContext;
   <div id="duplicate_canonical" class="tabcontent">
     <p>Requires a server call.</p>
   </div>
+   <div id="duplicate_tyler" class="tabcontent"><p>Requires a server call.</p></div>
   
   <p>Running <code>MyApp3</code> with <em>duplicate.xml</em> will
   yield the following output:
@@ -1553,6 +1580,8 @@ import ch.qos.logback.classic.LoggerContext;
             onclick="openTab(event, 'restricted', 'legacy')">Legacy</button>
     <button class="tablinks" id="button_restricted_canonical"
             onclick="openTab(event, 'restricted', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_restricted_tyler"
+             onclick="openTab(event, 'restricted', 'tyler')">Tyler</button>
   </div>
 
   <div id="restricted_legacy" class="tabcontent">
@@ -1584,6 +1613,7 @@ import ch.qos.logback.classic.LoggerContext;
   <div id="restricted_canonical" class="tabcontent">
     <p>Requires a server call.</p>
   </div>
+   <div id="restricted_tyler" class="tabcontent"><p>Requires a server call.</p></div>
 
   <p>In this example, the console appender will log all the messages
   (for all loggers in the system) whereas only logging requests
@@ -1609,6 +1639,8 @@ import ch.qos.logback.classic.LoggerContext;
             onclick="openTab(event, 'additivityFlag', 'legacy')">Legacy</button>
     <button class="tablinks" id="button_additivityFlag_canonical"
             onclick="openTab(event, 'additivityFlag', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_additivityFlag_tyler"
+             onclick="openTab(event, 'additivityFlag', 'tyler')">Tyler</button>
   </div>
 
   <div id="additivityFlag_legacy" class="tabcontent">    
@@ -1640,6 +1672,7 @@ import ch.qos.logback.classic.LoggerContext;
   <div id="additivityFlag_canonical" class="tabcontent">
     <p>Requires a server call.</p>
   </div>
+   <div id="additivityFlag_tyler" class="tabcontent"><p>Requires a server call.</p></div>
   
   <p>This example, the appender named <em>FILE</em> is attached to the
   <em>chapters.configuration.Foo</em> logger. Moreover, the <em>chapters.configuration.Foo</em>
@@ -1677,6 +1710,8 @@ import ch.qos.logback.classic.LoggerContext;
             onclick="openTab(event, 'contextName', 'legacy')">Legacy</button>
     <button class="tablinks" id="button_contextName_canonical"
             onclick="openTab(event, 'contextName', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_contextName_tyler"
+             onclick="openTab(event, 'contextName', 'tyler')">Tyler</button>
   </div>  
   <div id="contextName_legacy" class="tabcontent">
   <pre><code>&lt;configuration>
@@ -1696,6 +1731,7 @@ import ch.qos.logback.classic.LoggerContext;
   <div id="contextName_canonical" class="tabcontent">
     <p>Requires a server call.</p>
   </div>
+   <div id="contextName_tyler" class="tabcontent"><p>Requires a server call.</p></div>
 
   <p>This last example illustrates naming of the logger
   context. Adding the <a
@@ -1765,6 +1801,8 @@ import ch.qos.logback.classic.LoggerContext;
             onclick="openTab(event, 'variableSubstitution1', 'legacy')">Legacy</button>
     <button class="tablinks" id="button_variableSubstitution1_canonical"
             onclick="openTab(event, 'variableSubstitution1', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_variableSubstitution1_tyler"
+             onclick="openTab(event, 'variableSubstitution1', 'tyler')">Tyler</button>
   </div>
 
   <div id="variableSubstitution1_legacy" class="tabcontent">
@@ -1788,6 +1826,7 @@ import ch.qos.logback.classic.LoggerContext;
   <div id="variableSubstitution1_canonical" class="tabcontent">
     <p>Requires a server call.</p>
   </div>
+   <div id="variableSubstitution1_tyler" class="tabcontent"><p>Requires a server call.</p></div>
   
   <p>The next example shows the use of a System property to achieve
   the same result. The property is not declared in the configuration
@@ -1806,6 +1845,8 @@ import ch.qos.logback.classic.LoggerContext;
             onclick="openTab(event, 'variableSubstitution2', 'legacy')">Legacy</button>
     <button class="tablinks" id="button_variableSubstitution2_canonical"
             onclick="openTab(event, 'variableSubstitution2', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_variableSubstitution2_tyler"
+             onclick="openTab(event, 'variableSubstitution2', 'tyler')">Tyler</button>
   </div>
   
   <div id="variableSubstitution2_legacy" class="tabcontent">
@@ -1827,6 +1868,7 @@ import ch.qos.logback.classic.LoggerContext;
   <div id="variableSubstitution2_canonical" class="tabcontent">
     <p>Requires a server call.</p>
   </div>
+   <div id="variableSubstitution2_tyler" class="tabcontent"><p>Requires a server call.</p></div>
 
   <p>When multiple variables are needed, it may be more convenient to
   create a separate file that will contain all the variables. Here is
@@ -1843,6 +1885,8 @@ import ch.qos.logback.classic.LoggerContext;
             onclick="openTab(event, 'variableSubstitution3', 'legacy')">Legacy</button>
     <button class="tablinks" id="button_variableSubstitution3_canonical"
             onclick="openTab(event, 'variableSubstitution3', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_variableSubstitution3_tyler"
+             onclick="openTab(event, 'variableSubstitution3', 'tyler')">Tyler</button>
   </div>
   <div id="variableSubstitution3_legacy" class="tabcontent">
   <pre><code>&lt;configuration>
@@ -1865,6 +1909,7 @@ import ch.qos.logback.classic.LoggerContext;
    <div id="variableSubstitution3_canonical" class="tabcontent">
      <p>Requires a server call.</p>
    </div>
+   <div id="variableSubstitution3_tyler" class="tabcontent"><p>Requires a server call.</p></div>
 
 
    <p>This configuration file contains a reference to a file named
@@ -1886,6 +1931,8 @@ import ch.qos.logback.classic.LoggerContext;
              onclick="openTab(event, 'variable1', 'legacy')">Legacy</button>
      <button class="tablinks" id="button_variable1_canonical"
              onclick="openTab(event, 'variable1', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_variable1_tyler"
+             onclick="openTab(event, 'variable1', 'tyler')">Tyler</button>
    </div>
    
    <div id="variable1_legacy" class="tabcontent">
@@ -1909,6 +1956,7 @@ import ch.qos.logback.classic.LoggerContext;
    <div id="variable1_canonical" class="tabcontent">
      <p>Requires a server call.</p>
    </div>
+   <div id="variable1_tyler" class="tabcontent"><p>Requires a server call.</p></div>
    
 
    <h4 class="doAnchor" name="scopes">Scopes</h4>
@@ -1969,6 +2017,8 @@ import ch.qos.logback.classic.LoggerContext;
              onclick="openTab(event, 'contextScopedVariable', 'legacy')">Legacy</button>
      <button class="tablinks" id="button_contextScopedVariable_canonical"
              onclick="openTab(event, 'contextScopedVariable', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_contextScopedVariable_tyler"
+             onclick="openTab(event, 'contextScopedVariable', 'tyler')">Tyler</button>
    </div>
 
    <div id="contextScopedVariable_legacy" class="tabcontent">     
@@ -1992,6 +2042,7 @@ import ch.qos.logback.classic.LoggerContext;
   <div id="contextScopedVariable_canonical" class="tabcontent">
     <p>Requires a server call.</p>
   </div>
+   <div id="contextScopedVariable_tyler" class="tabcontent"><p>Requires a server call.</p></div>
   
    <p>In the above example, given that the <em>nodeId</em> property is
    defined in the context scope, it will be available in every logging
@@ -2046,6 +2097,8 @@ fileName=myApp.log
               onclick="openTab(event, 'variableSubstitution4', 'legacy')">Legacy</button>
       <button class="tablinks" id="button_variableSubstitution4_canonical"
               onclick="openTab(event, 'variableSubstitution4', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_variableSubstitution4_tyler"
+             onclick="openTab(event, 'variableSubstitution4', 'tyler')">Tyler</button>
     </div>    
 
     <div id="variableSubstitution4_legacy" class="tabcontent">
@@ -2070,6 +2123,7 @@ fileName=myApp.log
    <div id="variableSubstitution4_canonical" class="tabcontent">
      <p>Requires a server call.</p>
    </div>   
+   <div id="variableSubstitution4_tyler" class="tabcontent"><p>Requires a server call.</p></div>
 
    <h4>name nesting</h4>
 
@@ -2136,6 +2190,8 @@ fileName=myApp.log
             onclick="openTab(event, 'propertiesOnTheFly', 'legacy')">Legacy</button>
     <button class="tablinks" id="button_propertiesOnTheFly_canonical"
             onclick="openTab(event, 'propertiesOnTheFly', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_propertiesOnTheFly_tyler"
+             onclick="openTab(event, 'propertiesOnTheFly', 'tyler')">Tyler</button>
   </div>  
 
   <div id="propertiesOnTheFly_legacy" class="tabcontent">
@@ -2156,6 +2212,7 @@ fileName=myApp.log
   <div id="propertiesOnTheFly_canonical" class="tabcontent">
     <p>Requires a server call.</p>
   </div>
+   <div id="propertiesOnTheFly_tyler" class="tabcontent"><p>Requires a server call.</p></div>
 
   <p>In the above example, shape, color and size are properties of
   "a.class.implementing.&#8203;PropertyDefiner". As long as there is a setter
@@ -2269,6 +2326,8 @@ fileName=myApp.log
             onclick="openTab(event, 'conditional', 'legacy')">Legacy</button>
     <button class="tablinks" id="button_conditional_canonical"
             onclick="openTab(event, 'conditional', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_conditional_tyler"
+             onclick="openTab(event, 'conditional', 'tyler')">Tyler</button>
   </div>
    
 
@@ -2305,6 +2364,7 @@ fileName=myApp.log
   <div id="conditional_canonical" class="tabcontent">
     <p>Requires a server call.</p>
   </div>
+   <div id="conditional_tyler" class="tabcontent"><p>Requires a server call.</p></div>
 
   <p>Conditional processing is supported <em>anywhere</em> within the
   <code>&lt;configuration></code> element. Nested if-then-else
@@ -2339,6 +2399,8 @@ fileName=myApp.log
             onclick="openTab(event, 'insertFromJNDI', 'legacy')">Legacy</button>
     <button class="tablinks" id="button_insertFromJNDI_canonical"
             onclick="openTab(event, 'insertFromJNDI', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_insertFromJNDI_tyler"
+             onclick="openTab(event, 'insertFromJNDI', 'tyler')">Tyler</button>
 </div>
 
 <div id="insertFromJNDI_legacy" class="tabcontent">
@@ -2363,6 +2425,10 @@ fileName=myApp.log
 <div id="insertFromJNDI_canonical" class="tabcontent">
   <p>Requires a server call. Please wait a few seconds.</p>
 </div>
+<div id="insertFromJNDI_tyler" class="tabcontent">
+  <p>Requires a server call.</p>
+</div>
+
 
   <p>In this last example, the "java:comp/env/appName" env-entry is
   inserted as the <span class="variable">appName</span> property. Note
@@ -2413,6 +2479,8 @@ fileName=myApp.log
             onclick="openTab(event, 'containingConfig', 'legacy')">Legacy</button>
     <button class="tablinks" id="button_containingConfig_canonical"
             onclick="openTab(event, 'containingConfig', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_containingConfig_tyler"
+             onclick="openTab(event, 'containingConfig', 'tyler')">Tyler</button>
 </div> 
 
 <div id="containingConfig_legacy" class="tabcontent">
@@ -2528,6 +2596,8 @@ fileName=myApp.log
             onclick="openTab(event, 'levelChangePropagator', 'legacy')">Legacy</button>
     <button class="tablinks" id="button_levelChangePropagator_canonical"
             onclick="openTab(event, 'levelChangePropagator', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_levelChangePropagator_tyler"
+             onclick="openTab(event, 'levelChangePropagator', 'tyler')">Tyler</button>
 </div>
 
 <div id="levelChangePropagator_legacy" class="tabcontent">
@@ -2553,6 +2623,8 @@ fileName=myApp.log
             onclick="openTab(event, 'levelChangePropagator_RESET', 'legacy')">Legacy</button>
     <button class="tablinks" id="button_levelChangePropagator_RESET_canonical"
             onclick="openTab(event, 'levelChangePropagator_RESET', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_levelChangePropagator_RESET_tyler"
+             onclick="openTab(event, 'levelChangePropagator_RESET', 'tyler')">Tyler</button>
 </div>
 
 <div id="levelChangePropagator_RESET_legacy" class="tabcontent">
@@ -2586,6 +2658,8 @@ fileName=myApp.log
             onclick="openTab(event, 'sequnceNumberGenerator', 'legacy')">Legacy</button>
     <button class="tablinks" id="button_sequnceNumberGenerator_canonical"
             onclick="openTab(event, 'sequnceNumberGenerator', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_sequnceNumberGenerator_tyler"
+             onclick="openTab(event, 'sequnceNumberGenerator', 'tyler')">Tyler</button>
   </div>
 
     
@@ -2601,6 +2675,7 @@ fileName=myApp.log
   <div id="sequnceNumberGenerator_canonical" class="tabcontent">
     <p>Requires a server call.</p>
   </div>
+   <div id="sequnceNumberGenerator_tyler" class="tabcontent"><p>Requires a server call.</p></div>
 
   <!-- ========================================================================== -->
   
