@@ -34,7 +34,7 @@ function openTab(evt, anId, subId) {
     if(subId == 'canonical') {
         canonical(`${anId}_legacy`, `${anId}_canonical`);
     }
-
+ 
     if(subId == 'tyler') {
         tyler(`${anId}_legacy`, `${anId}_tyler`);
     }

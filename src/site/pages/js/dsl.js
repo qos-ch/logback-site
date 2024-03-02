@@ -1,9 +1,10 @@
 
-//var xml2CanonURL='https://logback.qos.ch/translator/rest/dsl/xml2Canon/asJSON';
+var xml2CanonURL='https://logback.qos.ch/translator/rest/dsl/xml2Canon/asJSON';
+var xml2JavaURL ='https://logback.qos.ch/translator/rest/dsl/xml2Java/asJSON';
 
-var xml2CanonURL = 'http://localhost:8080/translator/rest/dsl/xml2Canon/asJSON';
+//var xml2CanonURL = 'http://localhost:8080/translator/rest/dsl/xml2Canon/asJSON';
+//var xml2JavaURL = 'http://localhost:8080/translator/rest/dsl/xml2Java/asJSON';
 
-var xml2JavaURL = 'http://localhost:8080/translator/rest/dsl/xml2Java/asJSON';
 
 const successClass = "success";
 
