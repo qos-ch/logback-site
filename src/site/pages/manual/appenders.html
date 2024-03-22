@@ -395,9 +395,7 @@ public interface Appender&lt;E> extends LifeCycle, ContextAware, FilterAttachabl
   <div id="logback_Console_canonical" class="tabcontent">
     <p>Requires a server call.</p>
   </div>
-  <div id="logback_Console_tyler" class="tabcontent">
-            <p>Requires a server call.</p>
-  </div>
+  <div id="logback_Console_tyler" class="tabcontent"><p>Requires a server call.</p></div>
 
 
    <p>After you have set your current path to the
@@ -572,6 +570,8 @@ public interface Appender&lt;E> extends LifeCycle, ContextAware, FilterAttachabl
             onclick="openTab(event, 'logback_fileAppender', 'legacy')">Legacy</button>
     <button class="tablinks" id="button_logback_fileAppender_canonical"
             onclick="openTab(event, 'logback_fileAppender', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_logback_fileAppender_tyler"
+             onclick="openTab(event, 'logback_fileAppender', 'tyler')">Tyler</button>
   </div>
 
    <div id="logback_fileAppender_legacy" class="tabcontent">
@@ -598,6 +598,7 @@ public interface Appender&lt;E> extends LifeCycle, ContextAware, FilterAttachabl
    <div id="logback_fileAppender_canonical" class="tabcontent">
      <p>Requires a server call.</p>
    </div>
+   <div id="logback_fileAppender_tyler" class="tabcontent"><p>Requires a server call.</p></div>
 
    
    <p>After changing the current directory to
@@ -628,6 +629,8 @@ public interface Appender&lt;E> extends LifeCycle, ContextAware, FilterAttachabl
             onclick="openTab(event, 'logback_timestamp', 'legacy')">Legacy</button>
     <button class="tablinks" id="button_logback_timestamp_canonical"
             onclick="openTab(event, 'logback_timestamp', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_logback_timestamp_tyler"
+             onclick="openTab(event, 'logback_timestamp', 'tyler')">Tyler</button>
   </div>
 
    <div id="logback_timestamp_legacy" class="tabcontent">   
@@ -657,6 +660,7 @@ public interface Appender&lt;E> extends LifeCycle, ContextAware, FilterAttachabl
    <div id="logback_timestamp_canonical" class="tabcontent">
      <p>Requires a server call.</p>
    </div>
+   <div id="logback_timestamp_tyler" class="tabcontent"><p>Requires a server call.</p></div>
 
 
    <p>The timestamp element takes two mandatory attributes <span
@@ -701,7 +705,7 @@ public interface Appender&lt;E> extends LifeCycle, ContextAware, FilterAttachabl
 
    <h2 class="doAnchor" name="RollingFileAppender">RollingFileAppender
    </h2>
-   
+     
    <p><a
 	 href="../xref/ch/qos/logback/core/rolling/RollingFileAppender.html"><code>RollingFileAppender</code></a>
 	 extends <code>FileAppender</code> with the capability to rollover log
@@ -1262,6 +1266,8 @@ public interface RollingPolicy extends LifeCycle {
              onclick="openTab(event, 'logback_RollingTimeBased', 'legacy')">Legacy</button>
      <button class="tablinks" id="button_logback_RollingTimeBased_canonical"
              onclick="openTab(event, 'logback_RollingTimeBased', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_logback_RollingTimeBased_tyler"
+             onclick="openTab(event, 'logback_RollingTimeBased', 'tyler')">Tyler</button>
    </div>
     
    
@@ -1294,6 +1300,7 @@ public interface RollingPolicy extends LifeCycle {
    <div id="logback_RollingTimeBased_canonical" class="tabcontent">
      <p>Requires a server call.</p>
    </div>   
+     <div id="logback_RollingTimeBased_tyler" class="tabcontent"><p>Requires a server call.</p></div>
 
     <p>The next configuration sample illustrates the use of
     <code>RollingFileAppender</code> associated with
@@ -1311,6 +1318,8 @@ public interface RollingPolicy extends LifeCycle {
              onclick="openTab(event, 'logback_PrudentTimeBasedRolling', 'legacy')">Legacy</button>
      <button class="tablinks" id="button_logback_PrudentTimeBasedRolling_canonical"
              onclick="openTab(event, 'logback_PrudentTimeBasedRolling', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_logback_PrudentTimeBasedRolling_tyler"
+             onclick="openTab(event, 'logback_PrudentTimeBasedRolling', 'tyler')">Tyler</button>
    </div>
     
    
@@ -1339,6 +1348,7 @@ public interface RollingPolicy extends LifeCycle {
    <div id="logback_PrudentTimeBasedRolling_canonical" class="tabcontent">
      <p>Requires a server call.</p>
    </div>
+     <div id="logback_PrudentTimeBasedRolling_tyler" class="tabcontent"><p>Requires a server call.</p></div>
   
 
     <h3 class="doAnchor" name="SizeAndTimeBasedRollingPolicy">Size and
@@ -1431,6 +1441,8 @@ public interface RollingPolicy extends LifeCycle {
             onclick="openTab(event, 'logback_sizeAndTime', 'legacy')">Legacy</button>
     <button class="tablinks" id="button_logback_sizeAndTime_canonical"
             onclick="openTab(event, 'logback_sizeAndTime', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_logback_sizeAndTime_tyler"
+             onclick="openTab(event, 'logback_sizeAndTime', 'tyler')">Tyler</button>
   </div>
 
   <div id="logback_sizeAndTime_legacy" class="tabcontent">    
@@ -1461,6 +1473,7 @@ public interface RollingPolicy extends LifeCycle {
      <div id="logback_sizeAndTime_canonical" class="tabcontent">
       <p>Requires a server call.</p>
     </div>
+     <div id="logback_sizeAndTime_tyler" class="tabcontent"><p>Requires a server call.</p></div>
 
     
     <p>Note the "%i" conversion token in addition to "%d". <b>Both the
@@ -1651,6 +1664,8 @@ public interface RollingPolicy extends LifeCycle {
             onclick="openTab(event, 'logback_RollingFixedWindow', 'legacy')">Legacy</button>
      <button class="tablinks" id="button_logback_RollingFixedWindow_canonical"
              onclick="openTab(event, 'logback_RollingFixedWindow', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_logback_RollingFixedWindow_tyler"
+             onclick="openTab(event, 'logback_RollingFixedWindow', 'tyler')">Tyler</button>
    </div>
      
    <div id="logback_RollingFixedWindow_legacy" class="tabcontent">
@@ -1682,6 +1697,7 @@ public interface RollingPolicy extends LifeCycle {
      <div id="logback_RollingFixedWindow_canonical" class="tabcontent">
        <p>Requires a server call.</p>
      </div>
+     <div id="logback_RollingFixedWindow_tyler" class="tabcontent"><p>Requires a server call.</p></div>
 
 
     <h2 class="doAnchor" name="TriggeringPolicy">Overview of triggering policies</h2>
@@ -1757,6 +1773,8 @@ public interface TriggeringPolicy&lt;E&gt; extends LifeCycle {
               onclick="openTab(event, 'logback_RollingSizeBased', 'legacy')">Legacy</button>
       <button class="tablins" id="button_logback_RollingSizeBased_canonical"
               onclick="openTab(event, 'logback_RollingSizeBased', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_logback_RollingSizeBased_tyler"
+             onclick="openTab(event, 'logback_RollingSizeBased', 'tyler')">Tyler</button>
     </div>
 
     <div id="logback_RollingSizeBased_legacy" class="tabcontent">
@@ -1786,6 +1804,7 @@ public interface TriggeringPolicy&lt;E&gt; extends LifeCycle {
     <div id="logback_RollingSizeBased_canonical" class="tabcontent">
       <p>Requires a server call.</p>
     </div>
+     <div id="logback_RollingSizeBased_tyler" class="tabcontent"><p>Requires a server call.</p></div>
 
 	
     <!-- XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXx -->
@@ -2084,6 +2103,7 @@ public interface TriggeringPolicy&lt;E&gt; extends LifeCycle {
     <div id="client1_canonical" class="tabcontent">
       <p>Requires a server call.</p>
     </div>
+     <div id="client1_tyler" class="tabcontent"><p>Requires a server call.</p></div>
 
 		<p>
 			Note that in the above configuration scripts the values for the 
@@ -2188,6 +2208,8 @@ public interface TriggeringPolicy&lt;E&gt; extends LifeCycle {
               onclick="openTab(event, 'sslclient', 'legacy')">Legacy</button>
       <button class="tablinks" id="button_sslclient_canonical"
               onclick="openTab(event, 'sslclient', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_sslclient_tyler"
+             onclick="openTab(event, 'sslclient', 'tyler')">Tyler</button>
     </div>
 
     <div id="sslclient_legacy" class="tabcontent">
@@ -2216,6 +2238,7 @@ public interface TriggeringPolicy&lt;E&gt; extends LifeCycle {
     <div id="sslclient_canonical" class="tabcontent">
       <p>Requires a server call. Please wait a few seconds.</p>
     </div>
+     <div id="sslclient_tyler" class="tabcontent"><p>Requires a server call.</p></div>
 
     
     <p>Note that, just as in the previous example, the values for
@@ -2362,6 +2385,8 @@ public interface TriggeringPolicy&lt;E&gt; extends LifeCycle {
               onclick="openTab(event, 'server4', 'legacy')">Legacy</button>
       <button class="tablinks" id="button_server4_canonical"
               onclick="openTab(event, 'server4', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_server4_tyler"
+             onclick="openTab(event, 'server4', 'tyler')">Tyler</button>
     </div>
     
     <div id="server4_legacy" class="tabcontent">
@@ -2384,6 +2409,7 @@ public interface TriggeringPolicy&lt;E&gt; extends LifeCycle {
     <div id="server4_canonical" class="tabcontent">
       <p>Requires a server call. Please wait a few seconds.</p>
     </div>
+     <div id="server4_tyler" class="tabcontent"><p>Requires a server call.</p></div>
 
     
     <p>Note that this configuration differs from previous examples using
@@ -2405,6 +2431,8 @@ public interface TriggeringPolicy&lt;E&gt; extends LifeCycle {
               onclick="openTab(event, 'server3', 'legacy')">Legacy</button>
       <button class="tablinks" id="button_server3_canonical"
               onclick="openTab(event, 'server3', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_server3_tyler"
+             onclick="openTab(event, 'server3', 'tyler')">Tyler</button>
     </div>
 
     <div id="server3_legacy" class="tabcontent">
@@ -2433,6 +2461,7 @@ public interface TriggeringPolicy&lt;E&gt; extends LifeCycle {
     <div id="server3_canonical" class="tabcontent">
       <p>Requires a server call. Please wait a few seconds.</p>
     </div>
+     <div id="server3_tyler" class="tabcontent"><p>Requires a server call.</p></div>
     
     <p>The principal differences between this configuration and the
     previous configuration is that the appender's <em>class</em> attribute
@@ -2780,6 +2809,8 @@ public interface TriggeringPolicy&lt;E&gt; extends LifeCycle {
               onclick="openTab(event, 'mail1', 'legacy')">Legacy</button>
       <button class="tablinks" id="button_mail1_canonical"
               onclick="openTab(event, 'mail1', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_mail1_tyler"
+             onclick="openTab(event, 'mail1', 'tyler')">Tyler</button>
     </div>
     
     <div id="mail1_legacy" class="tabcontent">
@@ -2806,6 +2837,7 @@ public interface TriggeringPolicy&lt;E&gt; extends LifeCycle {
     <div id="mail1_canonical" class="tabcontent">
       <p>Requires a server call. Please wait a few seconds.</p>
     </div>
+     <div id="mail1_tyler" class="tabcontent"><p>Requires a server call.</p></div>
 
     
     <p>Before trying out <code>chapters.appenders.&#8203;mail.Email</code>
@@ -2898,6 +2930,8 @@ public interface TriggeringPolicy&lt;E&gt; extends LifeCycle {
              onclick="openTab(event, 'mail_customBufferSize', 'legacy')">Legacy</button>
      <button class="tablinks" id="button_mail_customBufferSize_canonical"
              onclick="openTab(event, 'mail_customBufferSize', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_mail_customBufferSize_tyler"
+             onclick="openTab(event, 'mail_customBufferSize', 'tyler')">Tyler</button>
    </div>
 
    <div id="mail_customBufferSize_legacy" class="tabcontent">
@@ -2925,6 +2959,7 @@ public interface TriggeringPolicy&lt;E&gt; extends LifeCycle {
    <div id="mail_customBufferSize_canonical" class="tabcontent">
      <p>Requires a server call. Please wait a few seconds.</p>
    </div>
+     <div id="mail_customBufferSize_tyler" class="tabcontent"><p>Requires a server call.</p></div>
 
    
     <h3 class="doAnchor">Triggering event</h3>
@@ -3013,6 +3048,8 @@ public class CounterBasedEvaluator extends ContextAwareBase implements EventEval
             onclick="openTab(event, 'mail3', 'legacy')">Legacy</button>
     <button class="tablinks" id="button_mail3_canonical"
             onclick="openTab(event, 'mail3', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_mail3_tyler"
+             onclick="openTab(event, 'mail3', 'tyler')">Tyler</button>
     </div>
 
     <div id="mail3_legacy" class="tabcontent">
@@ -3038,6 +3075,7 @@ public class CounterBasedEvaluator extends ContextAwareBase implements EventEval
     <div id="mail3_canonical" class="tabcontent">
       <p>Requires a server call. Please wait a few seconds.</p>
     </div>
+     <div id="mail3_tyler" class="tabcontent"><p>Requires a server call.</p></div>
 
 
     <h3 class="doAnchor" name="OnMarkerEvaluator">Marker based
@@ -3078,6 +3116,8 @@ logger.error(<b>notifyAdmin</b>,
              onclick="openTab(event, 'mailWithMarker', 'legacy')">Legacy</button>
      <button class="tablinks" id="button_mailWithMarker_canonical"
              onclick="openTab(event, 'mailWithMarker', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_mailWithMarker_tyler"
+             onclick="openTab(event, 'mailWithMarker', 'tyler')">Tyler</button>
    </div>
 
    <div id="mailWithMarker_legacy" class="tabcontent">   
@@ -3105,6 +3145,7 @@ logger.error(<b>notifyAdmin</b>,
     <div id="mailWithMarker_canonical" class="tabcontent">
       <p>Requires a server call. Please wait a few seconds.</p>
     </div>
+     <div id="mailWithMarker_tyler" class="tabcontent"><p>Requires a server call.</p></div>
     
     <p>Give it a whirl with the following command:</p>
 
@@ -3134,6 +3175,8 @@ logger.error(<b>notifyAdmin</b>,
              onclick="openTab(event, 'mailWithMarker_Janino', 'legacy')">Legacy</button>
      <button class="tablinks" id="button_mailWithMarker_Janino_canonical"
              onclick="openTab(event, 'mailWithMarker_Janino', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_mailWithMarker_Janino_tyler"
+             onclick="openTab(event, 'mailWithMarker_Janino', 'tyler')">Tyler</button>
    </div>
 
    <div id="mailWithMarker_Janino_legacy" class="tabcontent">
@@ -3157,6 +3200,7 @@ logger.error(<b>notifyAdmin</b>,
    <div id="mailWithMarker_Janino_canonical" class="tabcontent">
      <p>Requires a server call. Please wait a few seconds.</p>
    </div>
+     <div id="mailWithMarker_Janino_tyler" class="tabcontent"><p>Requires a server call.</p></div>
    
 
     <h3 class="doAnchor" name="smtpAuthentication">Authentication/STARTTLS/SSL</h3>
@@ -3185,6 +3229,8 @@ logger.error(<b>notifyAdmin</b>,
               onclick="openTab(event, 'gmailSSL', 'legacy')">Legacy</button>
       <button class="tablinks" id="button_gmailSSL_canonical"
               onclick="openTab(event, 'gmailSSL', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_gmailSSL_tyler"
+             onclick="openTab(event, 'gmailSSL', 'tyler')">Tyler</button>
     </div>
     
     <div id="gmailSSL_legacy" class="tabcontent">
@@ -3215,6 +3261,7 @@ logger.error(<b>notifyAdmin</b>,
     <div id="gmailSSL_canonical" class="tabcontent">
       <p>Requires a server call. Please wait a few seconds.</p>
     </div>
+     <div id="gmailSSL_tyler" class="tabcontent"><p>Requires a server call.</p></div>
     
     <h3 class="doAnchor" name="gmailSTARTTLS">SMTPAppender for Gmail
     (STARTTLS)</h3>
@@ -3230,6 +3277,8 @@ logger.error(<b>notifyAdmin</b>,
               onclick="openTab(event, 'gmailSTARTTLSExample', 'legacy')">Legacy</button>
       <button class="tablinks" id="button_gmailSTARTTLSExample_canonical"
               onclick="openTab(event, 'gmailSTARTTLSExample', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_gmailSTARTTLSExample_tyler"
+             onclick="openTab(event, 'gmailSTARTTLSExample', 'tyler')">Tyler</button>
     </div>
 
     <div id="gmailSTARTTLSExample_legacy" class="tabcontent">    
@@ -3261,6 +3310,7 @@ logger.error(<b>notifyAdmin</b>,
     <div id="gmailSTARTTLSExample_canonical" class="tabcontent">
       <p>Requires a server call. Please wait a few seconds.</p>
     </div>
+     <div id="gmailSTARTTLSExample_tyler" class="tabcontent"><p>Requires a server call.</p></div>
 
     <h3 class="doAnchor" name="smtpDiscriminator">SMTPAppender with MDCDiscriminator</h3>
 
@@ -3289,6 +3339,8 @@ logger.error(<b>notifyAdmin</b>,
               onclick="openTab(event, 'mailWithMDCBasedDiscriminator', 'legacy')">Legacy</button>
       <button class="tablinks" id="button_mailWithMDCBasedDiscriminator_canonical"
               onclick="openTab(event, 'mailWithMDCBasedDiscriminator', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_mailWithMDCBasedDiscriminator_tyler"
+             onclick="openTab(event, 'mailWithMDCBasedDiscriminator', 'tyler')">Tyler</button>
     </div>
 
     <div id="mailWithMDCBasedDiscriminator_legacy" class="tabcontent">
@@ -3320,6 +3372,7 @@ logger.error(<b>notifyAdmin</b>,
     <div id="mailWithMDCBasedDiscriminator_canonical" class="tabcontent">
       <p>Requires a server call. Please wait a few seconds.</p>
     </div>
+     <div id="mailWithMDCBasedDiscriminator_tyler" class="tabcontent"><p>Requires a server call.</p></div>
 
 
     <p>Thus, each outgoing email generated by
@@ -3705,6 +3758,8 @@ logger.error(<b>notifyAdmin</b>,
             onclick="openTab(event, 'append_toMySQL_with_driverManager', 'legacy')">Legacy</button>
       <button class="tablinks" id="button_append_toMySQL_with_driverManager_canonical"
               onclick="openTab(event, 'append_toMySQL_with_driverManager', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_append_toMySQL_with_driverManager_tyler"
+             onclick="openTab(event, 'append_toMySQL_with_driverManager', 'tyler')">Tyler</button>
     </div>
 
     <div id="append_toMySQL_with_driverManager_legacy" class="tabcontent">
@@ -3729,6 +3784,7 @@ logger.error(<b>notifyAdmin</b>,
     <div id="append_toMySQL_with_driverManager_canonical" class="tabcontent">
       <p>Requires a server call. Please wait a few seconds.</p>
     </div>
+     <div id="append_toMySQL_with_driverManager_tyler" class="tabcontent"><p>Requires a server call.</p></div>
 
     <p>The correct driver must be declared. Here, the
     <code>com.mysql.jdbc.Driver</code> class is used. The <span
@@ -3799,6 +3855,8 @@ logger.error(<b>notifyAdmin</b>,
               onclick="openTab(event, 'append_with_datasource', 'legacy')">Legacy</button>
       <button class="tablinks" id="button_append_with_datasource_canonical"
               onclick="openTab(event, 'append_with_datasource', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_append_with_datasource_tyler"
+             onclick="openTab(event, 'append_with_datasource', 'tyler')">Tyler</button>
     </div>
 
     <div id="append_with_datasource_legacy" class="tabcontent">
@@ -3832,6 +3890,7 @@ logger.error(<b>notifyAdmin</b>,
     <div id="append_with_datasource_canonical" class="tabcontent">
       <p>Requires a server call. Please wait a few seconds.</p>
     </div>
+     <div id="append_with_datasource_tyler" class="tabcontent"><p>Requires a server call.</p></div>
     
     <p>Note that in this configuration sample, we make heavy use of
     substitution variables.  They are sometimes handy when connection
@@ -3921,6 +3980,8 @@ logger.error(<b>notifyAdmin</b>,
              onclick="openTab(event, 'append_via_jndi', 'legacy')">Legacy</button>
      <button class="tablinks" id="button_append_via_jndi_canonical"
              onclick="openTab(event, 'append_via_jndi', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_append_via_jndi_tyler"
+             onclick="openTab(event, 'append_via_jndi', 'tyler')">Tyler</button>
    </div>
 
    <div id="append_via_jndi_legacy" class="tabcontent">
@@ -3942,6 +4003,7 @@ logger.error(<b>notifyAdmin</b>,
    <div id="append_via_jndi_canonical" class="tabcontent">
      <p>Requires a server call. Please wait a few seconds.</p>
    </div>
+     <div id="append_via_jndi_tyler" class="tabcontent"><p>Requires a server call.</p></div>
 
 		<p>
 			Note that this class will obtain an
@@ -3979,6 +4041,8 @@ logger.error(<b>notifyAdmin</b>,
               onclick="openTab(event, 'toMySQL_with_datasource', 'legacy')">Legacy</button>
       <button class="tablinks" id="button_toMySQL_with_datasource_canonical"
               onclick="openTab(event, 'toMySQL_with_datasource', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_toMySQL_with_datasource_tyler"
+             onclick="openTab(event, 'toMySQL_with_datasource', 'tyler')">Tyler</button>
     </div>
 
     <div id="toMySQL_with_datasource_legacy" class="tabcontent">        
@@ -4005,6 +4069,7 @@ logger.error(<b>notifyAdmin</b>,
     <div id="toMySQL_with_datasource_canonical" class="tabcontent">
       <p>Requires a server call. Please wait a few seconds.</p>
     </div>
+     <div id="toMySQL_with_datasource_tyler" class="tabcontent"><p>Requires a server call.</p></div>
 
     
     <p>With this configuration file, sending 500 logging events to a
@@ -4030,6 +4095,8 @@ logger.error(<b>notifyAdmin</b>,
               onclick="openTab(event, 'toMySQL_ds_pooling', 'legacy')">Legacy</button>
       <button class="tablinks" id="button_toMySQL_ds_pooling_canonical"
               onclick="openTab(event, 'toMySQL_ds_pooling', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_toMySQL_ds_pooling_tyler"
+             onclick="openTab(event, 'toMySQL_ds_pooling', 'tyler')">Tyler</button>
     </div>
 
     <div id="toMySQL_ds_pooling_legacy" class="tabcontent">
@@ -4057,6 +4124,7 @@ logger.error(<b>notifyAdmin</b>,
     <div id="toMySQL_ds_pooling_canonical" class="tabcontent">
       <p>Requires a server call. Please wait a few seconds.</p>
     </div>
+     <div id="toMySQL_ds_pooling_tyler" class="tabcontent"><p>Requires a server call.</p></div>
 
 
 
@@ -4175,6 +4243,8 @@ logger.error(<b>notifyAdmin</b>,
               onclick="openTab(event, 'syslog', 'legacy')">Legacy</button>
       <button class="tablinks" id="button_syslog_canonical"
               onclick="openTab(event, 'syslog', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_syslog_tyler"
+             onclick="openTab(event, 'syslog', 'tyler')">Tyler</button>
     </div>
 
     <div id="syslog_legacy" class="tabcontent">
@@ -4196,6 +4266,7 @@ logger.error(<b>notifyAdmin</b>,
     <div id="syslog_canonical" class="tabcontent">
       <p>Requires a server call. Please wait a few seconds.</p>
     </div>
+     <div id="syslog_tyler" class="tabcontent"><p>Requires a server call.</p></div>
     
 
     <p>When testing this configuration, you should verify that the
@@ -4577,6 +4648,8 @@ import static ch.qos.logback.classic.&#8203;ClassicConstants.&#8203;FINALIZE_SES
               onclick="openTab(event, 'asyncAppender', 'legacy')">Legacy</button>
       <button class="tablinks" id="button_asyncAppender_canonical"
               onclick="openTab(event, 'asyncAppender', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_asyncAppender_tyler"
+             onclick="openTab(event, 'asyncAppender', 'tyler')">Tyler</button>
     </div>
 
     <div id="asyncAppender_legacy" class="tabcontent">
@@ -4603,6 +4676,7 @@ import static ch.qos.logback.classic.&#8203;ClassicConstants.&#8203;FINALIZE_SES
     <div id="asyncAppender_canonical" class="tabcontent">
       <p>Requires a server call. Please wait a few seconds.</p>
     </div>
+     <div id="asyncAppender_tyler" class="tabcontent"><p>Requires a server call.</p></div>
 
 
     <h3 class="doAnchor" name="WriteYourOwnAppender">Writing your own

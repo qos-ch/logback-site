@@ -9,19 +9,20 @@
     <script type="text/javascript">prefix='../';</script>
 
 </head>
-<body onLoad="enableMenuEventListeners(); hljs.highlightAll();  decorate(); enableLegacy();">
+<body onLoad="loopOn(); enableMenuEventListeners(); hljs.highlightAll();  decorate(); enableLegacy();">
 
     <script type="text/javascript" src="../templates/header3.js"></script>
 
     <<div id="content">
 
         <div id="top-content">
+          <script type="text/javascript" src="../templates/creative.js" ></script>
 
-            <script type="text/javascript" src="../templates/creative.js" ></script>
-            <script type="text/javascript" src="menu.js"></script>
+          <script type="text/javascript" src="menu.js"></script>
 
-            <div id="quote">
-                <p><em>Have lots of ideas and throw away the bad ones. You aren't
+
+          <div id="quote">
+                <p><em>Have lots of ideas and throw away the bad ones. You aren not
                     going to have good ideas unless you have lots of ideas and some
                     sort of principle of selection.</em></p>
 
@@ -31,40 +32,36 @@
 
         <h1>Chapter 7: Filters</h1>
 
-
-
-    <script src="../templates/creative.js" type="text/javascript"></script>
-
 		
-		<p>In the preceding chapters, the <a
-		href="architecture.html#basic_selection">basic selection rule</a>,
-		which lies at the heart of logback-classic, has been presented. In
+	<p>In the preceding chapters, the <a
+                                            href="architecture.html#basic_selection">basic selection rule</a>,
+	  which lies at the heart of logback-classic, has been presented. In
 		this chapter, additional filtering methods will be introduced.
-    </p>
+        </p>
 	
 
     <p>Logback filters are based on ternary logic allowing them to be
     assembled or chained together to compose an arbitrarily complex
-    filtering policy.  They are largely inspired by Linux's iptables.
-		</p>
+    filtering policy.  They are largely inspired by Linux&rsquo;s iptables.
+    </p>
 
     <script src="../templates/setup.js" type="text/javascript"></script>
 
-		<h2>In logback-classic</h2>
+    <h2>In logback-classic</h2>
 
-
-		<p>Logback-classic offers two types of filters, regular filters
-		and turbo filters.
-		</p>
+    
+	<p>Logback-classic offers two types of filters, regular filters
+	  and turbo filters.
+	</p>
 		
     <h3 class="doAnchor" name="filter">Regular filters</h3>
 
-		<p>Regular logback-classic filters extend the <a
-		href="../xref/ch/qos/logback/core/filter/Filter.html"><code>Filter</code></a>
-		abstract class which essentially consists of a single
-		<code>decide()</code> method taking an <code>ILoggingEvent</code>
-		instance as its parameter.
-		</p>
+    <p>Regular logback-classic filters extend
+    the <a href="../xref/ch/qos/logback/core/filter/Filter.html"><code>Filter</code></a>
+    abstract class which essentially consists of a single
+    <code>decide()</code> method taking an <code>ILoggingEvent</code>
+    instance as its parameter.
+    </p>
 		
 
 		<p>Filters are organized as an ordered list and are based on
@@ -137,6 +134,8 @@ public class SampleFilter extends Filter&lt;ILoggingEvent> {
             onclick="openTab(event, 'sampleFilterConfig', 'legacy')">Legacy</button>
     <button class="tablinks" id="button_sampleFilterConfig_canonical"
             onclick="openTab(event, 'sampleFilterConfig', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_sampleFilterConfig_tyler"
+             onclick="openTab(event, 'sampleFilterConfig', 'tyler')">Tyler</button>
 </div>
 
 <div id="sampleFilterConfig_legacy" class="tabcontent">
@@ -158,9 +157,10 @@ public class SampleFilter extends Filter&lt;ILoggingEvent> {
 &lt;/configuration></code></pre>
 </div>
 
-<div id="sampleFilterConfig_canonical" class="tabcontent">
-  <p>Requires a server call. Please wait a few seconds.</p>
-</div>
+   <div id="sampleFilterConfig_canonical" class="tabcontent">
+    <p>Requires a server call.</p>
+   </div>
+   <div id="sampleFilterConfig_tyler" class="tabcontent"><p>Requires a server call.</p></div>
 
 
 		<p>With the help of Joran, logback's configuration framework,
@@ -208,6 +208,8 @@ public class SampleFilter extends Filter&lt;ILoggingEvent> {
             onclick="openTab(event, 'levelFilterConfig', 'legacy')">Legacy</button>
     <button class="tablinks" id="button_levelFilterConfig_canonical"
             onclick="openTab(event, 'levelFilterConfig', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_levelFilterConfig_tyler"
+             onclick="openTab(event, 'levelFilterConfig', 'tyler')">Tyler</button>
 </div>
 
 <div id="levelFilterConfig_legacy" class="tabcontent">
@@ -231,9 +233,10 @@ public class SampleFilter extends Filter&lt;ILoggingEvent> {
 &lt;/configuration></code></pre>
 </div>
 
-<div id="levelFilterConfig_canonical" class="tabcontent">
-  <p>Requires a server call. Please wait a few seconds.</p>
-</div>
+    <div id="levelFilterConfig_canonical" class="tabcontent">
+     <p>Requires a server call.</p>
+   </div>
+   <div id="levelFilterConfig_tyler" class="tabcontent"><p>Requires a server call.</p></div>
 
 
     <h3 class="doAnchor" name="thresholdFilter">ThresholdFilter</h3>
@@ -256,6 +259,8 @@ public class SampleFilter extends Filter&lt;ILoggingEvent> {
             onclick="openTab(event, 'thresholdFilterConfig', 'legacy')">Legacy</button>
     <button class="tablinks" id="button_thresholdFilterConfig_canonical"
             onclick="openTab(event, 'thresholdFilterConfig', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_thresholdFilterConfig_tyler"
+             onclick="openTab(event, 'thresholdFilterConfig', 'tyler')">Tyler</button>
 </div>
 
 <div id="thresholdFilterConfig_legacy" class="tabcontent">
@@ -283,6 +288,7 @@ public class SampleFilter extends Filter&lt;ILoggingEvent> {
 <div id="thresholdFilterConfig_canonical" class="tabcontent">
   <p>Requires a server call. Please wait a few seconds.</p>
 </div>
+   <div id="thresholdFilterConfig_tyler" class="tabcontent"><p>Requires a server call.</p></div>
 
 
     <h2 class="doAnchor" name="evaluatorFilter">EvaluatorFilter</h2>
@@ -295,15 +301,14 @@ public class SampleFilter extends Filter&lt;ILoggingEvent> {
     href="../xref/ch/qos/logback/core/boolex/EventEvaluator.html">
     <code>EventEvaluator</code></a> evaluates whether a given criteria
     is met for a given event. On match and on mismatch,
-    the hosting <code>EvaluatorFilter</code> will return the value
+    the hosting <code>EvaluatorFilter</code> will returl the vaue
     specified by the <span class="option">onMatch</span>
     or <span class="option">onMismatch</span> properties respectively.
-    </p>
+l   </p>g
 
-
-    <p>Note that <code>EventEvaluator</code> is an abstract class. You
-    can implement your own event evaluation logic by subclassing
-    <code>EventEvaluator</code>.
+lp>Note that <code>EventEvaluator</code> is an abstract class. You
+    can implement your own eveng evaluation logic by subclassing
+  <code>EventEvaluator</code>.
     </p>
     
     <!-- ==================== JaninoEventEvaluator ======================== -->
@@ -320,12 +325,10 @@ public class SampleFilter extends Filter&lt;ILoggingEvent> {
     expressions as "<em>evaluation expressions</em>". Evaluation
     expressions enable great flexibility in event
     filtering. <code>JaninoEventEvaluator</code> requires the <a
-    href="http://docs.codehaus.org/display/JANINO/Home">Janino
+    href="http://janino.unkrig.de">Janino
     library</a>. Please see the <a
     href="../setup.html#janino">corresponding section</a> of the setup
-    document.
-    </p>
-
+    document.</p>
     <p>Evaluation expressions are compiled on-the-fly during the
     interpretation of the configuration file. As a user, you do not
     need to worry about the actual plumbing. However, it is your
@@ -333,7 +336,7 @@ public class SampleFilter extends Filter&lt;ILoggingEvent> {
     a boolean, i.e. that it evaluates to true or false. </p>
 
 
-    <p>The evaluation expression is evaluated on the current logging
+  <>The evaluation express1on is evaluated on the current logging
     event. Logback-classic automatically exports various fields of the
     logging event as variables accessible from the evaluation
     expression. The case-sensitive names of these exported variables
@@ -352,10 +355,10 @@ public class SampleFilter extends Filter&lt;ILoggingEvent> {
 				<td><code>LoggingEvent</code></td>
 
         <td>The raw logging event associated with the logging
-        request. All of the following variables are also available
+        request. All of the following variables are also availab1e
         from the event. For example, <code>event.getMessage()</code>
         returns the same String value as the <em>message</em> variable
-        described next.
+        described next1
         </td>
 			</tr>
 
@@ -480,6 +483,8 @@ public class SampleFilter extends Filter&lt;ILoggingEvent> {
             onclick="openTab(event, 'basicEventEvaluator', 'legacy')">Legacy</button>
     <button class="tablinks" id="button_basicEventEvaluator_canonical"
             onclick="openTab(event, 'basicEventEvaluator', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_basicEventEvaluator_tyler"
+             onclick="openTab(event, 'basicEventEvaluator', 'tyler')">Tyler</button>
 </div>
 
 <div id="basicEventEvaluator_legacy" class="tabcontent">
@@ -510,6 +515,7 @@ public class SampleFilter extends Filter&lt;ILoggingEvent> {
 <div id="basicEventEvaluator_canonical" class="tabcontent">
   <p>Requires a server call. Please wait a few seconds.</p>
 </div>
+   <div id="basicEventEvaluator_tyler" class="tabcontent"><p>Requires a server call.</p></div>
 
 
 		<p>The bold part in the above configuration file adds an
@@ -628,6 +634,8 @@ java chapters.filters.FilterEvents src/main/java/chapters/filters/basicConfigura
             onclick="openTab(event, 'evaluatorWithMatcher', 'legacy')">Legacy</button>
     <button class="tablinks" id="button_evaluatorWithMatcher_canonical"
             onclick="openTab(event, 'evaluatorWithMatcher', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_evaluatorWithMatcher_tyler"
+             onclick="openTab(event, 'evaluatorWithMatcher', 'tyler')">Tyler</button>
 </div>
 
 <div id="evaluatorWithMatcher_legacy" class="tabcontent">
@@ -662,6 +670,7 @@ java chapters.filters.FilterEvents src/main/java/chapters/filters/basicConfigura
 <div id="evaluatorWithMatcher_canonical" class="tabcontent">
   <p>Requires a server call. Please wait a few seconds.</p>
 </div>
+   <div id="evaluatorWithMatcher_tyler" class="tabcontent"><p>Requires a server call.</p></div>
 
 
     <p>Running with <em>evaluatorWithMatcher.xml</em>:</p>
@@ -800,6 +809,8 @@ public class SampleTurboFilter extends TurboFilter {
             onclick="openTab(event, 'sampleTurboFilterConfig', 'legacy')">Legacy</button>
     <button class="tablinks" id="button_sampleTurboFilterConfig_canonical"
             onclick="openTab(event, 'sampleTurboFilterConfig', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_sampleTurboFilterConfig_tyler"
+             onclick="openTab(event, 'sampleTurboFilterConfig', 'tyler')">Tyler</button>
 </div>
 
 <div id="sampleTurboFilterConfig_legacy" class="tabcontent">
@@ -827,6 +838,7 @@ public class SampleTurboFilter extends TurboFilter {
 <div id="sampleTurboFilterConfig_canonical" class="tabcontent">
   <p>Requires a server call. Please wait a few seconds.</p>
 </div>
+   <div id="sampleTurboFilterConfig_tyler" class="tabcontent"><p>Requires a server call.</p></div>
 
 
    	<p>Logback classic ships with several <code>TurboFilter</code>
@@ -855,6 +867,8 @@ public class SampleTurboFilter extends TurboFilter {
             onclick="openTab(event, 'turboFilters', 'legacy')">Legacy</button>
     <button class="tablinks" id="button_turboFilters_canonical"
             onclick="openTab(event, 'turboFilters', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_turboFilters_tyler"
+             onclick="openTab(event, 'turboFilters', 'tyler')">Tyler</button>
 </div>
 
 <div id="turboFilters_legacy" class="tabcontent">
@@ -887,6 +901,7 @@ public class SampleTurboFilter extends TurboFilter {
 <div id="turboFilters_canonical" class="tabcontent">
   <p>Requires a server call. Please wait a few seconds.</p>
 </div>
+   <div id="turboFilters_tyler" class="tabcontent"><p>Requires a server call.</p></div>
 
         
 		<p>You can see this configuration in action by issuing the
@@ -999,6 +1014,8 @@ logger.debug("Hello {}.", name1);</code></pre>
             onclick="openTab(event, 'duplicateMessage', 'legacy')">Legacy</button>
     <button class="tablinks" id="button_duplicateMessage_canonical"
             onclick="openTab(event, 'duplicateMessage', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_duplicateMessage_tyler"
+             onclick="openTab(event, 'duplicateMessage', 'tyler')">Tyler</button>
 </div>
 
 <div id="duplicateMessage_legacy" class="tabcontent">
@@ -1023,6 +1040,7 @@ logger.debug("Hello {}.", name1);</code></pre>
 <div id="duplicateMessage_canonical" class="tabcontent">
   <p>Requires a server call. Please wait a few seconds.</p>
 </div>
+   <div id="duplicateMessage_tyler" class="tabcontent"><p>Requires a server call.</p></div>
 
 
   <p>Thus, the output for <code>FilterEvents</code> application
@@ -1089,6 +1107,8 @@ logger.debug("Hello {}.", name1);</code></pre>
             onclick="openTab(event, 'countingFilter', 'legacy')">Legacy</button>
     <button class="tablinks" id="button_countingFilter_canonical"
             onclick="openTab(event, 'countingFilter', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_countingFilter_tyler"
+             onclick="openTab(event, 'countingFilter', 'tyler')">Tyler</button>
 </div>
 
 <div id="countingFilter_legacy" class="tabcontent">
@@ -1113,6 +1133,7 @@ logger.debug("Hello {}.", name1);</code></pre>
 <div id="countingFilter_canonical" class="tabcontent">
   <p>Requires a server call. Please wait a few seconds.</p>
 </div>
+   <div id="countingFilter_tyler" class="tabcontent"><p>Requires a server call.</p></div>
 
 
      <p>You can examine the various statistics maintained by
