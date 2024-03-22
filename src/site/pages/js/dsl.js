@@ -5,7 +5,6 @@ var xml2JavaURL ='https://logback.qos.ch/translator/rest/dsl/xml2Java/asJSON';
 //var xml2CanonURL = 'http://localhost:8080/translator/rest/dsl/xml2Canon/asJSON';
 //var xml2JavaURL = 'http://localhost:8080/translator/rest/dsl/xml2Java/asJSON';
 
-
 const successClass = "success";
 
 function loopOn() {
@@ -98,7 +97,8 @@ function sanitize(text) {
 
 
     var l1 = inputText.length;
-    inputText = inputText.replace(/&#8203;/gi, '');
+    inputText = inputText.replace(/\u200B/g,'');
+    //inputText = inputText.replace(/8203;/gi, '');
     var l2 = inputText.length;
 
     inputText = inputText.replace(/<span\s+class="[^"]*">/gi, '');
