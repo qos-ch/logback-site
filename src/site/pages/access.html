@@ -38,19 +38,21 @@
        scope of HTTP-access logging. </p>
 
     <p>It should be noted that while logback-access requires
-    logback-core, it is independent of logback-classic as well as
-    slf4j. Just as importantly, logback-access artifact must be
-    installed at the container level, not at web-application level. It
-    does not make sense to bundle logback-access artifacts at the
-    level of a web-application.
+       logback-core, it is independent of logback-classic as well as
+       slf4j. Just as importantly, logback-access artifact must be
+       installed at the container level, not at web-application
+       level. It does not make sense to
+       bundle <em>logback-access.jar</em> at the level of a
+       web-application.
     </p>
 
 
     <h1 class="doAnchor" name="common">Logback-acess common</h1>
 
     <p>There is much code common to both Tomcat and Jetty access
-    logging. This code is located in a new module called "common"
-    having the following maven coordinates:</p>
+    logging. This code is located in a new module callled
+    "ch.qos.logback.access:common" having the following maven
+    coordianes:</p>
 
     <pre>
   &lt;dependency>
@@ -59,8 +61,8 @@
     &lt;version>${latest.logback-access.version}&lt;/version>
   &lt;/dependency>    </pre>
 
-    <p>The "ch.qos.logback.access:common" module relies on the
-    "logback-core" module with these Maven coordinates:</p>
+    <p>The "ch.qos.logback.access:common" module relies on
+    "ch.qos.logback:logback-core" module:</p>
 
     <pre>
   &lt;dependency>
@@ -69,11 +71,150 @@
     &lt;version>${latest.stable.jakarta.version}&lt;/version>
   &lt;/dependency>    </pre>
     
+    
+    
     <h1 class="doAnchor" name="tomcat">Logback-access under Tomcat</h1>
 
-    <p>Logback-access supports both Tomcat versions 10 and 11 with
-    module called "tomcat" requiring the "common" artifact mentioned
-    above.</p>
+    <p>Logback-access supports both Tomcat versions 10 and 11 with a
+    module called "ch.qos.logback.access:tomcat", having the following
+    coordinates:</p>
+
+    <pre>
+  &lt;dependency> 
+    &lt;groupId>ch.qos.logback.access&lt;/groupId>
+    &lt;artifactId>tomcat&lt;/artifactId>
+    &lt;version>${latest.logback-access.version}&lt;/version>      
+  &lt;/dependency></pre>
+    
+    <p>To use logback-access with Tomcat, after downloading the
+    aforementioned artifactsw, place the files
+    <em>ch.qos.logback:logback-core-${project.version}.jar</em> and
+    <em>ch.qos.logback.access:common-${latest.logback-access.version}.jar</em>
+    <em>ch.qos.logback.access:tomcat-${latest.logback-access.version}.jar</em>
+    under the $TOMCAT_HOME/lib/ directory, where $TOMCAT_HOME is the
+    folder where you have installed Tomcat.
+    </p>
+
+
+    <h2>LogbackValve</h2>
+
+    <p>The
+    <code>ch.qos.logback.access.&#8203;tomcat.LogbackValve</code>
+    class extends Tomcat's <code><a
+    href="http://tomcat.apache.org/tomcat-11.0-doc/api/org/apache/catalina/valves/ValveBase.html">
+    ValveBase</a></code> class. Valves are usually associated together
+    to form a processing pipeline.
+    </p>
+
+    <p>To configure Tomcat in order to use <code>LogbackValve</code>,
+        add the following lines to the tomcat server configuration file,
+        namely <em>$TOMCAT_HOME/conf/&#8203;server.xml</em>:
+    </p>
+    <pre class="source">&lt;Valve className="ch.qos.&#8203;logback.access.&#8203;tomcat.LogbackValve"/></pre>
+
+    <p>This line is usually nested within an <code>&lt;Engine></code>
+        or <code>&lt;Host></code> element.
+    </p>
+
+    <p>By default, <code>LogbackValve</code> looks for a configuration
+        file called <em>logback-access.xml</em>, in the same folder where
+        <em>server.xml</em> is located, that is in
+        <em>$TOMCAT_HOME/conf/</em>. This configuration file contains
+        directives for configuring logback-access components. It is used
+        to specify appenders where the logging requests will be
+        sent. Please refer to the <a href="#configuration">logback-access
+            configuration section</a> further below.
+    </p>
+
+    <p>If the <code>LogbackValve</code> is not able to read a configuration file
+        from the filesystem, it will attempt to load it as a resource (i.e.
+        getClassLoader().&#8203;getResourceAsStream(&#8203;)). This might be helpful in scenarios
+        where your application is embedding Tomcat (e.g. using Spring Boot.) As
+        mentioned above, if no filename is set, it defaults to looking for a
+        resource named logback-access.xml.
+    </p>
+
+    <p>In order to help with troubleshooting, by default, the
+        <code>LogbackValve</code> will print its internal status at its
+        initialization. Typical output would look as:
+    </p>
+
+    <p class="source">21:56:09,921 |-INFO in c.q.lb.access.j.&#8203;a.ConfigurationAction - Ignoring debug attribute.
+        21:56:09,921 |-INFO in c.q.lb.core.j.a.&#8203;AppenderAction - About to instantiate appender of type
+        [ch.qos.logback.&#8203;core.ConsoleAppender]
+        21:56:09,921 |-INFO in c.q.lb.core.j.a.&#8203;AppenderAction - Naming appender as [STDOUT]
+        21:56:10,015 |-INFO in c.q.lb.core.j.a.&#8203;AppenderAction - Popping appender named [STDOUT] from the object stack
+        21:56:10,015 |-INFO in c.q.lb.core.j.a.&#8203;AppenderRefAction - Attaching appender named [STDOUT] to
+        ch.qos.logback.access.&#8203;tomcat.LogbackValve[Catalina]
+        21:56:10,015 |-INFO in c.q.lb.access.j.&#8203;a.ConfigurationAction - End of configuration.</p>
+
+    <p>It is possible to override default status printing by specifying
+        the "quiet" attribute in the <code>Valve</code>
+        element. Similarly, it is also possible to set the filename for
+        the logback-access configuration file. Here is an example.
+    </p>
+
+    <pre><code>&lt;Valve className="ch.qos.&#8203;logback.access.&#8203;tomcat.LogbackValve"
+        quiet="true" filename="c:/my-logback-access.&#8203;xml"/></code></pre>
+
+    <h3 class="doAnchor" name="viewingStatusMessages">Viewing status messages</h3>
+
+    <p>Logback-access ships with a servlet called
+        <code>ViewStatusMessagesServlet</code>. This servlet prints the
+        internal status messages of the <code>LogbackValve</code> as an
+        HTML table. Here is sample output.
+    </p>
+
+
+    <a href="images/lbAccessStatus.jpg">
+        <img src="images/lbAccessStatus.jpg" alt="click to enlarge" width="90%"/>
+    </a>
+
+    <p>To add this servlet to your web-application, add the following
+        lines to its <em>WEB-INF/web.xml</em> file.</p>
+
+    <pre><code>  &lt;servlet>
+    &lt;servlet-name>AccessViewStatusMessages&lt;/&#8203;servlet-name>
+    &lt;servlet-class>ch.qos.logback.access.&#8203;ViewStatusMessagesServlet&lt;/&#8203;servlet-class>
+  &lt;/servlet>
+
+  &lt;servlet-mapping>
+    &lt;servlet-name>AccessViewStatusMessages&lt;/&#8203;servlet-name>
+    &lt;url-pattern>/lbAccessStatus&lt;/&#8203;url-pattern>
+  &lt;/servlet-mapping></code></pre>
+
+    <p>The <code>ViewStatusMessages</code> servlet will available
+        under the URL <code>http://host/yourWebapp/lbAccessStatus</code>
+    </p>
+
+
+    <h1 class="doAnchor" name="jetty">Logback-access under Jetty</h1>
+
+    <p>Logback-access supports both Jetty version 11 and 12. However,
+    each version of Jetty requires a different artifact.
+    </p>
+
+    <p>The artifact for Jetty 11 is:</p>
+
+    <pre>
+  &lt;dependency>
+    &lt;groupId>ch.qos.logback.access&lt;/groupId>
+    &lt;artifactId>jetty11&lt;/artifactId>
+    &lt;version>${latest.logback-access.version}&lt;/version>
+  &lt;/dependency>    </pre>
+
+    <p>The artifact for Jetty 12 is:</p>
+
+    <pre>
+  &lt;dependency>
+    &lt;groupId>ch.qos.logback.access&lt;/groupId>
+    &lt;artifactId>jetty12&lt;/artifactId>
+    &lt;version>${latest.logback-access.version}&lt;/version>
+  &lt;/dependency> </pre>
+
+
+    <p>Both versions require logback-core and "ch.qos.logback.access:common
+    artifacts mentioned above.</p>
  
 
     <h3>Logback's implementation of
