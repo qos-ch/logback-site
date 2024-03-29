@@ -9,7 +9,7 @@
     <script type="text/javascript">prefix='../';</script>
 
   </head>
-  <body onLoad="loopOn(); enableMenuEventListeners(); hljs.highlightAll();  decorate(); addClipboardListener(); enableLegacy();">
+  <body onLoad="enableMenuEventListeners(); hljs.highlightAll();  decorate(); addClipboardListener(); enableLegacy();">
 
 
       <script type="text/javascript" src="../templates/header3.js"></script>
@@ -438,109 +438,108 @@ WARN  [main]: Message 2</p>
         <th>Effect</th>
       </tr>
 
-			<tr>
-				<td class="word" name="logger">
-          <a name="logger" href="#logger"><span class="anchor"/></a>
-					<b>c</b>{<em>length</em>} <br />
-					<b>lo</b>{<em>length</em>} <br />
-					<b>logger</b>{<em>length</em>} <br />
-				</td>
+        <tr>
+	  <td class="word" name="logger">
+	    <b>c</b>{<em>length</em>} <br />
+	    <b>lo</b>{<em>length</em>} <br />
+	    <b>logger</b>{<em>length</em>} <br />
+	  </td>
 
-				<td>
-          Outputs the name of the logger at the origin of the logging
-          event.
+	  <td>
+          <p>Outputs the name of the logger at the origin of the
+          logging event.</p>
 
-					<p>This conversion word takes an integer as its first and
-					only option. The converter's abbreviation algorithm will
-					shorten the logger name, usually without significant loss of
-					meaning. Setting the value of length option to zero
-					constitutes an exception. It will cause the conversion word
-					to return the sub-string right to the rightmost dot
-					character in the logger name. The next table provides
-					examples of the abbreviation algorithm in action.
+	  <p>This conversion word takes an integer as its first and
+	  only option. The converter's abbreviation algorithm will
+	  shorten the logger name, usually without significant loss of
+	  meaning. Setting the value of length option to zero
+	  constitutes an exception. It will cause the conversion word
+	  to return the sub-string right to the rightmost dot
+	  character in the logger name. The next table provides
+	  examples of the abbreviation algorithm in action.
           </p>
 
-					<table class="bodyTable dark" border="0" cellpadding="8">
-						<tr>
-							<th>Conversion specifier</th>
-							<th>Logger name</th>
-							<th>Result</th>
-						</tr>
-						<tr>
-							<td>%logger</td>
-							<td>mainPackage.sub.sample.Bar</td>
-							<td>mainPackage.sub.sample.Bar</td>
-						</tr>
-
+	  <table class="bodyTable dark" border="0" cellpadding="8">
+	    <tr>
+	      <th>Conversion specifier</th>
+	      <th>Logger name</th>
+	      <th>Result</th>
+	    </tr>
+	    <tr>
+	      <td>%logger</td>
+	      <td>mainPackage.sub.sample.Bar</td>
+	      <td>mainPackage.sub.sample.Bar</td>
+	    </tr>
+            
             <tr>
-							<td>%logger{0}</td>
-							<td>mainPackage.sub.sample.Bar</td>
-							<td>Bar</td>
-						</tr>
-
-						<tr>
-							<td>%logger{5}</td>
-							<td>mainPackage.sub.sample.Bar</td>
-							<td>m.s.s.Bar</td>
-						</tr>
-
-						<tr>
-							<td>%logger{10}</td>
-							<td>mainPackage.sub.sample.Bar</td>
-							<td>m.s.s.Bar</td>
-						</tr>
-
-						<tr>
-							<td>%logger{15}</td>
-							<td>mainPackage.sub.sample.Bar</td>
-							<td>m.s.sample.Bar</td>
-						</tr>
-
-						<tr>
-							<td>%logger{16}</td>
-							<td>mainPackage.sub.sample.Bar</td>
-							<td>m.sub.sample.Bar</td>
-						</tr>
-
-						<tr>
-							<td>%logger{26}</td>
-							<td>mainPackage.sub.sample.Bar</td>
-							<td>mainPackage.sub.sample.Bar</td>
-						</tr>
-					</table>
+	      <td>%logger{0}</td>
+	      <td>mainPackage.sub.sample.Bar</td>
+	      <td>Bar</td>
+	    </tr>
+            
+	    <tr>
+	      <td>%logger{5}</td>
+	      <td>mainPackage.sub.sample.Bar</td>
+	      <td>m.s.s.Bar</td>
+	    </tr>
+            
+	    <tr>
+	      <td>%logger{10}</td>
+	      <td>mainPackage.sub.sample.Bar</td>
+	      <td>m.s.s.Bar</td>
+	    </tr>
+            
+	    <tr>
+	      <td>%logger{15}</td>
+	      <td>mainPackage.sub.sample.Bar</td>
+	      <td>m.s.sample.Bar</td>
+	    </tr>
+            
+	    <tr>
+	      <td>%logger{16}</td>
+	      <td>mainPackage.sub.sample.Bar</td>
+	      <td>m.sub.sample.Bar</td>
+	    </tr>
+            
+	    <tr>
+	      <td>%logger{26}</td>
+	      <td>mainPackage.sub.sample.Bar</td>
+	      <td>mainPackage.sub.sample.Bar</td>
+	    </tr>
+	  </table>
 
           <p>Please note that the rightmost segment in a logger name
           is never abbreviated, even if its length is longer than the
           <em>length</em> option. Other segments may be shortened to
           at most a single character but are never removed.</p>
+          
+	  </td>
+	</tr>
 
-				</td>
-			</tr>
+	<tr>
+	  <td class="word" name="class">
+	    <b>C</b>{<em>length</em>} <br />
+	    <b>class</b>{<em>length</em>} <br />
+	  </td>
 
-			<tr>
-				<td class="word" name="class">
-					<b>C</b>{<em>length</em>} <br />
-					<b>class</b>{<em>length</em>} <br />
-				</td>
+	  <td>
+	    <p>Outputs the fully-qualified class name of the caller
+	    issuing the logging request.
+	    </p>
+            
+	    <p>Just like the <em>%logger</em> conversion word above,
+	    this conversion takes an integer as an option to shorten
+	    the class name. Zero carries special meaning and will cause
+	    the simple class name to be printed without the package name
+	    prefix. By default the class name is printed in full.
+	    </p>
 
-				<td>
-					<p>Outputs the fully-qualified class name of the caller
-					issuing the logging request.
-					</p>
-
-					<p>Just like the <em>%logger</em> conversion word above,
-					this conversion takes an integer as an option to shorten
-					the class name. Zero carries special meaning and will cause
-					the simple class name to be printed without the package name
-					prefix. By default the class name is printed in full.
-					</p>
-
-          <p>Generating the caller class information is not
-          particularly fast.  Thus, its use should be avoided unless
-          execution speed is not an issue.
-					</p>
-				</td>
-			</tr>
+            <p>Generating the caller class information is not
+            particularly fast.  Thus, its use should be avoided unless
+            execution speed is not an issue.
+	    </p>
+	  </td>
+	</tr>
 
       <tr>
         <td class="word" name="contextName">
@@ -644,6 +643,93 @@ WARN  [main]: Message 2</p>
 	</td>
          </tr>
 
+	      <tr>
+		<td class="word" name="ex">
+		  <b>ex</b>{<em>depth</em>} <br />
+          	  <b>exception</b>{<em>depth</em>} <br />
+		  <b>throwable</b>{<em>depth</em>} <br />
+                  <br />
+		  <b>ex</b>{depth, evaluator-1, ..., evaluator-n} <br />
+		  <b>exception</b>{depth, evaluator-1, ..., evaluator-n} <br />
+		  <b>throwable</b>{depth, evaluator-1, ..., evaluator-n}
+		</td>
+
+		<td>
+		  <p>Outputs the stack trace of the exception
+		  associated with the logging event, if any. By default the
+		  full stack trace will be output.
+		  </p>
+
+
+  		  <p>The <em>throwable</em> conversion word can be followed by one of
+		  the following options:
+		  </p>
+		  <ul>
+		    <li><em>short</em>: prints the first line of the stack trace</li>
+		    <li><em>full</em>: prints the full stack trace</li>
+		    <li>Any integer: prints the given number of lines of the stack trace</li>
+		  </ul>
+                  
+		  <p>Here are some examples:</p>
+
+		  <table  class="bodyTable">
+		    <tr class="a">
+		      <th>Conversion Pattern</th>
+		      <th>Result</th>
+		    </tr>
+		    <tr class="b">
+		      <td>%ex</td>
+		      <td><pre>mainPackage.foo.&#8203;bar.TestException: Houston we have a problem
+  at mainPackage.foo.&#8203;bar.TestThrower.&#8203;fire(TestThrower.&#8203;java:22)
+  at mainPackage.foo.&#8203;bar.TestThrower.&#8203;readyToLaunch(TestThrower.&#8203;java:17)
+  at mainPackage.ExceptionLauncher.&#8203;main(ExceptionLauncher.&#8203;java:38)</pre></td>
+		    </tr>
+		    <tr class="a">
+		      <td>%ex{short}</td>
+		      <td><pre>mainPackage.foo.&#8203;bar.TestException: Houston we have a problem
+  at mainPackage.foo.&#8203;bar.TestThrower.&#8203;fire(TestThrower.&#8203;java:22)</pre></td>
+		    </tr>
+		    <tr class="b">
+		      <td>%ex{full}</td>
+		      <td><pre>mainPackage.foo.&#8203;bar.TestException: Houston we have a problem
+  at mainPackage.foo.&#8203;bar.TestThrower.&#8203;fire(TestThrower.&#8203;java:22)
+  at mainPackage.foo.&#8203;bar.TestThrower.&#8203;readyToLaunch(TestThrower.&#8203;java:17)
+  at mainPackage.ExceptionLauncher.&#8203;main(ExceptionLauncher.&#8203;java:38)</pre></td>
+		    </tr>
+		    <tr class="a">
+		      <td>%ex{2}</td>
+		      <td><pre>mainPackage.foo.&#8203;bar.TestException: Houston we have a problem
+  at mainPackage.foo.&#8203;bar.TestThrower.&#8203;fire(TestThrower.&#8203;java:22)
+  at mainPackage.foo.&#8203;bar.TestThrower.&#8203;readyToLaunch(TestThrower.&#8203;java:17)</pre></td>
+		    </tr>
+		  </table>
+
+	          <p>This conversion word can also use evaluators to
+	          test logging events against a given criterion before
+	          creating the output. For example, using <b>%ex{full,
+	          EX_DISPLAY_EVAL}</b> will display the full stack
+	          trace of the exception only if the evaluator called
+	          <em>EX_DISPLAY_EVAL</em> returns a <b>negative</b>
+	          answer. Evaluators are described further down in
+	          this document.
+	          </p>
+
+                  <p>If you do not specify %throwable or another
+                  throwable-related conversion word in the conversion
+                  pattern, <code>PatternLayout</code> will
+                  automatically add it as the last conversion word, on
+                  account of the importance of stack trace
+                  information. The $nopex conversion word can be
+                  substituted for %throwable, if you do not wish stack
+                  trace information to be displayed. See also the
+                  %nopex conversion word.
+                  </p>
+
+	        </td>
+              </tr>
+
+         
+         
         <tr>
           <td class="word" name="micros">
             <b>micros / ms</b>
@@ -657,49 +743,49 @@ WARN  [main]: Message 2</p>
 
 
 
-			<tr>
-				<td class="word" name="file">
-					<b>F / file</b>
-				</td>
+	<tr>
+	  <td class="word" name="file">
+	    <b>F / file</b>
+	  </td>
+          
+	  <td>
+	    <p>Outputs the file name of the Java source file where the
+	    logging request was issued.
+	    </p>
+            
+	    <p>Generating the file information is not particularly fast.
+	    Thus, its use should be avoided unless execution speed is
+	    not an issue.
+	    </p>
+	  </td>
+	</tr>
+        
+	<tr >
+	  <td class="word" name="caller">
+	    <b>caller{depth}</b>
+	    <b>caller{depthStart..depthEnd}</b>
+	    <b>caller{depth, evaluator-1, ... evaluator-n}</b>
+	    <b>caller{depthStart..depthEnd, evaluator-1, ... evaluator-n}</b>
+	  </td>
+          
+	  <td>
+	    <p>Outputs location information of the caller which
+	    generated the logging event.
+	    </p>
+            
+	    <p>The location information depends on the JVM
+	    implementation but usually consists of the fully qualified
+	    name of the calling method followed by the caller's source,
+	    the file name and line number between parentheses.
+	    </p>
 
-				<td>
-					<p>Outputs the file name of the Java source file where the
-					logging request was issued.
-					</p>
+	    <p>A integer can be added to the <em>caller</em> conversion
+	    specifier's options to configure the depth of the
+	    information to be displayed.
+	    </p>
 
-					<p>Generating the file information is not particularly fast.
-					Thus, its use should be avoided unless execution speed is
-					not an issue.
-					</p>
-				</td>
-			</tr>
-
-			<tr >
-				<td class="word" name="caller">
-					<b>caller{depth}</b>
-					<b>caller{depthStart..depthEnd}</b>
-					<b>caller{depth, evaluator-1, ... evaluator-n}</b>
-					<b>caller{depthStart..depthEnd, evaluator-1, ... evaluator-n}</b>
-				</td>
-
-				<td>
-					<p>Outputs location information of the caller which
-					generated the logging event.
-					</p>
-
-					<p>The location information depends on the JVM
-					implementation but usually consists of the fully qualified
-					name of the calling method followed by the caller's source,
-					the file name and line number between parentheses.
-					</p>
-
-					<p>A integer can be added to the <em>caller</em> conversion
-					specifier's options to configure the depth of the
-					information to be displayed.
-					</p>
-
-          <p>For example, <b>%caller{2}</b> would display the
-          following excerpt:</p>
+            <p>For example, <b>%caller{2}</b> would display the
+            following excerpt:</p>
 
 <pre class="source white_bg">0    [main] DEBUG - logging statement
 Caller+0   at mainPackage.sub.;sample.Bar.sampleMethodName(;Bar.java:22)
@@ -718,21 +804,21 @@ Caller+2   at mainPackage.ConfigTester.;main(ConfigTester.;java:38)</pre>
 
                     <p>For example, <b>%caller{1..2}</b> would display the following excerpt:</p>
 
-<pre class="source white_bg">0    [main] DEBUG - logging statement
+                    <pre class="source white_bg">0    [main] DEBUG - logging statement
 Caller+0   at mainPackage.sub.;sample.Bar.createLoggingRequest(;Bar.java:17)</pre>
 
-					<p>This conversion word can also use evaluators to test
-					logging events against a given criterion before computing
-					caller data. For example, using <b>%caller{3,
-					CALLER_DISPLAY_EVAL}</b> will display three lines of
-					stacktrace, only if the evaluator called
-					<em>CALLER_DISPLAY_EVAL</em> returns a <b>positive</b>
-					answer.
-				</p>
-
-				 <p>Evaluators are described below.</p>
-				</td>
-			</tr>
+                    <p>This conversion word can also use evaluators to test
+		    logging events against a given criterion before computing
+		    caller data. For example, using <b>%caller{3,
+		    CALLER_DISPLAY_EVAL}</b> will display three lines of
+		    stacktrace, only if the evaluator called
+		    <em>CALLER_DISPLAY_EVAL</em> returns a <b>positive</b>
+		    answer.
+		    </p>
+                                
+		    <p>Evaluators are described below.</p>
+	  </td>
+	</tr>
 
 		<tr>
 		  <td class="word" name="kvp">
@@ -787,7 +873,61 @@ Caller+0   at mainPackage.sub.;sample.Bar.createLoggingRequest(;Bar.java:17)</pr
 		  </td>
 		</tr>
 
+                <tr>
+                  <td class="word" name="marker">
+                    <b>marker</b>
+                  </td>
 
+                  <td>
+                    <p>Outputs the marker associated with the logger
+                      request.</p>
+                    
+                    <p>In case the marker contains children markers, the
+                      converter displays the parent as well as childrens' names
+                      according to the format shown below.
+                    </p>
+                    <p>
+                      <em>parentName [ child1, child2 ]</em>
+                    </p>
+                  </td>
+                </tr>
+ 
+                <tr>
+		  <td class="word" name="mdc">
+		    <b>mdc</b>{<em>key:-defaultVal</em>} <br />
+                    <b>X</b>{<em>key:-defaultVal</em>} <br />
+		  </td>
+                          
+		  <td>
+                            
+		    <p>Outputs the MDC (mapped diagnostic context)
+		      associated with the thread that generated the
+		      logging event.
+		    </p>
+                            
+		    <p>If the <b>mdc</b> conversion word is followed
+		    by a key between braces, as
+		    in <b>%mdc{userid}</b>, then the MDC value
+		    corresponding to the key 'userid' will be
+		    output. If the value is null, then
+		    the <a href="configuration.html#defaultValuesForVariables">default
+		    value</a> specified after the <b>:-</b> operator
+		    is output. If no default value is specified than
+		    the empty string is output.
+		    </p>
+
+		    <p>If no key is given, then the entire content of
+                    the MDC will be output in the format "key1=val1,
+                    key2=val2".
+                    </p>
+
+		    <p>See the <a href="mdc.html">chapter on MDC</a>
+		    for more details on the subject.
+                    </p>                            
+		  </td>
+		</tr>
+
+                
 		<tr>
 		  <td class="word" name="message">
 		    <b>m / msg / message</b>
@@ -827,180 +967,208 @@ Caller+0   at mainPackage.sub.;sample.Bar.createLoggingRequest(;Bar.java:17)</pr
 		    specifying a line separator.
 		    </p>
 		  </td>
+		</tr>
 
-			</tr>
+                <tr>
+                  <td class="word" name="nopex">
+                    <b>nopex</b> <br />
+                    <b>nopexception</b>
+                  </td>
 
-			<tr>
-				<td class="word" name="level">
-					<b>p / le / level</b>
-				</td>
-				<td>Outputs the level of the logging event.</td>
-			</tr>
+                  <td>
+                    <p>Although it <em>pretends</em> to handle stack trace data,
+                    this conversion word does not output any data, thus,
+                    effectively ignoring exceptions.
+                    </p>
+                    
+                    <p>The %nopex conversion word allows the user to override
+                    <code>PatternLayout</code>'s internal safety mechanism which
+                    silently adds the %xThrowable conversion keyword in the absence of
+                    another conversion word handling exceptions.
+                    </p>
+                  </td>
+                </tr>
 
-			<tr>
+                
+                <tr>
+	          <td class="word" name="level">
+		    <b>p / le / level</b>
+		  </td>
+		  <td>Outputs the level of the logging event.</td>
+		</tr>
 
-				<td class="word" name="relative">
-					<b>r / relative</b>
-				</td>
+                <tr>
+                  <td class="word" name="prefix">
+                    <b>prefix(<em>p</em>)</b>
+                  </td>
 
-				<td>Outputs the number of milliseconds elapsed since the start
-				of the application until the creation of the logging event.
-				</td>
-			</tr>
+                  <td><p>For all the child converters contained in
+                  pattern 'p', prefixes the output of each converter
+                  with the name of the converter.  In environments
+                  where log contents need to be analysed, it is often
+                  useful to prefix the contents of a pattern with a
+                  prefix.</p>
 
+                  <p>For example, you may wish to use the following
+                  pattern to facilitate parsing of log files:
+                  </p>
 
-			<tr>
-				<td class="word" name="relative">
-					<b>t / thread</b>
-				</td>
+                  <pre>%d thread=%thread level=%level logger=%logger user=%X{user} %message</pre>
 
-				<td>Outputs the name of the thread that generated the logging
-				event.
-				</td>
+                  <p>The %prefix composite converter can take care of the prefixing for you:</p>
 
-			</tr>
+                  <pre>%d <b>%prefix(</b>%thread %level %logger %X{user}<b>)</b> %message</pre>
 
-			<tr>
-				<td class="word" name="mdc">
-					<b>X</b>{<em>key:-defaultVal</em>} <br />
-					<b>mdc</b>{<em>key:-defaultVal</em>} <br />
-				</td>
+                  <p>The two previous patterns will generate
+                  equivalent output. The usefulness of the %prefix
+                  converter increases with the number of child
+                  converters contained in the pattern 'p'.</p>
 
-				<td>
+                  </td>
+                </tr>
+                
+                
+                <tr>
+                  <td class="word" name="property">
+                    <b>property{key}</b>
+                  </td>
 
-					<p>Outputs the MDC (mapped diagnostic context) associated
-					with the thread that generated the logging event.
-					</p>
+                  <td><p>Outputs the value associated with a property named
+                      <em>key</em>. The relevant docs on how to define ion
+                      entitled <a
+                                 href="configuration.html#variableSubstitution">define
+                        variables</a> and <a href="configuration.html#scopes">variable
+                        scopes</a>.
+                      
 
-					<p>If the <b>mdc</b> conversion word is followed by a key
-					between braces, as in <b>%mdc{userid}</b>, then the MDC
-					value corresponding to the key 'userid' will be output. If
-					the value is null, then the <a
-					href="configuration.html#defaultValuesForVariables">default
-					value</a> specified after the <b>:-</b> operator is
-					output. If no default value is specified than the empty
-					string is output.
-					</p>
-
-					<p>If no key is given, then the entire content of the MDC
-					will be output in the format "key1=val1, key2=val2".
-					</p>
-
-					<p>See the <a href="mdc.html">chapter on MDC</a> for more
-					details on the subject.</p>
-
-				</td>
-			</tr>
-			<tr>
-				<td class="word" name="ex">
-					<b>ex</b>{<em>depth</em>} <br />
-          	<b>exception</b>{<em>depth</em>} <br />
-					<b>throwable</b>{<em>depth</em>} <br />
-          <br />
-					<b>ex</b>{depth, evaluator-1, ..., evaluator-n} <br />
-					<b>exception</b>{depth, evaluator-1, ..., evaluator-n} <br />
-					<b>throwable</b>{depth, evaluator-1, ..., evaluator-n}
-				</td>
-
-				<td>
-					<p>Outputs the stack trace of the exception
-					associated with the logging event, if any. By default the
-					full stack trace will be output.
-				 </p>
+                      If <em>key</em> is not a property of
+                      the logger context, then <em>key</em> will be looked up in the
+                      System properties.</p>
 
 
-  			 <p>The <em>throwable</em> conversion word can be followed by one of
-						the following options:
-				 </p>
-				 <ul>
-				   <li><em>short</em>: prints the first line of the stack trace</li>
-				   <li><em>full</em>: prints the full stack trace</li>
-				   <li>Any integer: prints the given number of lines of the stack trace</li>
-				 </ul>
+                    <p>There is no default value for <em>key</em>. If it is
+                      omitted, the returned value will be "Property_HAS_NO_KEY",
+                      expliciting the error condition.</p>
 
-				 <p>Here are some examples:</p>
+                  </td>
+                </tr>
 
-				 <table  class="bodyTable">
-						<tr class="a">
-							<th>Conversion Pattern</th>
-							<th>Result</th>
-						</tr>
-						<tr class="b">
-							<td>%ex</td>
-							<td><pre>mainPackage.foo.&#8203;bar.TestException: Houston we have a problem
-  at mainPackage.foo.&#8203;bar.TestThrower.&#8203;fire(TestThrower.&#8203;java:22)
-  at mainPackage.foo.&#8203;bar.TestThrower.&#8203;readyToLaunch(TestThrower.&#8203;java:17)
-  at mainPackage.ExceptionLauncher.&#8203;main(ExceptionLauncher.&#8203;java:38)</pre></td>
-						</tr>
-						<tr class="a">
-							<td>%ex{short}</td>
-							<td><pre>mainPackage.foo.&#8203;bar.TestException: Houston we have a problem
-  at mainPackage.foo.&#8203;bar.TestThrower.&#8203;fire(TestThrower.&#8203;java:22)</pre></td>
-						</tr>
-						<tr class="b">
-							<td>%ex{full}</td>
-							<td><pre>mainPackage.foo.&#8203;bar.TestException: Houston we have a problem
-  at mainPackage.foo.&#8203;bar.TestThrower.&#8203;fire(TestThrower.&#8203;java:22)
-  at mainPackage.foo.&#8203;bar.TestThrower.&#8203;readyToLaunch(TestThrower.&#8203;java:17)
-  at mainPackage.ExceptionLauncher.&#8203;main(ExceptionLauncher.&#8203;java:38)</pre></td>
-						</tr>
-						<tr class="a">
-							<td>%ex{2}</td>
-							<td><pre>mainPackage.foo.&#8203;bar.TestException: Houston we have a problem
-  at mainPackage.foo.&#8203;bar.TestThrower.&#8203;fire(TestThrower.&#8203;java:22)
-  at mainPackage.foo.&#8203;bar.TestThrower.&#8203;readyToLaunch(TestThrower.&#8203;java:17)</pre></td>
-						</tr>
-				 </table>
+                
+                <tr>
+                  
+		  <td class="word" name="relative">
+		    <b>r / relative</b>
+		  </td>
 
-	<p>This conversion word can also use evaluators to test
-	logging events against a given criterion before creating the
-	output. For example, using <b>%ex{full, EX_DISPLAY_EVAL}</b>
-	will display the full stack trace of the exception only if the
-	evaluator called <em>EX_DISPLAY_EVAL</em> returns a
-	<b>negative</b> answer. Evaluators are described further down
-	in this document.
-	</p>
+		  <td>Outputs the number of milliseconds elapsed since the start
+		    of the application until the creation of the logging event.
+		  </td>
+		</tr>
 
-         <p>If you do not specify %throwable or another
-          throwable-related conversion word in the conversion pattern,
-          <code>PatternLayout</code> will automatically add it as the
-          last conversion word, on account of the importance of stack
-          trace information. The $nopex conversion word can be
-          substituted for %throwable, if you do not wish stack trace
-          information to be displayed. See also the %nopex conversion
-          word.
-         </p>
+                <tr>
+                  <td class="word" name="rootException">
+                    <b>rEx</b>{<em>depth</em>} <br />
+                    <b>rootException</b>{<em>depth</em>} <br />
+                    <br />
+	            <b>rEx</b>{depth, evaluator-1, ..., evaluator-n} <br />
+	            <b>rootException</b>{depth, evaluator-1, ..., evaluator-n}
+                  </td>
 
-	</td>
-      </tr>
+                  <td>
+                    <p>Outputs the stack trace of the exception
+                    associated with the logging event, if any. The
+                    root cause will be output first instead of the
+                    standard "root cause last". Here is a sample
+                    output (edited for space):
+                    </p>
 
-      <tr>
-	<td class="word" name="xThrowable">
-	  <b>xEx</b>{<em>depth</em>} <br />
-          <b>xException</b>{<em>depth</em>} <br />
-					<b>xThrowable</b>{<em>depth</em>} <br />
-          <br />
-					<b>xEx</b>{depth, evaluator-1, ..., evaluator-n} <br />
-					<b>xException</b>{depth, evaluator-1, ..., evaluator-n} <br />
-					<b>xThrowable</b>{depth, evaluator-1, ..., evaluator-n}
-				</td>
+                    <pre class="small">java.lang.NullPointerException
+  at com.xyz.Wombat(Wombat.;java:57) ~[wombat-1.3.jar:1.3]
+  at com.xyz.Wombat(Wombat.;java:76) ~[wombat-1.3.jar:1.3]
+Wrapped by: org.springframework.;BeanCreationException: Error creating bean with name 'wombat':
+  at org.springframework.;AbstractBeanFactory.;getBean(AbstractBeanFactory.;java:248) [spring-2.0.jar:2.0]
+  at org.springframework.;AbstractBeanFactory.;getBean(AbstractBeanFactory.;java:170) [spring-2.0.jar:2.0]
+  at org.apache.catalina.;StandardContext.;listenerStart(StandardContext.;java:3934) [tomcat-6.0.26.jar:6.0.26]
+                    </pre>
 
-				<td>
-					<p>Same as the %throwable conversion word above with the
-					addition of class packaging information.</p>
+                    <p>The %rootException converter admits the same
+                    optional parameters as the %xException converter
+                    described above, including depth and
+                    evaluators. It outputs also packaging
+                    information. In short, %rootException is very
+                    similar to %xException, only the order of
+                    exception output is reversed.
+                    </p>
+                  
+                    <p>Tomasz Nurkiewicz, the author of %rootException converter,
+                    documents his contribution in a blog entry entitled<
+                    <a href="https://nurkiewicz.com/2011/09/logging-exceptions-root-cause-first.html">"Logging
+                    exceptions root cause first"</a>.</p>
+                  </td>
+                </tr>
 
-          <p>At the end of each stack frame of the exception, a string
-          consisting of the jar file containing the relevant class
-          followed by the "Implementation-Version" as found in that
-          jar's manifest will be added. This innovative technique was
-          <a
-          href="http://macstrac.blogspot.com/2008/09/better-stack-traces-in-java-with-log4j.html">originally suggested
-          by James Strachan</a>. If the information is uncertain, then
-          the class packaging data will be preceded by a tilde, i.e.
-          the '~' character.
-          </p>
+              <tr>
+                <td class="word" name="replace">
+                  <b>replace(<em>p</em>){r, t}</b>
+                </td>
+                
+                <td>
+                  <p>Replaces occurrences of 'r', a regex, with its
+                  replacement 't' in the string produces by the
+                  sub-pattern 'p'. For example, "%replace(%msg){'\s',
+                  ''}" will remove all spaces contained in the event
+                  message.
+                  </p>
 
-          <p>Here is an example:</p>
+                  <p>The pattern 'p' can be arbitrarily complex and in
+                  particular can contain multiple conversion
+                  keywords. For instance, "%replace(%logger
+                  %msg){'\.', '/'}" will replace all dots in the
+                  logger or the message of the event with a forward
+                  slash.
+                  </p>                  
+                </td>
+              </tr>
+              
+		<tr>
+		  <td class="word" name="thread">
+		    <b>t / thread</b>
+		  </td>
+                  
+		  <td><p>Outputs the name of the thread that generated the logging
+		  event.</p>
+		</td>                
+	      </tr>
+                        
+
+              <tr>
+	        <td class="word" name="xThrowable">
+	          <b>xEx</b>{<em>depth</em>} <br />
+                  <b>xException</b>{<em>depth</em>} <br />
+		  <b>xThrowable</b>{<em>depth</em>} <br />
+                  <br />
+		  <b>xEx</b>{depth, evaluator-1, ..., evaluator-n} <br />
+		  <b>xException</b>{depth, evaluator-1, ..., evaluator-n} <br />
+		  <b>xThrowable</b>{depth, evaluator-1, ..., evaluator-n}
+		</td>
+
+		<td>
+		  <p>Same as the %throwable conversion word above with the
+		  addition of class packaging information.</p>
+
+                  <p>At the end of each stack frame of the exception,
+                  a string consisting of the jar file containing the
+                  relevant class followed by the
+                  "Implementation-Version" as found in that jar&quot;s
+                  manifest will be added. This innovative technique
+                  was 
+                  <a href="http://macstrac.blogspot.com/2008/09/better-stack-traces-in-java-with-log4j.html">originally
+                  suggested by James Strachan</a>. If the information
+                  is uncertain, then the class packaging data will be
+                  preceded by a tilde, i.e.  the '~' character.
+                  </p>
+
+                  <p>Here is an example:</p>
 
           <p class="source small">java.lang.NullPointerException
   at com.xyz.Wombat(Wombat.;java:57) <b><span class="red">~</span>[wombat-1.3.jar:1.3]</b>
@@ -1042,164 +1210,12 @@ Caller+0   at mainPackage.sub.;sample.Bar.createLoggingRequest(;Bar.java:17)</pr
 
       </tr>
 
-      <tr>
-        <td class="word" name="nopex">
-          <b>nopex</b> <br />
-          <b>nopexception</b>
-        </td>
-
-        <td>
-          <p>Although it <em>pretends</em> to handle stack trace data,
-          this conversion word does not output any data, thus,
-          effectively ignoring exceptions.
-          </p>
-
-          <p>The %nopex conversion word allows the user to override
-          <code>PatternLayout</code>'s internal safety mechanism which
-          silently adds the %xThrowable conversion keyword in the absence of
-          another conversion word handling exceptions.
-          </p>
-        </td>
-      </tr>
-
-      <tr >
-        <td class="word" name="marker">
-          <b>marker</b>
-        </td>
-
-        <td>
-          <p>Outputs the marker associated with the logger
-         request.</p>
-
-          <p>In case the marker contains children markers, the
-          converter displays the parent as well as childrens' names
-          according to the format shown below.
-          </p>
-          <p>
-            <em>parentName [ child1, child2 ]</em>
-          </p>
-        </td>
-      </tr>
 
 
-      <tr>
-        <td class="word" name="property">
-          <b>property{key}</b>
-        </td>
-
-        <td><p>Outputs the value associated with a property named
-        <em>key</em>. The relevant docs on how to define ion
-        entitled <a
-        href="configuration.html#variableSubstitution">define
-        variables</a> and <a href="configuration.html#scopes">variable
-        scopes</a>.
-
-        <!-- XXXXXXXXXXXX -->
-
-        If <em>key</em> is not a property of
-        the logger context, then <em>key</em> will be looked up in the
-        System properties.</p>
 
 
-         <p>There is no default value for <em>key</em>. If it is
-         omitted, the returned value will be "Property_HAS_NO_KEY",
-         expliciting the error condition.</p>
 
-        </td>
-      </tr>
-
-      <tr>
-        <td class="word" name="replace">
-          <b>replace(<em>p</em>){r, t}</b>
-        </td>
-
-        <td>
-          <p>Replaces occurrences of 'r', a regex, with its
-          replacement 't' in the string produces by the sub-pattern
-          'p'. For example, "%replace(%msg){'\s', ''}" will remove all
-          spaces contained in the event message.
-          </p>
-
-          <p>The pattern 'p' can be arbitrarily complex and in
-          particular can contain multiple conversion keywords. For
-          instance, "%replace(%logger %msg){'\.', '/'}" will replace
-          all dots in the logger or the message of the event with a
-          forward slash.
-          </p>
-
-        </td>
-      </tr>
-
-      <tr>
-        <td class="word" name="prefix">
-          <b>prefix(<em>p</em>)</b>
-        </td>
-
-        <td><p>For all the child converters contained in pattern 'p',
-        prefixes the output of each converter with the name of the
-        converter.  In environments where log contents need to be
-        analysed, it is often useful to prefix the contents of a
-        pattern with a prefix.</p>
-
-        <p>For example, you may wish to use the following pattern to
-        facilitate parsing of log files:
-        </p>
-
-        <pre>%d thread=%thread level=%level logger=%logger user=%X{user} %message</pre>
-
-        <p>The %prefix composite converter can take care of the prefixing for you:
-
-        <pre>%d <b>%prefix(</b>%thread %level %logger %X{user}<b>)</b> %message</pre>
-
-        <p>The two previous patterns will generate equivalent
-        output. The usefulness of the %prefix converter increases
-        with the number of child converters contained in the pattern
-        'p'.</p>
-
-        </td>
-      </tr>
-
-
-      <tr>
-        <td class="word" name="rootException">
-          <b>rEx</b>{<em>depth</em>} <br />
-          <b>rootException</b>{<em>depth</em>} <br />
-          <br />
-	  <b>rEx</b>{depth, evaluator-1, ..., evaluator-n} <br />
-	  <b>rootException</b>{depth, evaluator-1, ..., evaluator-n}
-        </td>
-
-        <td>
-          <p>Outputs the stack trace of the exception associated with
-          the logging event, if any. The root cause will be output
-          first instead of the standard "root cause last". Here is a
-          sample output (edited for space):
-          </p>
-
-         <pre class="small">java.lang.NullPointerException
-  at com.xyz.Wombat(Wombat.;java:57) ~[wombat-1.3.jar:1.3]
-  at com.xyz.Wombat(Wombat.;java:76) ~[wombat-1.3.jar:1.3]
-Wrapped by: org.springframework.;BeanCreationException: Error creating bean with name 'wombat':
-  at org.springframework.;AbstractBeanFactory.;getBean(AbstractBeanFactory.;java:248) [spring-2.0.jar:2.0]
-  at org.springframework.;AbstractBeanFactory.;getBean(AbstractBeanFactory.;java:170) [spring-2.0.jar:2.0]
-  at org.apache.catalina.;StandardContext.;listenerStart(StandardContext.;java:3934) [tomcat-6.0.26.jar:6.0.26]
-</pre>
-
-         <p>The %rootException converter admits the same optional
-         parameters as the %xException converter described above,
-         including depth and evaluators. It outputs also packaging
-         information. In short, %rootException is very similar to
-         %xException, only the order of exception output is reversed.
-         </p>
-
-         <p>Tomasz Nurkiewicz, the author of %rootException converter,
-         documents his contribution in a blog entry entitled <a
-         href="https://nurkiewicz.com/2011/09/logging-exceptions-root-cause-first.html">"Logging
-         exceptions root cause first"</a>.</p>
-        </td>
-      </tr>
-
-		</table>
+    </table>
 
 
     <h4 class="doAnchor" name="percentIsSpecial">% character has special meaning</h4>
@@ -1220,7 +1236,7 @@ Wrapped by: org.springframework.;BeanCreationException: Error creating bean with
     literals <code>"&nbsp;["</code> and
     <code>"]&nbsp;-&nbsp;"</code>. However, if a character which can
     be part of a java identifier immediately follows a conversion
-    word, logback's pattern parser will be fooled into thinking that
+    word, logback&quot;s pattern parser will be fooled into thinking that
     the literal is part of the conversion word. For example, the
     pattern "%date<b>%nHello</b>" will be interpreted as two
     conversion words %date and %nHello and since %nHello is not a
