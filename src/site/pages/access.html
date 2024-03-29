@@ -38,22 +38,20 @@
        scope of HTTP-access logging. </p>
 
     <p>It should be noted that while logback-access requires
-       logback-core, it is independent of logback-classic as well as
-       slf4j. Just as importantly, logback-access artifact must be
-       installed at the container level, not at web-application
-       level. It does not make sense to
-       bundle <em>logback-access.jar</em> at the level of a
-       web-application.
+    logback-core, it is independent of logback-classic as well as
+    slf4j. Just as importantly, logback-access artifacts must be
+    installed at the container level, not at web-application level. It
+    usually does not make sense to bundle logback-access artifacts at
+    the level of a web-application.
     </p>
 
 
     <h1 class="doAnchor" name="common">Logback-acess common</h1>
 
-    <p>There is much code common to both Tomcat and Jetty access
-    logging. This code is located in a new module callled
-    "ch.qos.logback.access:common" having the following maven
-    coordianes:</p>
-
+    <p>There is much code shared by both Tomcat and Jetty access
+    logging. This code is located in a new module callled "common"
+    having the following maven coordianes:</p>
+ 
     <pre>
   &lt;dependency>
     &lt;groupId>ch.qos.logback.access&lt;/groupId>
@@ -61,8 +59,8 @@
     &lt;version>${latest.logback-access.version}&lt;/version>
   &lt;/dependency>    </pre>
 
-    <p>The "ch.qos.logback.access:common" module relies on
-    "ch.qos.logback:logback-core" module:</p>
+    <p>This "common" module relies on "logback-core" module with the
+    Maven coordinates:</p>
 
     <pre>
   &lt;dependency>
@@ -188,7 +186,7 @@
     </p>
 
 
-    <h1 class="doAnchor" name="jetty">Logback-access under Jetty</h1>
+    <h1 class="doAnchor" name="jetty">Logback-access with Jetty</h1>
 
     <p>Logback-access supports both Jetty version 11 and 12. However,
     each version of Jetty requires a different artifact.
@@ -213,8 +211,14 @@
   &lt;/dependency> </pre>
 
 
-    <p>Both versions require logback-core and "ch.qos.logback.access:common
-    artifacts mentioned above.</p>
+    <p>Both Jetty artifacts require the logback-core and "common"
+    artifacts mentioned above. Moreover, these artifacts must be
+    copied under $JETTY_HOME/lib directory, where $JETTY_HOME is the
+    folder where you have installed Jetty. To be clear, for Jetty 11
+    the required artifacts are "ch.qos.logback:logback-core",
+    "ch.qos.logback.access:common" and "ch.qos.logback.access:jetty11".
+    For Jetty 12, replace the last artifact by "ch.qos.logback.access:jetty12".
+    </p>
  
 
     <h3>Logback's implementation of
