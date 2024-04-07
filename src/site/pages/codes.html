@@ -267,7 +267,32 @@
   is a TriggeringPolicy <em>and</em> and
   <code>RollingPolicy</code> at the same time.
   </p>
-      
+
+  <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->
+  <h3 class="doAnchor" name="rfa_reset_rp_or_tp">A TriggeringPolicy 
+  <code>TriggeringPolicy</code> is set a second time, or a RollingPolicy is set for the second time.    
+  </h3>
+    
+  <p>It is easy for forget that some rolling policies such as
+  <code>c.q.l.core.rolling.TimeBasedRollingPolicy</code> and
+  <code>c.q.l.core.rolling.SizeAndTimeBasedRollingPolicy</code> act as
+  <b>both</b> a rolling policy and a trigerring policy.
+  </p>
+
+  <p>Recognizing this, the
+  <code>RollingFileAppender.setRollingPolicy()</code> method will
+  automatically set the triggering policy with the same policy
+  parameter. Similarly,
+  <code>RollingFileAppender.setTriggeringPolicy()</code> method will
+  automatically set the rolling policy with the same policy parameter.
+  </p>
+  
+  <p>Once <code>TimeBasedRollingPolicy</code> is set, setting a second
+  triggerring policy is usually an oversight and will cause errors.
+  Thus, the relevant setter will emit a warning about setting a
+  policy a second time.
+  </p>
+  
   <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->
 
   <h3 class="doAnchor" name="#sat_missing_integer_token">Missing
