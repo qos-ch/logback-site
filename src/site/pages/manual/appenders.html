@@ -8,8 +8,8 @@
 
     <script type="text/javascript">prefix='../';</script>
 
-</head>
-<body onload="enableMenuEventListeners(); hljs.highlightAll(); decorate(); addClipboardListener(); enableLegacy();">
+</head> 
+<body onload="enableMenuEventListeners(); hljs.highlightAll(); decorate(); addClipboardListener(); enableLegacy(); loopOn();">
 
     <script type="text/javascript" src="../templates/header3.js"></script>
 
@@ -3185,7 +3185,8 @@ logger.error(<b>notifyAdmin</b>,
   &lt;appender name="EMAIL" class="ch.qos.logback.&#8203;classic.net.SMTPAppender">
     &lt;evaluator class="ch.qos.logback.&#8203;classic.boolex.&#8203;JaninoEventEvaluator">
       &lt;expression>
-        (marker != null) &amp;&amp;
+        &lt;!-- ampersand characters must be escaped here in XML --&gt;
+        (marker != null) &amp;amp;&amp;amp;  
         (marker.contains(&#8203;"NOTIFY_ADMIN") || marker.contains(&#8203;"TRANSACTION_FAILURE"))
       &lt;/expression>
     &lt;/evaluator>
@@ -3194,7 +3195,7 @@ logger.error(<b>notifyAdmin</b>,
     &lt;from>${from}&lt;/from>
     &lt;layout class="ch.qos.logback.&#8203;classic.html.HTMLLayout"/>
   &lt;/appender>
-&lt;/configuration></code></pre>
+&lt;/configuration></code></pre> 
    </div>
 
    <div id="mailWithMarker_Janino_canonical" class="tabcontent">
