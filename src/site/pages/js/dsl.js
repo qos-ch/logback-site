@@ -95,6 +95,9 @@ function sanitize(text) {
     inputText = inputText.replace(/&lt;/gi, '<');
     inputText = inputText.replace(/&gt;/gi, '>');
 
+    // replace &amp;amp; as &amp;
+    // sp that &amp;amp;&amp;amp; becomes &amp;&amp;    
+    inputText = inputText.replace(/;amp;/gi, ';');
 
     var l1 = inputText.length;
     inputText = inputText.replace(/\u200B/g,'');
