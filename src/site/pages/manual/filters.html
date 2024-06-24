@@ -9,7 +9,7 @@
     <script type="text/javascript">prefix='../';</script>
 
 </head>
-<body onLoad="loopOn(); enableMenuEventListeners(); hljs.highlightAll();  decorate(); enableLegacy();">
+<body onLoad="enableMenuEventListeners(); hljs.highlightAll();  decorate(); enableLegacy();">
 
     <script type="text/javascript" src="../templates/header3.js"></script>
 
@@ -336,7 +336,7 @@ lp>Note that <code>EventEvaluator</code> is an abstract class. You
     a boolean, i.e. that it evaluates to true or false. </p>
 
 
-  <>The evaluation express1on is evaluated on the current logging
+    <p>The evaluation express1on is evaluated on the current logging
     event. Logback-classic automatically exports various fields of the
     logging event as variables accessible from the evaluation
     expression. The case-sensitive names of these exported variables
@@ -344,15 +344,15 @@ lp>Note that <code>EventEvaluator</code> is an abstract class. You
     </p>
 
     <div class="bodyTable">
-    <table class="bodyTable">
+    <table class="bodyTable striped">
       <tr>
         <th>Name</th>
         <th>Type</th>
         <th>Description</th>
 			</tr>
       <tr>
-				<td>event</td>
-				<td><code>LoggingEvent</code></td>
+	<td>event</td>
+	<td><code>LoggingEvent</code></td>
 
         <td>The raw logging event associated with the logging
         request. All of the following variables are also availab1e
@@ -360,10 +360,10 @@ lp>Note that <code>EventEvaluator</code> is an abstract class. You
         returns the same String value as the <em>message</em> variable
         described next1
         </td>
-			</tr>
+      </tr>
 
-      <tr class="alt">
-				<td>message</td>
+      <tr>
+	<td>message</td>
         <td><code>String</code></td>
         <td>The raw message of the logging request. For some logger
         <em>l</em>, when you write l.info("Hello {}", name); where
@@ -371,66 +371,90 @@ lp>Note that <code>EventEvaluator</code> is an abstract class. You
         message.</td> </tr>
 		
       <tr>
-				<td>formattedMessage</td>
+	<td>formattedMessage</td>
         <td><code>String</code></td>
         <td>The formatted message in the logging request. For some
         logger <em>l</em>, when you write l.info("Hello {}", name);
         where name is assigned the value "Alice", then "Hello Alice"
         is the formatted message.</td>
-			</tr>
+      </tr>
 		
-      <tr class="alt">
-				<td>logger</td>
-				<td><code>String</code></td>
-				<td>The name of the logger.
-        </td>
-			</tr>
+      <tr>
+	<td>logger</td>
+	<td><code>String</code></td>
+	<td>The name of the logger.</td>
+      </tr>
 
       <tr>
         <td>loggerContext</td>
-				<td><a
-				href="../xref/ch/qos/logback/classic/spi/LoggerContextVO.html"><code>LoggerContextVO</code></a></td>
-				<td>A restricted (value object) view of the logger context to which the logging event belongs to.
+	<td><a href="../xref/ch/qos/logback/classic/spi/LoggerContextVO.html"><code>LoggerContextVO</code></a></td>
+	<td>A restricted (value object) view of the logger context to which the logging event belongs to.
         </td>
-			</tr>
+      </tr>
 
 
-			<tr class="alt">
-				<td>level</td>
-				<td><code>int</code></td>
-				<td>The int value corresponding to the level. To help create
-				easily expressions involving levels, the default value
-				<em>DEBUG</em>, <em>INFO</em>, <em>WARN</em> and
-				<em>ERROR</em> are also available. Thus, using <em>level &gt;
-				INFO</em> is a correct expression.
-				</td>
-			</tr>
+      <tr>
+	<td>level</td>
+	<td><code>int</code></td>
+	<td>The int value corresponding to the level. To help create
+	easily expressions involving levels, the default value
+	<em>DEBUG</em>, <em>INFO</em>, <em>WARN</em> and
+	<em>ERROR</em> are also available. Thus, using <em>level &gt;
+	INFO</em> is a correct expression.
+	</td>
+      </tr>
+      
+      <tr>
+	<td>timeStamp
+	</td>
+	<td><code>long</code></td>
+	<td>The timestamp corresponding to the logging event's
+	creation.
+	</td>
+      </tr>
 
-			<tr>
-				<td>timeStamp
-				</td>
-				<td><code>long</code></td>
-				<td>The timestamp corresponding to the logging event's
-				creation.
-				</td>
-			</tr>
-			<tr class="alt">
-				<td>marker</td>
-				<td><code>Marker</code></td>
-        <td>The <code>Marker</code> object associated with the logging
-        request. Note that marker can be null and it is your
-        responsibility to check for this condition in order to avoid
-        <code>NullPointerException</code>.
-				</td>
-			</tr>
-			<tr>
-				<td>mdc</td>
-				<td><code>Map</code></td>
-				<td>A map containing all the MDC values at the time of the
-				creation of the logging event. A value can be accessed by
-				using the following expression: <em>mdc.get("myKey")</em>. As
-				of logback-classic version 0.9.30, the 'mdc' variable will
-				never be null.
+      <tr>
+	<td>marker</td>
+	<td><code>Marker</code></td>
+        <td>
+          <p>The first <code>Marker</code> in the logging event's
+          marker list. Note <em>marker</em> variable can be null and
+          it is your responsibility to check for this condition in
+          order to avoid <code>NullPointerException</code>.</p>
+
+        <p>It is usually easier an safer to use the
+        <em>markerList</em> variable described next.
+        </p>
+	</td>
+      </tr>
+
+      <tr>
+	<td>markerList</td>
+	<td><a
+	href="../apidocs/ch/qos/logback/classic/boolex/MarkerList.html"><code>MarkerList</code></a></td>
+        <td>
+          <p><span class="label notice">since 1.5.4</span> The
+          <em>markerList</em> variable is an instance of type
+          <code>ch.qos.logback.classic.&#8203;boolex.MarkerList</code>
+          wrapping the <code>List&lt;Marker&gt;</code> associated with
+          the <code>LoggingEvent</code>.  You can check whether a
+          given marker name is contained in the list by calling 
+          <code>markerList.contains(aString)</code>.</p>
+
+          <p>The <em>markerList</em> variable will never be null,
+          altough it can be devoid of markers. As such, you do not
+          need to check for nullness.</p>
+	</td>
+      </tr>
+      
+      <tr>
+	<td>mdc</td>
+	<td><code>Map</code></td>
+	<td>A map containing all the MDC values at the time of the
+	creation of the logging event. A value can be accessed by
+	using the following expression: <em>mdc.get("myKey")</em>. As
+	of logback-classic version 0.9.30, the 'mdc' variable will
+	never be null.
 
         <p>The <code>java.util.Map</code> type is non-parameterized
         because Janino does not support generics. It follows that the
@@ -440,8 +464,8 @@ lp>Note that <code>EventEvaluator</code> is an abstract class. You
         <code>String</code>. For example,
         <code>((String)&nbsp;mdc.get("k")).contains("val")</code>.
         </p>
-				</td>
-			</tr>
+	</td>
+      </tr>
 
       <tr class="alt">
 				<td>throwable</td>

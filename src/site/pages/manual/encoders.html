@@ -225,17 +225,17 @@ public class LayoutWrappingEncoder&lt;E> extends EncoderBase&lt;E> {
      <h2 class="doAnchor">JsonEncoder</h2>
 
      <p> <span class="label notice">since versions 1.3.8/1.4.8</span></p>
-     
-     <p><code>JsonEncoder</code> follows the <a
-     href="http://ndjson.org/">Newline delimited JSON (ndjson)</a>
-     standard. It transforms a logging event into a valid json text in
-     conformance with [<a
-     href="https://datatracker.ietf.org/doc/html/rfc8259">RFC-8259</a>]. Each
+      
+     <p><code>JsonEncoder</code> follows
+     the <a href="https://jsonlines.org/">JSON Lines</a> standard. It
+     transforms a logging event into a valid json text in conformance
+     with
+     [<a href="https://datatracker.ietf.org/doc/html/rfc8259">RFC-8259</a>]. Each
      logging event in JSON text format is followed by a new line. More
      specifically, certain characters such as quotations marks,
      backslash, forward slash, form feed, line feed, carriage return
-     characters are escaped according to the rules described in <a
-     href="https://datatracker.ietf.org/doc/html/rfc8259#section-7">section
+     characters are escaped according to the rules described
+     in <a href="https://datatracker.ietf.org/doc/html/rfc8259#section-7">section
      7 of RFC-8259</a>.
      </p>
 

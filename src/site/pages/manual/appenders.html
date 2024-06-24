@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -3185,9 +3184,7 @@ logger.error(<b>notifyAdmin</b>,
   &lt;appender name="EMAIL" class="ch.qos.logback.&#8203;classic.net.SMTPAppender">
     &lt;evaluator class="ch.qos.logback.&#8203;classic.boolex.&#8203;JaninoEventEvaluator">
       &lt;expression>
-        &lt;!-- ampersand characters must be escaped here in XML --&gt;
-        (marker != null) &amp;amp;&amp;amp;  
-        (marker.contains(&#8203;"NOTIFY_ADMIN") || marker.contains(&#8203;"TRANSACTION_FAILURE"))
+        (markerList.contains(&#8203;"NOTIFY_ADMIN") || marker.contains(&#8203;"TRANSACTION_FAILURE"))
       &lt;/expression>
     &lt;/evaluator>
     &lt;smtpHost>${smtpHost}&lt;/smtpHost>
@@ -3197,7 +3194,7 @@ logger.error(<b>notifyAdmin</b>,
   &lt;/appender>
 &lt;/configuration></code></pre> 
    </div>
-
+ 
    <div id="mailWithMarker_Janino_canonical" class="tabcontent">
      <p>Requires a server call. Please wait a few seconds.</p>
    </div>
