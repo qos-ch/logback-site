@@ -146,17 +146,23 @@
 
 -->
 
-    <!--
 
 
     <hr width="80%" align="center" />
 
-    <h3 class="doAnchor" name="access_2.0.2">2024-0x-x Release of logback-access
+    <h3 class="doAnchor" name="access_2.0.2">2024-07-08 Release of logback-access
     version 2.0.2</h3>
 
+    <p>&bull; Fixed issue with "asynchronous" cookies when Jetty 11/12
+    recycles <code>Request</code> objects. This problem was reported
+    in <a
+    href="https://github.com/qos-ch/logback-access/issues/11">issues/11</a>
+    by You Aoki.
+    </p>
+    
     <p>&bull; Fixed a bug whereby included configuration files would
     not be handled properly.  This problem was reported in
-    in <a href="https://github.com/qos-ch/logback-access/issues/14>issues/14</a>
+    in <a href="https://github.com/qos-ch/logback-access/issues/14">issues/14</a>
     by Robert H&ouml;glund.
     </p>
         
@@ -166,15 +172,17 @@
     in <a href="https://github.com/qos-ch/logback-access/issues/12">issues/12</a>
       by Christophe Roudet.
     </p>
+
     
     <p>&bull; A bit-wise identical binary of this version can be
-    reproduced by checking out the tag v_2.0.2 from the source code <a
-    href="https://github.com/qos-ch/logback-access">repository</a>
-    (GitHub). Releases built using Java "21" 2023-10-17 LTS build
-    21.0.1.+12-LTS-29 under Linux Debian 11.6.
+    reproduced by building from <a
+    href="https://github.com/qos-ch/logback-access">source code</a> at
+    commit <code>51b2693c2f7f01a463d29599a6363da2bef50929</code>
+    associated with the tag <code>v_2.0.2</code>. Release built using
+    Java "21" 2023-10-17 LTS build 21.0.1.+12-LTS-29 under Linux
+    Debian 11.6.
     </p>
-    -->
-    
+     
 
     
     <hr width="80%" align="center" />
@@ -182,11 +190,11 @@
     <h3 class="doAnchor" name="1.5.6">2024-04-17 Release of logback
     version 1.5.6</h3>
 
-    <p>&bull; Fixed incorrect handling of a included configuration
+    <p>&bull; Fixed incorrect handling of an included configuration
     file containing inner conditionals. This issue was reported in <a
     href="https://github.com/qos-ch/logback/issues/805">issues/805</a>
     by Johan Mast.</p>
-
+ 
     <p>&bull; A bit-wise identical binary of this version can be
     reproduced by checking out the tag v_1.5.6 from the
     source code repository (GitHub). Releases built using Java "21"
@@ -281,9 +289,8 @@
     source code repository (GitHub). Releases built using Java "21"
     2023-10-17 LTS build 21.0.1.+12-LTS-29 under Linux Debian 11.6.
     </p>
-
     
-    <hr width="80%" align="center" />.
+    <hr width="80%" align="center" />
     
     <h3 class="doAnchor" name="access_2.0.0">2024-03-29 Release of logback-access
     version 2.0.0</h3>
