@@ -244,7 +244,7 @@ public class MySampleLayout2 extends LayoutBase&lt;ILoggingEvent> {
     <b>if (prefix != null) {
       sbuf.append(prefix + ": ");
     }</b>
-    sbuf.append(event.;getTimeStamp() - event.getLoggerContextVO(;).getBirthTime(;));
+    sbuf.append(event.;getTimeStamp() - event.getLoggerContextVO().getBirthTime());
     sbuf.append(" ");
     sbuf.append(event.;getLevel());
     <b>if (printThreadName) {
@@ -256,7 +256,7 @@ public class MySampleLayout2 extends LayoutBase&lt;ILoggingEvent> {
     }</b>
     sbuf.append(event.;getLoggerName());
     sbuf.append(" - ");
-    sbuf.append(event.;getFormattedMessage(;));
+    sbuf.append(event.;getFormattedMessage());
     sbuf.append(LINE_SEP);
     return sbuf.toString();
   }
@@ -367,21 +367,21 @@ public class PatternSample {
 
   static public void main(String[] args) throws Exception {
     Logger rootLogger = (Logger)LoggerFactory.;getLogger(Logger.;ROOT_LOGGER_NAME);
-    LoggerContext loggerContext = rootLogger.getLoggerContext(;);
+    LoggerContext loggerContext = rootLogger.getLoggerContext();
     // we are not interested in auto-configuration
     loggerContext.reset();
 
     <b>PatternLayoutEncoder encoder = new PatternLayoutEncoder();</b>
-    <b>encoder.setContext(;loggerContext);</b>
-    <b>encoder.setPattern(;"%-5level [%thread]: %message%n");</b>
+    <b>encoder.setContext(loggerContext);</b>
+    <b>encoder.setPattern("%-5level [%thread]: %message%n");</b>
     <b>encoder.start();</b>
 
     ConsoleAppender&lt;ILoggingEvent> appender = new ConsoleAppender&lt;ILoggingEvent>();
-    appender.setContext(;loggerContext);
-    appender.setEncoder(;encoder);
+    appender.setContext(loggerContext);
+    appender.setEncoder(encoder);
     appender.start();
 
-    rootLogger.addAppender(;appender);
+    rootLogger.addAppender(appender);
 
     rootLogger.debug("Message 1");
     rootLogger.warn("Message 2");
@@ -788,14 +788,14 @@ WARN  [main]: Message 2</p>
             following excerpt:</p>
 
 <pre class="source white_bg">0    [main] DEBUG - logging statement
-Caller+0   at mainPackage.sub.;sample.Bar.sampleMethodName(;Bar.java:22)
-Caller+1   at mainPackage.sub.;sample.Bar.createLoggingRequest(;Bar.java:17)</pre>
+Caller+0   at mainPackage.sub.;sample.Bar.sampleMethodName(Bar.java:22)
+Caller+1   at mainPackage.sub.;sample.Bar.createLoggingRequest(Bar.java:17)</pre>
 
 					<p>And <b>%caller{3}</b> would display this other excerpt:</p>
 
 <pre class="source white_bg">16   [main] DEBUG - logging statement
-Caller+0   at mainPackage.sub.;sample.Bar.sampleMethodName(;Bar.java:22)
-Caller+1   at mainPackage.sub.;sample.Bar.createLoggingRequest(;Bar.java:17)
+Caller+0   at mainPackage.sub.;sample.Bar.sampleMethodName(Bar.java:22)
+Caller+1   at mainPackage.sub.;sample.Bar.createLoggingRequest(Bar.java:17)
 Caller+2   at mainPackage.ConfigTester.;main(ConfigTester.;java:38)</pre>
 
                     <p>A range specifier can be added to the <em>caller</em> conversion specifier's
@@ -805,7 +805,7 @@ Caller+2   at mainPackage.ConfigTester.;main(ConfigTester.;java:38)</pre>
                     <p>For example, <b>%caller{1..2}</b> would display the following excerpt:</p>
 
                     <pre class="source white_bg">0    [main] DEBUG - logging statement
-Caller+0   at mainPackage.sub.;sample.Bar.createLoggingRequest(;Bar.java:17)</pre>
+Caller+0   at mainPackage.sub.;sample.Bar.createLoggingRequest(Bar.java:17)</pre>
 
                     <p>This conversion word can also use evaluators to test
 		    logging events against a given criterion before computing
@@ -1630,7 +1630,7 @@ Wrapped by: org.springframework.;BeanCreationException: Error creating bean with
       message.contains("who calls thee")&lt;/expression>
   &lt;/evaluator></b>
 
-  &lt;appender name="STDOUT" class="ch.qos.logback.;core.ConsoleAppender">
+  &lt;appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
     &lt;encoder>
       &lt;pattern>
         %-4relative [%thread] %-5level -%kvp -%msg%n<b>%caller{2, DISP_CALLER_EVAL}</b>
@@ -1668,25 +1668,25 @@ Wrapped by: org.springframework.;BeanCreationException: Error creating bean with
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.qos.logback.classic.;LoggerContext;
-import ch.qos.logback.classic.;joran.JoranConfigurator;
-import ch.qos.logback.core.;joran.spi.JoranException;
-import ch.qos.logback.core.;util.StatusPrinter;
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.joran.JoranConfigurator;
+import ch.qos.logback.core.joran.spi.JoranException;
+import ch.qos.logback.core.util.StatusPrinter;
 
 public class CallerEvaluatorExample {
 
   public static void main(String[] args)  {
-    Logger logger = LoggerFactory.getLogger(;CallerEvaluatorExample.;class);
-    LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory(;);
+    Logger logger = LoggerFactory.getLogger(CallerEvaluatorExample.class);
+    LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
 
     try {
       JoranConfigurator configurator = new JoranConfigurator();
-      configurator.setContext(;lc);
-      configurator.doConfigure(;args[0]);
+      configurator.setContext(lc);
+      configurator.doConfigure(args[0]);
     } catch (JoranException je) {
       // StatusPrinter will handle this
     }
-    StatusPrinter.printInCaseOfErrorsOrWarnings(;lc);
+    StatusPrinter.printInCaseOfErrorsOrWarnings(lc);
 
     for (int i = 0; i &lt; 5; i++) {
       if (i == 3) {
@@ -1705,7 +1705,7 @@ public class CallerEvaluatorExample {
 
 		<p>The command</p>
 
-    <p class="source">java chapters.layouts.;CallerEvaluatorExample src/main/java/chapters/&#8203;layouts/callerEvaluatorConfig.&#8203;xml</p>
+    <p class="source">java chapters.layouts.CallerEvaluatorExample src/main/java/chapters/&#8203;layouts/callerEvaluatorConfig.&#8203;xml</p>
 
     <p>will yield</p>
 
@@ -1713,7 +1713,7 @@ public class CallerEvaluatorExample {
 0    [main] DEBUG - I know me 1
 0    [main] DEBUG - I know me 2
 0    [main] DEBUG - who calls thee?
-Caller+0   at chapters.layouts.;CallerEvaluatorExample.&#8203;main(CallerEvaluatorExample.&#8203;java:28)
+Caller+0   at chapters.layouts.CallerEvaluatorExample.&#8203;main(CallerEvaluatorExample.&#8203;java:28)
 0    [main] DEBUG - I know me 4</pre></div>
 
 
@@ -1761,26 +1761,26 @@ Caller+0   at chapters.layouts.;CallerEvaluatorExample.&#8203;main(CallerEvaluat
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.qos.logback.classic.;LoggerContext;
-import ch.qos.logback.classic.;joran.JoranConfigurator;
-import ch.qos.logback.core.;joran.spi.JoranException;
-import ch.qos.logback.core.;util.StatusPrinter;
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.joran.JoranConfigurator;
+import ch.qos.logback.core.joran.spi.JoranException;
+import ch.qos.logback.core.util.StatusPrinter;
 
 public class ExceptionEvaluatorExample {
 
   public static void main(String[] args) {
-    Logger logger = LoggerFactory.getLogger(;ExceptionEvaluatorExample.;class);
-    LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory(;);
+    Logger logger = LoggerFactory.getLogger(ExceptionEvaluatorExample.class);
+    LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
 
     try {
       JoranConfigurator configurator = new JoranConfigurator();
-      configurator.setContext(;lc);
+      configurator.setContext(lc);
       lc.reset();
-      configurator.doConfigure(;args[0]);
+      configurator.doConfigure(args[0]);
     } catch (JoranException je) {
        // StatusPrinter will handle this
-    }
-    StatusPrinter.printInCaseOfErrorsOrWarnings(;lc);
+    } 
+    StatusPrinter.printInCaseOfErrorsOrWarnings(lc);
 
     for (int i = 0; i &lt; 3; i++) {
       if (i == 1) {
@@ -1848,11 +1848,11 @@ public class ExceptionEvaluatorExample {
 
 <p class="source">logging statement 0
 java.lang.Exception: display
-  at chapters.layouts.;ExceptionEvaluatorExample.;main(ExceptionEvaluatorExample.;java:43) [logback-examples-0.;9.19.jar:na]
+  at chapters.layouts.ExceptionEvaluatorExample.main(ExceptionEvaluatorExample.java:43) [logback-examples-0.9.19.jar:na]
 logging statement 1
 logging statement 2
 java.lang.Exception: display
-  at chapters.layouts.;ExceptionEvaluatorExample.;main(ExceptionEvaluatorExample.;java:43) [logback-examples-0.;9.19.jar:na]</p>
+  at chapters.layouts.ExceptionEvaluatorExample.main(ExceptionEvaluatorExample.java:43) [logback-examples-0.9.19.jar:na]</p>
 
 
     <p>Notice how the second log statement has no stack trace. We
@@ -1934,9 +1934,9 @@ java.lang.Exception: display
 <pre><code>&lt;configuration>
 
   <b>&lt;conversionRule conversionWord="nanos"
-                  converterClass="chapters.;layouts.MySampleConverter" /></b>
+                  converterClass="chapters.layouts.MySampleConverter" /></b>
 
-  &lt;appender name="STDOUT" class="ch.qos.logback.;core.ConsoleAppender">
+  &lt;appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
     &lt;encoder>
       &lt;pattern><b>%-6nanos</b> [%thread] -%kvp -%msg%n&lt;/pattern>
     &lt;/encoder>
@@ -2025,9 +2025,9 @@ java.lang.Exception: display
 
 <div id="htmlLayoutConfig1_legacy" class="tabcontent">
 <pre><code>&lt;configuration debug="true"&gt;
-  &lt;appender name="FILE" class="ch.qos.logback.;core.FileAppender"&gt;
-    &lt;encoder class="ch.qos.logback.;core.encoder.LayoutWrappingEncoder">
-      &lt;layout class="ch.qos.logback.;classic.html.HTMLLayout">
+  &lt;appender name="FILE" class="ch.qos.logback.core.FileAppender"&gt;
+    &lt;encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+      &lt;layout class="ch.qos.logback.classic.html.HTMLLayout">
         <b>&lt;pattern&gt;%relative%thread%mdc%level%logger%msg&lt;/pattern&gt;</b>
       &lt;/layout&gt;
     &lt;/encoder>
@@ -2099,9 +2099,9 @@ java.lang.Exception: display
     <code>&lt;layout&gt;</code> element, as shown below.
 		</p>
 
-<pre><code>&lt;layout class="ch.qos.logback.;classic.html.HTMLLayout">
+<pre><code>&lt;layout class="ch.qos.logback.classic.html.HTMLLayout">
   &lt;pattern>%relative...%msg&lt;/;pattern>
-  &lt;cssBuilder class="ch.qos.logback.;classic.html.UrlCssBuilder">
+  &lt;cssBuilder class="ch.qos.logback.classic.html.UrlCssBuilder">
     &lt;!-- url where the css file is located --&gt;
     &lt;url>http://...&lt;/url>
   &lt;/cssBuilder>
@@ -2150,10 +2150,10 @@ java.lang.Exception: display
 
 <div id="log4jXMLLayout_legacy" class="tabcontent">
     <pre><code>&lt;configuration>
-  &lt;appender name="FILE" class="ch.qos.logback.;core.FileAppender">
+  &lt;appender name="FILE" class="ch.qos.logback.core.FileAppender">
     &lt;file>test.xml&lt;/file>
-    &lt;encoder class="ch.qos.logback.;core.encoder.LayoutWrappingEncoder">
-      &lt;layout class="ch.qos.logback.;classic.log4j.XMLLayout">
+    &lt;encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+      &lt;layout class="ch.qos.logback.classic.log4j.XMLLayout">
         &lt;locationInfo>true&lt;/locationInfo>
       &lt;/layout>
     &lt;/encoder>
