@@ -567,6 +567,9 @@ WARN  [main]: Message 2</p>
          href="https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html">java.time.format.DateTimeFormatter</a>
          (in logback 1.3.x). </p>
 
+          <p>For microseconds, use the <b><a
+          href="#micros">micros/ms</a></b> conversion specifier.</p>
+         
          <p>You can specify the string <em>"ISO8601"</em> for the
          ISO8601 date format. Note that the %date conversion word
          defaults to the <a
@@ -730,16 +733,6 @@ WARN  [main]: Message 2</p>
 
          
          
-        <tr>
-          <td class="word" name="micros">
-            <b>micros / ms</b>
-          </td>
-          <td><p><span class="label notice">Since 1.3</span> Outputs the microseconds of the timestamp included in
-          the event.</p>
-
-          <p>For performance reasons, the microseconds have to be specified separately and in addition to %date.</p>
-          </td>
-        </tr>
 
 
 
@@ -822,19 +815,20 @@ Caller+0   at mainPackage.sub.;sample.Bar.createLoggingRequest(Bar.java:17)</pre
 
 		<tr>
 		  <td class="word" name="kvp">
-		    <b>kvp{NONE,SINGLE,DOUBLE}</b>
+		    <b>kvp{NONE|SINGLE|DOUBLE}</b>
 		  </td>
 		  <td>
                     <p>Outputs the key value pairs contained in the
-                    logging event. By default, the value part will be
-                    surrounded by double quotes. You can
-                    override the default by specifying NONE or SINGLE,
-                    for no quote character or the single quote
-                    character &apos; respectively.
+                    logging event.  You can override the default by
+                    specifying NONE for no quote character or SINGLE
+                    for a single quote character, DOUBLE for double
+                    quotes. By default, the value part will be
+                    surrounded by double quotes.
                     </p>
 
-                    <p>The value key pairs {k1, v1} and {k2, v2}
+                    <p>The key value pairs (k1, v1) and (k2, v2)
                     contained in the event will be output as follows:
+                    </p>
                     <table>
                       <tr>
                         <td>NONE</td>
@@ -852,8 +846,10 @@ Caller+0   at mainPackage.sub.;sample.Bar.createLoggingRequest(Bar.java:17)</pre
                         <td>default</td>
                         <td>same as if DOUBLE were specified</td>
                       </tr>
-
                     </table>
+
+                    <p>If you wish to mask the value of some keys, see
+                    the <a href="#maskedKvp">%maskedKvp</a> converter.</p>
 		  </td>
 		</tr>
 
@@ -873,6 +869,19 @@ Caller+0   at mainPackage.sub.;sample.Bar.createLoggingRequest(Bar.java:17)</pre
 		  </td>
 		</tr>
 
+                
+		<tr>
+		  <td class="word" name="message">
+		    <b>m / msg / message</b>
+		  </td>
+		  <td>
+                    <p>Outputs the application-supplied message associated with
+                    the logging event.
+                    </p>
+		  </td>
+		</tr>
+
+                
                 <tr>
                   <td class="word" name="marker">
                     <b>marker</b>
@@ -890,8 +899,51 @@ Caller+0   at mainPackage.sub.;sample.Bar.createLoggingRequest(Bar.java:17)</pre
                       <em>parentName [ child1, child2 ]</em>
                     </p>
                   </td>
-                </tr>
- 
+                </tr> 
+log
+                <!-- ========= -->
+
+                <tr>
+		  <td class="word" name="maskedKvp">
+		    <b>maskedKvp</b>{QUOTATION_SPEC, <em>key1, key2, ...</em>} <br/>
+		  </td>
+                          
+		  <td><p><span class="label notice">Since 1.5.7</span>
+		  Under most circumstances, you may probably wish to
+		  print all key-value pairs. However, sometimes you
+		  wish to mask values of certain keys, typically
+		  passwords, credit card numbers and such. While <a
+		  href="#replace">replace</a> converter can acheive
+		  that, pattern replacement comes at a computational
+		  cost.
+                  </p>
+
+                  <p>On the other hand, the %maskedKvp converter will
+                  mask values for all specified keys at practiacally
+                  no computational cost.
+                  </p>
+
+                  <p>For example, assuming key value pairs (k1, v1),
+                  (k2, v2) and (k3, v3) in the logging event,
+                  <b>%maskedKvp{k2, k3}</b> will output:</p>
+
+                  <p>k1="v1" k2="XXX" k3="XXX"</p>
+                  
+                  
+                  <p>If you wish to specify a quotation character, you
+                  may place an optional quotation specifier
+                  (QUOTATION_SPEC abobe) as the first argument. For
+                  example, for the same key vales <b>%maskedKvp{NONE,
+                  k2}</b> will output:</p>
+
+                  <p>k1=v1 k2=XXX k3=v3</p>                                    
+                  
+                  </td>
+                </tr> 
+
+                    <!-- ========================================= -->
+
+                
                 <tr>
 		  <td class="word" name="mdc">
 		    <b>mdc</b>{<em>key:-defaultVal</em>} <br />
@@ -927,17 +979,6 @@ Caller+0   at mainPackage.sub.;sample.Bar.createLoggingRequest(Bar.java:17)</pre
 		  </td>
 		</tr>
 
-                
-		<tr>
-		  <td class="word" name="message">
-		    <b>m / msg / message</b>
-		  </td>
-		  <td>
-                    <p>Outputs the application-supplied message associated with
-                    the logging event.
-                    </p>
-		  </td>
-		</tr>
 
 		<tr>
 		  <td class="word" name="method">
@@ -953,6 +994,22 @@ Caller+0   at mainPackage.sub.;sample.Bar.createLoggingRequest(Bar.java:17)</pre
 		  </td>
 		</tr>
 
+                <tr>
+                  <td class="word" name="micros">
+                    <b>micros / ms</b>
+                  </td>
+                  <td>
+                    <p><span class="label notice">Since 1.3</span>
+                    Outputs the microseconds of the timestamp included
+                    in the event.</p>
+                  
+                    <p>For performance reasons, the microseconds have
+                    to be specified separately and in addition to
+                    %date.</p>
+                  </td>
+                </tr>
+
+                
 		<tr>
 		  <td class="word" name="newline">
 		    <b>n</b>
@@ -2316,12 +2373,14 @@ java.lang.Exception: display
           containing a date and time pattern strings used by
           <code>java.text.SimpleDateFormat</code>.  <em>ISO8601</em>
           is also a valid value.
-					</p>
-					<p>For example, <b>%t{HH:mm:ss,SSS}</b> or
-					<b>%t{dd&nbsp;MMM&nbsp;yyyy&nbsp;;HH:mm:ss,SSS}</b>.
-					If no date format specifier is given then the
-					Common Log Format date format is assumed, that is: <b>%t{dd/MMM/yyyy:HH:mm:ss&nbsp;Z}</b>
-					</p>
+	  </p>
+	  <p>For example, <b>%t{HH:mm:ss,SSS}</b> or
+	  <b>%t{dd&nbsp;MMM&nbsp;yyyy&nbsp;;HH:mm:ss,SSS}</b>.  If no
+	  date format specifier is given then the Common Log Format
+	  date format is assumed, that is:
+	  <b>%t{dd/MMM/yyyy:HH:mm:ss&nbsp;Z}</b>
+	  </p>
+          
         </td>
       </tr>
       <tr>

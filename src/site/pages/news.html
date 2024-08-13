@@ -124,25 +124,52 @@
       </div>
     </div> 
 
-    <!--
+    <!-- 
 
     <hr width="80%" align="center" />
 
     <h3 class="doAnchor" name="1.5.7">2024-05-xx Release of logback
     version 1.5.7</h3>
 
+    <p>&bull; Confirmed solution of issue with incorrect
+    synchronization in <code>RollingFileAppender</code>. Issue
+    reported in <a
+    href="https://jira.qos.ch/browse/LOGBACK-1711">LOGBACK-1711</a> by
+    Gili Tzabari.
+    
     <p>&bull; Fixed issue with addinng properties following the
     valueOf convention into collections. This issue was reported in <a
-    href="https://jira.qos.ch/browse/LOGBACK-1445">LOGBACK-1445</> by
+    href="https://jira.qos.ch/browse/LOGBACK-1445">LOGBACK-1445</a> by
     Steve Lessard who also provided the relevant PR.</p>
 
+    <p>&bull; In configuration files, migrated processing of
+    "conversion rule" elements to model based processing.</p>
+
+    <p>&bull; Added <code>eCharsetPropertyDefiner</code> computes the
+    charset of the console. However, since certain methods in the computation
+    require Java 17, the code is available only in Java 21. This addresses issue
+    <a href="https://jira.qos.ch/browse/LOGBACK-1642">LOGBACK-1642</a>
+    reported by Garret Wilson.</p>
+
+    <p>&bull; Variable subsitution is now reported if it occurs. Added
+    test cases regarding substitution of variable in level attribute
+    or level elements. This adresses <a
+    href="https://jira.qos.ch/browse/LOGBACK-1519">/LOGBACK-1519</a>
+    reported by Phil Adams.  </p>
+
+    <p>&bull; Added <a
+    href="manual/layouts.html#maskedKvp"><b>%maskedKvp'</b></a>
+    converter which behaves similarly to %kvp except that it will
+    mask values for specified keys. This was indirecly requested in <a
+    href="https://github.com/qos-ch/logback/issues/828/">issues/828</a>
+    by Vinit Kumar.
+    </p>
+    
     <p>&bull; A bit-wise identical binary of this version can be
     reproduced by checking out the tag v_1.5.7 from the
     source code repository (GitHub). Releases built using Java "21"
     2023-10-17 LTS build 21.0.1.+12-LTS-29 under Linux Debian 11.6.
     </p>
-
-
 
 -->
 
