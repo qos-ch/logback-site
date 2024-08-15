@@ -957,10 +957,15 @@ import ch.qos.logback.classic.LoggerContext;
    installed automatically making <code>&lt;shutdownHook/></code>
    directive quite redundant and unnecessary. </p>
 
+   <p>As of version 1.5.7, installing a shutdown hook will replace
+     the previously installed hook. Thus, at most one logback shutdown
+     hook can be installed via the usual <em>logback.xml</em>
+     configuraiton.
+    </p>
 
 
-    <h4 class="doAnchor" name="webShutdownHook">WebShutdownHook or stopping logback-classic
-   in web-applications</h4>
+    <h4 class="doAnchor" name="webShutdownHook">WebShutdownHook or
+   stopping logback-classic in web-applications</h4>
 
    <p><span class="label">since 1.1.10</span> Logback-classic will
    <b>automatically</b> ask the web-server to install a <code><a
@@ -2642,7 +2647,7 @@ fileName=myApp.log
   &lt;/contextListener>
    &lt;!-- rest of the configuration file .... --&gt;
 &lt;/configuration></code></pre>
-
+ 
 </div>
 
 <div id="levelChangePropagator_RESET_canonical" class="tabcontent">
@@ -2651,6 +2656,10 @@ fileName=myApp.log
 <div id="levelChangePropagator_RESET_tyler" class="tabcontent"><p>Requires a server call.</p></div>
 
 
+    <p>Stating the obvious, if your application is modular and
+    presumably also uses <code>java.util.logging</code>, then your
+    application's <em>module-info.java</em> file will need to declare
+    'requires java.util'.</p>
 
       <p> </p>
 

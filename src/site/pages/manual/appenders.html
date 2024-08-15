@@ -2502,7 +2502,8 @@ public interface TriggeringPolicy&lt;E&gt; extends LifeCycle {
       <tr>
         <td><span class="prop" container="smtp">smtpHost</span></td>
         <td><code>String</code></td>
-        <td>The host name of the SMTP server. This parameter is mandatory.</td>
+        <td>The host name of the SMTP server. Defaults to "localhost"
+        in <code>com.sun.mail.smtp.SMTPTransport</code> if not set.</td>
       </tr>
       
       <tr>

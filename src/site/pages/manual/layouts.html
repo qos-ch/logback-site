@@ -570,16 +570,27 @@ WARN  [main]: Message 2</p>
           <p>For microseconds, use the <b><a
           href="#micros">micros/ms</a></b> conversion specifier.</p>
          
-         <p>You can specify the string <em>"ISO8601"</em> for the
-         ISO8601 date format. Note that the %date conversion word
-         defaults to the <a
-         href="http://en.wikipedia.org/wiki/ISO_8601">ISO 8601 date
-         format</a> in the absence of a pattern parameter.</p>
+         <p>You can specify the string <em>"ISO8601"</em> for the <a
+         href="http://en.wikipedia.org/wiki/ISO_8601">ISO8601 date
+         format</a>, equivalent to setting
+         "yyyy-MM-dd&nbsp;HH:mm:ss,SSS". Please note the space
+         included between the date and the time parts which is not
+         strictly ISO8601 compliant.
+         </p>
+
+         <p><span class="label notice">Since 1.5.7</span> For strict ISO8601
+         format, use <code>STRICT</code> which is equivalent to
+         setting the pattern "yyyy-MM-dd'T'HH:mm:ss,SSS".</p>
+
+         
+         <p>In the absence of a pattern parameter, the %date
+         conversion word defaults to ISO8601 (non strict) date
+         format.</p>
 
          <p>Here are some sample parameter values. They assume that
-         the actual date is Friday 20th of October, 2006 and that the
-         author has returned to working on this document just after
-         lunch.</p>
+         the actual date is Monday 20th of October, 2036 and that the
+         author has returned from the future to work on this document.
+         </p>
 
          <table class="bodyTable dark" cellpadding="8">
            <tr>
@@ -588,16 +599,21 @@ WARN  [main]: Message 2</p>
            </tr>
            <tr>
              <td>%d</td>
-             <td>2006-10-20 14:06:49,812</td>
+             <td>2036-10-20 14:06:49,812</td>
            </tr>
            <tr>
              <td>%date</td>
-             <td>2006-10-20 14:06:49,812</td>
+             <td>2036-10-20 14:06:49,812</td>
            </tr>
            <tr>
              <td>%date{ISO8601}</td>
-             <td>2006-10-20 14:06:49,812</td>
+             <td>2036-10-20 14:06:49,812</td>
            </tr>
+           <tr>
+             <td>%date{STRICT}</td>
+             <td>2036-10-20T14:06:49,812</td>
+           </tr>
+           
            <tr>
              <td>%date{HH:mm:ss.SSS}</td>
              <td>14:06:49.812</td>
@@ -611,10 +627,10 @@ WARN  [main]: Message 2</p>
           <p>The second parameter specifies a timezone. For example,
           the pattern '%date{HH:mm:ss.SSS,&nbsp;Australia/Perth}'
           would print the time in the time zone of Perth, Australia,
-          the most isolated city on Earth.  Note that in the absence
-          of the timezone parameter, the default timezone of the host
-          Java platform is used.  If the specified timezone identifier
-          is unknown or misspelled, the GMT timezone is assumed as
+          the most isolated city on Earth.  In the absence of the
+          timezone parameter, the default timezone of the host Java
+          platform is used.  If the specified timezone identifier is
+          unknown or misspelled, the GMT timezone is assumed as
           dictated by the <a
           href="http://docs.oracle.com/javase/6/docs/api/java/util/TimeZone.html#getTimeZone(java.lang.String)">TimeZone.getTimeZone(String)</a>
           method specification.
@@ -641,7 +657,13 @@ WARN  [main]: Message 2</p>
           your date pattern, then simply enclose the pattern between
           single or double quotes. For example,
           %date{<b>"</b>HH:mm:ss,SSS<b>"</b>} or
-          %date{<b>'</b>HH:mm:ss,SSS<b>'</b>}.
+          %date{<b>'</b>HH:mm:ss,SSS<b>'</b>}. 
+          </p>
+
+          <p><span class="label">common error</span> Parameters must
+          be supplied in the expected order. For example, "%date{UTC}"
+          will not be correctly interpreted and must be provided as
+          "%date{ISO8601, UTC}".
           </p>
 	</td>
          </tr>
