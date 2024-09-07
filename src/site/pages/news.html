@@ -111,7 +111,7 @@
 
     <h3>Reproducible builds</h3>
      
-    <div style="display: flex;">
+    <div style="display: flex;"> 
       <div style="margin-right: 1rem;">
          <a href="https://github.com/jvm-repo-rebuild/reproducible-central/">
           <img style="max-height: 5rem;" src="images/reproducible.svg"/>
@@ -125,6 +125,73 @@
       </div>
     </div> 
 
+    <!--
+    <hr width="80%" align="center" />
+
+    <h3 class="doAnchor" name="1.5.9">2024-09-xx Release of logback
+    version 1.5.9</h3>
+
+    <p>&bull; Fixed issue with <code>PropertiesConfigurator</code>
+    thrashing logger names of same length.</p>
+
+    <p>&bull; Fixed issue with <code>PropertiesConfigurator</code>
+    incorrectly handling level strings INHERITED and NULL.</p>
+
+    
+    <p>&bull; A bit-wise identical binary of this version can be
+    reproduced by building from <a
+    href="https://github.com/qos-ch/logback">source code</a> at commit
+    XXXXXXXXXXXX associated with the tag v_1.5.9. Release built using
+    Java "21" 2023-10-17 LTS build 21.0.1.+12-LTS-29 under Linux
+    Debian 11.6.
+    </p>
+    -->
+    <hr width="80%" align="center" />
+
+    <h3 class="doAnchor" name="1.5.8">2024-09-06 Release of logback
+    version 1.5.8</h3>
+
+    <p>&bull; <code>SizeAndTimeBasedRollingPolicy</code> now uses an
+    internal size counter instead of occasionally calling the OS to
+    obtain file size. The new approach is more precise and with less
+    jitter.</p>
+ 
+    <p>&bull; Introducing a new <code><a
+    href="manual/configuration.html#propertiesConfigurator">PropertiesConfigurator</a></code>
+    component to configure logger levels from a properties file. The
+    reconfiguration on change task supports watching the designated
+    properties file(s).</p>
+    
+
+    <p>&bull; A bit-wise identical binary of this version can be
+    reproduced by building from <a
+    href="https://github.com/qos-ch/logback">source code</a> at commit
+    92e1a5ea0adc3bc215fc9441fb711fb5726974e4 associated with the tag
+    v_1.5.8. Release built using Java "21" 2023-10-17 LTS build
+    21.0.1.+12-LTS-29 under Linux Debian 11.6.
+    </p>
+
+    
+    <hr width="80%" align="center" />
+
+    <h3 class="doAnchor" name="access_2.0.3">2024-08-16 Release of logback-access
+    version 2.0.3</h3>
+
+    <p>&bull; Bumped logback-core version to 1.5.7 and adapted
+    <code>LogbackValve.getConfigurationLock()</code> method to align with
+    logback-core.</p>
+    
+    <p>&bull; A bit-wise identical binary of this version can be
+    reproduced by building from <a
+    href="https://github.com/qos-ch/logback-access">source code</a> at
+    commit <code>f5d5f162953c348cf7dde2a59b1b09e3aeeda3a1</code>
+    associated with the tag <code>v_2.0.3</code>. Release built using
+    Java "21" 2023-10-17 LTS build 21.0.1.+12-LTS-29 under Linux
+    Debian 11.6.
+    </p>
+
+
+    
     <hr width="80%" align="center" />
 
     <h3 class="doAnchor" name="1.5.7">2024-08-15 Release of logback

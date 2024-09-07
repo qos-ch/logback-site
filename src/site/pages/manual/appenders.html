@@ -910,14 +910,14 @@ public interface RollingPolicy extends LifeCycle {
          file will be computed anew for each period based on the value
          of
          <span class="prop">fileNamePattern</span>. In this
-         configuration no roll over occur, unless file compression is
+         configuration no roll over occurs, unless file compression is
          specified. The examples below should clarify this point.
          </p>
 
          <p>The date-and-time pattern, as found within the accolades
          of %d{} follow java.text.SimpleDateFormat conventions. The
          forward slash '/' or backward slash '\' characters anywhere
-         within the <span class="option">fileNamePattern</span>
+         within the <span class="option">fileNamePattern</span> 
          property or within the date-and-time pattern will be
          interpreted as directory separators.
          </p>
@@ -985,7 +985,8 @@ public interface RollingPolicy extends LifeCycle {
        requires <span class="option">maxHistory</span> property to be
        set as well.  Moreover, the "max history" restriction is always
        applied first and the "total size cap" restriction applied
-       second.
+       second. In other words, if enabled, both restrictions are
+       applied, albeit sequentially.
        </p>
 
        <p>The <span class="prop">totalSizeCap</span> property can be
@@ -1006,7 +1007,7 @@ public interface RollingPolicy extends LifeCycle {
        <td>boolean</td>
        <td>
          <p>If set to true, archive removal will be executed on
-         appender start up. By default this property is set to
+         appender start up. By default, this property is set to
          false. </p>
 
          <p>Archive removal is normally performed during roll
