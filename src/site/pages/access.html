@@ -45,21 +45,28 @@
     the level of a web-application.
     </p>
 
+    <p><span class="label notice">Since 2.0.4</span> Given that
+    logback-access artifacts are usually imported into the servlet
+    container's <em>lib/</em> directory and managed manually,
+    logback-access artifact names such as <em>common-2.0.x.jar</em> or
+    <em>tomcat-2.0.x.jar</em> can be very confusing. To alleviate this
+    issue, as of logback-access version 2.0.4, all logback-access
+    artifacts are prefixed with the string "logback-access-".</p>
 
+    
     <h1 class="doAnchor" name="common">Logback-acess common</h1>
 
     <p>There is much code shared by both Tomcat and Jetty access
     logging. This code is located in a new module callled "common"
     having the following maven coordianes:</p>
  
-    <pre>
-  &lt;dependency>
+    <pre>  &lt;dependency>
     &lt;groupId>ch.qos.logback.access&lt;/groupId>
-    &lt;artifactId>common&lt;/artifactId>
+    &lt;artifactId>logback-access-common&lt;/artifactId>
     &lt;version>${latest.logback-access.version}&lt;/version>
   &lt;/dependency>    </pre>
 
-    <p>This "common" module relies on "logback-core" module with the
+    <p>The "logback-access-common" module relies on "logback-core" module with the
     Maven coordinates:</p>
 
     <pre>
@@ -74,21 +81,21 @@
     <h1 class="doAnchor" name="tomcat">Logback-access under Tomcat</h1>
 
     <p>Logback-access supports both Tomcat versions 10 and 11 with a
-    module called "ch.qos.logback.access:tomcat", having the following
+    module called "ch.qos.logback.access:logback-access-tomcat", having the following
     coordinates:</p>
 
     <pre>
   &lt;dependency> 
     &lt;groupId>ch.qos.logback.access&lt;/groupId>
-    &lt;artifactId>tomcat&lt;/artifactId>
+    &lt;artifactId>logback-access-tomcat&lt;/artifactId>
     &lt;version>${latest.logback-access.version}&lt;/version>      
   &lt;/dependency></pre>
     
     <p>To use logback-access with Tomcat, after downloading the
-    aforementioned artifactsw, place the files
+    aforementioned artifacts, place the files
     <em>ch.qos.logback:logback-core-${project.version}.jar</em> and
-    <em>ch.qos.logback.access:common-${latest.logback-access.version}.jar</em>
-    <em>ch.qos.logback.access:tomcat-${latest.logback-access.version}.jar</em>
+    <em>ch.qos.logback.access:logback-access-common-${latest.logback-access.version}.jar</em>
+    <em>ch.qos.logback.access:logback-access-tomcat-${latest.logback-access.version}.jar</em>
     under the $TOMCAT_HOME/lib/ directory, where $TOMCAT_HOME is the
     folder where you have installed Tomcat.
     </p>
@@ -197,7 +204,7 @@
     <pre>
   &lt;dependency>
     &lt;groupId>ch.qos.logback.access&lt;/groupId>
-    &lt;artifactId>jetty11&lt;/artifactId>
+    &lt;artifactId>logback-access-jetty11&lt;/artifactId>
     &lt;version>${latest.logback-access.version}&lt;/version>
   &lt;/dependency>    </pre>
 
@@ -206,18 +213,20 @@
     <pre>
   &lt;dependency>
     &lt;groupId>ch.qos.logback.access&lt;/groupId>
-    &lt;artifactId>jetty12&lt;/artifactId>
+    &lt;artifactId>logback-access-jetty12&lt;/artifactId>
     &lt;version>${latest.logback-access.version}&lt;/version>
   &lt;/dependency> </pre>
 
 
-    <p>Both Jetty artifacts require the logback-core and "common"
-    artifacts mentioned above. Moreover, these artifacts must be
-    copied under $JETTY_HOME/lib directory, where $JETTY_HOME is the
-    folder where you have installed Jetty. To be clear, for Jetty 11
-    the required artifacts are "ch.qos.logback:logback-core",
-    "ch.qos.logback.access:common" and "ch.qos.logback.access:jetty11".
-    For Jetty 12, replace the last artifact by "ch.qos.logback.access:jetty12".
+    <p>Both Jetty artifacts require the logback-core and
+    "logback-access-common" artifacts mentioned above. Moreover, these
+    artifacts must be copied under $JETTY_HOME/lib directory, where
+    $JETTY_HOME is the folder where you have installed Jetty. To be
+    clear, for Jetty 11 the required artifacts are
+    "ch.qos.logback:logback-core",
+    "ch.qos.logback.access:logback-access-common" and
+    "ch.qos.logback.access:logback-access-jetty11".  For Jetty 12,
+    replace the last artifact by "ch.qos.logback.access:logback-access-jetty12".
     </p>
  
 
