@@ -220,6 +220,12 @@
     configuration times.
     </p>
 
+    <p><span class="label">since 1.5.8</span> <a
+    href="#propertiesConfigurator"><code>PropertiesConfigurator</code></a>
+    allows for setting logger levels via a properties file. The
+    properties file can be fetched via HTTP or HTTPS
+    protocols. Watching for changes is also supported.</p>
+
     
     <h3 class="doAnchor" name="automaticConf">Automatically
     configuring logback</h3>
@@ -767,8 +773,16 @@ public class ServerMain {
    errors, it will fall back to a previous configuration file free of
    XML syntax errors.</p>
 
+   <p><span class="label">Since 1.5.9</span> It is possible to watch
+   for modifications in configuration files in properties format. See
+   <a
+   href="#propertiesConfigurator"><code>PropertiesConfigurator</code></a>
+   for further details.</p>
+ 
 
-   <h4 class="doAnchor" name="packagingData">Enabling packaging data in stack traces</h4>
+   
+   <h4 class="doAnchor" name="packagingData">Enabling packaging data
+   in stack traces</h4>
 
    <p class="highlight">While useful, packaging data is expensive to
    compute, especially in applications with frequent exceptions.</p>
@@ -2570,37 +2584,41 @@ fileName=myApp.log
   <h2 class="doAnchor" name="propertiesConfigurator">PropertiesConfigurator</h2>
 
   <p><span class="label notice">Since 1.5.8</span> The
-  <code>PropertiesConfigurator</code> can read a properties file to
-  set logger levels.</p>
+  <code>PropertiesConfigurator</code> offers limited but useful
+  functionality. It can read a properties file to set logger
+  levels. Variables are supported.</p>
 
   <p>As the scope of <code>PropertiesConfigurator</code> is limited to
   setting levels of loggers, the syntax of the properties file is
   simple.</p>
 
   <pre><code>
-    # defines aKey set to aValue
+    # defines a variable named "aKey" set to "aValue"
     aKey=aValue
     # sets the level of the root logger to 'LEVEL'
     logback.root=LEVEL
-    # sets the logger named 'LOGGER_NAME' to 'LEVEL'
-    logback.logger.LOGGER_NAME=LEVEL
+    # sets the logger named 'LOGGER.NAME' to 'LEVEL'
+    logback.logger.LOGGER.NAME=LEVEL
   </code></pre>
 
-  <p>where LOGGER_NAME is a logger name and LEVEL is one of the <a
+  <p>where LOGGE._NAME is a logger name and LEVEL is one of the <a
   href="#loggerElement">level values for configuring loggers</a>.
 
   <p>Note that variable substitution is allowed.</p>
 
   <p>Here is a sample .properties file:
 
-  <pre><code>
+    <pre><code>
+    # set the root logger to level INFO
     logback.root = INFO
 
+    # define variable 
     com_foo_level = DEBUG    
 
+    # set levels for loggers
     logback.logger.org.xyz.http = TRACE
     logback.logger.org.xyz.database = ERROR
-    logback.com.foo = ${com_foo_level}
+    logback.logger.com.foo = ${com_foo_level}
   </code></pre>
 
   <p>The location of .properties file is declared via the
@@ -2632,6 +2650,40 @@ fileName=myApp.log
   <div id="propertiesConfigurator_canonical" class="tabcontent"><p>Requires a server call.</p></div>
   <div id="propertiesConfigurator_tyler" class="tabcontent"><p>Requires a server call.</p></div>
 
+  <p>Note that configuration files in properties format are special in
+  the sense that they can be <a href="#autoScan">watched for
+  changes</a> on web-servers using HTTP or HTTPS protocols whereas,
+  security reasons, XML configuration files cannot be loaded via HTTP
+  or HTTPS.</p>
+
+  <p>Here is a sample configuration file including a remote properties
+  file. The file will be checked for changes every 10 minites and
+  reloaded upon modification.</p>
+
+    <div class="tab">
+    <button class="tablinks" id="button_propertiesConfiguratorHTTP_legacy"
+            onclick="openTab(event, 'propertiesConfiguratorHTTP, 'legacy')">Legacy</button>
+    <button class="tablinks" id="button_propertiesConfiguratorHTTP_canonical"
+            onclick="openTab(event, 'propertiesConfiguratorHTTP', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_propertiesConfiguratorHTTP_tyler"
+             onclick="openTab(event, 'propertiesConfiguratorHTTP', 'tyler')">Tyler</button>
+  </div>
+ 
+    
+  <div id="propertiesConfiguratorHTTP_legacy" class="tabcontent">
+    <pre><code>&lt;configuration scan="true" scanPeriod="10 minutes">
+    &lt;!-- the url must end with .properties .... --&gt;
+    &lt;propertiesConfigurator url="http://some.server/foo.properties"/>
+
+     &lt;!-- rest of the configuration file .... --&gt;
+&lt;/configuration>
+    </code></pre>
+  </div>
+
+  <div id="propertiesConfiguratorHTTP_canonical" class="tabcontent"><p>Requires a server call.</p></div>
+  <div id="propertiesConfiguratorHTTP_tyler" class="tabcontent"><p>Requires a server call.</p></div>
+
+  <p>The url must end with the string ".properties" to be watched for changes.</p>
   
   <!-- ==================== ContextListener =================== -->
   <h2 class="doAnchor" name="contextListener">Adding a context

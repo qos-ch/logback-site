@@ -128,15 +128,57 @@
     <!--
     <hr width="80%" align="center" />
 
-    <h3 class="doAnchor" name="1.5.9">2024-09-xx Release of logback
+    <h3 class="doAnchor" name="access_2.0.4">2024-09-xx Release of logback-access
+      version 2.0.4</h3>
+
+    <p>&bull; Given that logback-access artifacts are often imported
+    manually into the servlet container's lib/ directory,
+    logback-access artifact names such as <em>common-2.0.x.jar</em> or
+    <em>tomcat-2.0.x.jar</em> can be confusing. To alleviate this
+    issue all logback-access artifacts are now prefixed with
+    "logback-access-". This issue was reported in <a
+    href="https://github.com/qos-ch/logback-access/issues/21">logback-access/issues/21</a>
+    by Francisco A. Lozano.
+    </p>
+    
+    <p>&bull; A bit-wise identical binary of this version can be
+    reproduced by building from <a
+    href="https://github.com/qos-ch/logback-access">source code</a> at
+    commit <code>XXXXXXXXXXXXXX</code>
+    associated with the tag <code>v_2.0.4</code>. Release built using
+    Java "21" 2023-10-17 LTS build 21.0.1.+12-LTS-29 under Linux
+    Debian 11.6.
+     </p>
+     
+    -->
+
+    
+
+    <hr width="80%" align="center" />
+
+    <h3 class="doAnchor" name="1.5.9">2024-10-08 Release of logback
     version 1.5.9</h3>
 
+    <p>&bull; Fixed issue in version 1.5.7 causing inccorrect header
+    output by <code>RollingFileAppender</code> as reported in <a
+    href="https://github.com/qos-ch/logback/issues/857">issues/857</a>
+    reported by Carl Mai who also provided the relevant patch.</p>
+
+    <p>&bull; Logback now supports reading files and watching changes
+    in configuration files in properties format. The contents can be
+    located in a file or a URL using http/https protocols.
+    </p>
+        
     <p>&bull; Fixed issue with <code>PropertiesConfigurator</code>
     thrashing logger names of same length.</p>
 
     <p>&bull; Fixed issue with <code>PropertiesConfigurator</code>
     incorrectly handling level strings INHERITED and NULL.</p>
 
+    <p>&bull; Fixed bug with incorrect escaping of reverse solidus,
+    i.e. the backslash characer. This issue was raised
+    in <a href="https://github.com/qos-ch/logback/issues/861">issues/861</a>
+    by "zooway".
     
     <p>&bull; A bit-wise identical binary of this version can be
     reproduced by building from <a
@@ -145,17 +187,31 @@
     Java "21" 2023-10-17 LTS build 21.0.1.+12-LTS-29 under Linux
     Debian 11.6.
     </p>
-    -->
+
+
+    
     <hr width="80%" align="center" />
 
     <h3 class="doAnchor" name="1.5.8">2024-09-06 Release of logback
     version 1.5.8</h3>
 
-    <p>&bull; <code>SizeAndTimeBasedRollingPolicy</code> now uses an
-    internal size counter instead of occasionally calling the OS to
-    obtain file size. The new approach is more precise and with less
-    jitter.</p>
- 
+    <p>&bull; <a
+    href="manual/appenders.html#SizeAndTimeBasedRollingPolicy"><code>SizeAndTimeBasedRollingPolicy</code></a>
+    now uses an internal size counter instead of occasionally calling
+    the OS to obtain file size. The new approach is more precise and
+    with less jitter.</p>
+
+    
+    <p>&bull; In relation to the aforementioned change,
+    <code>SizeAndTimeBasedFNATP</code> class was renamed as
+    <code>SizeAndTimeBasedFileNamingAndTriggeringPolicy</code>. Thus,
+    earlier configuration files using
+    <code>SizeAndTimeBasedFNATP</code> will no longer work.  However, 
+    given that <code>SizeAndTimeBasedRollingPolicy</code> offers a
+    simpler configuration structure, the documentation ceased to
+    mention <code>SizeAndTimeBasedFNATP</code> since 2016.</p>
+    
+    
     <p>&bull; Introducing a new <code><a
     href="manual/configuration.html#propertiesConfigurator">PropertiesConfigurator</a></code>
     component to configure logger levels from a properties file. The

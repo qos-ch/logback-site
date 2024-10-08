@@ -1417,11 +1417,10 @@ public interface RollingPolicy extends LifeCycle {
        <td><span class="prop">checkIncrement</span></span></td>
        <td><code><a href="../apidocs/ch/qos/logback/core/util/Duration.html">Duration</a></code></td>
 
-       <td><p><span class="label notice">since 1.3.12/1.4.12</span> Given
-       that checking for file size is a relatively costly operation,
-       by default it is performed once every 60 seconds.  However, you
-       can set a different check increment as a <a
-       href="../apidocs/ch/qos/logback/core/util/Duration.html">duration</a>.</p>       
+       <td><p><span class="label notice">since 1.5.8</span> The
+       <span
+    class="option">checkIncrement</span> property is no longer needed as logback now
+       counts the number of bytes written to file.</p>
        </td>
      </tr>
 
@@ -1432,7 +1431,7 @@ public interface RollingPolicy extends LifeCycle {
     based log file archiving.</p>
     
   <p class="example">Example: Sample configuration for
-  <code>SizeAndTimeBasedFNATP</code> 
+  <code>SizeAndTimeBasedRollingPolicy</code> 
   (logback-examples/&#8203;src/main/resources/&#8203;chapters/appenders/&#8203;conf/logback-sizeAndTime.&#8203;xml)</p>
 
   
@@ -1494,12 +1493,13 @@ public interface RollingPolicy extends LifeCycle {
     called <code>SizeAndTimeBasedFNATP</code>. However, given that
     <code>SizeAndTimeBasedRollingPolicy</code> offers a simpler configuration
     structure, we no longer document
-    <code>SizeAndTimeBasedFNATP</code>.  Nevertheless, earlier
+    <code>SizeAndTimeBasedFNATP</code>.  Moreover, in logback version
+    1.5.8,
+    <code>SizeAndTimeBasedFNATP</code> was renamed as
+    <code>SizeAndTimeBasedFileNamingAndTriggeringPolicy</code>. Thus, earlier
     configuration files using <code>SizeAndTimeBasedFNATP</code> will
-    continue to work just fine. In fact,
-    <code>SizeAndTimeBasedRollingPolicy</code> is implemented with a
-    <code>SizeAndTimeBasedFNATP</code> subcomponent.</p>
-
+    no longer work. </p>
+ 
    <h4 class="doAnchor" name="FixedWindowRollingPolicy">FixedWindowRollingPolicy</h4>
 
    
