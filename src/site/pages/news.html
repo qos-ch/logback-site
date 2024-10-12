@@ -129,8 +129,8 @@
 
     <hr width="80%" align="center" />
 
-    <h3 class="doAnchor" name="tyler_0.8">2024-10-12 Release of logback-tyler
-    version 0.8</h3>
+    <h3 class="doAnchor" name="tyler_0.8.0">2024-10-12 Release of logback-tyler
+    version 0.8.0</h3>
 
     <p>&bull; Added the capability to scan for changes in properties
     configuration files.</p>
@@ -146,7 +146,7 @@
     the tag v_0.8.0. Release built using Java "21" 2023-10-17 LTS
     build 21.0.1.+12-LTS-29 under Linux Debian 11.6.
   </p>
-  
+   
     <!-- =========== -->
 
 
@@ -155,13 +155,12 @@
     <h3 class="doAnchor" name="1.5.10">2024-10-12 Release of logback
     version 1.5.10</h3>
 
-    <p>&bull; Fixed issue <code>with</code> JSONEncoder producing s
+    <p>&bull; Fixed issue with <code>JSONEncoder</code> producing
     invalid json when certain fields are disabled, in particular the
-    field <code>throwable #866 in version 1.5.7 causing inccorrect
-    header output by <code>RollingFileAppender</code> as reported in
-    <a
-    href="https://github.com/qos-ch/logback/issues/857">issues/857</a>
-    reported by Carl Mai who also provided the relevant patch.</p>
+    field <code>throwable</code> in version 1.5.7. This issue was
+    reported in <a
+    href="https://github.com/qos-ch/logback/issues/866">issues/866</a>
+    by Ben Hurwitz.</p>
 
     <p>&bull; Minor refactoring to allow
     <code>ConfigurationModelHandlerFull</code> and
