@@ -8,7 +8,7 @@
 
     <script type="text/javascript">prefix='../';</script>
 </head>
-  <body onload="enableMenuEventListeners(); hljs.highlightAll(); decorate(); addClipboardListener(); enableLegacy();">
+  <body onload="loopOn(); enableMenuEventListeners(); hljs.highlightAll(); decorate(); addClipboardListener(); enableLegacy();">
 
   <script type="text/javascript" src="../templates/header3.js"></script>
 
@@ -2626,9 +2626,11 @@ fileName=myApp.log
 
    <div class="tab">
     <button class="tablinks" id="button_propertiesConfigurator_legacy"
-            onclick="openTab(event, 'propertiesConfigurator, 'legacy')">Legacy</button>
+            onclick="openTab(event, 'propertiesConfigurator', 'legacy')">Legacy</button>
+    
     <button class="tablinks" id="button_propertiesConfigurator_canonical"
             onclick="openTab(event, 'propertiesConfigurator', 'canonical')">Canonical (1.3)</button>
+
     <button class="tablinks" id="button_propertiesConfigurator_tyler"
              onclick="openTab(event, 'propertiesConfigurator', 'tyler')">Tyler</button>
   </div>

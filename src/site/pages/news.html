@@ -125,30 +125,59 @@
       </div>
     </div> 
 
+    <!-- =========== -->
 
     <hr width="80%" align="center" />
 
-    <!--
-    <h3 class="doAnchor" name="1.5.10">2024-10-xx Release of logback
+    <h3 class="doAnchor" name="tyler_0.8">2024-10-12 Release of logback-tyler
+    version 0.8</h3>
+
+    <p>&bull; Added the capability to scan for changes in properties
+    configuration files.</p>
+    
+    <p>&bull; For further documentation on logback-tyler see the <a
+    href="https://github.com/qos-ch/logback-tyler/">logback-tyler
+    repository</a>.</p>
+
+    <p>&bull; A bit-wise identical binary of this version can be
+    reproduced by building from <a
+    href="https://github.com/qos-ch/logback-tyler">source code</a> at
+    commit 52c99b9f5f4952181d7a198a00e6ba5407b7c5de associated with
+    the tag v_0.8.0. Release built using Java "21" 2023-10-17 LTS
+    build 21.0.1.+12-LTS-29 under Linux Debian 11.6.
+  </p>
+  
+    <!-- =========== -->
+
+
+    <hr width="80%" align="center" />
+        
+    <h3 class="doAnchor" name="1.5.10">2024-10-12 Release of logback
     version 1.5.10</h3>
 
     <p>&bull; Fixed issue <code>with</code> JSONEncoder producing s
-    invalid json when certain fields are disabled, in particular the field <code>throwable #866 in version 1.5.7
-    causing inccorrect header output by
-    <code>RollingFileAppender</code> as reported in <a
+    invalid json when certain fields are disabled, in particular the
+    field <code>throwable #866 in version 1.5.7 causing inccorrect
+    header output by <code>RollingFileAppender</code> as reported in
+    <a
     href="https://github.com/qos-ch/logback/issues/857">issues/857</a>
     reported by Carl Mai who also provided the relevant patch.</p>
 
+    <p>&bull; Minor refactoring to allow
+    <code>ConfigurationModelHandlerFull</code> and
+    <code>PropertiesConfiguratorModelHandler</code> funtionality to be
+    callable by logback-tyler. 
+    </p>
     
     <p>&bull; A bit-wise identical binary of this version can be
     reproduced by building from <a
     href="https://github.com/qos-ch/logback">source code</a> at commit
-    XXXXXXXXXXXXXXXXXXXXXXX associated with the tag
+    56ec7b2e0f6047aef077dbefc34a57ed38881a54 associated with the tag
     v_1.5.10. Release built using Java "21" 2023-10-17 LTS build
     21.0.1.+12-LTS-29 under Linux Debian 11.6.
     </p>
 
--->
+
 
      
     <hr width="80%" align="center" />
@@ -211,7 +240,6 @@
     v_1.5.9. Release built using Java "21" 2023-10-17 LTS build
     21.0.1.+12-LTS-29 under Linux Debian 11.6.
     </p>
-
 
     
     <hr width="80%" align="center" />
