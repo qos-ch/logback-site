@@ -168,11 +168,23 @@
       configuration. Note that this is the <b>nominal</b>
       configuration step.</p>
 
+      
+      <p><span class="label">since 1.5.8</span> <a
+      href="#propertiesConfigurator"><code>PropertiesConfigurator</code></a>,
+      introduced in version 1.5.8, allows for setting logger levels
+      via a properties file. The location of properties files can be
+      specified as a file path as well a URL via HTTP or HTTPS
+      protocols. Watching files and reconfiguration upon change is
+      also supported. Note that configuration files in properties
+      format are intended to be part of the main configuration file in
+      XML format. </p>
+
+    
       <p>&bull; If  no   configuration   file   could  be   located,
       <code>DefaultJoranConfigurator</code>   will   return  with   an
       execution  status asking  for the  next available  configurator,
       i.e. <code>BasicConfigurator</code></a>, to be invoked.
-      </p>
+    </p>    
       </li>
 
       
@@ -219,12 +231,6 @@
     model</a> format is a quick and convenient way of improving
     configuration times.
     </p>
-
-    <p><span class="label">since 1.5.8</span> <a
-    href="#propertiesConfigurator"><code>PropertiesConfigurator</code></a>
-    allows for setting logger levels via a properties file. The
-    properties file can be fetched via HTTP or HTTPS
-    protocols. Watching for changes is also supported.</p>
 
     
     <h3 class="doAnchor" name="automaticConf">Automatically
@@ -2584,7 +2590,7 @@ fileName=myApp.log
   <h2 class="doAnchor" name="propertiesConfigurator">PropertiesConfigurator</h2>
 
   <p><span class="label notice">Since 1.5.8</span> The
-  <code>PropertiesConfigurator</code> offers limited but useful
+  <code>PropertiesConfigurator</code> offers useful albeit limited
   functionality: it can read .properties files to set logger
   levels. Variable definition as well as variable substitution are
   also supported.</p>
@@ -2656,7 +2662,7 @@ fileName=myApp.log
   or HTTPS.</p>
 
   <p>Here is a sample configuration file including a remote properties
-  file. The file will be checked for changes every 10 minites and
+  file. The file will be checked for changes every 10 minutes and
   reloaded upon modification.</p>
 
     <div class="tab">
@@ -2686,7 +2692,7 @@ fileName=myApp.log
   
   <!-- ==================== ContextListener =================== -->
   <h2 class="doAnchor" name="contextListener">Adding a context
-  listener</h2>
+  listener</h2> 
 
   <p>Instances of the <a
   href="../xref/ch/qos/logback/classic/spi/LoggerContextListener.html">LoggerContextListener</a>
@@ -2789,7 +2795,7 @@ fileName=myApp.log
    creation. This field is fed by a sequence number generator attached
    to the logging context.</p>
 
-   <p>A sequence number  generatror is set as follows:</p>
+   <p>A sequence number generator is set as follows:</p>
 
    <div class="tab">
     <button class="tablinks" id="button_sequnceNumberGenerator_legacy"
