@@ -167,17 +167,18 @@
       this file can be located, it will be read and interpreted for
       configuration. Note that this is the <b>nominal</b>
       configuration step.</p>
-
+ 
       
-      <p><span class="label">since 1.5.8</span> <a
-      href="#propertiesConfigurator"><code>PropertiesConfigurator</code></a>,
+      <p><span class="label">since
+      1.5.8</span> <a href="#propertiesConfigurator"><code>PropertiesConfigurator</code></a>,
       introduced in version 1.5.8, allows for setting logger levels
       via a properties file. The location of properties files can be
       specified as a file path as well a URL via HTTP or HTTPS
       protocols. Watching files and reconfiguration upon change is
       also supported. Note that configuration files in properties
-      format are intended to be part of the main configuration file in
-      XML format. </p>
+      format are intended to be part of a main configuration file in
+      XML format or a configurator produced by
+      <a href="https://logback.qos.ch/translator/services/xml2Java.html">logback-tyler</a>. </p>
 
     
       <p>&bull; If  no   configuration   file   could  be   located,
