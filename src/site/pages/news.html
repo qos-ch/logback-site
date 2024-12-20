@@ -108,8 +108,8 @@
     scripts are now largely order-free. For example, appenders can now
     be defined after they are first referenced in a logger. Moreover,
     unreferenced appenders are no longer instantiated. </p>
-
-    <h3>Reproducible builds</h3>
+ 
+    <h3  class="doAnchor" name="reproducible">Reproducible builds</h3>
      
     <div style="display: flex;"> 
       <div style="margin-right: 1rem;">
@@ -126,19 +126,133 @@
     </div> 
 
     <!-- ============================================================================ -->
-    
-    
-    <!-- =========== -->
-    
-
-
-    <!--
 
     <hr width="80%" align="center" />
 
-    <h3 class="doAnchor" name="1.5.12">2024-10-xx Release of logback
+    
+    <h3 class="doAnchor" name="access_2.0.5">2024-12-19 Release of logback-access
+    version 2.0.5</h3>
+
+    <p>&bull; Fixed non-optional dependencies in
+    logback-access-Tomcat. This problem was raised in <a
+    href="https://github.com/qos-ch/logback-access/issues/17">issues/17</a>
+    by Jonatan Ivanov.
+    </p>
+
+    <p>&bull; Bumped logback-core dependency to version 1.5.14 and
+    removed <code>JaninoEventEvaluator</code> in order to mitigate <a
+    href="https://www.cve.org/cverecord?id=CVE-2024-12798">CVE-2024-12798</a>.</p>
+
+        
+    <p>&bull; A bit-wise identical binary of this version can be
+    reproduced by building from <a
+    href="https://github.com/qos-ch/logback-access">source code</a> at
+    commit 09a2cdd0a09467692129aac96b55e8392b02b72b associated with
+    the tag <code>v_2.0.5</code>. Release built using Java "21"
+    2023-10-17 LTS build 21.0.1.+12-LTS-29 under Linux Debian 11.6.
+     </p> 
+    
+    
+    <!-- ============================================================================ -->
+
+    <hr width="80%" align="center" />
+
+    <h3 class="doAnchor" name="1.5.14">2024-12-19 Release of logback
+    version 1.5.14</h3>
+
+    <p>&bull; Fixed compatibility issue with downstream users who
+    access the pattern rule registry through the logging context, most
+    notably Spring-Boot. This issue was reported in <a
+    href="https://github.com/qos-ch/logback/issues/885">issues/885</a>
+    by Stéphane Nicoll.</p>
+
+    <p>&bull; A bit-wise identical binary of this version can be
+    reproduced by building from <a
+    href="https://github.com/qos-ch/logback">source code</a> at commit
+    3ddf27b2c76682f5d77e249f384c323582418575 associated with the tag
+    v_1.5.14. Release built using Java "21" 2023-10-17 LTS build
+    21.0.1.+12-LTS-29 under Linux Debian 11.6.
+    </p>
+    
+    
+    <!-- ============================================================================ -->
+
+    <hr width="80%" align="center" />
+
+    <h3 class="doAnchor" name="1.5.13">2024-12-18 Release of logback
+    version 1.5.13</h3>
+
+    <p>&bull; <code>PatternLayout</code> now internally uses a mapping
+    of conversion words to converter instance suppliers intead of
+    conversion words to converter class names. This change was
+    suggested
+    in <a href="https://github.com/qos-ch/logback/issues/803">issues/803</a>
+    by Eric Norman. The old map in <code>PatternLayout</code> is
+    deprecated but still exists to preserve backward
+    compatibility. </p>
+
+    <p>&bull; <code>ConsoleAppender</code> now prints a status statement
+    warning the user about the high cost of logging on the console.</p>
+
+    <p>&bull; <code>JaninoEventEvaluator</code> was removed in order
+    to prevent arbitrary code execution (ACE) attacks made possible by
+    malicious configuration files. Successful attacks require
+    significant amount of existing privilege, sign of an already
+    compromised system.  This change is intended to prevent an
+    escalation of an existing flaw to a higher threat level. This
+    issue was discovered by 7asecurity and reported under the
+    reference <a
+    href="https://www.cve.org/cverecord?id=CVE-2024-12798">CVE-2024-12798</a>.
+    </p> 
+    
+    <p>&bull; To prevent Server-Side Request Forgery (SSRF) attacks,
+    <code>SaxEventRecorder</code> was modified to ignore external DTD
+    files specified in DOCTYPE declarations in configuration files
+    written in XML. This issue was discovered by 7asecurity and reported
+    under the reference <a
+    href="https://www.cve.org/cverecord?id=CVE-2024-12801">CVE-2024-12801</a>.
+    </p>
+    
+    <p>&bull; A bit-wise identical binary of this version can be
+    reproduced by building from <a
+    href="https://github.com/qos-ch/logback">source code</a> at commit
+    32638aa7e99c0135cb1b81806ed05352e6bfe27f associated with the tag
+    v_1.5.13. Release built using Java "21" 2023-10-17 LTS build
+    21.0.1.+12-LTS-29 under Linux Debian 11.6.
+    </p>
+
+    <hr width="80%" align="center" />
+
+    <h3 class="doAnchor" name="tyler_1.0.1">2024-12-17 Release of logback-tyler
+    version 1.0.1</h3>
+
+    <p>&bull; The <code>TylerConfigurator</code> classes produced by
+    logback-tyler now have the <code>public</code> modifier. The
+    missing public modifier was raised by Mark Stewart
+    in <a href="https://github.com/qos-ch/logback-tyler/issues/6">issues/5/</a>.</p>
+
+    <p>&bull; A bit-wise identical binary of this version can be
+    reproduced by building
+    from <a href="https://github.com/qos-ch/logback-tyler">source
+    code</a> at commit 900ae7efac3f89d7b7dfc817bb6d8477a1aaa196
+    associated with the tag v_1.0.1. Release built using Java "21"
+    2023-10-17 LTS build 21.0.1.+12-LTS-29 under Linux Debian 11.6.d
+    </p>
+
+
+    <!-- --------------------------->
+
+    
+    <hr width="80%" align="center" />
+
+    <h3 class="doAnchor" name="1.5.12">2024-10-25 Release of logback
     version 1.5.12</h3>
 
+    <p>&bull; <code>RollingFileAppender</code> now takes into account
+    the size of any previously existing log file being written
+    to. This issue was raised in <a
+    href="https://github.com/qos-ch/logback/issues/867">issues/867</a>.
+    
     <p>&bull; In the very unusual case where the logger invocation
     ended with two exceptions, the penultimate exception was not
     treated as a parameter but an exception. This issue was reported
@@ -146,17 +260,14 @@
     by Michael Rasmussen who also provided the relevant test case.
     </p>
         
-
     <p>&bull; A bit-wise identical binary of this version can be
-    reproduced by building
-    from <a href="https://github.com/qos-ch/logback">source code</a>
-    at commit XXXXXXXXXXX associated with the tag v_1.5.12. Release
-    built using Java "21" 2023-10-17 LTS build 21.0.1.+12-LTS-29 under
-    Linux Debian 11.6.
+    reproduced by building from <a
+    href="https://github.com/qos-ch/logback">source code</a> at commit
+    3a64b51c5af2920e48104165700188b7b34013e3 associated with the tag
+    v_1.5.12. Release built using Java "21" 2023-10-17 LTS build
+    21.0.1.+12-LTS-29 under Linux Debian 11.6.
     </p>
-
-    <!-- =========== -->
-
+ 
     <hr width="80%" align="center" />
 
     <h3 class="doAnchor" name="tyler_1.0.0">2024-10-20 Release of logback-tyler

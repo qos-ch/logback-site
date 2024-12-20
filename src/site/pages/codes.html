@@ -122,7 +122,7 @@
     &lt;/layout>
   &lt;/encoder>
 &lt;/appender> </code></pre>
-  
+   
   
 
   <p>We hope to make up for this inconvenience with cool new features
@@ -132,7 +132,24 @@
   layout instead of encoder) will continue to work unmodified.</b>
   </p>
 
+  <!-- ========================================================== -->
   
+  <h3 class="doAnchor" name="slowConsole">Logging to the console can be slow</h3>
+
+  <p>Writing to the console can be up to a thousand times slower than
+  writing to a file. Therefore, we strongly recommend avoiding console
+  logging in production environments, especially in high-volume
+  systems where performance is critical.
+   </p>
+
+  <p>Additionally, some application servers or frameworks
+  <b>automatically capture</b> console's output and redirect it to a
+  logging backend such as logback-classic. If this captured data is
+  written to the console, for instance using
+  <code>ConsoleAppender</code>, race conditions can occur, potentially
+  leading to application deadlocks.
+  </p>
+
   
 
   <!-- ================&#8203;===============&#8203;===============&#8203;============= -->

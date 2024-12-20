@@ -294,64 +294,73 @@ public interface Appender&lt;E> extends LifeCycle, ContextAware, FilterAttachabl
 
 	<h2 class="doAnchor" name="ConsoleAppender">ConsoleAppender</h2>
 	
-  <p>The <a href="../xref/ch/qos/logback/core/ConsoleAppender.html">
-  <code>ConsoleAppender</code></a>, as the name indicates, appends on
-  the console, or more precisely on <em>System.out</em> or
-  <em>System.err</em>, the former being the default
-  target. <code>ConsoleAppender</code> formats events with the help of
-  an encoder specified by the user. Encoders will be discussed in a
-  subsequent chapter. Both <em>System.out</em> and <em>System.err</em>
-  are of type <code>java.io.PrintStream</code>.  Consequently, they
-  are wrapped inside an <code>OutputStreamWriter</code> which buffers
-  I/O operations.
+        <p>The <a
+        href="../xref/ch/qos/logback/core/ConsoleAppender.html">
+        <code>ConsoleAppender</code></a>, as the name indicates,
+        appends on the console, or more precisely on
+        <em>System.out</em> or <em>System.err</em>, the former being
+        the default target. <code>ConsoleAppender</code> formats
+        events with the help of an encoder specified by the
+        user. Encoders will be discussed in a subsequent chapter. Both
+        <em>System.out</em> and <em>System.err</em> are of type
+        <code>java.io.PrintStream</code>.  Consequently, they are
+        wrapped inside an <code>OutputStreamWriter</code> which
+        buffers I/O operations.
 	</p>
-	
+
+        <p><span class="label">WARNING</span> Please note the console
+        is comparatively slow, even very slow. You should avoid
+        logging to the console in production, especially in high
+        volume systems.
+        </p>
+         
+
+  
 	<table class="bodyTable striped">
-			<tr>
-			<th>Property Name</th>
-			<th>Type</th>
-			<th>Description</th>
-		</tr>
-		<tr>
-			<td><span class="prop" container="conApp">encoder</span></td>
-      <td>
-        <a href="../xref/ch/qos/logback/core/encoder/Encoder.html"><code>Encoder</code></a>
-      </td>
-			<td>See <code>OutputStreamAppender</code> properties.</td>
-		</tr>
-		<tr>
-			<td><span class="prop" container="conApp">target</span></td>
-			<td><code>String</code></td>
-			<td>
-				One of the String values <em>System.out</em> or 
-				<em>System.err</em>. The default target is <em>System.out</em>.
-			</td>
-		</tr>
-
-		<tr>
-			<td><span class="prop" container="conApp">withJansi</span></td>
-			<td><code>boolean</code></td>
-			<td>By the default <span class="prop">withJansi</span> property
-			is set to <code>false</code>.  Setting <span
-			class="prop">withJansi</span> to <code>true</code> activates the
-			<a href="http://jansi.fusesource.org/">Jansi</a> library which
-			provides support for ANSI color codes on Windows machines.  On a
-			Windows host, if this property is set to true, then you should
-			put "org.fusesource.jansi:jansi:${jansi.version}" on the class
-			path. Note that Unix-based operating systems such as Linux and
-			Mac OS X support ANSI color codes by default.
-
-      <p>Under the Eclipse IDE, you might want to try the <a
-      href="http://www.mihai-nita.net/eclipse/">ANSI in Eclipse
-      Console</a> plugin.
-      </p>
-			</td>
-		</tr>
+	  <tr>
+	    <th>Property Name</th>
+	    <th>Type</th>
+	    <th>Description</th>
+	  </tr>
+	  <tr>
+	    <td><span class="prop" container="conApp">encoder</span></td>
+            <td>
+              <a href="../xref/ch/qos/logback/core/encoder/Encoder.html"><code>Encoder</code></a>
+            </td>
+	    <td>See <code>OutputStreamAppender</code> properties.</td>
+	  </tr>
+	  <tr>
+	    <td><span class="prop" container="conApp">target</span></td>
+	    <td><code>String</code></td>
+	    <td>
+	      One of the String values <em>System.out</em> or 
+	      <em>System.err</em>. The default target is <em>System.out</em>.
+	    </td>
+	  </tr>
+ 
+	  <tr>
+	    <td><span class="prop" container="conApp">withJansi</span></td>
+	    <td><code>boolean</code></td>
+	    <td>
+              <p>By the default <span class="prop">withJansi</span>
+              property is set to <code>false</code>.  Setting <span
+              class="prop">withJansi</span> to <code>true</code>
+              activates the <a
+              href="http://jansi.fusesource.org/">Jansi</a> library
+              which provides support for ANSI color codes on Windows
+              machines.  On a Windows host, if this property is set to
+              true, then you should put
+              "org.fusesource.jansi:jansi:${jansi.version}" on the
+              class path. Note that Unix-based operating systems such
+              as Linux and Mac OS X support ANSI color codes by
+              default.
+            </p>
+	    </td>
+	  </tr>
 
 	</table>
 	
-	<p>Here is a sample configuration that uses
-	<code>ConsoleAppender</code>.
+	<p>Here is a sample configuration that uses <code>ConsoleAppender</code>.
 	</p>
 
 
