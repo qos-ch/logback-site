@@ -129,6 +129,27 @@
 
     <hr width="80%" align="center" />
 
+
+    <h3 class="doAnchor" name="1.5.15">2024-12-21 Release of logback
+    version 1.5.15</h3>
+ 
+    <p>&bull; In case logback-core and logback-classic versions are
+    not identical, logback-classic will warn the user about this
+    discrepancy at initialization time in order signal eventual
+    incompatibility problems. </p>
+
+    <p>&bull; A bit-wise identical binary of this version can be
+    reproduced by building from <a
+    href="https://github.com/qos-ch/logback">source code</a> at commit
+    c32c92a2acf4befa0609003b4add00398818bbb9 associated with the tag
+    v_1.5.15. Release built using Java "21" 2023-10-17 LTS build
+    21.0.1.+12-LTS-29 under Linux Debian 11.6.
+    </p>
+
+    <!-- ============================================================================ -->
+
+    <hr width="80%" align="center" />
+
     
     <h3 class="doAnchor" name="access_2.0.5">2024-12-19 Release of logback-access
     version 2.0.5</h3>
@@ -174,7 +195,7 @@
     21.0.1.+12-LTS-29 under Linux Debian 11.6.
     </p>
     
-    
+     
     <!-- ============================================================================ -->
 
     <hr width="80%" align="center" />
@@ -194,6 +215,19 @@
     <p>&bull; <code>ConsoleAppender</code> now prints a status statement
     warning the user about the high cost of logging on the console.</p>
 
+    <p>&bull; Logback delegates certain asynchronous tasks to a
+    <code>ThreadPoolExecutor</code>. This executor now uses
+    <code>LinkedBlockingQueue</code> instead of
+    <code>SynchronousQueue</code>.  This has the effect of queueing
+    jobs immediately regardless of their number and have them run by
+    CORE_POOL_SIZE (currently 4) concurrent threads. This new strategy
+    is appropriate as long as jobs to arrive at a slower pace compared
+    to their duration. If they arrive faster than they can be
+    completed, the queue size will increase indefinitely but will be
+    accepted. In the previous strategy, if more than CORE_POOL_SIZE (2
+    previously) arrived, new jobs would be refused.
+    </p>
+    
     <p>&bull; <code>JaninoEventEvaluator</code> was removed in order
     to prevent arbitrary code execution (ACE) attacks made possible by
     malicious configuration files. Successful attacks require

@@ -248,7 +248,7 @@ public class SampleFilter extends Filter&lt;ILoggingEvent> {
 		threshold, <code>ThresholdFilter</code> will respond NEUTRAL when
 		its <code>decide</code>() method is invoked. However, events with
 		a level below the threshold will be denied. Here is a sample
-		configuration file.
+		configuration file. 
 		</p>
 
     <em>Example: Sample ThresholdFilter configuration
@@ -304,340 +304,41 @@ public class SampleFilter extends Filter&lt;ILoggingEvent> {
     the hosting <code>EvaluatorFilter</code> will returl the vaue
     specified by the <span class="option">onMatch</span>
     or <span class="option">onMismatch</span> properties respectively.
-l   </p>g
+   </p>
 
-lp>Note that <code>EventEvaluator</code> is an abstract class. You
-    can implement your own eveng evaluation logic by subclassing
-  <code>EventEvaluator</code>.
+    <p>Note that <code>EventEvaluator</code> is an abstract class. You
+    can implement your own event evaluation logic by subclassing
+    <code>EventEvaluator</code>.
     </p>
     
     <!-- ==================== JaninoEventEvaluator ======================== -->
     
     <h3 class="doAnchor"
     name="JaninoEventEvaluator">JaninoEventEvaluator</h3>
-    
-
-    <p>Logback-classic ships with another concrete
-    <code>EventEvaluator</code> implementation called <a
-    href="../xref/ch/qos/logback/classic/boolex/JaninoEventEvaluator.html">JaninoEventEvaluator</a>
-    taking an arbitrary Java language block returning a boolean value
-    as the evaluation criteria. We refer to such Java language boolean
-    expressions as "<em>evaluation expressions</em>". Evaluation
-    expressions enable great flexibility in event
-    filtering. <code>JaninoEventEvaluator</code> requires the <a
-    href="http://janino.unkrig.de">Janino
-    library</a>. Please see the <a
-    href="../setup.html#janino">corresponding section</a> of the setup
-    document.</p>
-    <p>Evaluation expressions are compiled on-the-fly during the
-    interpretation of the configuration file. As a user, you do not
-    need to worry about the actual plumbing. However, it is your
-    responsibility to ensure that the Java language expression returns
-    a boolean, i.e. that it evaluates to true or false. </p>
-
-
-    <p>The evaluation express1on is evaluated on the current logging
-    event. Logback-classic automatically exports various fields of the
-    logging event as variables accessible from the evaluation
-    expression. The case-sensitive names of these exported variables
-    are listed below.
+      
+    <p><span class="label notice">since 1.5.13</span> For security
+    reasons, <code>JaninoEvaluator</code> has been removed with no
+    replacement. However, it is a rather easy exercise to migrate the
+    logic within an existing evaluator expression (which is just Java)
+    into a custom <code>EventEvaluator</code>.</p>
+ 
+    <p>To migrate evaluation logic, we suggest to subclass
+    <code>EventEvaluatorBase</code> and copy the logic previously in
+    the evaluation expression into the
+    <code>evaluate(ILoggingEvent)</code> method.
     </p>
 
-    <div class="bodyTable">
-    <table class="bodyTable striped">
-      <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Description</th>
-			</tr>
-      <tr>
-	<td>event</td>
-	<td><code>LoggingEvent</code></td>
-
-        <td>The raw logging event associated with the logging
-        request. All of the following variables are also availab1e
-        from the event. For example, <code>event.getMessage()</code>
-        returns the same String value as the <em>message</em> variable
-        described next1
-        </td>
-      </tr>
-
-      <tr>
-	<td>message</td>
-        <td><code>String</code></td>
-        <td>The raw message of the logging request. For some logger
-        <em>l</em>, when you write l.info("Hello {}", name); where
-        name is assigned the value "Alice", then "Hello {}" is the
-        message.</td> </tr>
-		
-      <tr>
-	<td>formattedMessage</td>
-        <td><code>String</code></td>
-        <td>The formatted message in the logging request. For some
-        logger <em>l</em>, when you write l.info("Hello {}", name);
-        where name is assigned the value "Alice", then "Hello Alice"
-        is the formatted message.</td>
-      </tr>
-		
-      <tr>
-	<td>logger</td>
-	<td><code>String</code></td>
-	<td>The name of the logger.</td>
-      </tr>
-
-      <tr>
-        <td>loggerContext</td>
-	<td><a href="../xref/ch/qos/logback/classic/spi/LoggerContextVO.html"><code>LoggerContextVO</code></a></td>
-	<td>A restricted (value object) view of the logger context to which the logging event belongs to.
-        </td>
-      </tr>
-
-
-      <tr>
-	<td>level</td>
-	<td><code>int</code></td>
-	<td>The int value corresponding to the level. To help create
-	easily expressions involving levels, the default value
-	<em>DEBUG</em>, <em>INFO</em>, <em>WARN</em> and
-	<em>ERROR</em> are also available. Thus, using <em>level &gt;
-	INFO</em> is a correct expression.
-	</td>
-      </tr>
-      
-      <tr>
-	<td>timeStamp
-	</td>
-	<td><code>long</code></td>
-	<td>The timestamp corresponding to the logging event's
-	creation.
-	</td>
-      </tr>
-
-      <tr>
-	<td>marker</td>
-	<td><code>Marker</code></td>
-        <td>
-          <p>The first <code>Marker</code> in the logging event's
-          marker list. Note <em>marker</em> variable can be null and
-          it is your responsibility to check for this condition in
-          order to avoid <code>NullPointerException</code>.</p>
-
-        <p>It is usually easier an safer to use the
-        <em>markerList</em> variable described next.
-        </p>
-	</td>
-      </tr>
-
-      <tr>
-	<td>markerList</td>
-	<td><a
-	href="../apidocs/ch/qos/logback/classic/boolex/MarkerList.html"><code>MarkerList</code></a></td>
-        <td>
-          <p><span class="label notice">since 1.5.4</span> The
-          <em>markerList</em> variable is an instance of type
-          <code>ch.qos.logback.classic.&#8203;boolex.MarkerList</code>
-          wrapping the <code>List&lt;Marker&gt;</code> associated with
-          the <code>LoggingEvent</code>.  You can check whether a
-          given marker name is contained in the list by calling 
-          <code>markerList.contains(aString)</code>.</p>
-
-          <p>The <em>markerList</em> variable will never be null,
-          altough it can be devoid of markers. As such, you do not
-          need to check for nullness.</p>
-	</td>
-      </tr>
-      
-      <tr>
-	<td>mdc</td>
-	<td><code>Map</code></td>
-	<td>A map containing all the MDC values at the time of the
-	creation of the logging event. A value can be accessed by
-	using the following expression: <em>mdc.get("myKey")</em>. As
-	of logback-classic version 0.9.30, the 'mdc' variable will
-	never be null.
-
-        <p>The <code>java.util.Map</code> type is non-parameterized
-        because Janino does not support generics. It follows that the
-        type returned by <code>mdc.get()</code> is <code>Object</code>
-        and not <code>String</code>. To invoke <code>String</code>
-        methods on the returned value, it must be cast as
-        <code>String</code>. For example,
-        <code>((String)&nbsp;mdc.get("k")).contains("val")</code>.
-        </p>
-	</td>
-      </tr>
-
-      <tr class="alt">
-				<td>throwable</td>
-        <td>java.lang.Throwable</td>
-				<td>If no exception is associated with the event, then the
-				value of the "throwable" variable will be null. Unfortunately,
-				"throwable" does not survive serialization. Thus, on remote
-				systems, its value will always be null. For location
-				independent expressions, use the <code>throwableProxy</code>
-				variable described next.
-				</td>
-			</tr>
-
-			<tr>
-				<td>throwableProxy</td>
-				<td><a
-				href="../xref/ch/qos/logback/classic/spi/IThrowableProxy.html"><code>IThrowableProxy</code></a></td>
-				<td>A proxy for the exception associated with the logging
-				event. If no exception is associated with the event, then the
-				value of the "throwableProxy" variable will be null. In
-				contrast to "throwable", when an exception is associated with
-				an event, the value of "throwableProxy" will be non-null even
-				on remote systems, that is even after serialization.
-				</td>
-			</tr>
 
     
 
-		</table>
-    </div>
+    <h2 class="doAnchor" name="matcher">Matchers</h2>
 
-    <p>Here is a concrete example.</p>
-
-    <em>Example: Basic event evaluator usage
-    (logback-examples/src/main/resources/chapters/filters/basicEventEvaluator.xml)</em>
-
-<div class="tab">
-    <button class="tablinks" id="button_basicEventEvaluator_legacy"
-            onclick="openTab(event, 'basicEventEvaluator', 'legacy')">Legacy</button>
-    <button class="tablinks" id="button_basicEventEvaluator_canonical"
-            onclick="openTab(event, 'basicEventEvaluator', 'canonical')">Canonical (1.3)</button>
-    <button class="tablinks" id="button_basicEventEvaluator_tyler"
-             onclick="openTab(event, 'basicEventEvaluator', 'tyler')">Tyler</button>
-</div>
-
-<div id="basicEventEvaluator_legacy" class="tabcontent">
-    <pre><code>&lt;configuration>
-
-  &lt;appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-    <b>&lt;filter class="ch.qos.logback.core.filter.EvaluatorFilter">      
-      &lt;evaluator> &lt;!-- defaults to type ch.qos.logback.classic.boolex.JaninoEventEvaluator -->
-        &lt;expression><span class="green">return message.contains("billing");</span>&lt;/expression>
-      &lt;/evaluator>
-      &lt;OnMismatch>NEUTRAL&lt;/OnMismatch>
-      &lt;OnMatch>DENY&lt;/OnMatch>
-    &lt;/filter></b>
-    &lt;encoder>
-      &lt;pattern>
-        %-4relative [%thread] %-5level %logger -%kvp -%msg%n
-      &lt;/pattern>
-    &lt;/encoder>
-  &lt;/appender>
-
-  &lt;root level="INFO">
-    &lt;appender-ref ref="STDOUT" />
-  &lt;/root>
-&lt;/configuration></code></pre>
-
-</div>
-
-<div id="basicEventEvaluator_canonical" class="tabcontent">
-  <p>Requires a server call. Please wait a few seconds.</p>
-</div>
-   <div id="basicEventEvaluator_tyler" class="tabcontent"><p>Requires a server call.</p></div>
-
-
-		<p>The bold part in the above configuration file adds an
-		<code>EvaluatorFilter</code> to a <code>ConsoleAppender</code>. An
-		evaluator of type <code>JaninoEventEvaluator</code> is then
-		injected into the <code>EvaluatorFilter</code>. In the absence of
-		<span class="attr">class</span> attribute in the
-		<code>&lt;evaluator></code> element specified by the user, Joran
-		will infer a default type of <code>JaninoEventEvaluator</code>
-		for the evaluator. This is one of the <a
-		href="onJoran.html#defaultClassMapping">few occurrences</a> where
-		Joran implicitly infers the type of a component.
-    </p>
-
-    <p>The <em>expression</em> element corresponds to the evaluation
-    expression just discussed. The expression
-    <code>return message.contains("billing");</code> returns a boolean
-    value. Notice that the <em>message</em> variable is exported
-    automatically by <code>JaninoEventEvaluator</code>.
-    </p>
-
-		<p>Given that the <span class="option">OnMismatch</span> property is
-		set to NEUTRAL and the <span class="option">OnMatch</span>
-		property set to DENY, this evaluator filter will drop all logging
-		events whose message contains the string "billing".
-    </p>
-
-    <p>The <a
-    href="../xref/chapters/filters/FilterEvents.html"><code>FilterEvents</code></a>
-    application issues ten logging requests, numbered 0 to 9. Let us
-    first run <code>FilterEvents</code> class without any filters:
-		</p>
-		
-<div class="source"><pre>
-java chapters.filters.FilterEvents src/main/java/chapters/filters/basicConfiguration.xml
-</pre></div>
-		
-		<p>All requests will be displayed, as shown below:</p>
-
-<div class="source"><pre>0    [main] INFO  chapters.filters.FilterEvents - logging statement 0
-0    [main] INFO  chapters.filters.FilterEvents - logging statement 1
-0    [main] INFO  chapters.filters.FilterEvents - logging statement 2
-0    [main] DEBUG chapters.filters.FilterEvents - logging statement 3
-0    [main] INFO  chapters.filters.FilterEvents - logging statement 4
-0    [main] INFO  chapters.filters.FilterEvents - logging statement 5
-0    [main] ERROR chapters.filters.FilterEvents - <b>billing statement 6</b>
-0    [main] INFO  chapters.filters.FilterEvents - logging statement 7
-0    [main] INFO  chapters.filters.FilterEvents - logging statement 8
-0    [main] INFO  chapters.filters.FilterEvents - logging statement 9</pre></div>
-
-
-
-		<p>Suppose that we want to get rid of the "billing statement".
-		The <em>basicEventEvaluator.xml</em> configuration file listed
-		above filters messages containing the string "billing" which is
-		precisely the desired outcome.</p>
-
-    <p>Running with <em>basicEventEvaluator.xml</em>:</p>
-    <p class="source">java chapters.filters.FilterEvents src/main/java/chapters/filters/basicEventEvaluator.xml</p>
-    <p>we obtain:
-		</p>
-		
-    <p class="source">0    [main] INFO  chapters.filters.FilterEvents - logging statement 0
-0    [main] INFO  chapters.filters.FilterEvents - logging statement 1
-0    [main] INFO  chapters.filters.FilterEvents - logging statement 2
-0    [main] DEBUG chapters.filters.FilterEvents - logging statement 3
-0    [main] INFO  chapters.filters.FilterEvents - logging statement 4
-0    [main] INFO  chapters.filters.FilterEvents - logging statement 5
-0    [main] INFO  chapters.filters.FilterEvents - logging statement 7
-0    [main] INFO  chapters.filters.FilterEvents - logging statement 8
-0    [main] INFO  chapters.filters.FilterEvents - logging statement 9</p>
-		
-
-    <p>Evaluation expressions can be Java blocks. For example, the
-    following is a valid expression.</p>
-
-    <pre><code>&lt;evaluator>
-  &lt;expression>
-    if(logger.startsWith("org.apache.http"))
-      return true;
-
-    if(mdc == null || mdc.get("entity") == null)
-      return false;
-
-    String payee = (String) mdc.get("entity");
-
-    if(logger.equals("org.apache.http.wire") &amp;amp;&amp;amp; &lt;!-- &amp; encoded as &amp;amp; -->
-        payee.contains("someSpecialValue") &amp;amp;&amp;amp;
-        !message.contains("someSecret")) {
-      return true;
-    }
-
-    return false;
-  &lt;/expression>
-&lt;/evaluator></code></pre>
-
-
- 	  <h2 class="doAnchor" name="matcher">Matchers</h2>
+    <p>Given that <a
+    href="#JaninoEventEvaluator">JaninoEventEvaluator</a> has been
+    removed, matchers are no longer supported.</p>
+    
+    <!--
+    
 
     <p>While it is possible to do pattern matching by invoking the <a
     href="http://java.sun.com/j2se/1.5.0/docs/api/java/lang/String.html#matches%28java.lang.String%29">matches()</a>
@@ -671,7 +372,7 @@ java chapters.filters.FilterEvents src/main/java/chapters/filters/basicConfigura
       &lt;evaluator>        
         <b>&lt;matcher>
           &lt;Name>odd&lt;/Name>
-          &lt;!-- filter out odd numbered statements -->
+          &lt;!== filter out odd numbered statements ==>
           &lt;regex>statement [13579]&lt;/regex>
         &lt;/matcher>
         
@@ -712,6 +413,7 @@ java chapters.filters.FilterEvents src/main/java/chapters/filters/basicConfigura
     adding further <code>&lt;matcher></code> elements.</p>
 
 
+    -->
 
 
 
@@ -1190,7 +892,11 @@ logger.debug("Hello {}.", name1);</code></pre>
 
     <p>Note that <code>EventEvaluator</code> is an abstract class. You
     can implement your own event evaluation logic by subclassing
-    <code>EventEvaluator</code>. Logback-access ships with a concrete
+    <code>EventEvaluator</code>.
+    </p>
+
+    <!--
+    Logback-access ships with a concrete
     implementation
     named <a href="../xref/ch/qos/logback/access/boolex/JaninoEventEvaluator.html">JaninoEventEvaluator</a>.
     It takes arbitrary Java language boolean expressions as the
@@ -1257,7 +963,7 @@ logger.debug("Hello {}.", name1);</code></pre>
       &lt;evaluator name="Eval404">
         &lt;expression>
          <b>(event.getStatusCode() == 404)</b>
-           <b>&amp;amp;&amp;amp;</b>  &lt;!-- ampersand characters need to be escaped -->
+           <b>&amp;amp;&amp;amp;</b>  &lt;!-- ampersand characters need to be escaped ==>
          <b>!(event.getRequestURI().contains(".css"))</b>
         &lt;/expression>
       &lt;/evaluator>
@@ -1270,7 +976,9 @@ logger.debug("Hello {}.", name1);</code></pre>
   &lt;appender-ref ref="STDOUT" />
 &lt;/configuration>
     </code></pre>
-	
+
+   -->
+
     <script src="../templates/footer.js" type="text/javascript"></script>
 </div>
   </div>
