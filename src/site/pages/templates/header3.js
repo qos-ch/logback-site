@@ -31,6 +31,7 @@ function insertLogoAndMenu() {
     document.write('                <div class="dropdown-links">');
     document.write('                    <a href="'+ prefix +'index.html"><i class="fa-regular fa-house"></i>  Home page</a>'); // &#127968;
     document.write('                    <a href="'+ prefix +'documentation.html"><i class="fa-regular fa-book"></i> Documentation</a>'); // &#128214; &#128195;
+    document.write('                    <a href="'+ prefix +'sponsors.html"><i class="fa-regular fa-hand-holding-heart"></i> Sponsors</a>');  //&#9993 
     document.write('                    <a href="'+ prefix +'download.html"><i class="fa-regular fa-download"></i> Download</a>'); // &#128229;
     document.write('                    <a href="https://central.sonatype.com/search?namespace=ch.qos.logback">');
     document.write('                       <i class="fa-regular fa-magnifying-glass"></i> Search for logback'); // &#128270;
