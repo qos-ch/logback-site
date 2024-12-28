@@ -23,26 +23,29 @@
     <h2>STABLE version (ACTIVELY DEVELOPED)</h2>
 
     <p>The current actively developed version of logback supporting
-      Jakarta EE (jakarta.* namespace) is
-      <span class="big
-      green">${latest.stable.jakarta.version}</span>. It requires JDK
-      11 and SLF4J version 2.0.1 at runtime. It was built with JDK 21
-      and SLF4J version ${slf4j.version}.</p>
-     
+    Jakarta EE (jakarta.* namespace) is <span class="big
+    green">${latest.stable.jakarta.version}</span>. It requires JDK 11
+    and SLF4J version 2.0.1 at runtime. It was built with JDK 21 and
+    SLF4J version ${slf4j.version}.</p>
+
+    <p>The 1.5.x series is a direct descendant of and a drop-in
+    replacement for the 1.4.x series. It differs from the 1.4.x series
+    by the relocation of the logback-access module which was moved to
+    its own <a
+    href="https://github.com/qos-ch/logback-access">separate github
+    repository</a>.</p>
 
     <h2>Older stable versions (INACTIVE)</h2>
 
-    <p>&bull; Logback version <span class="big green">1.4.14</span> is
-    the latest in the 1.4.x series. It is the direct ancestor of the
-    1.5.x series. It supports Jakarta EE (jakarta.* namespace) and
-    requires SLF4J version 2.0.x and JDK 11. The 1.4.x series is no
-    loger actively developed.</p>
 
-    <p>&bull; Logback version <span class="big green">1.3.14</span> is
+    <p>&bull; The 1.4.x series is no loger actively
+    developed. Moreover, the 1.5.x is a drop in replacement for the
+    1.4.x series.</p>
+    
+    <p>&bull; Logback version <span class="big green">1.3.15</span> is
     the latest in the 1.3.x series. It supports Java EE (java.*
-    namespace) but otherwise is feature identical to 1.4.14. It
-    requires SLF4J version 2.0.x and JDK&nbsp;8. The 1.3.x series is
-    no loger actively developed.</p>
+    namespace). It requires SLF4J version 2.0.x and JDK&nbsp;8. The
+    1.3.x series is no loger actively developed.</p>
     
     <p>&bull; The 1.2.x series has been deprecated for several years and is
     no longer actively developed. </p>
@@ -58,16 +61,16 @@
     <h2>Verifying contents</h2>
 
     <p>Since early 2022, all logback binaries are reproducible. To
-        verify fidelity to the source code, check out the source code from
-        github with the tag corresponding to the version you wish to
-        verify. Build and compare.</p>
+    verify fidelity to the source code, check out the source code from
+    github with the tag corresponding to the version you wish to
+    verify. Build and compare.</p>
 
 
     <p>All logback artifacts published on Maven central are
-        signed. For each artifact, there is an associated signature file
-        with the .asc suffix. See <a
-                href="https://github.com/qos-ch/logback/blob/master/SECURITY.md">SECURITY.md</a>
-        for detailed instructions.
+    signed. For each artifact, there is an associated signature file
+    with the .asc suffix. See <a
+    href="https://github.com/qos-ch/logback/blob/master/SECURITY.md">SECURITY.md</a>
+    for detailed instructions.
     </p>
 
     <!--
