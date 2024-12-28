@@ -469,7 +469,7 @@ barlogger.<span class="green bold">debug</span>("Exiting gas station search");</
     <a name="RetrievingLoggers"></a>
 		<h3>Retrieving Loggers</h3>
 		<p>
-			Calling the <code><a href="../apidocs/org/slf4j/LoggerFactory.html#getLogger(java.lang.String)">LoggerFactory.getLogger</a></code>
+			Calling the <code><a href="https://www.slf4j.org/apidocs/org/slf4j/LoggerFactory.html#getLogger(java.lang.String)">LoggerFactory.getLogger</a></code>
 			method with the same name will always return a reference to
 			the exact same logger object.
 		</p>
@@ -528,7 +528,7 @@ Logger y = LoggerFactory.getLogger("wombat");</code></pre>
 		<p>More than one appender can be attached to a logger.</p>
 
     <p>The <code><a
-    href="../apidocs/ch/qos/logback/classic/Logger.html#addAppender(ch.qos.logback.core.Appender)">addAppender</a></code>
+    href="../apidocs/ch.qos.logback.classic/ch/qos/logback/classic/Logger.html#addAppender(ch.qos.logback.core.Appender)">addAppender</a></code>
     method adds an appender to a given logger.  Each enabled logging
     request for a given logger will be forwarded to all the appenders
     in that logger as well as the appenders higher in the

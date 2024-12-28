@@ -63,7 +63,7 @@ public interface Appender&lt;E> extends LifeCycle, ContextAware, FilterAttachabl
 	<em>E</em> as its only parameter. The actual type of <em>E</em>
 	will vary depending on the logback module. Within the
 	logback-classic module <em>E</em> would be of type <a
-	href="../apidocs/ch/qos/logback/classic/spi/ILoggingEvent.html">ILoggingEvent</a>
+	href="../apidocs/ch.qos.logback.classic/ch/qos/logback/classic/spi/ILoggingEvent.html">ILoggingEvent</a>
 	and within the logback-access module it would be of type <a
 	href="../apidocs/ch/qos/logback/access/spi/AccessEvent.html">AccessEvent</a>.
 	The <code>doAppend()</code> method is perhaps the most important in
@@ -1405,7 +1405,7 @@ public interface RollingPolicy extends LifeCycle {
        
      <tr>
        <td><span class="prop">maxFileSize</span></td>
-       <td><code><a href="../apidocs/ch/qos/logback/core/util/FileSize.html">FileSize</a></code> </td>
+       <td><code><a href="../apidocs/ch.qos.logback.core/ch/qos/logback/core/util/FileSize.html">FileSize</a></code> </td>
        <td>
          <p> Each time the current log file reaches <span
          class="prop">maxFileSize</span> before the current time
@@ -1424,7 +1424,7 @@ public interface RollingPolicy extends LifeCycle {
 
      <tr>
        <td><span class="prop">checkIncrement</span></span></td>
-       <td><code><a href="../apidocs/ch/qos/logback/core/util/Duration.html">Duration</a></code></td>
+       <td><code><a href="../apidocs/ch.qos.logback.core/ch/qos/logback/core/util/Duration.html">Duration</a></code></td>
 
        <td><p><span class="label notice">since 1.5.8</span> The
        <span
@@ -1938,7 +1938,7 @@ public interface TriggeringPolicy&lt;E&gt; extends LifeCycle {
       <tr>
         <td><span class="prop" container="socket">reconnectionDelay</span></td>
         <td><code><a
-        href="../apidocs/ch/qos/logback/core/util/Duration.html">Duration</a></code></td>
+        href="../apidocs/ch.qos.logback.core/ch/qos/logback/core/util/Duration.html">Duration</a></code></td>
         <td>
           The <span class="prop">reconnectionDelay</span> option takes
           a duration string, such "10 seconds" representing the time
@@ -1973,7 +1973,7 @@ public interface TriggeringPolicy&lt;E&gt; extends LifeCycle {
       <tr>
         <td><span class="prop" container="socket">eventDelayLimit</span></td>
         <td><code><a
-        href="../apidocs/ch/qos/logback/core/util/Duration.html">Duration</a></code></td>
+        href="../apidocs/ch.qos.logback.core/ch/qos/logback/core/util/Duration.html">Duration</a></code></td>
         <td>
           The <span class="prop">eventDelayLimit</span> option takes a
           duration string, such "10 seconds". It represents the time
@@ -4306,7 +4306,7 @@ logger.error(<b>notifyAdmin</b>,
 			<tr>
 				<td><span class="prop" container="sift">timeout</span></td>
 				<td><code><a
-				href="../apidocs/ch/qos/logback/core/util/Duration.html">Duration</a></code></td>
+				href="../apidocs/ch.qos.logback.core/ch/qos/logback/core/util/Duration.html">Duration</a></code></td>
 				<td>A nested appender which has not been accessed beyond the
 				<span class="prop">timeout</span> duration is deemed stale. A
 				stale appender is closed and unreferenced by
@@ -4460,7 +4460,7 @@ logger.debug("Alice says hello"); </p>
     code after which a nested appender is no longer needed. If such a
     location exists, even approximately, log from that location using
     the <a
-    href="../apidocs/ch/qos/logback/classic/ClassicConstants.html#FINALIZE_SESSION_MARKER">FINALIZE_SESSION</a>
+    href="../apidocs/ch.qos.logback.classic/ch/qos/logback/classic/ClassicConstants.html#FINALIZE_SESSION_MARKER">FINALIZE_SESSION</a>
     marker. Whenever SiftingAppender sees a logging event marked as
     <code>FINALIZE_SESSION</code> it will end-of-life the associated
     nested appender. Upon reaching its end-of-life, a nested appender
@@ -4496,7 +4496,7 @@ import static ch.qos.logback.classic.&#8203;ClassicConstants.&#8203;FINALIZE_SES
     <h3 class="doAnchor" name="AsyncAppender">AsyncAppender</h3>
 
     <p>AsyncAppender logs <a
-    href="../apidocs/ch/qos/logback/classic/spi/ILoggingEvent.html">ILoggingEvent</a>s
+    href="../apidocs/ch.qos.logback.classic/ch/qos/logback/classic/spi/ILoggingEvent.html">ILoggingEvent</a>s
     asynchronously. It acts solely as an event dispatcher and must
     therefore reference another appender in order to do anything
     useful.</p>

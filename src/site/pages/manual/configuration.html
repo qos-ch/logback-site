@@ -829,7 +829,7 @@ java.lang.Exception: 99 is invalid
 
    <p>Alternatively, packaging data can be enabled/disabled
    programmatically by invoking the <a
-   href="../apidocs/ch/qos/logback/classic/LoggerContext.html#setPackagingDataEnabled(boolean)">setPackagingDataEnabled(boolean)</a>
+   href="../apidocs/ch.qos.logback.classic/ch/qos/logback/classic/LoggerContext.html#setPackagingDataEnabled(boolean)">setPackagingDataEnabled(boolean)</a>
    method in <code>LoggerContext</code>, as shown next:</p>
 
 
@@ -966,7 +966,7 @@ import ch.qos.logback.classic.LoggerContext;
    to your shutdown hook's class name.</p>
 
    <p>The default shutdown hook, namely <a
-   href="../apidocs/ch/qos/logback/core/hook/DefaultShutdownHook.html">DefaultShutdownHook</a>,
+   href="../apidocs/ch.qos.logback.core/ch/qos/logback/core/hook/DefaultShutdownHook.html">DefaultShutdownHook</a>,
    will <b>stop</b> the logback context after a specified delay (0 by
    default). Stopping the context will allow up to 30 seconds for any
    log file compression tasks running in the background to finish. In
@@ -990,11 +990,11 @@ import ch.qos.logback.classic.LoggerContext;
 
    <p><span class="label">since 1.1.10</span> Logback-classic will
    <b>automatically</b> ask the web-server to install a <code><a
-   href="../apidocs/ch/qos/logback/classic/servlet/LogbackServletContainerInitializer.html">LogbackServlet&#8203;ContainerInitializer</a></code>
+   href="../apidocs/ch.qos.logback.classic/ch/qos/logback/classic/servlet/LogbackServletContainerInitializer.html">LogbackServlet&#8203;ContainerInitializer</a></code>
    implementing the <code>ServletContainer&#8203;Initializer</code> interface
    (available in servlet-api 3.x and later). This initializer will in
    turn install and instance of <code><a
-   href="../apidocs/ch/qos/logback/classic/servlet/LogbackServletContextListener.html">LogbackServlet&#8203;ContextListener</a></code>.
+   href="../apidocs/ch.qos.logback.classic/ch/qos/logback/classic/servlet/LogbackServletContextListener.html">LogbackServlet&#8203;ContextListener</a></code>.w
    This listener will stop the current logback-classic context when
    the web-app is stopped or reloaded.
    </p>
@@ -1722,7 +1722,7 @@ import ch.qos.logback.classic.LoggerContext;
   "default". However, you can set a different name with the help of
   the <code>&lt;contextName></code> configuration directive. Note that
   once set, the logger context name <a
-  href="../apidocs/ch/qos/logback/core/ContextBase.html#setName(java.lang.String)">cannot
+  href="../apidocs/ch.qos.logback.core/ch/qos/logback/core/ContextBase.html#setName(java.lang.String)">cannot
   be changed</a>. Setting the context name is a simple and
   straightforward method in order to distinguish between multiple
   applications logging to the same target.
@@ -2260,7 +2260,7 @@ fileName=myApp.log
 
     <tr>
       <td><a
-      href="../apidocs/ch/qos/logback/core/property/CanonicalHostNamePropertyDefiner.html"><code>Canonical&#8203;HostName&#8203;PropertyDefiner</code></a>
+      href="../apidocs/ch.qos.logback.core/ch/qos/logback/core/property/CanonicalHostNamePropertyDefiner.html"><code>Canonical&#8203;HostName&#8203;PropertyDefiner</code></a>
       </td>
       <td>Set the named variable to the canonical host name of the
       local host. Note that obtaining the canonical host name may take several seconds.
@@ -2269,7 +2269,7 @@ fileName=myApp.log
 
     <tr>
       <td><a
-      href="../apidocs/ch/qos/logback/core/property/FileExistsPropertyDefiner.html"><code>FileExists&#8203;PropertyDefiner</code></a>
+      href="../apidocs/ch.qos.logback.core/ch/qos/logback/core/property/FileExistsPropertyDefiner.html"><code>FileExists&#8203;PropertyDefiner</code></a>
       </td>
       <td>Set the named variable to "true" if the file specified by
       <span class="prop">path</span> property exists, to "false"
@@ -2279,7 +2279,7 @@ fileName=myApp.log
 
     <tr>
       <td><a
-      href="../apidocs/ch/qos/logback/core/property/FileExistsPropertyDefiner.html"><code>ResourceExists&#8203;PropertyDefiner</code></a>
+      href="../apidocs/ch.qos.logback.core/ch/qos/logback/core/property/FileExistsPropertyDefiner.html"><code>ResourceExists&#8203;PropertyDefiner</code></a>
       </td>
 
       <td>Set the named variable to "true" if the <span
