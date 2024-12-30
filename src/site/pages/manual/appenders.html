@@ -65,7 +65,7 @@ public interface Appender&lt;E> extends LifeCycle, ContextAware, FilterAttachabl
 	logback-classic module <em>E</em> would be of type <a
 	href="../apidocs/ch.qos.logback.classic/ch/qos/logback/classic/spi/ILoggingEvent.html">ILoggingEvent</a>
 	and within the logback-access module it would be of type <a
-	href="../apidocs/ch/qos/logback/access/spi/AccessEvent.html">AccessEvent</a>.
+	href="../apidocs-access/ch.qos.logback.access.common/ch/qos/logback/access/common/spi/AccessEvent.html">AccessEvent</a>.
 	The <code>doAppend()</code> method is perhaps the most important in
 	the logback framework.  It is responsible for outputting the logging
 	events in a suitable format to the appropriate output device.
@@ -344,9 +344,9 @@ public interface Appender&lt;E> extends LifeCycle, ContextAware, FilterAttachabl
 	    <td>
               <p>By the default <span class="prop">withJansi</span>
               property is set to <code>false</code>.  Setting <span
-              class="prop">withJansi</span> to <code>true</code>
+              class="prop">withJansi</span> to <code>true</code> 
               activates the <a
-              href="http://jansi.fusesource.org/">Jansi</a> library
+              href="http://fusesource.github.io/jansi/">Jansi</a> library
               which provides support for ANSI color codes on Windows
               machines.  On a Windows host, if this property is set to
               true, then you should put
@@ -1938,7 +1938,7 @@ public interface TriggeringPolicy&lt;E&gt; extends LifeCycle {
       <tr>
         <td><span class="prop" container="socket">reconnectionDelay</span></td>
         <td><code><a
-        href="../apidocs/ch.qos.logback.core/ch/qos/logback/core/util/Duration.html">Duration</a></code></td>
+        href="../apidocs/ch.qos.logback.core/ch/qos/logback/core/util/Duration.html"/ch.qos.logback.classic/c>Duration</a></code></td>
         <td>
           The <span class="prop">reconnectionDelay</span> option takes
           a duration string, such "10 seconds" representing the time
@@ -2303,7 +2303,7 @@ public interface TriggeringPolicy&lt;E&gt; extends LifeCycle {
     some situations, it may be inconvenient or infeasible to have an
     application initiate a connection to a remote logging server.  For
     these situations, Logback offers <a
-    href="../xref/ch/qos/logback/classic/net/server/ServerSocketAppender">
+    href="../xref/ch/qos/logback/classic/net/server/ServerSocketAppender.html">
     <code>ServerSocketAppender</code></a>.
     </p>
     
@@ -2316,7 +2316,7 @@ public interface TriggeringPolicy&lt;E&gt; extends LifeCycle {
     </p>
     
     <p>In addition to the basic <code>ServerSocketAppender</code>, Logback
-    offers <a href="../xref/ch/qos/logback/classic/net/server/SSLServerSocketAppender">
+    offers <a href="../xref/ch/qos/logback/classic/net/server/SSLServerSocketAppender.html">
     <code>SSLServerSocketAppender</code></a>, which distributes logging events
     to each connected client using a secure, encrypted channel.  Moreover, the
     SSL-enabled appender fully supports mutual certificate-based authentication,
@@ -2625,10 +2625,9 @@ public interface TriggeringPolicy&lt;E&gt; extends LifeCycle {
 
           <p>Logback ships with several other evaluators, namely <a
           href="../xref/ch/qos/logback/classic/boolex/OnMarkerEvaluator.html"><code>OnMarkerEvaluator</code></a>
-          (discussed below) and a powerful evaluator called <a
-          href="../xref/ch/qos/logback/classic/boolex/JaninoEventEvaluator.html"><code>JaninoEventEvaluator</code></a>,
-          discussed in <a href="filters.html#evaluatorFilter">another
-          chapter</a>.
+          (discussed below) and <a
+          href="../xref/ch/qos/logback/classic/boolex/ExceptionMatchEvaluator.html">ExceptionMatchEvaluator</a>. It
+          is rather easy to create yor own custom evaluator.
           </p>
 
         </td>
@@ -2706,7 +2705,7 @@ public interface TriggeringPolicy&lt;E&gt; extends LifeCycle {
         property to the fully qualified name of the client host. See
         also the "mail.smtp.localhost" property in the documentation
         for the <a
-        href="http://javamail.kenai.com/nonav/javadocs/com/sun/mail/smtp/package-summary.html">com.sun.mail.smtp</a>
+        href="https://jakarta.ee/specifications/mail/1.6/apidocs/com/sun/mail/smtp/package-summary">com.sun.mail.smtp</a>
         package.</td>
       </tr>
 
@@ -2811,7 +2810,9 @@ public interface TriggeringPolicy&lt;E&gt; extends LifeCycle {
 		<code>Email</code> application:
 		</p>	
 		
-    <p class="example">Example: A sample <code>SMTPAppender</code> configuration (logback-examples/&#8203;src/main/resources/&#8203;chapters/appenders/&#8203;mail/mail1.xml)</p>	
+    <p class="example">Example: A sample <code>SMTPAppender</code>
+    configuration
+    (logback-examples/&#8203;src/main/resources/&#8203;chapters/appenders/&#8203;mail/mail1.xml)</p>
 
     
     <div class="tab">
@@ -3434,45 +3435,44 @@ logger.error(<b>notifyAdmin</b>,
 
     <h3 class="doAnchor" name="DBAppender">DBAppender</h3>
 		
-		<p>The <a
-		href="../xref/ch/qos/logback/classic/db/DBAppender.html"><code>DBAppender</code></a>
-		inserts logging events into three database tables in a format
-		independent of the Java programming language.
-		</p>
+    <p>The <code>DBAppender</code> inserts logging events into three
+    database tables in a format independent of the Java programming
+    language.
+    </p>
 
-                <p>As of logback version 1.2.8 DBAppender no longer
-                ships with logback-classic. However,
-                <code>DBAppender</code> for logback-classic is
-                available under the following Maven coordinates:</p>
+    <p>As of logback version 1.2.8 DBAppender no longer
+    ships with logback-classic. However,
+    <code>DBAppender</code> for logback-classic is
+    available under the following Maven coordinates:</p>
+    
+    <p><code>ch.qos.logback.db:logback-classic-db:1.&#8203;2.11.1</code></p>
 
-                <p><code>ch.qos.logback.db:logback-classic-db:1.&#8203;2.11.1</code></p>
+    <p>These three tables are <em>logging_event</em>,
+    <em>logging_event_property</em> and
+    <em>logging_event_exception</em>. They must exist before
+    <code>DBAppender</code> can be used. Logback ships with SQL
+    scripts that will create the tables.  They can be found under the
+    <em>logback-classic/&#8203;src/main/java/ch/&#8203;qos/logback/classic/&#8203;db/script</em>
+    folder. There is a specific script for each of the most popular
+    database systems.  If the script for your particular type of
+    database system is missing, it should be quite easy to write one,
+    taking example on the already existing scripts. If you send them
+    to us, we will gladly include missing scripts in future releases.
+    </p>
 
-		<p>These three tables are <em>logging_event</em>,
-		<em>logging_event_property</em> and
-		<em>logging_event_exception</em>. They must exist before
-		<code>DBAppender</code> can be used. Logback ships with SQL
-		scripts that will create the tables.  They can be found under the
-		<em>logback-classic/&#8203;src/main/java/ch/&#8203;qos/logback/classic/&#8203;db/script</em>
-		folder. There is a specific script for each of the most popular
-		database systems.  If the script for your particular type of
-		database system is missing, it should be quite easy to write one,
-		taking example on the already existing scripts. If you send them
-		to us, we will gladly include missing scripts in future releases.
-		</p>
+    <p>If your JDBC driver supports the <code>getGeneratedKeys</code>
+    method introduced in JDBC 3.0 specification, assuming you have
+    created the appropriate database tables as mentioned above, then
+    no additional steps are required. Otherwise, there must be an
+    <code>SQLDialect</code> appropriate for your database
+    system. Currently, logback has dialects for H2, HSQL, MS SQL
+    Server, MySQL, Oracle, PostgreSQL, SQLLite and Sybase. </p>
 
-		<p>If your JDBC driver supports the <code>getGeneratedKeys</code>
-		method introduced in JDBC 3.0 specification, assuming you have
-		created the appropriate database tables as mentioned above, then
-		no additional steps are required. Otherwise, there must be an
-		<code>SQLDialect</code> appropriate for your database
-		system. Currently, logback has dialects for H2, HSQL, MS SQL
-		Server, MySQL, Oracle, PostgreSQL, SQLLite and Sybase. </p>
+    <p>The table below summarizes the database types and their support
+    of the <code>getGeneratedKeys()</code> method.
+    </p>
 
-		<p>The table below summarizes the database types and their support
-		of the <code>getGeneratedKeys()</code> method.
-		</p>
-
-		<table class="bodyTable striped" border="0" cellpadding="4">
+    <table class="bodyTable striped" border="0" cellpadding="4">
 			<tr>
 				<th>RDBMS</th>
         <th>tested version(s)
@@ -3800,9 +3800,7 @@ logger.error(<b>notifyAdmin</b>,
     class="prop">url</span> must begin with <em>jdbc:mysql://</em>.
     </p>
     
-    <p>The <a
-    href="../xref/ch/qos/logback/core/db/DriverManagerConnectionSource.html">
-    <code>DriverManagerConnectionSource</code></a> is an
+    <p>The <code>DriverManagerConnectionSource</code> is an
     implementation of <code>ConnectionSource</code> that obtains the
     connection in the traditional JDBC manner based on the connection
     URL.</p>
@@ -3846,12 +3844,13 @@ logger.error(<b>notifyAdmin</b>,
 		</p>
  -->
  
-		<p>Connecting to a database using a <code>DataSource</code> is
-		rather similar.  The configuration now uses <a
-		href="../xref/ch/qos/logback/core/db/DataSourceConnectionSource.html">
-		<code>DataSourceConnectionSource</code></a>, which is an
-		implementation of <code>ConnectionSource</code> that obtains the
-		<code>Connection</code> in the recommended JDBC manner based on a
+		<p>Connecting to a database using a
+		<code>DataSource</code> is rather similar.  The
+		configuration now uses
+		<code>DataSourceConnectionSource</code>, which is an
+		implementation of <code>ConnectionSource</code> that
+		obtains the <code>Connection</code> in the recommended
+		JDBC manner based on a
 		<code>javax.sql.DataSource</code>.
 		</p>
 	
@@ -3939,9 +3938,7 @@ logger.error(<b>notifyAdmin</b>,
     <h4 class="doAnchor"
     name="JNDIConnectionSource">JNDIConnectionSource</h4>
 
-		<p><a
-		href="../xref/ch/qos/logback/core/db/JNDIConnectionSource.html">
-		<code>JNDIConnectionSource</code></a> is another
+		<p><code>JNDIConnectionSource</code> is another
 		<code>ConnectionSource</code> implementation shipping in logback.
 		As its name indicates, it retrieves a
 		<code>javax.sql.DataSource</code> from a JNDI and then leverages
@@ -4773,14 +4770,15 @@ public class CountingConsoleAppender extends AppenderBase&lt;ILoggingEvent> {
   }
 }</code></pre>
 
-		<p>The <code>start()</code> method checks for the presence of a
-		<code>PatternLayoutEncoder</code>.  In case the encoder is not
-		set, the appender fails to start and emits an error message.
-		</p>
+      <p>The <code>start()</code> method checks for the presence of a
+      <code>PatternLayoutEncoder</code>.  In case the encoder is not
+      set, the appender fails to start and emits an error message.
+      </p>
 		
-		<p>This custom appender illustrates two points:</p>
-		
-		<ul>
+      <p>This custom appender illustrates two points:</p>
+      
+      
+      <ul>
 
       <li>All properties that follow the setter/getter JavaBeans
       conventions are handled transparently by logback
@@ -4788,75 +4786,79 @@ public class CountingConsoleAppender extends AppenderBase&lt;ILoggingEvent> {
       automatically during logback configuration, has the
       responsibility of verifying that the various properties of the
       appender are set and are coherent.
-			</li>
+      </li>
 
-			<li>The <code>AppenderBase.doAppend()</code> method invokes the
-			append() method of its derived classes.  Actual output
-			operations occur in the <code>append</code>() method.  In
-			particular, it is in this method that appenders format events by
-			invoking their layouts.
-			</li>
-		</ul>
+      <li>The <code>AppenderBase.doAppend()</code> method invokes the
+      append() method of its derived classes.  Actual output
+      operations occur in the <code>append</code>() method.  In
+      particular, it is in this method that appenders format events by
+      invoking their layouts.
+      </li>
+
+      </ul>
 		
-		<p>The <a
-		href="../xref/chapters/appenders/CountingConsoleAppender.html"><code>CountingConsoleAppender</code></a>
-		can be configured like any other appender.  See sample
-		configuration file
-		<em>logback-examples/&#8203;src/main/resources/&#8203;chapters/appenders/&#8203;countingConsole.&#8203;xml</em>
-		for an example.
-		</p>
+      <p>The <a
+      href="../xref/chapters/appenders/CountingConsoleAppender.html"><code>CountingConsoleAppender</code></a>
+      can be configured like any other appender.  See sample
+      configuration file
+      <em>logback-examples/&#8203;src/main/resources/&#8203;chapters/appenders/&#8203;countingConsole.&#8203;xml</em>
+      for an example.
+      </p>
   
 
-		<h2 class="doAnchor" name="logback_access">Logback Access</h2>
+      <h2 class="doAnchor" name="logback_access">Logback Access</h2>
 		
-		<p>Most of the appenders found in logback-classic have their
-		equivalent in logback-access. These work essentially in the same
-		way as their logback-classic counterparts. In the next section, we
-		will cover their use.
-		</p>
+      <p>Most of the appenders found in logback-classic have their
+      equivalent in logback-access. These work essentially in the same
+      way as their logback-classic counterparts. In the next section, we
+      will cover their use.
+      </p>
 		
-		<h3 class="doAnchor" name="AccessSocketAppender">SocketAppender
-		and SSLSocketAppender</h3>
+      <h3 class="doAnchor" name="AccessSocketAppender">SocketAppender
+      and SSLSocketAppender</h3>
+      
+      <p>The <a
+      href="../xref-access/ch/qos/logback/access/common/net/SocketAppender.html">
+      <code>SocketAppender</code></a> is designed to log to a remote
+      entity by transmitting serialized <code>AccessEvent</code>
+      objects over the wire.  Remote logging is non-intrusive as far
+      as the access event is concerned.  On the receiving end after
+      deserialization, the event can be logged as if it were generated
+      locally.
+      </p>
 		
-		<p>The <a
-		href="../xref/ch/qos/logback/access/net/SocketAppender.html">
-		<code>SocketAppender</code></a> is designed to log to a remote
-		entity by transmitting serialized <code>AccessEvent</code> objects
-		over the wire.  Remote logging is non-intrusive as far as the
-		access event is concerned.  On the receiving end after
-		deserialization, the event can be logged as if it were generated
-		locally.
-		</p>
-		
-		<p>The <a href="../xref/ch/qos/logback/access/net/SSLSocketAppender.html">
-    <code>SSLSocketAppender</code></a> extends the basic 
-    <code>SocketAppender</code> allowing logging to a remote entity over
-    the Secure Sockets Layer (SSL).
-    </p>
+      <p>The <a
+      href="../xref-access/ch/qos/logback/access/common/net/SSLSocketAppender.html">
+      <code>SSLSocketAppender</code></a> extends the basic
+      <code>SocketAppender</code> allowing logging to a remote entity
+      over the Secure Sockets Layer (SSL).
+      </p>
     
-		<p>
-			The properties of access' <code>SocketAppender</code> are the same as those available
-			for classic's <code>SocketAppender</code>.
-		</p>
+      <p>
+      The properties of access' <code>SocketAppender</code> are the
+      same as those available for classic's
+      <code>SocketAppender</code>.
+      </p>
 
-    <h3 class="doAnchor"
-    name="AccessServerSocketAppender">ServerSocketAppender and
-    SSLServerSocketAppender</h3>
+      <h3 class="doAnchor" name="AccessServerSocketAppender">ServerSocketAppender and
+      SSLServerSocketAppender</h3>
     
-    <p>Like <code>SocketAppender</code>, the <a
-    href="../xref/ch/qos/logback/access/net/server/ServerSocketAppender.html">
-    <code>ServerSocketAppender</code></a> is designed to log to a remote
-    entity by transmitting serialized <code>AccessEvent</code> objects
-    over the wire.  However, when using <code>ServerSocketAppender</code>
-    the appender acts as a server, passively listening on a TCP socket awaiting
-    inbound connections from interested clients.  Logging events delivered
-    to the appender are distributed to all connected clients.
+      <p>Like <code>SocketAppender</code>, the <a
+      href="../xref-access/ch/qos/logback/access/common/net/server/ServerSocketAppender.html">
+      <code>ServerSocketAppender</code></a> is designed to log to a
+      remote entity by transmitting serialized
+      <code>AccessEvent</code> objects over the wire.  However, when
+      using <code>ServerSocketAppender</code> the appender acts as a
+      server, passively listening on a TCP socket awaiting inbound
+      connections from interested clients.  Logging events delivered
+      to the appender are distributed to all connected clients.
     </p>
     
-    <p>The <a href="../xref/ch/qos/logback/access/net/server/SSLServerSocketAppender.html">
-    <code>SSLSocketAppender</code></a> extends the basic 
-    <code>ServerSocketAppender</code> allowing logging to a remote entity
-    over the Secure Sockets Layer (SSL).
+    <p>The <a
+    href="../xref-access/ch/qos/logback/access/common/net/server/SSLServerSocketAppender.html">
+    <code>SSLSocketAppender</code></a> extends the basic
+    <code>ServerSocketAppender</code> allowing logging to a remote
+    entity over the Secure Sockets Layer (SSL).
     </p>
     
     <p>The properties of access' <code>ServerSocketAppender</code> are
@@ -4865,34 +4867,34 @@ public class CountingConsoleAppender extends AppenderBase&lt;ILoggingEvent> {
     </p>
     
 	 	
-		<h3 class="doAnchor" name="AccessSMTPAppender">SMTPAppender</h3>
-		
-		<p>Access' <a
-		href="../xref/ch/qos/logback/access/net/SMTPAppender.html">
-		<code>SMTPAppender</code></a> works in the same way as its Classic
-		counterpart.  However, the <span class="prop">evaluator</span>
-		option is rather different.  By default, a
-		<code>URLEvaluator</code> object is used by
-		<code>SMTPAppender</code>. This evaluator contains a list of URLs
-		that are checked against the current request's URL. When one of
-		the pages given to the <code>URLEvaluator</code> is requested,
-		<code>SMTPAppender</code> sends an email.
-		</p>
+    <h3 class="doAnchor" name="AccessSMTPAppender">SMTPAppender</h3>
+    
+    <p>Access <a
+    href="../xref-access/ch/qos/logback/access/common/net/SMTPAppender.html">
+    <code>SMTPAppender</code></a> works in the same way as its Classic
+    counterpart.  However, the <span class="prop">evaluator</span>
+    option is rather different.  By default, a
+    <code>URLEvaluator</code> object is used by
+    <code>SMTPAppender</code>. This evaluator contains a list of URLs
+    that are checked against the current request's URL. When one of
+    the pages given to the <code>URLEvaluator</code> is requested,
+    <code>SMTPAppender</code> sends an email.
+    </p>
 		
 		<p>
-			Here is a sample configuration of a <code>SMTPAppender</code> in the access environment.
+		  Here is a sample configuration of a <code>SMTPAppender</code> in the access environment.
 		</p>
     <p class="example">Example: <code>SMTPAppender</code>
     configuration
     (logback-examples/&#8203;src/main/resources/&#8203;chapters/appenders/&#8203;conf/access/logback-smtp.&#8203;xml)</p>
 
 <pre><code>&lt;appender name="SMTP"
-  class="ch.qos.logback.access.net.SMTPAppender">
+  class="ch.qos.logback.access.common.net.SMTPAppender">
   &lt;layout class="ch.qos.logback.access.html.HTMLLayout">
     &lt;pattern>%h%l%u%t%r%s%b&lt;/pattern>
   &lt;/layout>
     
-  <b>&lt;Evaluator class="ch.qos.logback.access.net.URLEvaluator">
+  <b>&lt;Evaluator class="ch.qos.logback.access.common.net.URLEvaluator">
     &lt;URL>url1.jsp&lt;/URL>
     &lt;URL>directory/url2.html&lt;/URL>
   &lt;/Evaluator></b>
@@ -4910,9 +4912,8 @@ public class CountingConsoleAppender extends AppenderBase&lt;ILoggingEvent> {
 
 		<h3 class="doAnchor" name="AccessDBAppender">DBAppender</h3>
 		
-		<p><a
-		href="../xref/ch/qos/logback/access/db/DBAppender.html"><code>DBAppender</code></a>
-		is used to insert the access events into a database.
+		<p><code>DBAppender</code> is used to insert the
+		access events into a database.
 		</p>
 
                 <p>As of logback version 1.2.8 <code>DBAppender</code> no longer
@@ -5081,7 +5082,7 @@ public class CountingConsoleAppender extends AppenderBase&lt;ILoggingEvent> {
     <p>The SiftingAppender in logback-access is quite similar to its
     logback-classic counterpart. The main difference is that in
     logback-access the default discriminator, namely <a
-    href="../xref/ch/qos/logback/access/sift/AccessEventDiscriminator.html">AccessEventDiscriminator</a>,
+    href="../xref-access/ch/qos/logback/access/common/sift/AccessEventDiscriminator.html">AccessEventDiscriminator</a>,
     is not MDC based. As its name suggests, AccessEventDiscriminator,
     uses a designated field in AccessEvent as the basis for selecting a
     nested appender. If the value of the designated field is null,

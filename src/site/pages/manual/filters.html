@@ -571,7 +571,7 @@ public class SampleTurboFilter extends TurboFilter {
    	classes ready for use.  The <a
    	href="../xref/ch/qos/logback/classic/turbo/MDCFilter.html"><code>MDCFilter</code></a>
    	checks the presence of a given value in the MDC whereas <a
-   	href="../apidocs/ch/qos/logback/classic/turbo/DynamicThresholdFilter.html"><code>DynamicThresholdFilter</code></a>
+   	href="../apidocs/ch.qos.logback.classic/ch/qos/logback/classic/turbo/DynamicThresholdFilter.html"><code>DynamicThresholdFilter</code></a>
    	allows filtering based on MDC key/level threshold associations. On
    	the other hand, <a
    	href="../xref/ch/qos/logback/classic/turbo/MarkerFilter.html"><code>MarkerFilter</code></a>
@@ -805,7 +805,7 @@ logger.debug("Hello {}.", name1);</code></pre>
     counterparts, with one notable difference. Instead of
     <code>LoggingEvent</code> instances logback-access filters act
     upon <a
-    href="../xref/ch/qos/logback/access/spi/AccessEvent.html"><code>AccessEvent</code></a>
+    href="../xref-access/ch/qos/logback/access/common/spi/AccessEvent.html"><code>AccessEvent</code></a>
     instances. At present time, logback-access ships with a limited
     number of filters described below. If you would like to suggest
     additional filters, please contact the logback-dev mailing list.
@@ -815,7 +815,7 @@ logger.debug("Hello {}.", name1);</code></pre>
 		name="countingFilter"><code>CountingFilter</code></h2>
 		
 		<p>With the help of <a
-		href="../xref/ch/qos/logback/access/filter/CountingFilter.html"><code>CountingFilter</code></a>
+		href="../xref-access/ch/qos/logback/access/common/filter/CountingFilter.html"><code>CountingFilter</code></a>
 		class, logback-access can provide statistical data about access to
 		the web-server. Upon initialization, <code>CountingFilter</code>
 		registers itself as an MBean onto the platform's JMX server. You
