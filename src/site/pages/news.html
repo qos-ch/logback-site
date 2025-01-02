@@ -60,12 +60,8 @@
    
     <h2>On the 1.3.x and 1.4.x series</h2>
 
-    <p>Given that downstream users are likely to depend on either Java
-    EE (in the javax namespace) or on Jakarta EE (in the jakarta
-    namespace) in their projects, it was deemed important for logback
-    to support both alternatives.</p>
-
-    <p>As such, logback 1.3.x supports the Java EE edition whereas
+   
+    <p>Logback 1.3.x supports the Java EE edition whereas
     logback 1.4.x supports Jakarta EE, otherwise the two versions are
     feature identical. Here is a summary of the differences:</p>
 
@@ -96,7 +92,7 @@
       </tr>
 
     </table>
-    
+
     <p>Logback components written for logback 1.2 should work without
     change in version 1.3. However, Joran, logback's configuration
     system, has been rewritten to use an internal representation model
@@ -108,8 +104,16 @@
     scripts are now largely order-free. For example, appenders can now
     be defined after they are first referenced in a logger. Moreover,
     unreferenced appenders are no longer instantiated. </p>
+
+    
+    <h2>On the 1.2.x series (UN-MAINTAINED)</h2>
+
+    <p>The 1.2.x series has been deprecated for several years and is
+    no longer maintained. As such, use of the 1.2.x series is
+    discouraged.</p>
+    
  
-    <h3  class="doAnchor" name="reproducible">Reproducible builds</h3>
+    <h2  class="doAnchor" name="reproducible">Reproducible builds</h2>
      
     <div style="display: flex;"> 
       <div style="margin-right: 1rem;">

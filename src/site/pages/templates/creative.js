@@ -11,7 +11,7 @@ document.write('        </p>');
 
 
 document.write('        <p class="author" >');
-document.write('            Copyright &#169; 2000-2022 QOS.ch Sarl');
+document.write('            Copyright &#169; 2000-2025 QOS.CH Sarl');
 document.write('        </p>');
 
 //document.write('       <p>');
