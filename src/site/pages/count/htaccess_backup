@@ -1,0 +1,18 @@
+Redirect 302 /count/champion.html  https://github.com/sponsors/qos-ch/sponsorships?tier_id=77436
+Redirect 302 /count/exoscale.html  https://www.exoscale.com/
+Redirect 302 /count/stf.html      https://sovereigntechfund.de/en/
+Redirect 302 /count/amex.html      https://sovereigntechfund.de/en/
+Redirect 302 /count/aws.html      https://amazon.com/aws
+Redirect 302 /count/mercedes.html https://opensource.mercedes-benz.com/
+
+Redirect 302 /count/twitter.html  https://twitter.com/qos_ch
+Redirect 302 /count/github.html   https://github.com/qos-ch/logback
+Redirect 302 /count/lisette.html   https://www.lmgd.eu/
+Redirect 302 /count/sponsor.html  https://github.com/sponsors/qos-ch
+Redirect 302 /count/tidelift.html https://tidelift.com/subscription/pkg/maven-ch.qos.logback.logback-classic
+
+
+#Redirect 302 /count/spotify.html  https://research.atspotify.com/
+
+
+
