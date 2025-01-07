@@ -70,6 +70,9 @@ function insertLogoAndMenu() {
     document.write('    </div>');
 }
 
+// google add script
+document.write('<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6731569547319298" crossorigin="anonymous"></script>');
+
 document.write('<link rel="stylesheet" type="text/css" href="'+prefix+'common/css/site3.css" />');
 document.write('<link rel="stylesheet" type="text/css" href="'+prefix+'css/menu2.css"/>');
 document.write('<link rel="stylesheet" type="text/css" href="'+prefix+'css/popup.css"/>');
@@ -140,9 +143,6 @@ document.write('<div id="ad" class="top-message">');
 document.write('    <p>Need an issue fixed as soon as possible? Consider <a href="'+prefix+'count/champion.html"><i class="fa-regular fa-trophy"></i> championing a release</a>.</p>');
 document.write('</div>');
 
-// document.write('<div id="ad">');
-// document.write('    <script type="text/javascript" src="'+prefix+'templates/ad.js" ></script>');
-// document.write('</div>');
 
 // close #header-grid
 document.write('</div>');

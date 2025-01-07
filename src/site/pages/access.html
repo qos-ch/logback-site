@@ -24,7 +24,7 @@
     <script type="text/javascript" src="common/templates/sponsoredBy.js"></script>
 
     <!--<script type="text/javascript" src="templates/creative.js"> </script>-->
-
+ 
     <h1>Introduction</h1>
 
     <p>Logback-access integrates with Servlet containers such as
@@ -39,10 +39,12 @@
 
     <p>It should be noted that while logback-access requires
     logback-core, it is independent of logback-classic as well as
-    slf4j. Just as importantly, logback-access artifacts must be
+    SLF4J. Just as importantly, logback-access artifacts must be
     installed at the container level, not at web-application level. It
     usually does not make sense to bundle logback-access artifacts at
-    the level of a web-application.
+    the level of a web-application. However, in case your application
+    embeds an Servlet container such as Tomcat or Jetty, you can also
+    embed/package logback-access in the same manner.
     </p>
 
     <p><span class="label notice">Since 2.0.4</span> Given that

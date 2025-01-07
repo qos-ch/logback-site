@@ -328,16 +328,117 @@ public class SampleFilter extends Filter&lt;ILoggingEvent> {
     <code>evaluate(ILoggingEvent)</code> method.
     </p>
 
+    <p>You might also want to
+    try the <a href="https://logback.qos.ch/translator/services/janinoExpressionMigrator.html">Janino Expression Migrator
+    </a> available online.</p>
 
+    <p>For example, let us  migrate the following basic evaluator configuration.</p>
     
+    <div class="tab">
+    <button class="tablinks" id="button_basicEventEvaluator_legacy"
+            onclick="openTab(event, 'basicEventEvaluator', 'legacy')">Legacy</button>
+    <button class="tablinks" id="button_basicEventEvaluator_canonical"
+            onclick="openTab(event, 'basicEventEvaluator', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_basicEventEvaluator_tyler"
+             onclick="openTab(event, 'basicEventEvaluator', 'tyler')">Tyler</button>
+</div>
+
+<div id="basicEventEvaluator_legacy" class="tabcontent">
+    <pre><code>&lt;configuration>
+  &lt;appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <b>&lt;filter class="ch.qos.logback.core.filter.EvaluatorFilter">      
+      &lt;evaluator> &lt;!-- defaults to type ch.qos.logback.classic.boolex.JaninoEventEvaluator -->
+        &lt;expression><span class="green">return message.contains("billing");</span>&lt;/expression>
+      &lt;/evaluator>
+      &lt;OnMismatch>NEUTRAL&lt;/OnMismatch>
+      &lt;OnMatch>DENY&lt;/OnMatch>
+    &lt;/filter></b>
+    &lt;encoder>
+      &lt;pattern>
+        %-4relative [%thread] %-5level %logger -%kvp -%msg%n
+      &lt;/pattern>
+    &lt;/encoder>
+  &lt;/appender>
+
+  &lt;root level="INFO">
+    &lt;appender-ref ref="STDOUT" />
+  &lt;/root>
+&lt;/configuration></code></pre>
+
+</div> 
+
+    <p>Supplying the expression
+    <pre><code>return message.contains("billing");</code></pre>
+    to the <a hrref="https://logback.qos.ch/translator/services/janinoExpressionMigrator.html">online
+    mogrator</a> will result in the generation of following custom evaluator code.</p>
+
+    <pre><code>package PACKAGE_NAME_OF_YOUR_CHOICE;
+
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.boolex.MarkerList;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.classic.spi.IThrowableProxy;
+import ch.qos.logback.classic.spi.LoggerContextVO;
+import ch.qos.logback.classic.spi.ThrowableProxy;
+import ch.qos.logback.core.boolex.EvaluationException;
+import ch.qos.logback.core.boolex.EventEvaluatorBase;
+import ch.qos.logback.core.boolex.Matcher;
+import org.slf4j.Marker;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * &lt;p>This class was generated when migrating a logback-classic configuration
+ * using JaninoEventEvaluator.</p>
+ *
+ * &lt;p>JaninoEventEvaluator has been removed due to identified vulnerabilities.</p>which
+ *
+ * &lt;p>Note that the generated code in the {@link #evaluate(ILoggingEvent)} method will
+ * depend on the boolean expression, more specifically on the variables referenced
+ * in the original boolean  expression.</p>
+ */
+public class GeneratedExpressionEvaluator extends EventEvaluatorBase<ILoggingEvent> {
+
+    public boolean evaluate(ILoggingEvent event) throws NullPointerException, EvaluationException {
+        String message = event.getMessage();
+        return message.contains("billing");
+    }
+}</code></pre>
+
+   <p>Below is an example integrating this custom evaluator.</p>
+
+<pre><code>&lt;configuration>
+
+  &lt;appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    &lt;filter class="ch.qos.logback.core.filter.EvaluatorFilter">
+      &lt;evaluator class="PACKAGE_NAME_OF_YOUR_CHOICE.GeneratedExpressionEvaluator">
+         &lt;!‐‐ Note that like all logback components, this custom evaluator can also
+         be parameterized ‐‐>
+      &lt;/evaluator>
+      &lt;OnMismatch>NEUTRAL&lt;/OnMismatch>
+      &lt;OnMatch>DENY&lt;/OnMatch>
+    &lt;/filter>
+    &lt;layout>
+      &lt;pattern>%d [%thread] %-5level %logger{36} -%kvp- %msg%n&lt;/pattern>
+    &lt;/layout>
+  &lt;/appender>
+
+  &lt;root level="DEBUG">
+    &lt;appender-ref ref="STDOUT" />
+  &lt;/root>
+&lt;/configuration></code></pre>
+
+  <!--
 
     <h2 class="doAnchor" name="matcher">Matchers</h2>
 
     <p>Given that <a
     href="#JaninoEventEvaluator">JaninoEventEvaluator</a> has been
-    removed, matchers are no longer supported.</p>
+    removed, matchers are no longer .</p>
     
-    <!--
+  
     
 
     <p>While it is possible to do pattern matching by invoking the <a
@@ -799,42 +900,38 @@ logger.debug("Hello {}.", name1);</code></pre>
 
     <h1 class="doAnchor" name="logback-access">In logback-access</h1>
     
-    <p>Logback-access offers most of the features available with
+    <p>Logback-access offers many of the features available with
     logback-classic. In particular, <code>Filter</code> objects are
     available and work in the same way as their logback-classic
     counterparts, with one notable difference. Instead of
-    <code>LoggingEvent</code> instances logback-access filters act
+    <code>ILoggingEvent</code> instances logback-access filters act
     upon <a
     href="../xref-access/ch/qos/logback/access/common/spi/AccessEvent.html"><code>AccessEvent</code></a>
     instances. At present time, logback-access ships with a limited
-    number of filters described below. If you would like to suggest
-    additional filters, please contact the logback-dev mailing list.
-    </p>
+    number of filters described below.    </p>
 
-		<h2 class="doAnchor"
-		name="countingFilter"><code>CountingFilter</code></h2>
+    <h2 class="doAnchor" name="countingFilter"><code>CountingFilter</code></h2>
+		 
+     <p>With the help
+        of <a href="../xref-access/ch/qos/logback/access/common/filter/CountingFilter.html"><code>CountingFilter</code></a>
+        class, logback-access can provide statistical data about
+        access to the web-server. Upon
+        initialization, <code>CountingFilter</code> registers itself
+        as an MBean onto the platform's JMX server. You can then
+        interrogate that MBean for statistical data, e.g. averages by
+        minute, hour, day, week, or month. Other statistics such the
+        count for the preceding week, day, hour or month as well as
+        the total count are also available.
+     </p>
 		
-		<p>With the help of <a
-		href="../xref-access/ch/qos/logback/access/common/filter/CountingFilter.html"><code>CountingFilter</code></a>
-		class, logback-access can provide statistical data about access to
-		the web-server. Upon initialization, <code>CountingFilter</code>
-		registers itself as an MBean onto the platform's JMX server. You
-		can then interrogate that MBean for statistical data,
-		e.g. averages by minute, hour, day, week, or month. Other
-		statistics such the count for the preceding week, day, hour or
-		month as well as the total count are also available.
-		</p>
-		
-		<p>The following <em>logback-access.xml</em> configuration file
-		declares a <code>CountingFilter</code>.  </p>
+     <p>The following <em>logback-access.xml</em> configuration file
+     declares a <code>CountingFilter</code>.  </p>
 
 <div class="tab">
     <button class="tablinks" id="button_countingFilter_legacy"
             onclick="openTab(event, 'countingFilter', 'legacy')">Legacy</button>
     <button class="tablinks" id="button_countingFilter_canonical"
             onclick="openTab(event, 'countingFilter', 'canonical')">Canonical (1.3)</button>
-    <button class="tablinks" id="button_countingFilter_tyler"
-             onclick="openTab(event, 'countingFilter', 'tyler')">Tyler</button>
 </div>
 
 <div id="countingFilter_legacy" class="tabcontent">
@@ -856,13 +953,12 @@ logger.debug("Hello {}.", name1);</code></pre>
 
 </div>
 
-<div id="countingFilter_canonical" class="tabcontent">
-  <p>Requires a server call. Please wait a few seconds.</p>
-</div>
-   <div id="countingFilter_tyler" class="tabcontent"><p>Requires a server call.</p></div>
+  <div id="countingFilter_canonical" class="tabcontent">
+    <p>Requires a server call. Please wait a few seconds.</p>
+  </div>
 
 
-     <p>You can examine the various statistics maintained by
+    <p>You can examine the various statistics maintained by
     <code>CountingFilter</code> on your platform's JMX server via the
     <code>jconsole</code> application. </p>
 
@@ -915,7 +1011,7 @@ logger.debug("Hello {}.", name1);</code></pre>
     need to worry about the actual plumbing. However, it is your
     responsibility to ensure that the Java language expression returns
     a boolean, i.e. that it evaluates to true or false. </p>
-
+    
 
     <p>The evaluation expression is evaluated on the current access
     event. Logback-access automatically exports the current
@@ -926,37 +1022,102 @@ logger.debug("Hello {}.", name1);</code></pre>
     href="../xref/ch/qos/logback/access/spi/AccessEvent.html"><code>AccessEvent</code>
     class source code</a> for the exact list.
     </p>
+    -->
+
+    <h3>Filtering on HTTPResponse status code</h3>
+
+    <p><a href="../xref-access/ch/qos/logback/access/common/boolex/StatusCodeEventEvaluator.html"><code>StatusCodeEventEvaluator</code></a> (since 2.0.6) is a trivial event
+    evaluator. Its <code>evaluate(IAccessEvent)</code> method returns
+    true if the status code of access event passed as parameter
+    matches the status code specified in the configuration file.</p>
     
     <p>The next logback-access configuration file illustrates
-    filtering based on the <a
+    filtering on <a
     href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.5">404
     (Not Found)</a> HTTP response code. Every request resulting in a
     404 will be printed on the console.</p>
-   	
+
 <em>Example: Access Evaluator (logback-examples/src/main/resources/chapters/filters/accessEventEvaluator.xml)</em>
-<pre><code>&lt;configuration>
-  &lt;statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener" />
 
-  &lt;appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-    <b>&lt;filter class="ch.qos.logback.core.filter.EvaluatorFilter">
-      &lt;evaluator>
-        &lt;expression>event.getStatusCode() == 404&lt;/expression>
-      &lt;/evaluator>
-      &lt;onMismatch>DENY&lt;/onMismatch>
-    &lt;/filter></b>
-   &lt;encoder>&lt;pattern>%h %l %u %t %r %s %b&lt;/pattern>&lt;/encoder>
-  &lt;/appender>
+<pre><code>&lt;configuration&gt;
+    &lt;import class="ch.qos.logback.core.status.OnConsoleStatusListener"/&gt;
+    &lt;import class="ch.qos.logback.core.ConsoleAppender"/&gt;
+    &lt;import class="ch.qos.logback.core.filter.EvaluatorFilter"/&gt;
+    &lt;import class="ch.qos.logback.access.common.boolex.StatusCodeEventEvaluator"/&gt;
 
-  &lt;appender-ref ref="STDOUT" />
-&lt;/configuration></code></pre>
+    &lt;statusListener class="OnConsoleStatusListener"/&gt;
 
-		<p>In the next example, we still log requests resulting in 404 errors,
-		except those requests asking for CSS files.
-		</p>	
+    &lt;appender name="STDOUT"  class="ConsoleAppender"&gt;
+
+         &lt;filter class="EvaluatorFilter"&gt;
+            &lt;evaluator class="StatusCodeEventEvaluator"&gt;
+                &lt;statusCode&gt;404&lt;/statusCode&gt;
+            &lt;/evaluator&gt;
+            &lt;onMatch&gt;NEUTRAL&lt;/onMatch&gt;
+            &lt;onMismatch&gt;DENY&lt;/onMismatch&gt;
+        &lt;/filter&gt;
+
+        &lt;encoder&gt;
+           &lt;pattern&gt;%h %l %u %t %r %s %b&lt;/pattern&gt;
+        &lt;/encoder&gt;
+    &lt;/appender&gt;
+
+    &lt;appender-ref ref="STDOUT" /&gt;
+
+&lt;/configuration&gt;</code></pre>
+
+
+  <h3>Filtering on both the HTTP request URI and the response status code</h3>
+
+  <p><a href="../xref-access/ch/qos/logback/access/common/boolex/RequestURIEventEvaluator.html"><code>RequestURIEventEvaluator</code></a> (since 2.0.6) evaluates whether the
+  requestURI of an access event matches a regular expression. The next
+  example combines StatusCodeEventEvaluator and
+  <code>RequestURIEventEvaluator</code>, to still log requests
+  resulting in 404 errors, except those requests asking for CSS files.
+  </p>	
 
 
     <em>Example 6.10: Access Evaluator (logback-examples/src/main/resources/chapters/filters/accessEventEvaluator2.xml)</em>
-    <pre><code>&lt;configuration>
+    <pre><code>&lt;configuration&gt;
+    &lt;import class="ch.qos.logback.core.status.OnConsoleStatusListener"/&gt;
+    &lt;import class="ch.qos.logback.core.ConsoleAppender"/&gt;
+    &lt;import class="ch.qos.logback.core.filter.EvaluatorFilter"/&gt;
+    &lt;import class="ch.qos.logback.access.common.boolex.StatusCodeEventEvaluator"/&gt;
+    &lt;import class="ch.qos.logback.access.common.boolex.RequestURIEventEvaluator"/&gt;
+
+    &lt;statusListener class="OnConsoleStatusListener"/&gt;
+
+    &lt;appender name="STDOUT"  class="ConsoleAppender"&gt;
+
+         &lt;filter class="EvaluatorFilter"&gt;
+            &lt;evaluator class="StatusCodeEventEvaluator"&gt;
+                &lt;statusCode&gt;404&lt;/statusCode&gt;
+            &lt;/evaluator&gt;
+            &lt;onMatch&gt;NEUTRAL&lt;/onMatch&gt;
+            &lt;onMismatch&gt;DENY&lt;/onMismatch&gt;
+        &lt;/filter&gt;
+        &lt;filter class="EvaluatorFilter"&gt;
+            &lt;evaluator class="RequestURIEventEvaluator"&gt;
+                &lt;regex&gt;\.css$&lt;/regex&gt;
+            &lt;/evaluator&gt;
+            &lt;onMatch&gt;DENY&lt;/onMatch&gt;
+            &lt;onMismatch&gt;NEUTRAL&lt;/onMismatch&gt;
+        &lt;/filter&gt;
+
+        &lt;encoder&gt;
+           &lt;pattern&gt;%h %l %u %t %r %s %b&lt;/pattern&gt;
+        &lt;/encoder&gt;
+    &lt;/appender&gt;
+
+    &lt;appender-ref ref="STDOUT" /&gt;
+
+&lt;/configuration&gt;</code></pre>
+
+
+    
+
+<!--
+      &lt;configuration>
   &lt;statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener" />
   &lt;appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
     &lt;filter class="ch.qos.logback.core.filter.EvaluatorFilter">

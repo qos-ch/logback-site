@@ -104,14 +104,18 @@
     scripts are now largely order-free. For example, appenders can now
     be defined after they are first referenced in a logger. Moreover,
     unreferenced appenders are no longer instantiated. </p>
-
-    
-    <h2>On the 1.2.x series (UN-MAINTAINED)</h2>
+     
+    <h2>On the 1.2.x series (UNMAINTAINED)</h2>
 
     <p>The 1.2.x series has been deprecated for several years and is
     no longer maintained. As such, use of the 1.2.x series is
     discouraged.</p>
-    
+
+    <p>For those using Spring-boot 2.7 or earlier, it is possible to
+    upgrade to a more recent version of logback by setting the
+    <code>org.springframework.boot.logging.LoggingSystem</code> system
+    property to <code>none</code>.</p>
+
  
     <h2  class="doAnchor" name="reproducible">Reproducible builds</h2>
      
@@ -128,6 +132,62 @@
        </p> 
       </div>
     </div> 
+
+    <!-- ============================================================================ -->
+
+    <hr width="80%" align="center" />
+
+    
+    <h3 class="doAnchor" name="access_2.0.6">2025-01-07 Release of logback-access
+    version 2.0.6</h3>
+
+    <p>&bull; Added <a
+    href="../xref-access/ch/qos/logback/access/common/boolex/StubEventEvaluator.html"><code>StubEventEvaluator</code></a>
+    as a default nested component rule for <code>&lt;evaluator&gt;</code>. Without
+    this rule, configuration files previously defaulting to
+    <code>JaninoEventEvaluator</code> would raise exceptions.  </p>
+
+      <p>&bull; Added <a
+      href="../xref-access/ch/qos/logback/access/common/boolex/RequestURIEventEvaluator.html"><code>RequestURIEventEvaluator</code></a>
+      and <a
+      href="../xref-access/ch/qos/logback/access/common/boolex/StatusCodeEventEvaluator.html"><code>StatusCodeEventEvaluator</code></a>
+      as sample evaluators.</p>
+    
+    <p>&bull; Bumped logback-core dependency to version 1.5.16.</p>
+
+        
+    <p>&bull; A bit-wise identical binary of this version can be
+    reproduced by building
+    from <a href="https://github.com/qos-ch/logback-access">source
+    code</a> at commit d580d904bec59338ee5fe57985e6ba62418f982c
+    associated with the tag <code>v_2.0.6</code>. Release built using
+    Java "21" 2023-10-17 LTS build 21.0.1.+12-LTS-29 under Linux
+    Debian 11.6.
+     </p> 
+ 
+    <!-- ============================================================================ -->
+    <hr width="80%" align="center" />
+
+
+    <h3 class="doAnchor" name="1.5.16">2025-01-05 Release of logback
+    version 1.5.16</h3>
+
+    <p>&bull; In order to ease the migration of configuration files depending
+    on <code>JaninoEventEvaluator</code>, logback-classic will emit a
+    warning about the removal of <code>JaninoEventEvaluator</code> in
+    version 1.5.13 and suggest an <a
+    href="https://logback.qos.ch/translator/services/janinoExpressionMigrator.html">online
+    migration tool</a>.
+    </p>
+    
+    <p>&bull; A bit-wise identical binary of this version can be
+    reproduced by building from <a
+    href="https://github.com/qos-ch/logback">source code</a> at commit
+    74c9ebd0e784d9e9ffc6c627cf5016d0157956b2 associated with the tag
+    v_1.5.16. Release built using Java "21" 2023-10-17 LTS build
+    21.0.1.+12-LTS-29 under Linux Debian 11.6.
+    </p>
+
     <!-- ============================================================================ -->
     <hr width="80%" align="center" />
 

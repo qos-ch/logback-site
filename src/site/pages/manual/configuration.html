@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6731569547319298" crossorigin="anonymous"></script>    
+
     <title>Chapter 3: Configuration</title>
 
     <script type="text/javascript">prefix='../';</script>
@@ -102,6 +102,18 @@
       previous step, logback will instantiate a <a
       href="https://github.com/qos-ch/logback/blob/master/logback-classic/src/main/java/ch/qos/logback/classic/joran/SerializedModelConfigurator.java">SerializedModelConfigurator</a>.</p>
 
+      <p class="highlight">Given the lack of user interest,
+      <code>SerializedModelConfigurator</code> will be removed from
+      the initialization sequence in the near future.</p>
+      
+       <p>Given that <code>SerializedModelConfigurator</code> has not
+       met with user interest, and given the advent of the <a
+       href="https://github.com/qos-ch/logback-tyler">logback-tyler
+       project</a>, <code>SerializedModelConfigurator</code> will be
+       removed from logback's initialization sequence in the near
+       future. You are hereby discouraged from relying on
+       <code>SerializedModelConfigurator</code>.</p>
+        
 
        <p>&bull; If the system property "logback.scmoFile"
        is set, then <code>SerializedModelConfigurator</code> will try
@@ -204,14 +216,6 @@
     configuration file.
     </p>
 
-    <p><span class="label notice">Groovy</span> Given that Groovy is a
-    full-fledged language, we have dropped support for
-    <em>logback.groovy</em> in order to protect the innocent. However,
-    groovy support was picked up at <a
-    href="https://github.com/virtualdogbert/logback-groovy-config">virtualdogbert/logback-groovy-config</a>
-    by Tucker Pelletier.
-    </p>
-
     <p>If you are using a build tool according to Maven's folder
     structure, then if you place the <em>logback-test.xml</em> under
     the <em>src/test/resources</em> folder, Maven will ensure that it
@@ -227,11 +231,18 @@
     can use the service-provider loading facility (item 1 above) to
     load your own custom <code>Configurator</code> class with <a
     href="../xref/ch/qos/logback/classic/BasicConfigurator.html">BasicConfigurator</a>
-    serving as a good starting point.</p>
+    serving as a good starting point. Better yet, converting an XML
+    file to Java using <a
+    href="https://logback.qos.ch/translator/services/xml2Java.html"><code>TylerConfigurator</code></a>
+    is a quick and quite convenient way of improving configuration times.
+    </p>
 
-    <p>Converting an XML file to <a href="#serializeModel">serialized
-    model</a> format is a quick and convenient way of improving
-    configuration times.
+    <p><span class="label notice">Groovy</span> Given that Groovy is a
+    full-fledged language, we have dropped support for
+    <em>logback.groovy</em> in order to protect the innocent. However,
+    groovy support was picked up at <a
+    href="https://github.com/virtualdogbert/logback-groovy-config">virtualdogbert/logback-groovy-config</a>
+    by Tucker Pelletier.
     </p>
 
     
