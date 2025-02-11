@@ -140,6 +140,61 @@
 
     <!-- ============================================================================ -->
 
+    <!--
+    <h3 class="doAnchor" name="1.5.17">2025-02-xx Release of logback
+    version 1.5.17</h3>
+
+!!!!!!!!!!!!!!!!
+git sBEWARE: Release SLF4J 2.0.17 first, remove SNAPSHOT suffix in <slf4j.version> property
+in logback/pom.xml
+    
+    <p>&bull; Fixed Jansi 2.4.0 color-coded output not working on
+    Windows CMD.exe console when the default terminal application is
+    set to "Windows Console Host". This problem was reported in <a
+    href="https://github.com/qos-ch/logback/issues/753">issues/753</a>
+    by Michael Lyubkin.
+    </p>
+
+    <p>&bull; Fixed race condition occurring in case <code>MDC</code>
+    class is initialized while org.slf4j.LoggerFactory is initializing
+    logback-classic's <code>LoggerContext</code>. When this race
+    conditions occurs, the <code>MDCAdapter</code> instance used by
+    <code>MDC</code> does not match the instance used by
+    logback-classic. This issue was reported in <a
+    href="https://github.com/qos-ch/slf4j/issues/450">SLF4J
+    issues/450</a>. Fixing this issue also requires SLF4J version
+    2.0.17.
+    </p>
+    
+    <p>&bull; A bit-wise identical binary of this version can be
+    reproduced by building from <a
+    href="https://github.com/qos-ch/logback">source code</a> at commit
+
+      associated with the tag
+    v_1.5.17. Release built using Java "21" 2023-10-17 LTS build
+    21.0.1.+12-LTS-29 under Linux Debian 11.6.
+    </p>
+
+    -->
+    
+    <!-- ============================================================================ -->
+    <h3 class="doAnchor" name="tyler_1.0.2">2024-12-17 Release of logback-tyler
+    version 1.0.2</h3>
+
+    <p>&bull; Fixed issue with incorrect translation for
+    AsyncAppender. This issue was raised by Lewis Birks
+    in <a href="https://github.com/qos-ch/logback-tyler/issues/7">issues/7</a>.</p>
+
+    <p>&bull; A bit-wise identical binary of this version can be
+    reproduced by building 
+    from <a href="https://github.com/qos-ch/logback-tyler">source
+    code</a> at commit 20ea4c50fe46a79a7e125b62386908a6932a20c6
+    associated with the tag v_1.0.2. Release built using Java "21"
+    2023-10-17 LTS build 21.0.1.+12-LTS-29 under Linux Debian 11.6.d
+    </p>
+    
+    <!-- ============================================================================ -->
+
     <hr width="80%" align="center" />
 
     
@@ -347,6 +402,8 @@
     21.0.1.+12-LTS-29 under Linux Debian 11.6.
     </p>
 
+    <!-- ===================================================================== -->
+    
     <hr width="80%" align="center" />
 
     <h3 class="doAnchor" name="tyler_1.0.1">2024-12-17 Release of logback-tyler
@@ -355,7 +412,7 @@
     <p>&bull; The <code>TylerConfigurator</code> classes produced by
     logback-tyler now have the <code>public</code> modifier. The
     missing public modifier was raised by Mark Stewart
-    in <a href="https://github.com/qos-ch/logback-tyler/issues/6">issues/5/</a>.</p>
+    in <a href="https://github.com/qos-ch/logback-tyler/issues/6">issues/6</a>.</p>
 
     <p>&bull; A bit-wise identical binary of this version can be
     reproduced by building
@@ -366,7 +423,7 @@
     </p>
 
 
-    <!-- --------------------------->
+    <!-- ================================================================== -->
 
     
     <hr width="80%" align="center" />

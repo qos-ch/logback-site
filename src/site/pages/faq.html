@@ -35,6 +35,7 @@
       <li><a href="#dependency">What are logback's dependencies, i.e.
       JDK version and third-party libraries?</a>
       </li>
+      
     </ol>
   
                       
@@ -54,9 +55,8 @@
 
       <li>
         <a href="#configFileLocation">Where should the configuration
-        files such as <em>logback.scmo</em>, <em>logback-test.scmo</em>
-        <em>logback-test.xml</em> or <em>logback.xml</em> be located
-        on the classpath?</a> </li>
+        files such as <em>logback-test.xml</em>
+        or <em>logback.xml</em> be located on the classpath?</a> </li>
 
       <li>
         <a href="#sharedConfiguration">Is it possible for multiple JEE
@@ -126,8 +126,7 @@
         href="dependencies.html">separate page</a> dedicated to the
         question of dependencies.</p>
         </dd>
-      </dl>
-
+      </dl>      
 
     </div>
     
@@ -164,12 +163,11 @@
 
 
         <dd>
-          <p>Configuration files such
-          as <em>logback-test.scmo</em>, <em>logback.scmo</em>
-          <em>logback-test.xml</em> or <em>logback.xml</em> can be
-          located <b>directly</b> under any folder declared in the
-          class path. For example, if the class path reads
-          "c:/java/jdk15/lib/rt.jar;c:/mylibs/" then the
+          <p>Configuration files such <em>logback-test.xml</em>
+          or <em>logback.xml</em> can be located <b>directly</b> under
+          any folder declared in the class path. For example, if the
+          class path reads "c:/java/jdk15/lib/rt.jar;c:/mylibs/" then
+          the
           <em>logback.xml</em> file should be located directly under
           "c:/mylibs/", that is as "c:/mylibs/logback.xml". Placing it
           under a sub-folder of c:/mylibs/, say, c:/mylibs/other/,
