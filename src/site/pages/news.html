@@ -140,42 +140,66 @@
 
     <!-- ============================================================================ -->
 
-    <!--
-    <h3 class="doAnchor" name="1.5.17">2025-02-xx Release of logback
+    <h3 class="doAnchor" name="1.5.18">2025-03-18 Release of logback
+    version 1.5.18</h3>
+
+    <p>&bull; Added <a
+    href="manual/appenders.html#fileCompression">support for XZ
+    compression</a> for archived log files. Note that XZ compression
+    requries Tukaani project's <a
+    href="https://tukaani.org/xz/java.html"><code>XZ library for
+    Java</code></a>.  In case XZ compression is requested but the XZ
+    library is missing, then logback will substitute GZ compression as
+    a fallback. This feature was requested in <a
+    href="https://github.com/qos-ch/logback/issues/755">issues/755</a>.
+    </p>
+
+    <p>&bull; Removed references to
+    <code>java.security.AccessController</code> class. This has been
+    deprecated for some time and is slated for removal in future JDK
+    versions.</p>
+    
+    <p>&bull; A bit-wise identical binary of this version can be
+    reproduced by building from <a
+    href="https://github.com/qos-ch/logback">source code</a> at commit
+    b2a02f065379a9b1ba5ff837fc08913b744774bc associated with the tag
+    v_1.5.18. Release built using Java "21" 2023-10-17 LTS build
+    21.0.1.+12-LTS-29 under Linux Debian 11.6.
+    </p>
+    <!-- ============================================================================ -->
+
+    <h3 class="doAnchor" name="1.5.17">2025-02-25 Release of logback
     version 1.5.17</h3>
 
-!!!!!!!!!!!!!!!!
-git sBEWARE: Release SLF4J 2.0.17 first, remove SNAPSHOT suffix in <slf4j.version> property
-in logback/pom.xml
-    
+ 
     <p>&bull; Fixed Jansi 2.4.0 color-coded output not working on
     Windows CMD.exe console when the default terminal application is
     set to "Windows Console Host". This problem was reported in <a
     href="https://github.com/qos-ch/logback/issues/753">issues/753</a>
-    by Michael Lyubkin.
+    by Michael Lyubkin. 
     </p>
-
+ 
     <p>&bull; Fixed race condition occurring in case <code>MDC</code>
     class is initialized while org.slf4j.LoggerFactory is initializing
     logback-classic's <code>LoggerContext</code>. When this race
     conditions occurs, the <code>MDCAdapter</code> instance used by
-    <code>MDC</code> does not match the instance used by
-    logback-classic. This issue was reported in <a
-    href="https://github.com/qos-ch/slf4j/issues/450">SLF4J
-    issues/450</a>. Fixing this issue also requires SLF4J version
-    2.0.17.
+    <code>MDC</code> would not match the instance used by
+    logback-classic. This issue was reported
+    in <a href="https://github.com/qos-ch/slf4j/issues/450">SLF4J
+    issues/450</a>. While logback-classic version 1.5.17 remains
+    compatible with SLF4J versions in the 2.0.x series, fixing this
+    particular MDC issue requires SLF4J version 2.0.17.
     </p>
     
     <p>&bull; A bit-wise identical binary of this version can be
     reproduced by building from <a
     href="https://github.com/qos-ch/logback">source code</a> at commit
-
-      associated with the tag
+      10358724ed723b3745c010aa40cb02a2dfed4593 associated with the tag
     v_1.5.17. Release built using Java "21" 2023-10-17 LTS build
     21.0.1.+12-LTS-29 under Linux Debian 11.6.
     </p>
 
-    -->
+
     
     <!-- ============================================================================ -->
     <h3 class="doAnchor" name="tyler_1.0.2">2024-12-17 Release of logback-tyler

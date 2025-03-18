@@ -1168,13 +1168,17 @@ public interface RollingPolicy extends LifeCycle {
    folders.
    </p>
 
-   <h3>Automatic file compression</h3>
+   <h3 class="doAnchor" name="fileCompression">Automatic file compression</h3>
 
    <p><code>TimeBasedRollingPolicy</code> supports automatic file
-      compression.  This feature is enabled if the value of the
-      <span class="prop">fileNamePattern</span> option ends with <em>.gz</em>
- 	 or <em>.zip</em>.
-   </p>
+   compression.  This feature is enabled if the value of the <span
+   class="prop">fileNamePattern</span> option ends with <em>.gz</em>
+   <em>.zip</em> or <em>.xz</em>. Note that xz compression requries
+   Tukaani project's <a
+   href="https://tukaani.org/xz/java.html"><code>XZ library for
+   Java</code></a>. In case XZ compression is requested but the XZ
+   library is missing, then logback will substitute GZ compression as
+   a fallback.</p>
 
    <table class="bodyTable striped">
      <tr class="a">
@@ -5109,8 +5113,8 @@ public class CountingConsoleAppender extends AppenderBase&lt;ILoggingEvent> {
       &lt;defaultValue>NA&lt;/defaultValue>
     &lt;/Discriminator>
     &lt;sift>
-       &lt;appender name="${id}" class="ch.qos.logback.core.FileAppender">
-        &lt;file>byUser/${id}.log&lt;/file>
+       &lt;appender name="\${id}" class="ch.qos.logback.core.FileAppender">
+        &lt;file>byUser/\${id}.log&lt;/file>
         &lt;layout class="ch.qos.logback.access.PatternLayout">
           &lt;pattern>%h %l %u %t \"%r\" %s %b&lt;/pattern>
         &lt;/layout>
@@ -5120,6 +5124,8 @@ public class CountingConsoleAppender extends AppenderBase&lt;ILoggingEvent> {
   &lt;appender-ref ref="SIFTING" />
 &lt;/configuration></code></pre>
 
+    <!-- In the above, DOLLAR{id} is substituted by the resource plugin. We escape
+         to avoid substitution -->
 
     <p>In the above configuration file, a <code>SiftingAppender</code>
     nests <code>FileAppender</code> instances. The key "id" is
