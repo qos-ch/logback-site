@@ -137,16 +137,16 @@
        </p> 
       </div>
     </div> 
-
+ 
     <!-- ============================================================================ -->
-
+  
     <h3 class="doAnchor" name="1.5.18">2025-03-18 Release of logback
     version 1.5.18</h3>
 
     <p>&bull; Added <a
     href="manual/appenders.html#fileCompression">support for XZ
     compression</a> for archived log files. Note that XZ compression
-    requries Tukaani project's <a
+    requires Tukaani project's <a
     href="https://tukaani.org/xz/java.html"><code>XZ library for
     Java</code></a>.  In case XZ compression is requested but the XZ
     library is missing, then logback will substitute GZ compression as
@@ -155,9 +155,9 @@
     </p>
 
     <p>&bull; Removed references to
-    <code>java.security.AccessController</code> class. This has been
-    deprecated for some time and is slated for removal in future JDK
-    versions.</p>
+    <code>java.security.AccessController</code> class. This class has
+    been deprecated for some time and is slated for removal in future
+    JDK versions.</p>
     
     <p>&bull; A bit-wise identical binary of this version can be
     reproduced by building from <a
