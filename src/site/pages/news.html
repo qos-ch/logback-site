@@ -134,10 +134,42 @@
       1.3.x and later are binary reproducible, as <a
       href="https://github.com/jvm-repo-rebuild/reproducible-central/tree/master/content/ch/qos/logback">
       independently attested </a> by reproducible-central.
-       </p> 
+       </p>  
       </div>
-    </div> 
- 
+    </div>   
+   
+   <!-- ============================================================================ -->
+
+    <h3 class="doAnchor" name="1.5.19">2025-09-30 Release of logback
+    version 1.5.19</h3>
+
+    <p>&bull; Disallow "new" operator in the <span
+    class="attr">condition</span> attribute of <code>&lt;if&gt;</code>
+    elements. This fixes an ACE vulnerability recorded as <a
+    href="https://www.cve.org/cverecord?id=CVE-2025-11226">CVE-2025-11226</a>.</p> 
+
+    <p>&bull; At initialization time, slightly better reporting about
+    watched configuration files.</p>
+
+    <p>&bull; Softer message regarding usage of
+    <code>ConsoleAppender</code> and its potential impact on
+    performance.</p>
+
+    <p>&bull; In <code>ViewStatusMessagesServlet</code>, restrict
+    processing of "Clear" button to POST method. This change was
+    proposed by Ralf Wiebicke who also provided
+    the <a href="https://github.com/qos-ch/logback/pull/971">relevant
+    PR</a>.
+    </p>
+    
+    <p>&bull; A bit-wise identical binary of this version can be
+    reproduced by building from <a
+    href="https://github.com/qos-ch/logback">source code</a> at commit
+    e572d4f87f06674788eb3ca7148e8d1dffc615fa associated with the tag
+    v_1.5.19. Release built using Java "21" 2023-10-17 LTS build
+    21.0.1.+12-LTS-29 under Linux Debian 11.6.
+    </p>
+    
     <!-- ============================================================================ -->
   
     <h3 class="doAnchor" name="1.5.18">2025-03-18 Release of logback
