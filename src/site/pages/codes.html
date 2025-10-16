@@ -666,6 +666,30 @@
   </p>
 
   <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->
+  <h3 class="doAnchor" name="conditionNew">The 'condition' attribute
+  in <em>&lt;if&gt;</em> element may not contain the 'new' operator.
+  </h3>  
+
+  <p>The "new" operator in the condition attribute of <if> elements is
+  disallowed. This prevents an ACE vulnerability recorded as
+  <a href="https://www.cve.org/cverecord?id=CVE-2025-11226">CVE-2025-11226</a>.
+  </p>
+
+ <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->
+  <h3 class="doAnchor" name="conditionAttributeDeprecation">The
+  'condition' attribute in &lt;if> element is deprecated and slated
+  for removal. Use &lt;condition> element instead.
+  </h3>  
+
+  <p>Due to potential vulnerabilities associated with
+  configuration-time code compilation (Janino), the 'condition'
+  attribute within the &lt;if> element is deprecated and will be
+  removed.</p>
+
+  <p>As of logback 1.5.20, the &lt;condition> element with a custom
+  <code>PropertyEvaluator</code> offers a recommended alternative.</p>
+    
+  <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->
   <h3 class="doAnchor" name="block">As of logback version 0.9.28,
   JaninoEventEvaluator expects Java blocks.
   </h3>
