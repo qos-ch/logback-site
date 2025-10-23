@@ -97,7 +97,7 @@
       </li>
 
 
-      <li><p><span class="label notice">Since 1.3.9/1.4.9</span> If no
+      <!--<li><p><span class="label notice">Since 1.3.9/1.4.9</span> If no
       user-supplied custom <code>Configurator</code> was found in the
       previous step, logback will instantiate a <a
       href="https://github.com/qos-ch/logback/blob/master/logback-classic/src/main/java/ch/qos/logback/classic/joran/SerializedModelConfigurator.java">SerializedModelConfigurator</a>.</p>
@@ -148,7 +148,7 @@
        GraalVM, this may yield smaller executables that start faster.
        </p>
       </li>
-      
+      -->
       <li>
 
         <p><span class="label notice">Nominal step</span> If the
@@ -2312,17 +2312,151 @@ fileName=myApp.log
   development, testing and production. These configuration files have
   substantial parts in common differing only in a few places. To avoid
   duplication, logback supports conditional processing of
-  configuration files with the help of <code>&lt;if></code>,
+  configuration files with the help
+  of <code>&lt;condition></code>, <code>&lt;if></code>,
   <code>&lt;then></code> and <code>&lt;else></code> elements so that a
   single configuration file can adequately target several
-  environments. Note that conditional processing requires the <a
-  href="../setup.html#janino">Janino library</a>.
+  environments.
+  </p>
+
+
+  <p>The general format for conditional statements is shown below.</p>
+
+  <pre><code>   &lt;!-- condition-if-then form -->
+   &lt;condition class="a.class.implementing.PropertyCondition">
+      &lt;!-- additional parameters if needed --&gt;
+   &lt;/condition> 
+   &lt;!-- if-then form -->
+   &lt;if>
+    &lt;then>
+      ...
+    &lt;/then>
+  &lt;/if>
+
+  &lt;!-- condition-if-then-else form -->
+  &lt;condition class="a.class.implementing.ProppertyCondition">
+      &lt;!-- additional parameters if needed --&gt;
+  &lt;/condition> 
+  &lt;if>
+    &lt;then>
+      ...
+    &lt;/then>
+    &lt;else>
+      ...
+    &lt;/else>
+  &lt;/if></code></pre>
+
+
+  <p><span class="label notice">Since 1.5.20</span> Note that the
+  <code>&lt;condition&gt;</code> element preceeds the if/then/else
+  elements. This syntax is similar to conditional expressions in the
+  smalltalk language.  Conditional processing using the
+  <code>&lt;condition&gt;</code> element was introduced in logback
+  version 1.5.20.</p>
+
+
+  <p>If the <code>&lt;condition&gt;</code> evaluates to
+  <code>true</code>, the <code>&lt;then&gt;</code> part is activated
+  and if <code>false</code>, the <code>&lt;else&gt;</code> part is
+  activated, if present.</p>
+
+  <p>Conditional processing is supported <em>anywhere</em> within the
+  <code>&lt;configuration></code> element. Nested
+  condition-if-then-else statements are also supported. However, XML
+  syntax is cumbersome and is ill-suited as the foundation of a
+  general purpose programming language.  Thus, conditionals should be
+  used sparingly.</p>
+  
+  <p>The class passed to <code>&lt;condition&gt;</code> element must
+  implement the <code>PropertyCondition</code> interface.</p>
+
+  <p>Logback-core ships with rudimentary condition implementations all
+  derived from <code>PropertyConditionBase</code> in the
+  <code>ch.qos.logback.core.boolex</code> package.</p>
+
+  <p>Here is an example which checks if the HOSTNAME property equals
+  "torino".</p>
+
+ <div id="conditional_legacy" class="tabcontent">
+  <pre><code>&lt;configuration debug="true">
+
+  <b>&lt;condition class="ch.qos.logback.core.boolex.PropertyEqualityCondition"&gt;
+    &lt;key&gt;HOSTNAME&lt;/key&gt;
+    &lt;value&gt;torino&lt;/value&gt;
+  &lt;/condition></b>
+  <b>&lt;if></b>
+    <b>&lt;then></b>
+      &lt;appender name="CON" class="ch.qos.logback.core.ConsoleAppender">
+        &lt;encoder>
+          &lt;pattern>%d %-5level %logger{35} -%kvp- %msg %n&lt;/pattern>
+        &lt;/encoder>
+      &lt;/appender>
+      &lt;root>
+        &lt;appender-ref ref="CON" />
+      &lt;/root>
+    <b>&lt;/then></b>
+  <b>&lt;/if></b>
+
+  &lt;appender name="FILE" class="ch.qos.logback.core.FileAppender">
+    &lt;file>${randomOutputDir}/conditional.log&lt;/file>
+    &lt;encoder>
+      &lt;pattern>%d %-5level %logger{35} -%kvp- %msg %n&lt;/pattern>
+   &lt;/encoder>
+  &lt;/appender>
+
+  &lt;root level="ERROR">
+     &lt;appender-ref ref="FILE" />
+  &lt;/root>
+&lt;/configuration></code></pre>
+  </div>
+
+  <div id="conditional_canonical" class="tabcontent">
+    <p>Requires a server call.</p>
+  </div>
+   <div id="conditional_tyler" class="tabcontent"><p>Requires a server call.</p></div>
+  
+
+  <p><code>ProppertyConditionBase</code> class defines the following
+  helper methods <code>property(String key)</code>, <code>p(String
+  key)</code>, <code>isDefined(String key)</code>,
+  <code>isDefined(String key)</code>, <code>isNull(String key)</code>.
+
+  <p>For a key passed as argument, the <code>property(String
+  key)</code> or its shorter equivalent <code>p(String key)</code>
+  methods return the value of the property corresponding to
+  <code>key</code>.  For example, to access the value of a property
+  with key "k", you would write <code>property("k")</code> or
+  equivalently <code>p("k")</code>. If the property with key "k" is
+  undefined, the property method will return the empty string and not
+  null. This avoids the need to check for null values.</p>
+
+  <p>The <code>isDefined(String key)</code> method can be used to
+  check whether a property is defined. For example, to check whether
+  the property "k" is defined you would write
+  <code>isDefined("k")</code> Similarly, if you need to check whether
+  a property is null, the <code>isNull()</code> method is
+  provided. Example: <code>isNull("k")</code>.</p>
+
+ 
+  <h3>Dynamic-compilation Janino variant (DEPRECATED)</h3>  
+  
+  <p>In version earlier versions, conditional processing defaulted to
+  dynamic i.e. runtime, java code compilation and execution using the
+  <a href="../setup.html#janino">Janino library</a>. However, due to
+  potential vulnerabilities associated with dynamic, i.e. runtime,
+  java code compilation and execution (using Janino), the 'condition'
+  attribute within the &lt;if> element is deprecated and will be
+  removed in 2027.
+  </p>
+
+  <p>An online <a
+  href="https://logback.qos.ch/translator/services/conditionalConfigMigrator.html">migration
+  service</a> is provided to ease the transition.
   </p>
 
   <p>The general format for conditional statements is shown below.</p>
 
-  <pre><code>
-   &lt;!-- if-then form -->
+  <pre><code>   &lt;!-- if-then form -->
    &lt;if condition="some conditional expression">
     &lt;then>
       ...
@@ -2404,15 +2538,6 @@ fileName=myApp.log
   </div>
    <div id="conditional_tyler" class="tabcontent"><p>Requires a server call.</p></div>
 
-  <p>Conditional processing is supported <em>anywhere</em> within the
-  <code>&lt;configuration></code> element. Nested if-then-else
-  statements are also supported. However, XML syntax is awfully
-  cumbersome and is ill-suited as the foundation of a general purpose
-  programming language.  Consequently, too many conditionals will
-  quickly render your configuration files incomprehensible to subsequent
-  readers, including yourself.
-  </p>
-
 
   <!-- ============================================================== -->
 
@@ -2493,15 +2618,16 @@ fileName=myApp.log
 &lt;/configuration>
    </code></pre>
 
-  <p>Note that an instance of <a
+  
+  <p><a
   href="https://github.com/qos-ch/logback/blob/master/logback-classic/src/main/java/ch/qos/logback/classic/joran/SerializedModelConfigurator.java"><code>SerializedModelConfigurator</code></a>
-  is created and invoked during logback-classic
-  initialization. <code>SerializedModelConfigurator</code> instances
-  can read and configure logback-classic from serialized configuration
-  model (.scmo) files. See the earlier section on <a
-  href="#auto_configuration">configuration at initialization</a>.</p>
-   
-    
+  can subsequently read and configure logback-classic from these
+  serialized configuration model (.scmo) files. You can set up
+  <code>SerializedModelConfigurator</code> as a custom configurator
+  using Java's service-provider loading facility. See step 1 of the <a
+  href="#auto_configuration">Configuration at initialization</a>
+  section.</p>
+         
   <h3 class="doAnchor" name="fileInclusion">File inclusion</h3>
 
   <p>Joran supports including parts of a configuration file from

@@ -137,9 +137,76 @@
        </p>  
       </div>
     </div>   
-   
-   <!-- ============================================================================ -->
 
+    <!-- ============================================================================ -->
+    <!--
+   <hr width="80%" align="center" />
+   
+    <h3 class="doAnchor" name="1.5.21">2025-10-xx Release of logback
+    version 1.5.21</h3>
+
+    <p>&bull;JsonEncoder is now friedlier to derivation by sub-classes
+    as requested in <a
+    href="https://github.com/qos-ch/logback/issues/979">issues/979</a>.
+    </p>
+
+    <p>&bull; Fixed <code>XMLLayout</code> thread safety issue
+    reported in <a
+    href="https://jira.qos.ch/browse/LOGBACK-427">LOGBACK-427</a>.</p>
+
+     <p>&bull; A bit-wise identical binary of this version can be
+    reproduced by building from <a
+    href="https://github.com/qos-ch/logback">source code</a> at commit
+       XXXXXXXXXXXXXXXXXXXXXXx
+       associated with the tag
+    v_1.5.21. Release built using Java "21" 2023-10-17 LTS build
+    21.0.1.+12-LTS-29 under Linux Debian 11.6.
+    </p>
+    -->
+   <!-- ============================================================================ -->
+   <hr width="80%" align="center" />
+   
+    <h3 class="doAnchor" name="1.5.20">2025-10-19 Release of logback
+    version 1.5.20</h3>
+
+    <p>&bull; Due to potential vulnerabilities associated with
+    dynamic, i.e. runtime, java code compilation and execution (using
+    Janino), the 'condition' attribute within the
+    <code>&lt;if&gt;</code> element is deprecated and will be removed
+    in 2027.
+    </p>
+
+    <p>An online <a
+    href="https://logback.qos.ch/translator/services/conditionalConfigMigrator.html">migration
+    service</a> is provided to help with the transition.
+    </p>
+    
+    <p>The &lt;condition&gt; element, new in this version, admits
+    custom <code>PropertyEvaluator</code> as a recommended
+    alternative. See also the updated documentation on <a
+    href="manual/configuration.html#conditional">conditional
+    configuration</a>.
+    </p>
+
+    <p>&bull; <a
+    href="manual/configuration.html#auto_configuration">Initialization
+    procedure</a> has been simplified by removing the step
+    instantiating a <code>SerializedModelConfigurator</code>. However,
+    it is still possible to set up
+    <code>SerializedModelConfigurator</code> as a custom
+    configurator. </p>
+    
+    <p>&bull; A bit-wise identical binary of this version can be
+    reproduced by building from <a
+    href="https://github.com/qos-ch/logback">source code</a> at commit
+    930fb15c993a4344bcecc6ba2225c12a2c38e676 associated with the tag
+    v_1.5.20. Release built using Java "21" 2023-10-17 LTS build
+    21.0.1.+12-LTS-29 under Linux Debian 11.6.
+    </p>
+    
+   <!-- ============================================================================ -->
+    <hr width="80%" align="center" />
+   
     <h3 class="doAnchor" name="1.5.19">2025-09-30 Release of logback
     version 1.5.19</h3>
 
@@ -171,7 +238,8 @@
     </p>
     
     <!-- ============================================================================ -->
-  
+    <hr width="80%" align="center" />
+    
     <h3 class="doAnchor" name="1.5.18">2025-03-18 Release of logback
     version 1.5.18</h3>
 
@@ -199,7 +267,8 @@
     21.0.1.+12-LTS-29 under Linux Debian 11.6.
     </p>
     <!-- ============================================================================ -->
-
+    <hr width="80%" align="center" />
+    
     <h3 class="doAnchor" name="1.5.17">2025-02-25 Release of logback
     version 1.5.17</h3>
 
@@ -234,6 +303,8 @@
 
     
     <!-- ============================================================================ -->
+    <hr width="80%" align="center" />
+    
     <h3 class="doAnchor" name="tyler_1.0.2">2024-12-17 Release of logback-tyler
     version 1.0.2</h3>
 

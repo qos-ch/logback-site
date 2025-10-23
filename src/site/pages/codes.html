@@ -34,7 +34,8 @@
   <p>It should not happen when you are using the default or JNDI
   context selectors.
   </p>
-  
+
+  <hr width="80%" align="center" />
 
   <!-- ================&#8203;===============&#8203;===============&#8203;============= -->
   <h3 class="doAnchor" name="layoutInsteadOfEncoder">This appender no
@@ -131,6 +132,8 @@
   </p>
 
   <!-- ========================================================== -->
+
+  <hr width="80%" align="center" />
   
   <h3 class="doAnchor" name="slowConsole">Logging to the console can be slow</h3>
 
@@ -152,6 +155,8 @@
 
   <!-- ================&#8203;===============&#8203;===============&#8203;============= -->
 
+  <hr width="80%" align="center" />
+  
   <h3 class="doAnchor" name="socket_no_host">No remote host or address
   is set for <code>SocketAppender</code>
     
@@ -169,11 +174,9 @@
   ...
 &lt;/appender&gt;</code></pre>
 
-
-  
-
   <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->
-
+  <hr width="80%" align="center" />
+  
   <h3 class="doAnchor" name="socket_no_port">No remote port is set for
   <code>SocketAppender</code>    
   </h3>
@@ -189,13 +192,9 @@
   &lt;port>4560&lt;/port>
   ...
 &lt;/appender&gt;</code></pre>
-				
-
-
-  
-
+				  
   <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->
-
+  <hr width="80%" align="center" />
   <h3 class="doAnchor" name="smtp_no_layout">No <code>Layout</code> is
   set for SMTPAppender
   </h3>
@@ -227,7 +226,7 @@
   
       
   <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->
-
+  <hr width="80%" align="center" />
   <h3 class="doAnchor" name="sbtp_size_format">Specified number is not
   in proper int form, or not expected format.    
   </h3>
@@ -243,12 +242,10 @@
     </li>
   </ul>
       
-  <p>Here are some correct values: 500KB, 15MB, 2GB.</p>
-  
-  
+  <p>Here are some correctly formatted values: 500KB, 15MB, 2GB.</p> 
       
   <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->
-
+  <hr width="80%" align="center" />
   <h3 class="doAnchor" name="rfa_no_tp">No
   <code>TriggeringPolicy</code> was set for the
   <code>RollingFileAppender</code>.
@@ -283,6 +280,7 @@
   </p>
 
   <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->
+  <hr width="80%" align="center" />
   <h3 class="doAnchor" name="rfa_reset_rp_or_tp">A TriggeringPolicy 
   <code>TriggeringPolicy</code> is set a second time, or a RollingPolicy is set for the second time.    
   </h3>
@@ -308,7 +306,7 @@
   </p>
   
   <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->
-
+  <hr width="80%" align="center" />
   <h3 class="doAnchor" name="#sat_missing_integer_token">Missing
   integer token, that is %i, in FileNamePattern [...].
     
@@ -324,7 +322,7 @@
 
       
   <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->
-
+  <hr width="80%" align="center" />
   <h3 class="doAnchor" name="rfa_no_rp">No <code>RollingPolicy</code>
   was set for the <code>RollingFileAppender</code>.    
   </h3>
@@ -360,6 +358,7 @@
   
 
   <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->
+  <hr width="80%" align="center" />
   <h3 class="doAnchor" name="tbr_fnp_not_set">The <span
   class="option">FileNamePattern</span> property is mandatory for both
   <code>TimeBasedRollingPolicy</code> and
@@ -383,6 +382,7 @@
   
 
   <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->
+  <hr width="80%" align="center" />
   <h3 class="doAnchor" name="rfa_file_after">The <span
   class="option">File</span> property must be set before any rolling
   policy or triggering policy.
@@ -397,7 +397,7 @@
   </p>
 
   <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->  
-
+  <hr width="80%" align="center" />
   <h3 class="doAnchor" name="rfa_collision"><span
   class="option">File</span> property collides with <span
   class="option">fileNamePattern</span>. Aborting.
@@ -419,7 +419,7 @@
   refuse to start.</p>
 
   <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->  
-
+  <hr width="80%" align="center" />
   <h3 class="doAnchor" name="rfa_collision_in_dateFormat">The date
   format in <span class="option">fileNamePattern</span> will result in
   collisions in the names of archived log files.
@@ -440,7 +440,7 @@
   detected.</p>
 
   <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->  
-
+  <hr width="80%" align="center" />
   <h3 class="doAnchor" name="earlier_fa_collision"><span
   class="option">File</span>/<span
   class="option">FileNamePattern</span> option has the same value "..." as
@@ -462,8 +462,8 @@
   RollingFileAppender. Make sure that each RollingFileAppender has a
   unique <span class="option">FileNamePattern</span> option</p>
   
-  <!-- ================&#8203;===============&#8203;===============&#8203;===============
-       -->
+  <!-- ================&#8203;===============&#8203;===============&#8203;=========     -->
+  <hr width="80%" align="center" />
   <h3 class="doAnchor" name="renamingError">Failed to rename file [x]
   as [y].</h3>
 
@@ -548,6 +548,7 @@
    </p>
 
   <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->
+  <hr width="80%" align="center" />
   <h3 class="doAnchor" name="fwrp_parentFileName_not_set">The <span
   class="option">File</span> property must be set before
   <code>FixedWindowRollingPolicy</code>    
@@ -565,6 +566,7 @@
   </p>
 			
   <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->
+  <hr width="80%" align="center" />
   <h3 class="doAnchor" name="nested_if_element">Nested &lt;if&gt;
   element within &lt;appender&gt;, &lt;logger&gt; or &lt;root&gt;
   elements is disallowed
@@ -612,6 +614,7 @@
 
 
   <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->
+  <hr width="80%" align="center" />
   <h3 class="doAnchor" name="tbr_fnp_prudent_unsupported">Prudent mode
   is not supported with <code>FixedWindowRollingPolicy</code>.
   </h3>
@@ -622,10 +625,9 @@
   prudent mode is not allowed in conjunction with a
   <code>FixedWindowRollingPolicy</code>.
   </p>
-
-  
-  
+    
   <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->
+  <hr width="80%" align="center" />
   <h3 class="doAnchor" name="syslog_layout">SyslogAppender does not
   admit a layout.
   </h3>
@@ -645,6 +647,7 @@
   
 
   <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->
+  <hr width="80%" align="center" />  
   <h3 class="doAnchor" name="1andOnly1">Only and only one appender can
   be nested the &lt;sift> element in
   <code>SiftingAppender</code>.</h3>
@@ -654,6 +657,7 @@
   
 
   <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->
+  <hr width="80%" align="center" />
   <h3 class="doAnchor" name="ifJanino">Could not find Janino library
   on the class path. Skipping conditional processing.
   </h3>
@@ -665,7 +669,21 @@
   Janino to your class path.
   </p>
 
+  <p><span class="label">NOTE</span> As of logback 1.5.20, the
+  <code>&lt;condition&gt;</code> element with a custom
+  <code>PropertyEvaluator</code> offers a recommended alternative. See
+  also <a href="manual/configuration.html#conditional">conditional
+  processing of config files</a> as well as the <a
+  href="https://logback.qos.ch/translator/services/conditionalConfigMigrator.html">conditional
+  configuration migrator</a>. Due to potential vulnerabilities
+  associated with dynamic, i.e. runtime, java code compilation and
+  execution (using Janino), the <code>condition</code> attribute
+  within the <code>&lt;if&gt;</code> element is deprecated and will be
+  removed in 2027.
+  </p>
+  
   <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->
+  <hr width="80%" align="center" />
   <h3 class="doAnchor" name="conditionNew">The 'condition' attribute
   in <em>&lt;if&gt;</em> element may not contain the 'new' operator.
   </h3>  
@@ -675,25 +693,56 @@
   <a href="https://www.cve.org/cverecord?id=CVE-2025-11226">CVE-2025-11226</a>.
   </p>
 
+  <p><span class="label">NOTE</span> As of logback 1.5.20, the
+  <code>&lt;condition&gt;</code> element with a custom
+  <code>PropertyEvaluator</code> offers a recommended alternative. See
+  also <a href="manual/configuration.html#conditional">conditional
+  processing of config files</a> as well as the <a
+  href="https://logback.qos.ch/translator/services/conditionalConfigMigrator.html">conditional
+  configuration migrator</a>. Due to potential vulnerabilities
+  associated with dynamic, i.e. runtime, java code compilation and
+  execution (using Janino), the <code>condition</code> attribute
+  within the <code>&lt;if&gt;</code> element is deprecated and will be
+  removed in 2027.
+  </p>
+  
  <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->
-  <h3 class="doAnchor" name="conditionAttributeDeprecation">The
+ <hr width="80%" align="center" />
+ <h3 class="doAnchor" name="conditionAttributeDeprecation">The
   'condition' attribute in &lt;if> element is deprecated and slated
-  for removal. Use &lt;condition> element instead.
+  for removal. Use &lt;condition> element instead (requires version 1.5.20 or later).
   </h3>  
 
-  <p>Due to potential vulnerabilities associated with
-  configuration-time code compilation (Janino), the 'condition'
-  attribute within the &lt;if> element is deprecated and will be
-  removed.</p>
+  <p>Due to potential vulnerabilities associated with dynamic,
+  i.e. runtime, java code compilation and execution (using Janino),
+  the 'condition' attribute within the &lt;if> element is deprecated
+  and will be removed in 2027.</p>
 
-  <p>As of logback 1.5.20, the &lt;condition> element with a custom
-  <code>PropertyEvaluator</code> offers a recommended alternative.</p>
-    
+  <p><span class="label">NOTE</span> As of logback 1.5.20, the
+  <code>&lt;condition&gt;</code> element with a custom
+  <code>PropertyEvaluator</code> offers a recommended alternative. See
+  also <a href="manual/configuration.html#conditional">conditional
+  processing of config files</a> as well as the <a
+  href="https://logback.qos.ch/translator/services/conditionalConfigMigrator.html">conditional
+  configuration migrator</a>. Due to potential vulnerabilities
+  associated with dynamic, i.e. runtime, java code compilation and
+  execution (using Janino), the <code>condition</code> attribute
+  within the <code>&lt;if&gt;</code> element is deprecated and will be
+  removed in 2027.
+  </p>
+
   <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->
+  <hr width="80%" align="center" />
   <h3 class="doAnchor" name="block">As of logback version 0.9.28,
   JaninoEventEvaluator expects Java blocks.
   </h3>
 
+  <p><b><code>JaninoEventEvaluator</code> which was removed in logback
+  version 1.5.13. You can migrate existing configuration code with <a
+  href="https://logback.qos.ch/translator/services/janinoExpressionMigrator.html">Janino
+  expression migrator</a>.</b>
+  </p>
+  
   <p>As of logback version 0.9.28, JaninoEvaluator expects Java
   "block", i.e. the body of a method. In previous versions only
   boolean expressions were allowed. For backward compatibility
@@ -738,7 +787,8 @@ return false;</code></pre>
    <p>
    </p>
 
-     <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->
+   <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->
+   <hr width="80%" align="center" />   
    <h3 class="doAnchor" name="param">The &lt;param&gt; element is
    deprecated in favor of a more direct syntax.
    </h3>
@@ -754,7 +804,7 @@ return false;</code></pre>
     &lt;/appender>
    </code></pre>
 
-   <p class="green bold">prefer the direct form (GOOD)
+   <p class="green bold">prefer the direct form (GOOD)</p>
 
    <pre><code>
     &lt;appender name="STDOUT" class="ch.qos.logback.&#8203;core.ConsoleAppender">
@@ -765,6 +815,7 @@ return false;</code></pre>
    </code></pre>
 
    <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->
+   <hr width="80%" align="center" />
    <h3 class="doAnchor" name="missingRightParenthesis">In a conversion
    pattern, opened parenthesis must be closed.
    </h3>
@@ -778,6 +829,7 @@ return false;</code></pre>
    </p>
   
    <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->
+   <hr width="80%" align="center" />
    <h3 class="doAnchor" name="saxParserConfiguration">Error during SAX parser configuration</h3>
 
    
@@ -798,6 +850,7 @@ return false;</code></pre>
    <p>See also <a href="https://jira.qos.ch/browse/LOGBACK-1577">LOGBACK-1577</a>.</p>
    
    <!-- ================&#8203;===============&#8203;===============&#8203;=============== -->
+   <hr width="80%" align="center" />   
    <h3 class="doAnchor" name="appender_order">Appenders must be
    defined before they are referenced.
    </h3>

@@ -1,17 +1,31 @@
 #!/usr/bin/bash
 
+remove_quotes() {
+    local str="$1"
+    # Remove surrounding double quotes
+    str="${str#\"}"
+    str="${str%\"}"
+    echo "$str"
+ }
+
 function scpLogback() {
 
+    echo "----------------"
+    echo ARGS=$ARGS
+    cleanArgs=$(remove_quotes $ARGS)
+    echo cleanArgs=$cleanArgs    
+    echo "----------------"    
+    
     echo ${ARGS}
     SOURCE=/home/ceki/logback-site/target/site
 
     pushd $SOURCE
     #i=0;
-    for FILE in ${ARGS} 
+    for FILE in $cleanArgs
     do
         echo "FILE=$FILE"
         echo "scp $FILE fran1.qos.ch:/var/www/logback.qos.ch/htdocs/$FILE";
-        scp $FILE fran1.qos.ch:/var/www/logback.qos.ch/htdocs/$FILE;
+              scp $FILE fran1.qos.ch:/var/www/logback.qos.ch/htdocs/$FILE;
         #i=$((i + 1));
     done
     popd
