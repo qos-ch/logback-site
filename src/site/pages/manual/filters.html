@@ -525,10 +525,10 @@ public class GeneratedExpressionEvaluator extends EventEvaluatorBase<ILoggingEve
     <h2 class="doAnchor" name="TurboFilter">TurboFilters</h2>
     
     <p><code>TurboFilter</code> objects all extend the
-    	<a href="../xref/ch/qos/logback/classic/turbo/TurboFilter.html">
-    	<code>TurboFilter</code></a> abstract class. Like the regular
-    	filters, they use ternary logic to return their evaluation of
-    	the logging event.
+    <a href="../xref/ch/qos/logback/classic/turbo/TurboFilter.html">
+    <code>TurboFilter</code></a> abstract class. Like the regular
+    filters, they use ternary logic to return their evaluation of the
+    logging event.
     </p>
     
     <p>Overall, they work much like the previously mentioned
@@ -536,22 +536,34 @@ public class GeneratedExpressionEvaluator extends EventEvaluatorBase<ILoggingEve
     <code>Filter</code> and <code>TurboFilter</code> objects.
     </p>
     
-   	<p><code>TurboFilter</code> objects are tied to the logging
-   	context. Hence, they are called not only when a given appender is
-   	used, but each and every time a logging request is issued. Their
-   	scope is wider than appender-attached filters.
-   	</p>
+    <p><code>TurboFilter</code> objects are tied to the whole logging
+    context not just a single appender. Thus, their scope is wider
+    than appender-attached filters. Moreover, they are called each and
+    every time a logging request is issued.
+    </p>
    	
-   	<p>More importantly, they are called before the
-   	<code>LoggingEvent</code> object creation.
-   	<code>TurboFilter</code> objects do not require the instantiation
-   	of a logging event to filter a logging request. As such, turbo
-   	filters are intended for high performance filtering of logging
-	events, even before the events are created.
+    <p>In principle, they are called <b>before</b> the
+    <code>LoggingEvent</code> object creation.
+    <code>TurboFilter</code> objects do not require the instantiation
+    of a logging event to filter a logging request. As such, turbo
+    filters are intended for high performance filtering of logging
+    events, even before the events are created.
     </p>
 
+    <p>With the advent of <a
+    href="https://www.slf4j.org/manual.html#fluent">fluent API</a> in
+    SLF4J 2.0, turbo filters are called twice, once when the
+    atDebug(), atInfo(), etc methods are invoked, and a second time
+    from the <code>log()</code> method of an <a
+    href="architecture.html#basic_selection">enabled log
+    statement</a>. </p>
+
+    <p>Please note that the call to turbo filters in
+    <code>log()</code> method for an enabled log statement is new in
+    logback-classic version 1.5.21 and later, prior versions did not
+    call turbo filters form the <code>log()</code> methods.</p>
    	
-   	<h3 class="doAnchor" name="yourOwnTurboFilter">Implementing your
+    <h3 class="doAnchor" name="yourOwnTurboFilter">Implementing your
    	own TurboFilter</h3>
     
     <p>To create your own <code>TurboFilter</code> component, just

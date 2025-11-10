@@ -2370,9 +2370,19 @@ fileName=myApp.log
   from <code>PropertyConditionBase</code> in the
   <code>ch.qos.logback.core.boolex</code> package.</p>
 
-  <p>Here is an example which checks if the HOSTNAME property equals
+  <p>Here is an example which checks if the HOSTNAME property equals 
   "torino".</p>
 
+ <div class="tab">
+      <button class="tablinks" id="button_conditional_legacy"
+              onclick="openTab(event, 'conditional', 'legacy')">Legacy</button>
+      <button class="tablinks" id="button_conditional_canonical"
+              onclick="openTab(event, 'conditional', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_conditional_tyler"
+             onclick="openTab(event, 'conditional', 'tyler')">Tyler</button>
+    </div>    
+
+  
  <div id="conditional_legacy" class="tabcontent">
   <pre><code>&lt;configuration debug="true">
 
@@ -2433,6 +2443,15 @@ fileName=myApp.log
   a property is null, the <code>isNull()</code> method is
   provided. Example: <code>isNull("k")</code>.</p>
 
+
+  <h4>Conditional configuration using Janino has been deprecated</h4>
+ 
+  <p><span class="label">Note</span> Due to potential vulnerabilities
+  associated with dynamic, i.e. runtime, java code compilation and
+  execution (using Janino), the <code>condition</code> attribute
+  within the <code>&lt;if&gt;</code> element has been deprecated and
+  will be removed in 2027.
+  </p> 
  
   <h3 class="doAnchor" name="sequenceNumberGenerator">SequenceNumberGenerator</h3>
 

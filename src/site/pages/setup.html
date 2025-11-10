@@ -13,7 +13,7 @@
     <script type="text/javascript" src="common/templates/sponsoredBy.js"></script>
 
     <div id="content">
-
+ 
 	
     <h2 class="doAnchor">Classpath Setup</h2>
 
@@ -105,69 +105,38 @@
     transitivity rules.</p>
 
 
-   <p>To include logback-access in your Maven project, declare the following
-    dependency in your project's <em>pom</em> file.</p>
-
-    <pre class="prettyprint source">&lt;dependency>
-  &lt;groupId>ch.qos.logback&lt;/groupId>
-  &lt;artifactId>logback-access&lt;/artifactId>
-  &lt;version>${project.version}&lt;/version>
-&lt;/dependency></pre>
-
+    <p>For the <em>logback-access</em> project, see the instructions
+    on its <a href="access.html">dedicated page.</a></p>
+    
    <h2 class="doAnchor" name="optionalDeps">Optional dependencies</h2>
 
    <h3 class="doAnchor" name="SMTP"><code>SMTPAppender</code> requires
-   JavaMail API</h3>
+   Jakarta-Mail</h3>
 
-   <p><code>SMTPAppender</code> related examples require the JavaMail
-   API version 1.4 or later. Once you <a
-   href="http://java.sun.com/products/javamail/downloads/index.html">download
-   JavaMail</a>, you need to place <em>mail.jar</em> on your class
-   path.</p>
+   <p><code>SMTPAppender</code> related examples require the Jakarta-Mail
+   API version 2.0 or later. </p>
    
-   <p>Here is the corresponding Maven dependency declaration for your
-   convenience.</p>
+   <p>Here is the corresponding Maven dependency declaration.</p>
 
-
-
-   <pre class="prettyprint source">&lt;!-- The javax.activation:activation:1.1 dependency will be --&gt;
+   <pre class="prettyprint source">&lt;!-- The jakarta.activation:activation dependency will be --&gt;
 &lt;!-- automatically pulled in by Maven's transitivity rules --&gt;
-&lt;dependency>
-  &lt;groupId>javax.mail&lt;/groupId>
-  &lt;artifactId>mail&lt;/artifactId>
-  &lt;version>${javax.mail.version}&lt;/version>
+&lt;dependency&gt;
+  &lt;groupId&gt;jakarta.mail&lt;/groupId&gt;
+  &lt;artifactId&gt;jakarta.mail-api&lt;/artifactId&gt;
+  &lt;version&gt;${jakarta.mail.version}&lt;/version&gt;
+&lt;/dependency&gt;</pre>     
+
+    <p>You will also need an implementation of the jakarta.mail-api.
+    One possible implementation is Eclipse Agnus.
+    </p>
+
+    <pre class="prettyprint source">&lt;dependency&gt;
+  &lt;groupId&gt;org.eclipse.angus&lt;/groupId&gt;
+  &lt;artifactId&gt;angus-mail&lt;/artifactId&gt;
+  &lt;version&gt;1.0.0&lt;/version>
 &lt;/dependency></pre>
 
-
-   <h3 class="doAnchor" name="janino">Conditional processing and
-   <code>JaninoEventEvaluator</code> require the Janino library</h3>
    
-   <p><a href="manual/configuration.html#conditional">Conditional
-   processing</a> in configuration files requires
-   the <a href="http://janino.unkrig.de"><b>Janino
-   library</b></a>. Moreover, the evaluator examples based on
-   <code>JaninoEventEvaluator</code> require Janino as well.  Once you
-   download Janino, simply place <em>commons-compiler.jar</em> and
-   <em>janino.jar</em> on your application's class path.
-   </p>
-
-   <p><span class="label notice">Don't forget</span> As of Janino
-   version 2.6.0, in addition to <em>janino.jar</em>,
-   <em>commons-compiler.jar</em> needs to be on the class path as well.</p>
-
-   <p>Here is the corresponding Maven dependency declaration for your
-   convenience.
-   </p>
-
-   <pre class="prettyprint source">&lt;!-- The org.codehaus.janino:commons-compiler:${janino.version} dependency --&gt;
-&lt;!-- will be automatically pulled in by Maven's transitivity rules --&gt;
-&lt;dependency>
-  &lt;groupId>org.codehaus.janino&lt;/groupId>
-  &lt;artifactId>janino&lt;/artifactId>
-  &lt;version>${janino.version}&lt;/version>
-&lt;/dependency></pre>
-
-
    <h2 class="doAnchor" name="ide">Building Logback</h2>
 
    <p class="big green">As of version 1.5.x, logback requires Java 21
