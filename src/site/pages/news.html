@@ -138,6 +138,43 @@
       </div>
     </div>   
 
+
+   <!-- ============================================================================ -->
+   <hr width="80%" align="center" />
+   
+    <h3 class="doAnchor" name="1.5.22">2025-12-11 Release of logback
+    version 1.5.22</h3>
+
+    <p>&bull; Logback will no longer ouput the value of substituted
+    variables if the variable name contains any of the
+    case-insensitive strings "<code>password</code>",
+    "<code>secret</code>" or "<code>confidential</code>". This problem
+    was reported by View cmrohila's full-sized avatar Chintan Rohila
+    in <a
+    href="https://github.com/qos-ch/logback/issues/986">issues/986</a>.
+    </p>
+
+    <p>&bull; Logback will now take into account information output by
+    <code>toString()</code> implementaitons in a
+    <code>Throwable</code> class. This problem was reported in <a
+    href="https://jira.qos.ch/browse/LOGBACK-543">LOGBACK-543</a> by
+    Alvin Chee with a fix provided in <a
+    href="https://github.com/qos-ch/logback/pull/404">PR 404</a> by
+    Brett Kail.
+
+    <p>&bull; Instead of limit counting guard, Logback now uses a
+    tumbling window guard for printing internal error messages.</p>
+    
+   
+    <p>&bull; A bit-wise identical binary of this version can be
+    reproduced by building from <a
+    href="https://github.com/qos-ch/logback">source code</a> at commit
+    572379aabd2f672b49593e4020696c624541e5b0 associated with the tag
+    v_1.5.22. Release built using Java "21" 2023-10-17 LTS build
+    21.0.1.+12-LTS-29 under Linux Debian 11.6.
+    </p>
+
+    
     <!-- ============================================================================ -->
    <hr width="80%" align="center" />
    

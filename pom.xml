@@ -6,7 +6,7 @@
 
   <groupId>ch.qos.logback</groupId>
   <artifactId>logback-site</artifactId>  
-  <version>1.5.21</version>
+  <version>1.5.22</version>
 
 
   <!-- is not intended for deployment on Maven central -->

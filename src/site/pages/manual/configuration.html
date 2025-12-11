@@ -2199,6 +2199,19 @@ fileName=myApp.log
   href="appenders.html#uniquelyNamed">explained in a subsequent
   chapter</a>.</p>
 
+
+  <h3 class="doAnchor" name="confidential">Confidential values</h3>
+
+  <p><span class="label">Since 1.5.22</span> If <a
+  href="#dumpingStatusData">status output is enabled</a>, then logback
+  will emit the value of variables as they are substituted. To prevent
+  unintentional information leaks, any variable whose name contains
+  the case-insensitive strings "<code>password</code>",
+  "<code>secret</code>", or "<code>confidential</code>" will not be
+  printed.
+  </p>
+  
+  
   <!-- ============================================================== -->
   <h3 class="doAnchor" name="definingPropsOnTheFly">Defining
   variables, aka properties, on the fly</h3>
