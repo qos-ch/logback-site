@@ -2495,7 +2495,10 @@ fileName=myApp.log
 
   <pre><code>isNull("environment") &amp;&amp; propertyContains("HOSTNAME", "192.168")</code></pre>
 
-
+  <p><span class="label">XML quirk</span> Given that the
+  <code>&amp;</code> character is special in XML, it needs to be
+  written as <code>&amp;amp;</code> in XML files.</p>
+  
   <p>Here is an example which enables console appender if the "environment" property
   is null and the HOSTNAME property equals "torino".</p>
 
@@ -2508,12 +2511,13 @@ fileName=myApp.log
              onclick="openTab(event, 'conditional_exp', 'tyler')">Tyler</button>
     </div>    
 
-  
+    
  <div id="conditional_exp_legacy" class="tabcontent">
   <pre><code>&lt;configuration debug="true">
 
-  &lt;condition class="ch.qos.logback.core.boolex.ExpressionPropertyCondition"&gt;
-    <b>&lt;expression&gt;isNull("environment") &amp;&amp; propertyEquals("HOSTNAME", "torino")&lt;/expression&gt;</b>
+    &lt;condition class="ch.qos.logback.core.boolex.ExpressionPropertyCondition"&gt;
+    &lt!-- Note that the &amp; character needs to be written as &amp;amp; in XML files --&gt;  
+    <b>&lt;expression&gt;isNull("environment") &amp;amp;&amp;amp; propertyEquals("HOSTNAME", "torino")&lt;/expression&gt;</b>
   &lt;/condition></b>
   <b>&lt;if></b>
     <b>&lt;then></b>
