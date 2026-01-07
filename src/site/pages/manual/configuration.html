@@ -2022,17 +2022,47 @@ import ch.qos.logback.classic.LoggerContext;
    long as the JVM or until it is cleared.
    </p>
 
+
    <p class="highlight">Properties are looked up in the local
    scope first, in the context scope second, in the system properties
    scope third, and in the OS environment last.
    </p>
 
+   <h4 class="doAnchor" name="lookupOrder">Property look up order</h4>
+   
    <p>During substitution, properties are looked up in the local scope
    first, in the context scope second, in the system properties scope
    third, and in the <a
    href="http://docs.oracle.com/javase/tutorial/essential/environment/env.html">OS
    environment</a> fourth and last.
-   </p>
+   </p> 
+
+   <p>Scopes at a glance, listed by lookup order:</p>
+
+   <div class="bodytable">
+     <table class="bodyTable striped">
+       <tr>
+         <th>Scope</th>
+         <th>read/write</th>
+     </tr>
+     <tr>
+       <td>local</td>
+       <td>read/write</td>
+     </tr>
+     <tr>
+       <td>context</td>
+       <td>read/write</td>       
+     </tr>
+     <tr>
+       <td>system</td>
+       <td>read/write</td>       
+     </tr>
+     <tr>
+       <td>OS environment</td>
+       <td>read only</td>
+     </tr>
+   </table>
+   </div>
 
    <p>The <span class="attr">scope</span> attribute of the
    <code>&lt;property></code> element, <code>&lt;define></code>
@@ -2454,6 +2484,13 @@ fileName=myApp.log
   undefined, the property method will return the empty string and not
   null. This avoids the need to check for null values.</p>
 
+  <p>Properties are looked up in the <code>local</code> scope first,
+  in the <code>context</code> scope second, in the <code>system</code>
+  properties scope third, and in the OS environment fourth and
+  last. See <a href="#scopes">scopes</a> and <a
+  href="#lookupOrder">lookup order</a> sections above for more
+  details.</p>
+  
   <p>The <code>isDefined(String key)</code> method can be used to
   check whether a property is defined. For example, to check whether
   the property "k" is defined you would write
@@ -2462,13 +2499,13 @@ fileName=myApp.log
   provided. Example: <code>isNull("k")</code>.</p>
 
 
-  <h4  class="doAnchor" name="conditionalExp"><code>ExpressionPropertyCondition</code> evaluates boolean expressions</h4>
+  <h4 class="doAnchor"  name="conditionalExp"><code>ExpressionPropertyCondition</code>  evaluates boolean expressions</h4>
 
   <p><span class="label">Since 1.5.24</span>
-  <code>ExpressionPropertyCondition</code> can evaluate boolean
-  expressions similar to Java with with the boolean operators !,
-  &amp;&amp;, ||, as well as several pre-defined functions (see
-  below). Parenthesis are also supported.
+  <code>ExpressionPropertyCondition</code> can evaluate Java-like
+  boolean expressions using the boolean operators !, &amp;&amp;, ||, as
+  well as several pre-defined functions (see below). Parentheses are
+  also supported.
   </p>
 
   <p>The predefined functions are:</p>
@@ -2479,7 +2516,14 @@ fileName=myApp.log
     <li><code>propertyEquals(String key, String value)</code></li>
     <li><code>propertyContains(String key, String value)</code></li>
   </ul>
-
+  
+  <p>As mentioned earlier, properties are looked up in the
+  <code>local</code> scope first, in the <code>context</code> scope
+  second, in the <code>system</code> properties scope third, and in
+  the OS environment fourth and last. See <a href="#scopes">scopes</a> and <a
+  href="#lookupOrder">lookup order</a> sections above for more
+  details.</p>
+  
   <p>Sub-classes of <code>ExpressionPropertyCondition</code> can
   easily define new functions.</p>
 
@@ -2490,8 +2534,8 @@ fileName=myApp.log
   <pre><code>isDefined("environment") || !propertyEquals("HOSTNAME", "192.168.1.2")</code></pre>
 
   <p>Here is another boolean expression that will evaluate to true if
-  the "environment" property is null and the "host" property contains
-  "192.168"./p>
+  the "environment" property is null and the "HOSTNAME" property
+  contains "192.168"./p>
 
   <pre><code>isNull("environment") &amp;&amp; propertyContains("HOSTNAME", "192.168")</code></pre>
 
