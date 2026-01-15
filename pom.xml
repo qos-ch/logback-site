@@ -21,7 +21,7 @@
     <old.stable.version>1.2.13</old.stable.version>
     <latest.stable.javax.version>1.3.16</latest.stable.javax.version>
     <latest.stable.jakarta.version>${project.version}</latest.stable.jakarta.version>
-    <latest.logback-access.version>2.0.7</latest.logback-access.version>
+    <latest.logback-access.version>2.0.8</latest.logback-access.version>
     <slf4j.version>2.0.17</slf4j.version>
 
     <janino.version>3.1.8</janino.version>
