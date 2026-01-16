@@ -569,6 +569,9 @@ WARN  [main]: Message 2</p>
 
           <p>For microseconds, use the <b><a
           href="#micros">micros/ms</a></b> conversion specifier.</p>
+
+          <p>For epoch timestamps, use the <b><a
+          href="#epoch">epoch/ep</a></b> conversion specifier.</p>
          
          <p>You can specify the string <em>"ISO8601"</em> for the <a
          href="http://en.wikipedia.org/wiki/ISO_8601">ISO8601 date
@@ -667,7 +670,19 @@ WARN  [main]: Message 2</p>
           </p>
 	</td>
          </tr>
-
+            <tr>
+                <td class="word" name="epoch">
+                    <b>epoch</b><br/>
+                    <b>epoch</b>{<em>option</em>}<br/>
+                    <b>ep</b><br/>
+                    <b>ep</b>{<em>option</em>}<br/>
+                </td>
+                <td><p><span class="label notice">Since 1.5.25</span>
+                    Outputs the timestamp of the logging event in milliseconds since the UNIX epoch (Jan 1st 1970 at midnight UTC).</p>
+                    <p>Example: "%epoch", which produces something like "1768472130321".</p>
+                <p>Options: Can be configured to output the timestamp in seconds by using "%epoch{seconds}" or "%ep{seconds}", which produces
+                    something like "1768472130".  If no option (or an unrecognized option) is specified, default behaviour is to output milliseconds.</p></td>
+            </tr>
 	      <tr>
 		<td class="word" name="ex">
 		  <b>ex</b>{<em>depth</em>} <br />
@@ -929,7 +944,7 @@ log
 		  <td class="word" name="maskedKvp">
 		    <b>maskedKvp</b>{QUOTATION_SPEC, <em>key1, key2, ...</em>} <br/>
 		  </td>
-                          
+
 		  <td><p><span class="label notice">Since 1.5.7</span>
 		  Under most circumstances, you may probably wish to
 		  print all key-value pairs. However, sometimes you
