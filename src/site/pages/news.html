@@ -61,7 +61,7 @@
       </tr>
      </table>
    
-    <h2>On the 1.3.x and 1.4.x series (INACTIVE)</h2>
+    <h2>On the 1.3.x and 1.4.x series (END-OF-LIFE)</h2>
 
    
     <p>Few <b>optional</b> components such <code>SMTPAppender</code>
@@ -138,7 +138,109 @@
       </div>
     </div>   
 
+    <!-- ============================================================================ -->
+    <hr width="80%" align="center" />
+    
+    <h3 class="doAnchor" name="access_2.0.9">2026-01-25 Release of logback-access
+    version 2.0.9</h3>
+ 
+    
+    <p>&bull; Bumped logback-core dependency to version 1.5.26. </p>
 
+    <p>&bull; Fixed missing <code>AppenderModel</code> to
+    <code>AppenderDeclarationAnalyser</code> link in
+    <code>ModelClassToModelHandlerLinker</code>. This issue was
+    reported in <a
+    href="https://github.com/qos-ch/logback-access/issues/33">issues/33</a>
+    by Alexander Schepp.</p>
+    
+    <p>&bull; Aligned version check code with the functionality available in
+    logback-core 1.5.26.</p>
+
+ 
+    <p>&bull; A bit-wise identical binary of this version can be
+    reproduced by building
+    from <a href="https://github.com/qos-ch/logback-access">source
+    code</a> at commit
+    42fd491ce26dbf27a81066012361d6d782d4fa5c
+    associated with the tag <code>v_2.0.9</code>. Release built using
+    Java "21" 2023-10-17 LTS build 21.0.1.+12-LTS-29 under Linux
+    Debian 11.6.
+     </p> 
+
+    <!-- ============================================================================ -->
+    <hr width="80%" align="center" />
+   
+    <h3 class="doAnchor" name="1.5.26">2026-01-25 Release of logback
+    version 1.5.26</h3>
+
+    <p>&bull; <code>InsertFromJNDIModelHandler</code> was accessing
+    <code>javax.naming</code> package forcing the inclusion of the
+    optional <code>java.naming</code> module. This problem was raised
+    in <a
+    href="https://github.com/qos-ch/logback/issues/1003">issues/1003</a>
+    by Marius Hanl who also provided the relevant PR.
+    </p>
+
+    <p>&bull; In applications using shadow/fat/shade jars, module or package
+    information could be lost. Thus, in the absence of version
+    information, logback-classic would warn about version
+    mismatches. Logback components now ship with properties files
+    containing version information that survive shadow/fat/shade
+    jars. This issue was reporteed in <a
+    href="https://github.com/qos-ch/logback/issues/1002">issues/1002</a>
+    by Christoph Gritschenberger.
+    </p> 
+    
+    <p>&bull; A bit-wise identical binary of this version can be
+    reproduced by building from <a
+    href="https://github.com/qos-ch/logback">source code</a> at commit
+    33deb54506bbfaf1ff151f26f3a5f86936011619 associated with the tag
+    v_1.5.26. Release built using Java "21" 2023-10-17 LTS build
+    21.0.1.+12-LTS-29 under Linux Debian 11.6.
+    </p>
+
+    
+    <!-- ============================================================================ -->
+    <hr width="80%" align="center" />
+   
+    <h3 class="doAnchor" name="1.5.25">2026-01-17 Release of logback
+    version 1.5.25</h3>
+
+
+    <p>&bull; When processing configuration files, logback-core will
+    now only instantiate components compatible with the class expected
+    by the encapsulating class. This fixes an ACE vulnerability
+    recorded as <a
+    href="https://www.cve.org/cverecord?id=CVE-2026-1225">CVE-2026-1225.</a></p>
+
+    <p>&bull; In configuration files, referencing a single undeclared
+    appender would cause all referenced appenders to be skipped. This
+    issue was discovered in <a
+    href="https://github.com/qos-ch/logback/issues/997">issues/997</a>.
+    </p>
+    
+    <p>&bull; Added <code>VersionUtil</code> class to
+    logback-core. This utility class checks for version compatibility
+    issues and alerts the user if need be.</p>
+
+    <p>&bull; Added <a
+    href="manual/layouts.html#epoch">EpochConverter</a> to output
+    milliseconds/seconds since epoch. This enhancement was requested
+    by Duncan Jauncey in <a
+    href="https://github.com/qos-ch/logback/pull/1000">issues/1000</a>
+    who also provided the relevant implementation PR.
+    </p>    
+
+    <p>&bull; A bit-wise identical binary of this version can be
+    reproduced by building from <a
+    href="https://github.com/qos-ch/logback">source code</a> at commit
+    f426e0002800cfb507f393fcacffe0761a425220 associated with the tag
+    v_1.5.25. Release built using Java "21" 2023-10-17 LTS build
+    21.0.1.+12-LTS-29 under Linux Debian 11.6.
+    </p>
+
+    
     <!-- ============================================================================ -->
     <hr width="80%" align="center" />
     
@@ -158,7 +260,7 @@
     from <a href="https://github.com/qos-ch/logback-access">source
     code</a> at commit
     cfc81112a20cf321413c598f33d84037845999bd 
-    associated with the tag <code>v_2.0.7</code>. Release built using
+    associated with the tag <code>v_2.0.8</code>. Release built using
     Java "21" 2023-10-17 LTS build 21.0.1.+12-LTS-29 under Linux
     Debian 11.6.
      </p> 
