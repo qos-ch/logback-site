@@ -140,6 +140,39 @@
 
     <!-- ============================================================================ -->
     <hr width="80%" align="center" />
+   
+    <h3 class="doAnchor" name="1.5.27">2026-01-30 Release of logback
+    version 1.5.27</h3>
+
+    <p>&bull; Updated license to Eclipse Public License version 2.0
+    from version 1.0, retaining the GPL 2.1 dual-license.
+    </p>
+
+    <p>&bull; Fixed missing MDC data transmitted by <code>SocketAppender</code>
+    reported in <a
+    href="https://github.com/qos-ch/logback/issues/1007">issues/1010</a> by Lars Vogel.</p>
+    
+    <p>&bull; Removed all <code>Receiver</code> classes and
+    components which were already disabled for several years.</p>
+    
+    <p>&bull; Refactored file scanning code for improved clarity.</p>
+    
+    <p>&bull; In <code>SizeAndTimeBasedRollingPolicy</code> modified
+    <code>totalSizeCap</code> and <code>maxFileSize</code> comparison
+    to taking into account file compression. This fixes <a
+    href="https://github.com/qos-ch/logback/issues/1007">issues/1007</a>.
+    </p>
+    
+    <p>&bull; A bit-wise identical binary of this version can be
+    reproduced by building from <a
+    href="https://github.com/qos-ch/logback">source code</a> at commit
+    3618eb01aad6672f9cd250dccf7546a69cbe982f associated with the tag
+    v_1.5.27. Release built using Java "21" 2023-10-17 LTS build
+    21.0.1.+12-LTS-29 under Linux Debian 11.6.
+    </p>
+            
+    <!-- ============================================================================ -->
+    <hr width="80%" align="center" />
     
     <h3 class="doAnchor" name="access_2.0.9">2026-01-25 Release of logback-access
     version 2.0.9</h3>
