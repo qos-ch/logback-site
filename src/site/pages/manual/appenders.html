@@ -31,7 +31,7 @@
     </div>
 
         
-    <h1>Chapter 4: Appenders</h1>
+    <h1>Appenders</h1>
         
 
     <script type="text/javascript" src="../common/templates/sponsoredBy.js"></script>
@@ -1403,6 +1403,7 @@ public interface RollingPolicy extends LifeCycle {
     <code>SizeAndTimeBasedRollingPolicy</code>. Note these properties
     complement those applicable for <a
     href="#TimeBasedRollingPolicy"><code>TimeBasedRollingPolicy</code></a>.
+    </p>
     
     <table class="bodyTable striped">
      <tr>
@@ -1875,8 +1876,8 @@ public interface TriggeringPolicy&lt;E&gt; extends LifeCycle {
     transmission will be resumed transparently.  This transparent
     reconnection is performed by a connector thread which periodically
     attempts to connect to the server.
-		</p>
-		
+    </p>
+
     <p>Logging events are automatically buffered by the native TCP
     implementation.  This means that if the link to server is slow but
     still faster than the rate of event production by the client, the
@@ -1888,35 +1889,34 @@ public interface TriggeringPolicy&lt;E&gt; extends LifeCycle {
     Alternatively, if the network link is up, but the server is down,
     the client will not be blocked, although the log events will be
     lost due to server unavailability.
-		</p>
+    </p>
 		
-		<p>Even if a <code>SocketAppender</code> is no longer attached to
-		any logger, it will not be garbage collected in the presence of a
-		connector thread.  A connector thread exists only if the
-		connection to the server is down.  To avoid this garbage
-		collection problem, you should close the
-		<code>SocketAppender</code> explicitly. Long-lived applications
-		which create/destroy many <code>SocketAppender</code> instances
-		should be aware of this garbage collection problem. Most other
-		applications can safely ignore it.  If the JVM hosting the
-		<code>SocketAppender</code> exits before the
-		<code>SocketAppender</code> is closed, either explicitly or
-		subsequent to garbage collection, then there might be
-		untransmitted data in the pipe which may be lost. This is a common
-		problem on Windows based systems.  To avoid lost data, it is
-		usually sufficient to <code>close()</code> the
-		<code>SocketAppender</code> either explicitly or by calling the
-		<code>LoggerContext</code>'s <code>stop()</code>
-		method before exiting the application.
-		</p>
+    <p>Even if a <code>SocketAppender</code> is no longer attached to
+    any logger, it will not be garbage collected in the presence of a
+    connector thread.  A connector thread exists only if the
+    connection to the server is down.  To avoid this garbage
+    collection problem, you should close the
+    <code>SocketAppender</code> explicitly. Long-lived applications
+    which create/destroy many <code>SocketAppender</code> instances
+    should be aware of this garbage collection problem. Most other
+    applications can safely ignore it.  If the JVM hosting the
+    <code>SocketAppender</code> exits before the
+    <code>SocketAppender</code> is closed, either explicitly or
+    subsequent to garbage collection, then there might be
+    untransmitted data in the pipe which may be lost. This is a common
+    problem on Windows based systems.  To avoid lost data, it is
+    usually sufficient to <code>close()</code> the
+    <code>SocketAppender</code> either explicitly or by calling the
+    <code>LoggerContext</code>'s <code>stop()</code> method before
+    exiting the application.
+    </p>
 		
-		<p>The remote server is identified by the <span
-		class="prop">remoteHost</span> and <span
-		class="prop">port</span> properties.
-		<code>SocketAppender</code> properties are listed in the following
-		table.  <code>SSLSocketAppender</code> supports many additional
-		configuration properties, which are detailed in the section 
-		entitled <a href="usingSSL.html">Using SSL</a>.
+    <p>The remote server is identified by the <span
+    class="prop">remoteHost</span> and <span class="prop">port</span>
+    properties.  <code>SocketAppender</code> properties are listed in
+    the following table.  <code>SSLSocketAppender</code> supports many
+    additional configuration properties, which are detailed in the
+    section entitled <a href="usingSSL.html">Using SSL</a>.
 		</p>
 
     <table class="bodyTable striped">
@@ -2012,27 +2012,20 @@ public interface TriggeringPolicy&lt;E&gt; extends LifeCycle {
     </table>
     
     <h4>Logging Server Options</h4>
-    <p>The standard Logback Classic distribution includes two options
-    for servers that can be used to receive logging events from
-    <code>SocketAppender</code> or <code>SSLSocketAppender</code>.</p>
-    <ul>
-      <li><code>ServerSocketReceiver</code> and its SSL-enabled 
-      counterpart <code>SSLServerSocketReceiver</code> are receiver
-      components which can be configured in the <em>logback.xml</em> 
-      configuration file of an application in order receive events
-      from a remote socket appender.  See <a href="receivers.html">
-      Receivers</a> for configuration details and usage examples.
-      </li>
-      <li><code>SimpleSocketServer</code> and its SSL-enabled counterpart
-      <code>SimpleSSLSocketServer</code> both offer an 
-      easy-to-use standalone Java application that is designed to
-      be configured and run from your shell's command line interface.
-      These applications simply wait for logging events from 
-      <code>SocketAppender</code> or <code>SSLSocketAppender</code>
-      clients.  Each received event is logged according to local server 
-      policy.  Usage examples are given below.
-      </li>
-    </ul>
+    
+    <p>The logback classic distribution includes servers that can be
+    used to receive logging events from <code>SocketAppender</code> or
+    <code>SSLSocketAppender</code>.</p>
+
+    <p><code>SimpleSocketServer</code> and its SSL-enabled counterpart
+    <code>SimpleSSLSocketServer</code> both offer an easy-to-use
+    standalone Java application that is designed to be configured and
+    run from your shell's command line interface.  These applications
+    simply wait for logging events from <code>SocketAppender</code> or
+    <code>SSLSocketAppender</code> clients.  Each received event is
+    logged according to local server policy.  Usage examples are given
+    below.
+    </p>
     
     <h4><a name="simpleSocketServer"></a>Using SimpleSocketServer</h4>
     <p>
@@ -2081,15 +2074,12 @@ public interface TriggeringPolicy&lt;E&gt; extends LifeCycle {
 		(and irrevocably) lost.
 		</p>
 
-		<p>
-			Unlike
-			<code>SocketClient1</code>, the sample application
-			<code>SocketClient2</code> does not configure logback by itself. 
-			It requires a configuration file in XML format. 
-			The configuration file <em>client1.xml</em>
-			shown below creates a <code>SocketAppender</code>
-			and attaches it to the root logger.
-		</p>
+    <p>Unlike <code>SocketClient1</code>, the sample application
+    <code>SocketClient2</code> does not configure logback by itself.
+    It requires a configuration file in XML format.  The configuration
+    file <em>client1.xml</em> shown below creates a
+    <code>SocketAppender</code> and attaches it to the root logger.
+    </p>
 
     <p class="example">Example: SocketAppender configuration
     (logback-examples/&#8203;src/main/resources/&#8203;chapters/appenders/&#8203;socket/client1.&#8203;xml)</p>
@@ -2124,31 +2114,30 @@ public interface TriggeringPolicy&lt;E&gt; extends LifeCycle {
     <div id="client1_canonical" class="tabcontent"><p>Requires a server call.</p></div>
     <div id="client1_tyler" class="tabcontent"><p>Requires a server call.</p></div>
  
-     
-		<p>
-			Note that in the above configuration scripts the values for the 
-			<span class="prop">remoteHost</span>, <span class="prop">port</span> and
-			<span class="prop">includeCallerData</span> properties
-			are not given directly but as substituted variable keys. The values for the variables 
-			can be specified as system properties: 
-		</p>
+    
+    <p>Note that in the above configuration scripts the values for the
+    <span class="prop">remoteHost</span>, <span
+    class="prop">port</span> and <span
+    class="prop">includeCallerData</span> properties are not given
+    directly but as substituted variable keys. The values for the
+    variables can be specified as system properties:
+    </p>
 	
     <p class="source">java -Dhost=localhost -Dport=6000 -DincludeCallerData=false \
   chapters.appenders.socket.SocketClient2 src/main/java/chapters/&#8203;appenders/socket/&#8203;client1.xml</p>
 
-		<p>This command should give similar results to the previous
-			<code>SocketClient1</code>
-			example.
-		</p>
+    <p>This command should give similar results to the previous
+    <code>SocketClient1</code> example.
+    </p>
 		
-		<p>Allow us to repeat for emphasis that serialization of logging
-		events is not intrusive. A deserialized event carries the same
-		information as any other logging event. It can be manipulated as
-		if it were generated locally; except that serialized logging
-		events by default do not include caller data. Here is an example
-		to illustrate the point. First, start
-		<code>SimpleSocketServer</code> with the following command:
-		</p>
+    <p>Allow us to repeat for emphasis that serialization of logging
+    events is not intrusive. A deserialized event carries the same
+    information as any other logging event. It can be manipulated as
+    if it were generated locally; except that serialized logging
+    events by default do not include caller data. Here is an example
+    to illustrate the point. First, start
+    <code>SimpleSocketServer</code> with the following command:
+    </p>
 
     <p class="source"> java ch.qos.logback.classic.&#8203;net.SimpleSocketServer 6000 \
   src/main/java/chapters/&#8203;appenders/socket/&#8203;server2.xml</p>
@@ -2302,200 +2291,7 @@ public interface TriggeringPolicy&lt;E&gt; extends LifeCycle {
     element, the client's startup logging includes the details of the
     SSL configuration as aid to auditing local policy conformance.
     </p>
- 	  
- 	  
-    <h3 class="doAnchor" name="serverSocketAppender">
-      ServerSocketAppender and SSLServerSocketAppender</h3>
-    
-    <p>The <code>SocketAppender</code> component (and its SSL-enabled
-    counterpart) discussed previously are designed to allow an
-    application to connect to a remote logging server over the network
-    for the purpose of delivering logging events to the server.  In
-    some situations, it may be inconvenient or infeasible to have an
-    application initiate a connection to a remote logging server.  For
-    these situations, Logback offers <a
-    href="../xref/ch/qos/logback/classic/net/server/ServerSocketAppender.html">
-    <code>ServerSocketAppender</code></a>.
-    </p>
-    
-    <p>Instead of initiating a connection to a remote logging server, 
-    <code>ServerSocketAppender</code> passively listens on a TCP socket
-    awaiting incoming connections from remote clients.  Logging events
-    that are delivered to the appender are distributed to each connected
-    client.  Logging events that occur when no client is connected are
-    <em>summarily discarded</em>.
-    </p>
-    
-    <p>In addition to the basic <code>ServerSocketAppender</code>, Logback
-    offers <a href="../xref/ch/qos/logback/classic/net/server/SSLServerSocketAppender.html">
-    <code>SSLServerSocketAppender</code></a>, which distributes logging events
-    to each connected client using a secure, encrypted channel.  Moreover, the
-    SSL-enabled appender fully supports mutual certificate-based authentication,
-    which can be used to ensure that only authorized clients can connect to
-    the appender to receive logging events.   
-    </p>
-   
-    <p>The approach to encoding logging events for transmission on the wire 
-    is identical to that used by <code>SocketAppender</code>; each event is 
-    a serialized instance of <code>ILoggingEvent</code>.  Only the direction 
-    of connection initiation is reversed.  While <code>SocketAppender</code> 
-    acts as the active peer in establishing the connection to a logging server,
-    <code>ServerSocketAppender</code> is passive; it listens for
-    incoming connections from clients.</p>  
-
-    <p>The <code>ServerSocketAppender</code> subtypes are intended to be
-    used exclusively with Logback <em>receiver</em> components.  See
-    <a href="receivers.html">Receivers</a> for additional information on
-    this component type.</p>
-    
-    <p>The following configuration properties are supported by 
-    <code>ServerSocketAppender</code>:</p>
-    
-    <table class="bodyTable striped">
-      <tr>
-      <th>Property Name</th>
-      <th>Type</th>
-      <th>Description</th>
-      </tr>
-      <tr>
-        <td><span class="prop" container="serverSocketAppender">address</span></td>
-        <td><code>String</code></td>
-        <td>The local network interface address on which the appender
-        will listen.  If this property is not specified, the appender
-        will listen on all network interfaces.</td>
-      </tr>
-      <tr>
-        <td><span class="prop" container="serverSocketAppender">includeCallerData</span></td>
-        <td><code>boolean</code></td>
-        <td>
-          <p>
-            If true, the caller data will be available to the remote host. 
-            By default no caller data is sent to the client.
-          </p>
-        </td>
-      </tr>
-      <tr>
-        <td><span class="prop" container="serverSocketAppender">port</span></td>
-        <td><code>int</code></td>
-        <td>
-          <p>
-            The port number on which the appender will listen.
-          </p>
-        </td>
-      </tr> 
-      <tr>
-        <td><span class="prop" container="serverSocketAppender">ssl</span></td>
-        <td><code>SSLConfiguration</code></td>
-        <td>Supported only for <code>SSLServerSocketAppender</code>, this
-            property provides the SSL configuration that will be used by
-            the appender, as described in <a href="usingSSL.html">Using SSL</a>.
-        </td>
-      </tr>
-    </table>
-    
-    <p>The following example illustrates a configuration that uses
-      <code>ServerSocketAppender</code>:
-    </p>
-
-    <p class="example">Example: Basic ServerSocketAppender Configuration
-    (logback-examples/&#8203;src/main/resources/&#8203;chapters/appenders/&#8203;socket/server4.&#8203;xml)</p>
-
-    <div class="tab">
-      <button class="tablinks" id="button_server4_legacy"
-              onclick="openTab(event, 'server4', 'legacy')">Legacy</button>
-      <button class="tablinks" id="button_server4_canonical"
-              onclick="openTab(event, 'server4', 'canonical')">Canonical (1.3)</button>
-    <button class="tablinks" id="button_server4_tyler"
-             onclick="openTab(event, 'server4', 'tyler')">Tyler</button>
-    </div>
-    
-    <div id="server4_legacy" class="tabcontent">
-      
-<pre><code>&lt;configuration debug="true">
-  &lt;appender name="SERVER" 
-    class="ch.qos.logback.classic.net.server.ServerSocketAppender">
-    &lt;port>${port}&lt;/port>
-    &lt;includeCallerData>${includeCallerData}&lt;/includeCallerData>
-  &lt;/appender>
-
-  &lt;root level="debug">
-    &lt;appender-ref ref="SERVER" />
-  &lt;/root>  
-
-&lt;/configuration>
-</code></pre>
-    </div>
-
-    <div id="server4_canonical" class="tabcontent">
-      <p>Requires a server call. Please wait a few seconds.</p>
-    </div>
-     <div id="server4_tyler" class="tabcontent"><p>Requires a server call.</p></div>
-
-    
-    <p>Note that this configuration differs from previous examples using
-    <code>SocketAppender</code> only in the <em>class</em> specified for
-    the appender, and in the absence of the <span class="prop">remoteHost</span>
-    property &mdash; this appender waits passively for inbound connections 
-    from remote hosts rather than opening a connection to a remote logging
-    server.
-    </p>
-    
-    <p>The following example illustrates a configuration using
-    <code>SSLServerSocketAppender</code>.</p>
-        
-     <p class="example">Example: Basic SSLServerSocketAppender Configuration
-    (logback-examples/&#8203;src/main/resources/&#8203;chapters/appenders/&#8203;socket/ssl/server3.&#8203;xml)</p>
-
-    <div class="tab">
-      <button class="tablinks" id="button_server3_legacy"
-              onclick="openTab(event, 'server3', 'legacy')">Legacy</button>
-      <button class="tablinks" id="button_server3_canonical"
-              onclick="openTab(event, 'server3', 'canonical')">Canonical (1.3)</button>
-    <button class="tablinks" id="button_server3_tyler"
-             onclick="openTab(event, 'server3', 'tyler')">Tyler</button>
-    </div>
-
-    <div id="server3_legacy" class="tabcontent">
-
-    <pre><code>&lt;configuration debug="true">
-  &lt;appender name="SERVER" 
-    class="ch.qos.logback.classic.net.server.SSLServerSocketAppender">
-    &lt;port>${port}&lt;/port>
-    &lt;includeCallerData>${includeCallerData}&lt;/includeCallerData>
-    &lt;ssl>
-      &lt;keyStore>
-        &lt;location>${keystore}&lt;/location>
-        &lt;password>${password}&lt;/password>
-      &lt;/keyStore>
-    &lt;/ssl>
-  &lt;/appender>
-
-  &lt;root level="debug">
-    &lt;appender-ref ref="SERVER" />
-  &lt;/root>  
-
-&lt;/configuration>
-</code></pre>
-    </div>
-
-    <div id="server3_canonical" class="tabcontent">
-      <p>Requires a server call. Please wait a few seconds.</p>
-    </div>
-     <div id="server3_tyler" class="tabcontent"><p>Requires a server call.</p></div>
-    
-    <p>The principal differences between this configuration and the
-    previous configuration is that the appender's <em>class</em> attribute
-    identifies the <code>SSLServerSocketAppender</code> type, and the
-    presence of the nested <span class="prop">ssl</span> element which
-    specifies, in this example, configuration of a key store containing
-    an X.509 credential for the appender.  See <a href="usingSSL.html">
-    Using SSL</a> for information regarding SSL configuration properties.
-    </p>
-    
-    <p>Because the <code>ServerSocketAppender</code> subtypes are designed
-    to be used with receiver components, we will defer presenting 
-    illustrative examples to the chapter entitled 
-    <a href="receivers.html">Receivers</a>.</p>
+ 	   	   
     
    <h3 class="doAnchor">SMTPAppender</h3>
    

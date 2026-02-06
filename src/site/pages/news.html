@@ -141,6 +141,38 @@
     <!-- ============================================================================ -->
     <hr width="80%" align="center" />
    
+    <h3 class="doAnchor" name="1.5.28">2026-02-06 Release of logback
+      version 1.5.28</h3>
+
+      <p>&bull; Appender names or appender references are no longer
+      subject to variable substitution.</p>
+      
+      <p>&bull; Fixed issue with configurations with conditionals
+      encompassing appenders. This was reported in <a
+      href="https://github.com/qos-ch/logback/issues/1016">issues/1016</a>
+      reported by Sergey Sazonov.</p>
+
+      <p>&bull; The <code>&lt;propertyConfigurator&gt;</code> element
+      now admits a <code>'scan'</code> attribute which can be used to
+      override the <code>'scan'</code> attribute in the
+      <code>&lt;configuration&gt;</code> element.
+      
+      <p>&bull; Fixed <code>NullPointerException</code> thrown by
+      <code>VersionUtil.checkForVersionEquality</code> method occurring with
+      GraalVM Native Images. This issue was reported in <a
+      href="https://github.com/qos-ch/logback/issues/1014">issues/1014</a>.</p>
+      
+      <p>&bull; A bit-wise identical binary of this version can be
+      reproduced by building from <a
+      href="https://github.com/qos-ch/logback">source code</a> at
+      commit e7a1855ab562bb102333f754603ff89359bf3cfc associated with
+      the tag v_1.5.28. Release built using Java "21" 2023-10-17 LTS
+      build 21.0.1.+12-LTS-29 under Linux Debian 11.6.
+      </p>
+
+    <!-- ============================================================================ -->
+    <hr width="80%" align="center" />
+   
     <h3 class="doAnchor" name="1.5.27">2026-01-30 Release of logback
     version 1.5.27</h3>
 
@@ -220,7 +252,7 @@
     information, logback-classic would warn about version
     mismatches. Logback components now ship with properties files
     containing version information that survive shadow/fat/shade
-    jars. This issue was reporteed in <a
+    jars. This issue was reported in <a
     href="https://github.com/qos-ch/logback/issues/1002">issues/1002</a>
     by Christoph Gritschenberger.
     </p> 
@@ -239,7 +271,6 @@
    
     <h3 class="doAnchor" name="1.5.25">2026-01-17 Release of logback
     version 1.5.25</h3>
-
 
     <p>&bull; When processing configuration files, logback-core will
     now only instantiate components compatible with the class expected
