@@ -34,9 +34,6 @@
       </div>
 
 
-
-
-
     <h1>Configuration of logback</h1>
 
     <script type="text/javascript" src="../common/templates/sponsoredBy.js"></script>
@@ -506,17 +503,16 @@ as they occur and facilitates troubleshooting.</p>
 
 
    <p>If any of these two conditions is not fulfilled, Joran cannot
-   interpret the configuration file and in particular the
-   &lt;statusListener/&gt; element. If the configuration file is found
-   but is malformed, then logback will detect the error condition and
-   automatically print its internal status on the console. However, if
-   the configuration file cannot be found, logback will not
-   automatically print its status data, since this is not necessarily
-   an error condition. Programmatically invoking
+   interpret the configuration file and in particular the <span
+   class="elem">&lt;statusListener&gt;</span> element. If the configuration
+   file is found but is malformed, then logback will detect the error
+   condition and automatically print its internal status on the
+   console. However, if the configuration file cannot be found,
+   logback will not automatically print its status data, since this is
+   not necessarily an error condition. Programmatically invoking
    <code>StatusPrinter.print()</code> as shown in the <a
-   href="#MyApp2"><em>MyApp2</em></a>
-   application above ensures that status information is printed in
-   every case.</p>
+   href="#MyApp2"><em>MyApp2</em></a> application above ensures that
+   status information is printed in every case.</p>
 
    <p><span class="label">Forcing status output</span> In the absence
    of status messages, tracking down a rogue <em>logback.xml</em>
@@ -534,9 +530,9 @@ as they occur and facilitates troubleshooting.</p>
    <h4 class="doAnchor" name="configDebug">Shorthand</h4>
 
    <p>As a shorthand, it is possible to register an
-   <code>OnConsoleStatusListener</code> by setting the <em>debug</em>
-   attribute to <code>true</code> within the &lt;configuration/&gt;
-   element as shown below.</p>
+   <code>OnConsoleStatusListener</code> by setting the <span
+   class="attr">debug</span> attribute to <code>true</code> within the
+   <span class="elem">&lt;configuration&gt;</span> element, as shown below.</p>
 
   <p class="example">Example: Basic configuration file using debug
    mode
@@ -778,7 +774,7 @@ public class ServerMain {
    </p>
 
    <p>Behind the scenes, when you set the <span
-   class="option">scan</span> attribute to <code>true</code>, a <a
+   class="attr">scan</span> attribute to <code>true</code>, a <a
    href="../xref/ch/qos/logback/classic/joran/ReconfigureOnChangeTask.html"><code>ReconfigureOnChangeTask</code></a>
    will be installed. This task run in a separate thread and will
    check whether your configuration file has
@@ -958,8 +954,8 @@ import ch.qos.logback.classic.LoggerContext;
     
   <div id="shutdownHook_legacy" class="tabcontent">
 
-   <pre><code>&lt;configuration debug="true">
-   &lt;!-- in the absence of the class attribute, assume
+   <pre><code>&lt;configuration debug="true"> &lt;!-- in the absence
+   of the <span class="attr">class</span> attribute, assume
    ch.qos.logback.core.hook.DefaultShutdownHook --&gt;
    <b>&lt;shutdownHook/></b>
 
@@ -1109,22 +1105,22 @@ import ch.qos.logback.classic.LoggerContext;
     the <a href="architecture.html#basic_selection">basic selection
     rule</a>. Otherwise, and unless you are an egyptologist, logback
     configuration will be no more meaningful to you than are
-    hieroglyphics.
+    hieroglyphics. 
     </p>
 
-    <p>A logger is configured using the <code>&lt;logger></code>
-    element. A <code>&lt;logger></code> element takes exactly one
-    mandatory <span class="attr">name</span> attribute, an optional
-    <span class="attr">level</span> attribute, and an optional <span
-    class="attr">additivity</span> attribute, admitting the values
-    <em>true</em> or <em>false</em>. The value of the <span
+    <p>A logger is configured using the <span
+    class="elem">logger</span> element. A &lt;logger> element takes
+    exactly one mandatory <span class="attr">name</span> attribute, an
+    optional <span class="attr">level</span> attribute, and an
+    optional <span class="attr">additivity</span> attribute, admitting
+    the values <em>true</em> or <em>false</em>. The value of the <span
     class="attr">level</span> attribute admitting one of the
     case-insensitive string values TRACE, DEBUG, INFO, WARN, ERROR,
     ALL or OFF. The special case-insensitive value <em>INHERITED</em>,
     or its synonym <em>NULL</em>, will force the level of the logger
     to be inherited from higher up in the hierarchy. This comes in
-    handy if you set the level of a logger and later decide that
-    it should inherit its level.
+    handy if you set the level of a logger and later decide that it
+    should inherit its level.
     </p>
 
     <p class="highlight"> Note that unlike log4j, logback-classic does
@@ -1132,7 +1128,7 @@ import ch.qos.logback.classic.LoggerContext;
     when configuring a given logger.
     </p>
 
-    <p>The <code>&lt;logger></code> element may contain zero or more
+    <p>The <span class="elem">logger</span> element may contain zero or more
     <code>&lt;appender-ref></code> elements; each appender thus
     referenced is added to the named logger. Note that unlike log4j,
     logback-classic does <em>not</em> close nor remove any previously
@@ -2897,13 +2893,21 @@ fileName=myApp.log
      &lt;!-- rest of the configuration file .... --&gt;
 &lt;/configuration> 
     </code></pre>
-  </div>
+  </div> 
 
   <div id="propertiesConfiguratorHTTP_canonical" class="tabcontent"><p>Requires a server call.</p></div>
   <div id="propertiesConfiguratorHTTP_tyler" class="tabcontent"><p>Requires a server call.</p></div>
 
 <p><span class="label">.properties suffix</span> The url must end with the string ".properties" to be watched for changes.</p>
 
+
+  <p>As of version <span class="label">1.5.28</span>, the <span
+  class="elem">&lt;propertiesConfigurator&gt;</span> element admits
+  the <span class="attr">scan</span> attribute in case the <span
+  class="attr">scan</span> attribute of the
+  <code>&lt;configuration&gt;</code> element needs to be
+  overridden</p>
+  
   
   <!-- ==================== ContextListener =================== -->
   <h2 class="doAnchor" name="contextListener">Adding a context
