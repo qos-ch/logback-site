@@ -491,8 +491,9 @@ public interface Appender&lt;E> extends LifeCycle, ContextAware, FilterAttachabl
        <p>Options in defined in units of "FileSize" can be specified
        in bytes, kilobytes, megabytes or gigabytes by suffixing a
        numeric value with KB, MB and respectively GB. For example,
-       5242880, 5120KB, 5MB and 2GB are all valid values, with the
-       first three being equivalent.
+       5242880, 5120KB, 5120 KB, 5MB, 5 MB, 2 GB and 2GB are all valid
+       values, with the first five being equivalent. A numerical value
+       with no suffix is taken to be in units of bytes.
        </p>
        </td>
      </tr> 
@@ -992,7 +993,7 @@ public interface RollingPolicy extends LifeCycle {
 
      <tr>
        <td><span class="prop" container="tbrp">totalSizeCap</span></td>
-       <td>int</td>
+       <td>FileSize</td>
        <td><p>The optional <span class="prop">totalSizeCap</span>
        property controls the total size of all archive files. Oldest
        archives are deleted asynchronously when the total size cap is
@@ -1007,9 +1008,10 @@ public interface RollingPolicy extends LifeCycle {
        <p>The <span class="prop">totalSizeCap</span> property can be
        specified in units of bytes, kilobytes, megabytes or gigabytes
        by suffixing a numeric value with KB, MB and respectively
-       GB. For example, 5000000, 5000KB, 5MB and 2GB are all valid
-       values, with the first three being equivalent. A numerical
-       value with no suffix is taken to be in units of bytes.
+       GB. For example, 5242880, 5120KB, 5120 KB, 5MB, 5 MB, 2 GB and
+       2GB are all valid values, with the first five being
+       equivalent. A numerical value with no suffix is taken to be in
+       units of bytes.
        </p>
 
        <p>By default, <span class="prop">totalSizeCap</span> is set to

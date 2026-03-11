@@ -136,14 +136,94 @@
       independently attested </a> by reproducible-central.
        </p>  
       </div>
-    </div>   
+    </div>
+    
+    <!-- ============================================================================ -->
+    <!-- ============================================================================ -->        
 
+    <hr width="80%" align="center" />
+    
+    <h3 class="doAnchor" name="access_2.0.12">2026-02-16 Release of logback-access
+    version 2.0.12</h3>
+   
+    <p>&bull; Bumped logback-core dependency to version 1.5.32. This fixes <a
+    href="https://github.com/qos-ch/logback-access/issues/34">logback-access/issues/34</a>.</p>
+  
+    <p>&bull; A bit-wise identical binary of this version can be
+    reproduced by building from <a
+    href="https://github.com/qos-ch/logback-access">source code</a> at
+    commit 1c9905623cef1c883f0b1e52aea6e47583f6d97b associated with
+    the tag <code>v_2.0.9</code>. Release built using Java "21"
+    2023-10-17 LTS build 21.0.1.+12-LTS-29 under Linux Debian 11.6.
+     </p> 
+
+
+    <!-- ============================================================================ -->            
+    <hr width="80%" align="center" />
+   
+    <h3 class="doAnchor" name="1.5.32">2026-02-16 Release of logback
+    version 1.5.32</h3>
+
+    <p>&bull; In <code>DefaultProcessor</code>, fixed incorrect check
+    for dependencies contained within a parent model. Previous only
+    the direct children were scanned. This fixes <a
+    href="https://github.com/qos-ch/logback-access/issues/34">logback-access/issues/34</a>.
+    </p>
+
+    <p>&bull; A bit-wise identical binary of this version can be
+    reproduced by building from <a
+    href="https://github.com/qos-ch/logback">source code</a> at commit
+    e807335a67535b4eacce94e942c0bcb649665d93 associated with the tag
+    <code>v_1.5.32</code>. Release built using Java "21" 2023-10-17
+    LTS build 21.0.1.+12-LTS-29 under Linux Debian 11.6.
+     </p>
+
+    <!-- ============================================================================ -->    
+    <hr width="80%" align="center" />
+    
+    <h3 class="doAnchor" name="access_2.0.11">2026-02-14 Release of logback-access
+    version 2.0.11</h3>
+   
+    <p>&bull; Bumped logback-core dependency to version 1.5.31. </p>
+
+    <p>&bull; Fixed incorrect version information in
+    <em>logback-access-tomcat</em> module.</p>
+    
+    <p>&bull; A bit-wise identical binary of this version can be
+    reproduced by building from <a
+    href="https://github.com/qos-ch/logback-access">source code</a> at
+    commit 853d5641a4d0014d02502edeb34339d88dda6e69 associated with
+    the tag <code>v_2.0.9</code>. Release built using Java "21"
+    2023-10-17 LTS build 21.0.1.+12-LTS-29 under Linux Debian 11.6.
+     </p> 
+
+    <!-- ============================================================================ -->
+
+    <hr width="80%" align="center" />
+   
+    <h3 class="doAnchor" name="1.5.31">2026-02-14 Release of logback
+    version 1.5.31</h3>
+
+    <p>&bull; Fixed missing <em>META-INF/services</em> directory in
+    <em>logback-classic.jar</em>. This issue rendered logback-classic
+    version 1.5.30 unusable with SLF4J.
+    </p>
+
+
+    <p>&bull; A bit-wise identical binary of this version can be
+    reproduced by building from <a
+    href="https://github.com/qos-ch/logback">source code</a> at commit
+    168e42f9f9a18a3ffdf31eb2bfe80a71e33ecd8b associated with the tag
+    <code>v_1.5.31</code>. Release built using Java "21" 2023-10-17
+    LTS build 21.0.1.+12-LTS-29 under Linux Debian 11.6.
+     </p>
+                     
     <!-- ============================================================================ -->    
     <hr width="80%" align="center" />
     
     <h3 class="doAnchor" name="access_2.0.10">2026-02-14 Release of logback-access
     version 2.0.10</h3>
-       
+   
     <p>&bull; Bumped logback-core dependency to version 1.5.30. </p>
 
     <p>&bull; Version checking code updated to conform to the
@@ -169,6 +249,12 @@
     <h3 class="doAnchor" name="1.5.30">2026-02-14 Release of logback
     version 1.5.30</h3>
 
+     <p>&bull; <span style="color:red;">In this version, <em>logback-classic.jar</em> was
+     missing the <em>META-INF/services</em> directory, making it
+     unsuable with SLF4J.</span> Version 1.5.31 (released later on the same
+     day) fixes this issue.</p>
+
+    
      <p>&bull; Fix scanning issue when an included file becomes
      available at a later time. This problem was reported in <a
      href="https://github.com/qos-ch/logback/issues/1021">issues/1021</a>
@@ -180,9 +266,9 @@
      <p>&bull; A bit-wise identical binary of this version can be
      reproduced by building from <a
      href="https://github.com/qos-ch/logback">source code</a> at
-       commit 44164f10ca3fb44ce0e68519f13564b87e3aca61 associated with
-     the tag v_1.5.30. Release built using Java "21" 2023-10-17 LTS
-     build 21.0.1.+12-LTS-29 under Linux Debian 11.6.
+     commit 44164f10ca3fb44ce0e68519f13564b87e3aca61 associated with
+     the tag <code>v_1.5.30</code>. Release built using Java "21"
+     2023-10-17 LTS build 21.0.1.+12-LTS-29 under Linux Debian 11.6.
      </p>
     
     <!-- ============================================================================ -->
