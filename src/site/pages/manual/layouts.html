@@ -9,7 +9,7 @@
     <script type="text/javascript">prefix='../';</script>
 
   </head>
-  <body onLoad="enableMenuEventListeners(); hljs.highlightAll();  decorate(); addClipboardListener(); enableLegacy();">
+  <body onLoad="enableMenuEventListeners(); hljs.highlightAll();  decorate(); addClipboardListener(); enableLegacy(); loopOn();">
 
 
       <script type="text/javascript" src="../templates/header3.js"></script>
@@ -159,7 +159,10 @@ public class MySampleLayout extends LayoutBase&lt;ILoggingEvent> {
             onclick="openTab(event, 'sampleLayoutConfig', 'legacy')">Legacy</button>
     <button class="tablinks" id="button_sampleLayoutConfig_canonical"
             onclick="openTab(event, 'sampleLayoutConfig', 'canonical')">Canonical (1.3)</button>
-</div>
+    <button class="tablinks" id="button_sampleLayoutConfig_tyler"
+            onclick="openTab(event, 'sampleLayoutConfig', 'tyler')">Tyler</button>
+
+</div> 
 
 <div id="sampleLayoutConfig_legacy" class="tabcontent">
 <pre><code>&lt;configuration>
@@ -180,6 +183,7 @@ public class MySampleLayout extends LayoutBase&lt;ILoggingEvent> {
 <div id="sampleLayoutConfig_canonical" class="tabcontent">
   <p>Requires a server call. Please wait a few seconds.</p>
 </div>
+<div id="sampleLayoutConfig_tyler" class="tabcontent"><p>Requires a server call.</p></div>
 
 		<p>The sample application <a
 		href="../xref/chapters/layouts/SampleLogging.html">
@@ -280,6 +284,8 @@ public class MySampleLayout2 extends LayoutBase&lt;ILoggingEvent> {
             onclick="openTab(event, 'SampleLayout2', 'legacy')">Legacy</button>
     <button class="tablinks" id="button_SampleLayout2_canonical"
             onclick="openTab(event, 'SampleLayout2', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_SampleLayout2_tyler"
+         onclick="openTab(event, 'SampleLayout2', 'tyler')">Tyler</button>    
 </div>
 
 <div id="SampleLayout2_legacy" class="tabcontent">
@@ -301,9 +307,8 @@ public class MySampleLayout2 extends LayoutBase&lt;ILoggingEvent> {
 
 </div>
 
-<div id="SampleLayout2_canonical" class="tabcontent">
-  <p>Requires a server call. Please wait a few seconds.</p>
-</div>
+<div id="SampleLayout2_canonical" class="tabcontent"><p>Requires a server call. Please wait a few seconds.</p></div>
+<div id="SampleLayout2_tyler"     class="tabcontent"><p>Requires a server call. Please wait a few seconds.</p></div>
 
    <p></p>
 
@@ -1620,6 +1625,8 @@ Wrapped by: org.springframework.;BeanCreationException: Error creating bean with
             onclick="openTab(event, 'highlighted', 'legacy')">Legacy</button>
     <button class="tablinks" id="button_highlighted_canonical"
             onclick="openTab(event, 'highlighted', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_highlighted_tyler"
+            onclick="openTab(event, 'highlighted', 'tyler')">Tyler</button>    
 </div>
 
 <div id="highlighted_legacy" class="tabcontent">
@@ -1637,9 +1644,8 @@ Wrapped by: org.springframework.;BeanCreationException: Error creating bean with
 
 </div>
 
-<div id="highlighted_canonical" class="tabcontent">
-  <p>Requires a server call. Please wait a few seconds.</p>
-</div>
+<div id="highlighted_canonical" class="tabcontent"><p>Requires a server call. Please wait a few seconds.</p></div>
+<div id="highlighted_tyler" class="tabcontent"><p>Requires a server call. Please wait a few seconds.</p></div>
 
      <p>Setting <code>withJansi</code> to true enables ANSI
      color code interpretation by the Jansi library, which transparently
@@ -1715,6 +1721,8 @@ Wrapped by: org.springframework.;BeanCreationException: Error creating bean with
             onclick="openTab(event, 'callerEvaluatorConfig', 'legacy')">Legacy</button>
     <button class="tablinks" id="button_callerEvaluatorConfig_canonical"
             onclick="openTab(event, 'callerEvaluatorConfig', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_callerEvaluatorConfig_tyler"
+            onclick="openTab(event, 'callerEvaluatorConfig', 'tyler')">Tyler</button>    
 </div>
 
 <div id="callerEvaluatorConfig_legacy" class="tabcontent">
@@ -1738,9 +1746,8 @@ Wrapped by: org.springframework.;BeanCreationException: Error creating bean with
 &lt;/configuration></code></pre>
 </div>
 
-<div id="callerEvaluatorConfig_canonical" class="tabcontent">
-  <p>Requires a server call. Please wait a few seconds.</p>
-</div>
+<div id="callerEvaluatorConfig_canonical" class="tabcontent"><p>Requires a server call. Please wait a few seconds.</p></div>
+<div id="callerEvaluatorConfig_tyler" class="tabcontent"><p>Requires a server call. Please wait a few seconds.</p></div>
 
 		<p>The above evaluation expression matches events which emanate
 		from a logger with a name containing the string "chapters.layouts"
@@ -1902,6 +1909,8 @@ public class ExceptionEvaluatorExample {
             onclick="openTab(event, 'exceptionEvaluatorConfig', 'legacy')">Legacy</button>
     <button class="tablinks" id="button_exceptionEvaluatorConfig_canonical"
             onclick="openTab(event, 'exceptionEvaluatorConfig', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_exceptionEvaluatorConfig_tyler"
+            onclick="openTab(event, 'exceptionEvaluatorConfig', 'tyler')">Tyler</button>    
 </div>
 
 <div id="exceptionEvaluatorConfig_legacy" class="tabcontent">
@@ -1925,9 +1934,8 @@ public class ExceptionEvaluatorExample {
 
 </div>
 
-<div id="exceptionEvaluatorConfig_canonical" class="tabcontent">
-  <p>Requires a server call. Please wait a few seconds.</p>
-</div>
+<div id="exceptionEvaluatorConfig_canonical" class="tabcontent"><p>Requires a server call. Please wait a few seconds.</p></div>
+<div id="exceptionEvaluatorConfig_tyler" class="tabcontent"><p>Requires a server call. Please wait a few seconds.</p></div>
 
         <p>With this configuration, each time an instance of the
 		<em>chapters.layouts.&#8203;TestException</em> is included within a logging
@@ -2022,6 +2030,8 @@ java.lang.Exception: display
             onclick="openTab(event, 'mySampleConverterConfig', 'legacy')">Legacy</button>
     <button class="tablinks" id="button_mySampleConverterConfig_canonical"
             onclick="openTab(event, 'mySampleConverterConfig', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_mySampleConverterConfig_tyler"
+            onclick="openTab(event, 'mySampleConverterConfig', 'tyler')">Tyler</button>    
 </div>
 
 <div id="mySampleConverterConfig_legacy" class="tabcontent">
@@ -2043,9 +2053,8 @@ java.lang.Exception: display
 
 </div>
 
-<div id="mySampleConverterConfig_canonical" class="tabcontent">
-  <p>Requires a server call. Please wait a few seconds.</p>
-</div>
+<div id="mySampleConverterConfig_canonical" class="tabcontent"><p>Requires a server call. Please wait a few seconds.</p></div>
+<div id="mySampleConverterConfig_tyler" class="tabcontent"><p>Requires a server call. Please wait a few seconds.</p></div>
 
 		<p>Once the new conversion word has been declared in the
 		configuration file, we can refer to it within
@@ -2115,6 +2124,8 @@ java.lang.Exception: display
             onclick="openTab(event, 'htmlLayoutConfig1', 'legacy')">Legacy</button>
     <button class="tablinks" id="button_htmlLayoutConfig1_canonical"
             onclick="openTab(event, 'htmlLayoutConfig1', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_htmlLayoutConfig1_tyler"
+            onclick="openTab(event, 'htmlLayoutConfig1', 'tyler')">Tyler</button>    
 </div>
 
 <div id="htmlLayoutConfig1_legacy" class="tabcontent">
@@ -2135,9 +2146,8 @@ java.lang.Exception: display
 </code></pre>
 </div>
 
-<div id="htmlLayoutConfig1_canonical" class="tabcontent">
-  <p>Requires a server call. Please wait a few seconds.</p>
-</div>
+<div id="htmlLayoutConfig1_canonical" class="tabcontent">  <p>Requires a server call. Please wait a few seconds.</p></div>
+<div id="htmlLayoutConfig1_tyler" class="tabcontent">  <p>Requires a server call. Please wait a few seconds.</p></div>
 
    <p>The <a
    href="../xref/chapters/layouts/TrivialMain.html">TrivialMain</a>
@@ -2238,6 +2248,8 @@ java.lang.Exception: display
             onclick="openTab(event, 'log4jXMLLayout', 'legacy')">Legacy</button>
     <button class="tablinks" id="button_log4jXMLLayout_canonical"
             onclick="openTab(event, 'log4jXMLLayout', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_log4jXMLLayout_tyler"
+            onclick="openTab(event, 'log4jXMLLayout', 'tyler')">Tyler</button>    
 </div>
 
 <div id="log4jXMLLayout_legacy" class="tabcontent">
@@ -2258,9 +2270,8 @@ java.lang.Exception: display
 
 </div>
 
-<div id="log4jXMLLayout_canonical" class="tabcontent">
-  <p>Requires a server call. Please wait a few seconds.</p>
-</div>
+<div id="log4jXMLLayout_canonical" class="tabcontent"><p>Requires a server call. Please wait a few seconds.</p></div>
+<div id="log4jXMLLayout_tyler" class="tabcontent"><p>Requires a server call. Please wait a few seconds.</p></div>
 
 		<h1 class="doAnchor" name="logback-access">Logback access</h1>
 
