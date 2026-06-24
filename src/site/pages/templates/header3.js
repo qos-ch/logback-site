@@ -43,7 +43,7 @@ function insertLogoAndMenu() {
     document.write('            <div>');
     document.write('                <div class="dropdown-heading">Support</div>');
     document.write('                <div class="dropdown-links">');
-    document.write('                    <a href="'+ prefix +'mailinglist.html"><i class="fa-regular fa-envelope"></i> Mailing Lists</a>');  //&#9993;
+    // document.write('                    <a href="'+ prefix +'mailinglist.html"><i class="fa-regular fa-envelope"></i> Mailing Lists</a>');  //&#9993;
     document.write('                    <a href="'+ prefix +'bugreport.html"><i class="fa-regular fa-bug"></i> Bug Report</a>'); //&#129440; &#128027;
 
     document.write('                    <a href="' + prefix + 'count/github.html">');
@@ -71,7 +71,7 @@ function insertLogoAndMenu() {
 }
 
 // google add script
-document.write('<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6731569547319298" crossorigin="anonymous"></script>');
+// document.write('<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6731569547319298" crossorigin="anonymous"></script>');
 
 document.write('<link rel="stylesheet" type="text/css" href="'+prefix+'common/css/site3.css" />');
 document.write('<link rel="stylesheet" type="text/css" href="'+prefix+'css/menu2.css"/>');

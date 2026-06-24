@@ -137,8 +137,135 @@
        </p>  
       </div>
     </div>
-    
+
     <!-- ============================================================================ -->
+    <!-- ============================================================================ -->
+    <h3>2026-06-23 Release of logback version 1.5.35</h3> 
+
+      <p>&bull; The 'condition' attribute in &lt;if&gt; elements now
+      rejects unicode escape sequences (<code>\u</code> and
+      <code>\U</code>). This closes a bypass of the existing
+      prohibition on the <code>new</code> operator in Janino-evaluated
+      conditions. This issue was reported by IcySun (icysun@qq.com)
+      and registered as <a href="https://www.cve.org/cverecord?id=CVE-2026-13006">CVE-2026-13006</a>.</p>
+      
+
+      <p>&bull; Added <code>ConfiguratorRank.AUTHENTICATING</code>
+      (rank 100), the highest configurator rank, for
+      certified/authenticating configurators discovered via the
+      <code>ServiceLoader</code>
+      mechanism. <code>ContextInitializer</code> now requires that at
+      most one such configurator exist on the classpath; if more than
+      one is found, initialization aborts with an error.</p>
+ 
+      <p>&bull; <code>ConsoleCharsetPropertyDefiner</code> is no
+      longer shipped. The Java 21 multi-release compilation of
+      <code>logback-core</code> has been disabled, which removes this
+      class from the published artifact. Configurations that
+      referenced
+      <code>ch.qos.logback.core.property.ConsoleCharsetPropertyDefiner</code>
+      will need an alternative approach for console charset
+      detection.</p>
+ 
+      <p>&bull; The <code>logback-examples</code> module is now
+      included in the set of artifacts published to Maven Central.</p>
+ 
+      <p>&bull; <code>JoranConfigurator.makeAnotherInstance()</code>
+      and
+      <code>DefaultJoranConfigurator.performMultiStepConfigurationFileSearch()</code>
+      are now <code>protected</code>, allowing derived configurators
+      to override these methods.</p>
+ 
+      <p>&bull; A bitwise identical binary of this version can be
+      reproduced by building from <a
+      href="https://github.com/qos-ch/logback">source code</a> at
+      commit 08bd1598d565d83444f72983935e7da4746783b7 associated with
+      the tag <code>v_1.5.35</code>. Release built using Java "21"
+      2023-10-17 LTS build 21.0.1.+12-LTS-29 under Linux Debian
+      11.6.</p>
+
+    <!-- ============================================================================ -->
+
+    <h3 class="doAnchor" name="1.5.34">2026-06-01 Release of logback
+    version 1.5.34</h3>
+
+    <p>&bull; In case certain <code>StackTraceElement</code> values
+    returned by the <code>Throwable.getStackTrace</code> method are
+    <code>null</code>, <code>StackTraceElementProxy</code> substitutes
+    a dummy instance instead of throwing an
+    <code>IllegalArgumentException</code>. This resolves <a
+    href="https://github.com/qos-ch/logback/issues/1040">issues
+    #1040</a>, reported by Naotsugu Kobayashi.
+    </p>
+
+    <p>&bull; <code>HardenedObjectInputStream</code> will now throw an
+    <code>InvalidClassException</code> during deserialization attempts
+    of <code>Proxy</code> classes.  This change addresses potential
+    deserialization whitelist bypass vulnerability reported by <a
+    href="https://github.com/york-shen">York Shen</a> and registered as <a
+    href="https://www.cve.org/cverecord?id=CVE-2026-10532">CVE-2026-10532</a>.
+    </p>
+
+    
+    <p>&bull; A bitwise identical binary of this version can be
+    reproduced by building from <a
+    href="https://github.com/qos-ch/logback">source code</a> at commit
+    e62272ac152469aec1ede056c3c7d0d7314e7bfe associated with the tag
+    <code>v_1.5.34</code>. This release was built using Java "21"
+    2023-10-17 LTS build 21.0.1.+12-LTS-29 under Linux Debian 11.6.
+    </p>
+
+    <!-- ============================================================================ -->
+     
+    <h3 class="doAnchor" name="1.5.33">2026-05-27 Release of logback
+    version 1.5.33</h3>
+
+    <p>&bull; <code>PropertiesConfiguratorModelHandler</code> now
+    registers properties file URLs to the
+    <code>ConfigurationWatchList</code> when scan is enabled (via
+    local scan="true" attribute or top-level configuration scan),
+    ensuring changes are detected and reconfiguration occurs. This
+    problem was reported in <a
+    href="https://github.com/qos-ch/logback/issues/1034">issues/1034</a>.</p>
+
+    <p>&bull; When processing &lt;<em>conversionRule</em>&gt; elements
+    and both <span class="attr">class</span> and <span class="attr"> 
+    converterClass</span> attributes are specified, silently use the
+    class attribute without issuing a warning. However, if the
+    attribute values differ, a warning will be issued. This change was
+    requested in <a
+    href="https://github.com/qos-ch/logback/issues/1031">issues/1031</a>.</p>
+
+    <p>&bull; <code>HardenedModelInputStream</code> will no longer
+    accept to deserialize all classes located under the "java.lang"
+    and "java.util" packages but only a limited number of explicitly
+    authorized classes in those packages. This potential
+    deserialization whitelist bypass vulnerability was reported by <a
+    href="https://github.com/york-shen">York Shen</a> and registered
+    as <a
+    href="https://www.cve.org/cverecord?id=CVE-2026-9828">CVE-2026-9828</a>.</p>
+
+    <p>&bull; SSL parameters for <code>SSLSocketAppender</code> now
+    enable hostname verification by default. Moreover, the default
+    protocol is now "TLSv1.2". This potential vulnerability was
+    reported by <a href="https://github.com/york-shen">York
+    Shen</a>.</p>
+
+    <p>&bull; When printing the status message field,
+    <code>ViewStatusMessagesServletBase</code> now escapes special
+    characters such as "&amp;" as character entities. This potential
+    vulnerability was reported by <a
+    href="https://github.com/york-shen">York Shen</a>.</p>
+    
+    <p>&bull; A bit-wise identical binary of this version can be
+    reproduced by building from <a
+    href="https://github.com/qos-ch/logback">source code</a> at commit
+    124e8b49b55ac34d08743a0646bd463410192647 associated with the tag
+    <code>v_1.5.33</code>. Release built using Java "21" 2023-10-17
+    LTS build 21.0.1.+12-LTS-29 under Linux Debian 11.6.
+     </p>
+
+     
     <!-- ============================================================================ -->
 
     <hr width="80%" align="center" />

@@ -705,18 +705,48 @@
   within the <code>&lt;if&gt;</code> element is deprecated and will be
   removed in 2027.
   </p>
-  
- <!-- ============================================================= -->
- <hr width="80%" align="center" />
- <h3 class="doAnchor" name="conditionAttributeDeprecation">The
-  'condition' attribute in &lt;if> element is deprecated and slated
-  for removal. Use &lt;condition> element instead (requires version 1.5.20 or later).
-  </h3>  
 
-  <p>Due to potential vulnerabilities associated with dynamic,
-  i.e. runtime, java code compilation and execution (using Janino),
-  the 'condition' attribute within the &lt;if> element is deprecated
-  and will be removed in 2027.</p>
+   <!-- ============================================================= -->
+   <hr width="80%" align="center" />
+   <h3 class="doAnchor" name="conditionUnicode">The 'condition'
+   attribute in <em>&lt;if&gt;</em> element may not contain unicode
+   escape characters. Use &lt;condition> element instead (requires version
+   1.5.20 or later).
+   </h3>  
+
+   <p>&bull; The 'condition' attribute in &lt;if&gt; elements now
+   reject unicode escape sequences (<code>\u</code>
+   and <code>\U</code>). This closes a bypass of the existing
+   prohibition on the <code>new</code> operator in Janino-evaluated
+   conditions. </p>
+
+   <p><span class="label">NOTE</span> As of logback 1.5.20, the
+   <code>&lt;condition&gt;</code> element with a custom
+   <code>PropertyEvaluator</code> offers a recommended
+   alternative. See also <a
+   href="manual/configuration.html#conditional">conditional processing
+   of config files</a> as well as the <a
+   href="https://logback.qos.ch/translator/services/conditionalConfigMigrator.html">conditional
+   configuration migrator</a>. Due to potential vulnerabilities
+   associated with dynamic, i.e. runtime, java code compilation and
+   execution (using Janino), the <code>condition</code> attribute
+   within the <code>&lt;if&gt;</code> element is deprecated and will
+   be removed in January 2027.
+   </p>
+  
+   <!-- ============================================================ -->
+   <hr width="80%" align="center" />
+
+   <h3 class="doAnchor" name="conditionAttributeDeprecation">The
+   'condition' attribute in &lt;if> element is deprecated and slated
+   for removal. Use &lt;condition> element instead (requires version
+   1.5.20 or later).
+   </h3>  
+
+   <p>Due to potential vulnerabilities associated with dynamic,
+   i.e. runtime, java code compilation and execution (using Janino),
+   the 'condition' attribute within the &lt;if> element is deprecated
+   and will be removed in January 2027.</p>
 
   <p><span class="label">NOTE</span> As of logback 1.5.20, the
   <code>&lt;condition&gt;</code> element with a custom
@@ -728,7 +758,7 @@
   associated with dynamic, i.e. runtime, java code compilation and
   execution (using Janino), the <code>condition</code> attribute
   within the <code>&lt;if&gt;</code> element is deprecated and will be
-  removed in 2027.
+  removed in January 2027.
   </p>
 
   <!-- ============================================================= -->
