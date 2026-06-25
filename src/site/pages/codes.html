@@ -684,6 +684,31 @@
 
   <!-- ============================================================= -->
   <hr width="80%" align="center" />
+  <h3 class="doAnchor" name="conditionBlacklisted">The 'condition' attribute
+  in <em>&lt;if&gt;</em> element may not contain blacklisted references.
+  </h3>  
+
+  <p>Certain references in the condition attribute of <if> elements
+  are disallowed. This prevents an ACE vulnerability recorded as
+  <a href="https://www.cve.org/cverecord?id=CVE-2025-11226">CVE-2026-xxx</a>.
+  </p>
+
+  <p><span class="label">NOTE</span> As of logback 1.5.20, the
+  <code>&lt;condition&gt;</code> element with a custom
+  <code>PropertyEvaluator</code> offers a recommended alternative. See
+  also <a href="manual/configuration.html#conditional">conditional
+  processing of config files</a> as well as the <a
+  href="https://logback.qos.ch/translator/services/conditionalConfigMigrator.html">conditional
+  configuration migrator</a>. Due to potential vulnerabilities
+  associated with dynamic, i.e. runtime, java code compilation and
+  execution (using Janino), the <code>condition</code> attribute
+  within the <code>&lt;if&gt;</code> element is deprecated and will be
+  removed soon.
+  </p>
+
+  
+  <!-- ============================================================= -->
+  <hr width="80%" align="center" />
   <h3 class="doAnchor" name="conditionNew">The 'condition' attribute
   in <em>&lt;if&gt;</em> element may not contain the 'new' operator.
   </h3>  
@@ -703,7 +728,7 @@
   associated with dynamic, i.e. runtime, java code compilation and
   execution (using Janino), the <code>condition</code> attribute
   within the <code>&lt;if&gt;</code> element is deprecated and will be
-  removed in 2027.
+  removed soon.
   </p>
 
    <!-- ============================================================= -->
@@ -731,7 +756,7 @@
    associated with dynamic, i.e. runtime, java code compilation and
    execution (using Janino), the <code>condition</code> attribute
    within the <code>&lt;if&gt;</code> element is deprecated and will
-   be removed in January 2027.
+   be removed soon.
    </p>
   
    <!-- ============================================================ -->
