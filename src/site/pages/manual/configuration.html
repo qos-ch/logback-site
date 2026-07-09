@@ -2502,9 +2502,11 @@ fileName=myApp.log
 
   <p><span class="label">Since 1.5.24</span>
   <code>ExpressionPropertyCondition</code> can evaluate Java-like
-  boolean expressions using the boolean operators !, &amp;&amp;, ||, as
-  well as several pre-defined functions (see below). Parentheses are
-  also supported.
+  boolean expressions using the boolean operators !, &amp;&amp;, ||,
+  as well as several pre-defined functions (see below). Parentheses
+  are also supported. However, <b>numerical literals</b> are
+  <b>not</b> supported. Thus, the expression "1 != 2" will result in
+  an error.
   </p>
 
   <p>The predefined functions are:</p>
@@ -2605,7 +2607,9 @@ fileName=myApp.log
   associated with dynamic, i.e. runtime, java code compilation and
   execution (using Janino), the <code>condition</code> attribute
   within the <code>&lt;if&gt;</code> element has been deprecated and
-  will be removed soon.
+  was removed in version 1.5.37. An <a
+  href="https://logback.qos.ch/translator/services/conditionalConfigMigrator.html">online
+  migration service</a> is provided to help with the transition.
   </p>
 
 
