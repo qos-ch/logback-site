@@ -31,13 +31,50 @@
     <code>LogbackServletContextListener</code> which depend on Jakarta
     EE (jakarta.* namespace).</p>
   
-    <p>The 1.5.x series is a direct descendant of and a drop-in
-    replacement for the 1.4.x series. It differs from the 1.4.x series
-    by the relocation of the logback-access module which was moved to
-    its own <a
-    href="https://github.com/qos-ch/logback-access">separate github
-    repository</a>.</p> 
+    <p>The 1.6.x series is a direct descendant of and a drop-in
+    replacement for the 1.5.x series, with the notable exception of
+    conditionals using Janino (see next section). The 1.6.x series
+    differs from the 1.4.x series by the relocation of
+    the <em>logback-access</em> module to
+    its <a href="https://github.com/qos-ch/logback-access">own
+    separate GitHub repository</a>.</p>
 
+    <h3>Configuration files using conditionals need to be migrated</h3>
+     
+    <p>In version 1.5.37 and subsequently in 1.6.x, support for
+    Janino-based conditional expressions was removed. Evaluating
+    arbitrary Java expressions with the Janino library had led to
+    numerous security vulnerabilities.</p>
+
+    <p>If you are upgrading from a version earlier than 1.5.37 and
+    your configuration files still use those older Janino-style
+    conditionals, you must migrate them to the new format using the
+    <code>&lt;condition&gt;</code> element (available since version
+    version 1.5.20).</p>
+
+    <p>The <code>&lt;condition&gt;</code> element accepts
+    implementations of the <code>PropertyCondition</code> interface to
+    decide whether a branch of the configuration should apply.
+    Logback-core ships with several implementations of said
+    interface. See the documentation on <a
+    href="manual/configuration.html#conditional">conditional
+    processing</a> for details.</p>
+
+    <p>If you prefer a more mechanical approach for the migration, the
+    <a
+    href="https://logback.qos.ch/translator/services/conditionalConfigMigrator.html">online
+    migration service</a> can provide a step-by-step process for
+    you.</p>
+
+    
+    <h2>Legacy version: the 1.5.x series</h2>
+    
+    <p>The 1.5.x series is now considered legacy. Migration to
+    version 1.6.x should be straightforward. However, if you are
+    migrating from version 1.5.36 or earlier and use conditionals in
+    configuration files, you will need to migrate your logback.xml
+    files. See the 1.6.x section above.</p>
+    
 
     <h2>Older stale versions (END-OF-LIFE)</h2>
 

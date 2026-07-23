@@ -23,22 +23,24 @@
       relocated to its own repository.</p>
       -->
       
-    <h2>Logback news and release notes</h2>
+    <h2>Logback related news and release notes</h2>
 
-    <p>This page documents changes for various logback releases.</p>
+    <p>This page documents changes for various logback releases,
+    including logback-core, logback-classic, logback-access,
+    logback-tyler and logback-scoped-mdc.</p>
 
 
-    <h2>Latest STABLE version: the 1.6.x series</h2>
+    <h2  class="doAnchor" name="latest_stable">Latest STABLE version: the 1.6.x series</h2>
 
     <p>The 1.6.x series is a direct descendant of, and a drop-in
-    replacement for, the 1.5.x series. It contains a few optional
-    components, such as <code>SMTPAppender</code> and
+    replacement for, the 1.5.x series, with the notable exception of
+    conditionals using Janino (see next section). It contains a few
+    optional components, such as <code>SMTPAppender</code> and
     <code>LogbackServletContextListener</code>, that depend on Jakarta
     EE (jakarta.* namespace). The 1.6.x series differs from the 1.4.x
-    series by the relocation of the <em>logback-access</em> module
-    to its <a
-    href="https://github.com/qos-ch/logback-access">own separate
-    GitHub repository</a>.
+    series by the relocation of the <em>logback-access</em> module to
+    its <a href="https://github.com/qos-ch/logback-access">own
+    separate GitHub repository</a>.
     </p>
 
      <p>Here is a summary of 1.6.x dependencies:</p>
@@ -63,23 +65,32 @@
      </table>
 
 
-     <h3>Configuration files using conditionals need to be migrated</h3>
+    <h3>Configuration files using conditionals need to be migrated</h3>
      
-    <p>Due to the numerous vulnerabilities associated with conditional
-    configuration processing based on evaluating Java expressions with
-    the Janino library, support for Janino-based conditional
-    expressions was removed in version 1.5.37. If you are migrating
-    from an earlier version in the 1.5.x series and use conditionals in
-    configuration files, an <a
-    href="https://logback.qos.ch/translator/services/conditionalConfigMigrator.html">online
-    migration service</a> is available. In addition, the
-    <code>&lt;condition&gt;</code> element introduced in version
-    1.5.20 provides similar functionality to Janino, albeit with more
-    limited scope. See the <a
-    href="manual/configuration.html#conditional">relevant
-    documentation</a> for more details.
-     </p>
+    <p>In version 1.5.37 and subsequently in 1.6.x, support for
+    Janino-based conditional expressions was removed. Evaluating
+    arbitrary Java expressions with the Janino library had led to
+    numerous security vulnerabilities.</p>
 
+    <p>If you are upgrading from a version earlier than 1.5.37 and
+    your configuration files still use those older Janino-style
+    conditionals, you must migrate them to the new format using the
+    <code>&lt;condition&gt;</code> element (available since version
+    version 1.5.20).</p>
+
+    <p>The <code>&lt;condition&gt;</code> element accepts
+    implementations of the <code>PropertyCondition</code> interface to
+    decide whether a branch of the configuration should apply.
+    Logback-core ships with several implementations of said
+    interface. See the documentation on <a
+    href="manual/configuration.html#conditional">conditional
+    processing</a> for details.</p>
+
+    <p>If you prefer a more mechanical approach for the migration, the
+    <a
+    href="https://logback.qos.ch/translator/services/conditionalConfigMigrator.html">online
+    migration service</a> can provide a step-by-step process for
+    you.</p>
 
     
     <h2>Legacy version: the 1.5.x series</h2>
@@ -88,7 +99,7 @@
     version 1.6.x should be straightforward. However, if you are
     migrating from version 1.5.36 or earlier and use conditionals in
     configuration files, you will need to migrate your logback.xml
-    files. See the 1.6.x section above.</p>
+    files. See the previous section above.</p>
     
     <h2>Older stale versions (END-OF-LIFE)</h2>
 
@@ -134,7 +145,7 @@
      version 1.6.0</h3>
 
      <p>&bull; Removed certain deprecated variables, methods, and
-     classes. For the list see <a
+     classes. For the list of removed members see <a
      href="notes/release_1.6.0.txt">release_1.6.0.txt</a>.</p>
      
      <p>&bull; In <code>AsyncAppenderBase</code>, the
@@ -145,13 +156,16 @@
      href="https://github.com/qos-ch/logback/pull/1053">pr#1053</a>.</p>
 
      <p>&bull; Bump SLF4J dependency to version 2.0.18.</p>
+
+     <p>&bull; See also general note about the <a
+     href="latest_stable">1.6.x series</a>.</p>
      
      <p>&bull; A bit-wise identical binary of this version can be
      reproduced by building from <a
      href="https://github.com/qos-ch/logback">source code</a> at
-     commit d04984a41fce42977466f45a2f076f0ee5cc4207 associated with
-     the tag <code>v_1.5.38</code>. The release was built using Java "21"
-     2023-10-17 LTS build 21.0.1.+12-LTS-29 under Linux Debian
+     commit b07adf36019b51a10f824fdd94009985c587b1d3 associated with
+     the tag <code>v_1.6.0</code>. The release was built using Java
+     "21" 2023-10-17 LTS build 21.0.1.+12-LTS-29 under Linux Debian
      11.6.</p>
 
      <hr width="80%" align="center" />
