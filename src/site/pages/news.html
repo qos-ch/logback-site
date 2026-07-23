@@ -27,32 +27,33 @@
 
     <p>This page documents changes for various logback releases.</p>
 
-    <h2>On the 1.5.x series</h2>
 
-    <p>The 1.5.x series is a direct descendant of and a drop-in
-    replacement for the 1.4.x series. It contains few optional
+    <h2>Latest STABLE version: the 1.6.x series</h2>
+
+    <p>The 1.6.x series is a direct descendant of and a drop-in
+    replacement for the 1.5.x series. It contains few optional
     components such as <code>SMTPAppender</code> and
     <code>LogbackServletContextListener</code> which depend on Jakarta
-    EE (jakarta.* namespace). The 1.5.x series differs from the 1.4.x
+    EE (jakarta.* namespace). The 1.6.x series differs from the 1.4.x
     series by the relocation of the <em>logback-access</em> module
     which was moved to its <a
     href="https://github.com/qos-ch/logback-access">own separate
     github repository</a>.
     </p>
 
-    <p>Here is a summary of 1.5.x dependencies:</p>
+     <p>Here is a summary of 1.6.x dependencies:</p>
     
-     <table class="bodyTable striped"> 
+    <table class="bodyTable striped"> 
       <tr>
         <th>Logback version</th>
         <th>github branch </th> 
-        <th>SLF4J version </th>
+        <th>SLF4J version </th> 
         <th>JDK at runtime</th>
         <th>JDK during build</th>        
         <th>Enterprise Edition <span class="green">(optional components)</span></th>        
       </tr>
       <tr> 
-        <td> 1.5.x</td>
+        <td> 1.6.x</td>
         <td> master</td>
         <td style="text-align: right"> 2.0.x</td>
         <td style="text-align: right">    11 </td>
@@ -60,7 +61,35 @@
         <td style="text-align: right"> Jakarta EE (jakarta.* namespace) </td>
       </tr>
      </table>
-   
+
+
+     <h3>Configuraiton files using conditionals need to be migrated</h3>
+     
+    <p>Due to the numerous vulnerabilities associated with conditional
+    configuration processing based on the evaluation of Java
+    expressions using the Janino library, support for conditional
+    expressions using Janino has been removed in version 1.5.37. If
+    you are migrating from an earlier version in the 1.5.x series and
+    are using conditionals in configuration files, there exists <a
+    href="https://logback.qos.ch/translator/services/conditionalConfigMigrator.html">online
+    migration service</a>. In addition, the
+    <code>&lt;condition&gt;</code> element introduced in version
+    1.5.20, provides similar functionality to Janino, albeit more
+    limited functionality. See the <a
+    href="manual/configuration.html#conditional">relevant
+    documentation</a> for more details.
+     </p>
+
+
+    
+    <h2>Legacy version: the 1.5.x series</h2>
+    
+    <p> The 1.5.x series is now considered legacy. Migration to
+    version 1.6.x should be very easy. However, if you are migrating
+    from version 1.5.36 or earlier and are using conditionals in
+    configiration files, you will need to migrate your logback.xml
+    configuration files. See the 1.6.x entry above.</p>
+    
     <h2>Older stale versions (END-OF-LIFE)</h2>
 
     <ul>
@@ -78,7 +107,7 @@
       <li>No security patches for newly discovered vulnerabilities.</li>
     </ul>  
 
-    <hr align="center" />
+    
     
     <h2  class="doAnchor" name="reproducible">Reproducible builds</h2>
      
@@ -98,7 +127,36 @@
 
     <!-- ============================================================================ -->
     <!-- ============================================================================ -->
-    <hr width="99%" align="center" />
+    <hr width="80%" align="center" />
+
+
+     <h3 class="doAnchor" name="1.6.0">2026-07-23 Release of logback
+     version 1.6.0</h3>
+
+     <p>&bull; Removed certain deprecated variables, methods and
+     classes. For the list see <a
+     href="notes/release_1.6.0.txt">release_1.6.0.txt</a>.</p>
+     
+     <p>&bull; In <code>AsyncAppenderBase</code> the
+     <code>put(ILoggingEvent)</code> now has the
+     <code>protected</code> modifier allowing access to derived
+     classes. This change was requested by Thomas Skj&oslash;lberg in
+     <a
+     href="https://github.com/qos-ch/logback/pull/1053">pr#1053</a>.</p>
+
+     <p>&bull; Bump SLF4J dependency to version 2.0.18.</p>
+     
+     <p>&bull; A bitwise identical binary of this version can be
+     reproduced by building from <a
+     href="https://github.com/qos-ch/logback">source code</a> at
+     commit d04984a41fce42977466f45a2f076f0ee5cc4207 associated with
+     the tag <code>v_1.5.38</code>. Release built using Java "21"
+     2023-10-17 LTS build 21.0.1.+12-LTS-29 under Linux Debian
+     11.6.</p>
+
+     <hr width="80%" align="center" />
+
+    <!-- ============================================================================ -->
     
     <h3 class="doAnchor" name="access_2.0.13">2026-07-09 Release of logback-access
     version 2.0.13</h3>
@@ -139,8 +197,9 @@
     <!-- ============================================================================ -->
 
      <h3 class="doAnchor" name="1.5.37">2026-06-26 Release of logback
-     version 1.5.37</h3>
+     version 1.5.37</h3> 
 
+     
      <p class="highlight">This version is the definitive fix for <a
      href="https://www.cve.org/cverecord?id=CVE-2026-13006">CVE-2026-13006</a>.
      Moreover, due to numerous past vulnerabilities, <b>support for
@@ -150,11 +209,12 @@
      is an <a
      href="https://logback.qos.ch/translator/services/conditionalConfigMigrator.html">online
      migration service</a>.</p>
- 
+     
      <p>&bull; This version is the definitive fix for <a
      href="https://www.cve.org/cverecord?id=CVE-2026-13006">CVE-2026-13006</a>.
      </p>
-     
+
+
      <p>Due to the numerous vulnerabilities associated with
      conditional configuration processing based on the evaluation of
      Java expressions using the Janino library, support for conditional
