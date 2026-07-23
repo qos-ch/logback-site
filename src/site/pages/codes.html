@@ -151,8 +151,25 @@
   deadlocks.
   </p>
 
-  
+  <!-- ========================================================== -->
 
+  <hr width="80%" align="center" />
+
+  <!-- "Depender %s was expecting version %s for %s but found version %s" -->
+  
+  <h3 class="doAnchor" name="versionMismatch">Depender [A] was expecting
+  version Vx for dependency [B] but found version Vy</h3>
+
+  <p>This warning indicates that the depender A module was built using
+  version Vx of dependency B but version Vu was found on the class
+  path.
+  </p> 
+
+  <p>This is a warning and not necessarily indicative of an
+  error. However, unless know what you are doing, it is usually better
+  to align with the expected version.
+  </p>
+ 
   <!-- =========================================================== -->
 
   <hr width="80%" align="center" />
