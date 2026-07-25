@@ -23,9 +23,9 @@
 
     <h3>For logback 1.5.x targeting Jakarta EE (jakarta.* namespace) </h3>
     <ul>
-      <li>logback-core-${latest.stable.jakarta.version}.jar</li>
-      <li>logback-classic-${latest.stable.jakarta.version}.jar</li>
-      <li>logback-examples-${latest.stable.jakarta.version}.jar</li>
+      <li>logback-core-${latest.stable.version}.jar</li>
+      <li>logback-classic-${latest.stable.version}.jar</li>
+      <li>logback-examples-${latest.stable.version}.jar</li>
       <li>slf4j-api-${slf4j.version}.jar</li>
     </ul>       
 
@@ -51,8 +51,8 @@
     installed logback:
     </p>
 
-    <p class="source">java -cp lib/slf4j-api-${slf4j.version}.jar;../logback-core-${project.version}.jar;\
- ../logback-classic-${project.version}.jar;logback-examples-${project.version}.jar\
+    <p class="source">java -cp lib/slf4j-api-${slf4j.version}.jar;../logback-core-${latest.stable.version}.jar;\
+ ../logback-classic-${latest.stable.version}.jar;logback-examples-${latest.stable.version}.jar\
  chapters.introduction.HelloWorld1</p>
 
    <p>It is more convenient to set the CLASSPATH environment variable
@@ -85,7 +85,7 @@
     <pre class="prettyprint source">&lt;dependency>
   &lt;groupId>ch.qos.logback&lt;/groupId>
   &lt;artifactId>logback-classic&lt;/artifactId>
-  &lt;version>${project.version}&lt;/version>
+  &lt;version>${latest.stable.version}&lt;/version>
 &lt;/dependency></pre>
 
     <p><span class="label notice">TRANSITIVITY</span> Note that in

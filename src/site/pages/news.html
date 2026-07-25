@@ -76,7 +76,7 @@
     your configuration files still use those older Janino-style
     conditionals, you must migrate them to the new format using the
     <code>&lt;condition&gt;</code> element (available since version
-    version 1.5.20).</p>
+    1.5.20).</p>
 
     <p>The <code>&lt;condition&gt;</code> element accepts
     implementations of the <code>PropertyCondition</code> interface to
@@ -89,8 +89,7 @@
     <p>If you prefer a more mechanical approach for the migration, the
     <a
     href="https://logback.qos.ch/translator/services/conditionalConfigMigrator.html">online
-    migration service</a> can provide a step-by-step process for
-    you.</p>
+    migration service</a> can provide a step-by-step process.</p>
 
     
     <h2>Legacy version: the 1.5.x series</h2>
@@ -136,16 +135,32 @@
       </div>
     </div>
 
+    <hr width="80%" align="center" />
+    
     <!-- ============================================================================ -->
     <!-- ============================================================================ -->
+    <h3 class="doAnchor" name="access_2.0.13">2026-07-23 Release of logback-access
+    version 2.0.14</h3>
+   
+    <p>&bull; Bumped logback-core dependency to version 1.6.0.</p>
+  
+    <p>&bull; A bit-wise identical binary of this version can be
+    reproduced by building from <a
+    href="https://github.com/qos-ch/logback-access">source code</a> at
+    commit 889b875e24e8d369aa32e34112e040abe15bbc81 associated with
+    the tag <code>v_2.0.14</code>. Release built using Java "21"
+    2023-10-17 LTS build 21.0.1.+12-LTS-29 under Linux Debian 11.6.
+     </p> 
+  
     <hr width="80%" align="center" />
 
+    <!-- ============================================================================ -->
 
      <h3 class="doAnchor" name="1.6.0">2026-07-23 Release of logback
      version 1.6.0</h3>
 
-     <p>&bull; Removed certain deprecated variables, methods, and
-     classes. For the list of removed members see <a
+     <p>&bull; Removed deprecated variables, methods, and
+     classes. For the full list, see <a
      href="notes/release_1.6.0.txt">release_1.6.0.txt</a>.</p>
      
      <p>&bull; In <code>AsyncAppenderBase</code>, the
@@ -153,12 +168,12 @@
      <code>protected</code> modifier, which allows access from
      subclasses. This change was requested by Thomas Skj&oslash;lberg in
      <a
-     href="https://github.com/qos-ch/logback/pull/1053">pr#1053</a>.</p>
+     href="https://github.com/qos-ch/logback/pull/1053">PR #1053</a>.</p>
 
-     <p>&bull; Bump SLF4J dependency to version 2.0.18.</p>
-
-     <p>&bull; See also general note about the <a
-     href="latest_stable">1.6.x series</a>.</p>
+     <p>&bull; Bumped the SLF4J dependency to version 2.0.18.</p>
+ 
+     <p>&bull; <b>See also the overview of the <a
+     href="#latest_stable">1.6.x series</a></b>.</p>
      
      <p>&bull; A bit-wise identical binary of this version can be
      reproduced by building from <a
