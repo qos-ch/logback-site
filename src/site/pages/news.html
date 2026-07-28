@@ -139,11 +139,89 @@
     
     <!-- ============================================================================ -->
     <!-- ============================================================================ -->
+    
+     <h3 class="doAnchor" name="1.6.1">2026-07-28 Release of logback
+     version 1.6.1</h3>
+
+     <p>&bull; In <code>TimeBasedRollingPolicy</code>, when the <span
+     class="option">file</span> option is set, the intermediate file
+     renamed before asynchronous compression now receives the target
+     archive name <em>without</em> the compression suffix (e.g. `.gz`,
+     `.zip`, `.xz`). Previously it used a nanotime-based `.tmp`
+     suffix. This makes the file easier to identify if compression
+     fails during rollover. (See also the following paragraph.)</p>
+     
+     <p>&bull; On GZ, ZIP, or XZ compression failure, the original
+     (uncompressed) log file is no longer deleted.  Compression
+     strategies now delete the source file only after successful
+     compression and emit a warning that the original was left intact.
+     </p>
+     
+     <p>&bull; <code>ConsoleAppender</code> with &lt;withJansi&gt; now
+     probes JLine's <code>org.jline.jansi.AnsiConsole</code> first and
+     falls back to the legacy FuseSource
+     <code>org.fusesource.jansi.AnsiConsole</code> class. This keeps
+     ANSI coloring working after Jansi moved under the JLine
+     project. The optional <code>org.jline:jansi-core</code> artifact
+     is declared as a dependency alongside the existing FuseSource
+     jansi dependency. A <code>preferredJansiClassName</code> property
+     was added for tests. This issue was reported in <a
+     href="https://github.com/qos-ch/logback/issues/1043">issues/1043</a>
+     by <a href="https://github.com/seonwooj0810">seonwoo_jung</a> who
+     also provided the relevant PR.
+     </p>
+
+     <p>&bull; <code>LayoutWrappingEncoder</code> now reports an error
+     at <code>start()</code> when no layout is set and guards
+     <code>encode()</code> against a null layout. Previously, a missing
+     layout (for example after an ignored
+     <code>&lt;if&gt;</code>/<code>&lt;then&gt;</code>/<code>&lt;else&gt;</code>
+     branch) allowed the encoder to start and then fail with a
+     <code>NullPointerException</code> on every event, resulting in
+     silent log loss. This issue was reported in <a
+     href="https://github.com/qos-ch/logback/issues/1046">issues/1046</a>
+     by <a href="https://github.com/seonwooj0810">seonwoo_jung</a>
+     who also provided the relevant PR.</p>
+     
+     <p>&bull; <code>FileCollisionAnalyser</code> now detects file
+     collisions involving nested appenders of
+     <code>SiftingAppender</code>. When the nested <code>file</code>
+     or <code>fileNamePattern</code> does not textually reference the
+     discriminator key (e.g. <code>${userId}</code>), a warning is
+     issued at configuration time naming the appender, the key, and
+     the shared target. This closes a gap where statically declared
+     file appenders were checked but sifted nested appenders were
+     not. This enhancement was contributed in <a
+     href="https://github.com/qos-ch/logback/pull/1041">PR #1041</a>
+     by <a href="https://github.com/seonwooj0810">seonwoo_jung</a>.
+     </p>
+     
+     <p>&bull; More defensive handling in
+     <code>SyslogOutputStream</code> and
+     <code>SyslogAppenderBase</code>: the <code>close()</code> method
+     now ensures that resources are closed, writes and flushes check
+     that the underlying resources are in a valid state and fallback
+     to no-op otherwise.
+     </p>
+     
+
+     <p>&bull; A bit-wise identical binary of this version can be
+     reproduced by building
+     from <a href="https://github.com/qos-ch/logback">source code</a>
+     at commit 57759f433000a133088ef0441038963134437fbd associated
+     with the tag <code>v_1.6.1</code>. The release was built using
+     Java "21" 2023-10-17 LTS build 21.0.1.+12-LTS-29 under Linux
+     Debian 11.6.</p>
+   
+    <hr width="80%" align="center" />
+
+    <!-- ============================================================================ -->
+
     <h3 class="doAnchor" name="access_2.0.13">2026-07-23 Release of logback-access
     version 2.0.14</h3>
    
     <p>&bull; Bumped logback-core dependency to version 1.6.0.</p>
-  
+   
     <p>&bull; A bit-wise identical binary of this version can be
     reproduced by building from <a
     href="https://github.com/qos-ch/logback-access">source code</a> at
