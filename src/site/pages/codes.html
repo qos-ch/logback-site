@@ -979,6 +979,153 @@ return false;</code></pre>
 &lt;/configuration>
    </code></pre>
 
+
+  <!-- ============================================================= -->
+  <hr width="80%" align="center" />
+
+  <h3 class="doAnchor" name="callerContradiction">appenders named %s
+  instruct against caller extraction info while other appenders named
+  %s instruct in favor of caller extraction
+  </h3>
+
+  <p><span class="label notice">since 1.6.2</span> Logback may emit a
+  warning such as:
+  </p>
+
+  <pre>appenders named ASYNC instruct against caller extraction info while other appenders named CONSOLE instruct in favor of caller extraction
+See https://logback.qos.ch/codes.html#callerContradiction for details</pre>
+
+  <p>or:
+  </p>
+
+  <pre>appenders named ASYNC instruct preprocessing of caller extraction info but no appender instructs in favor of caller extraction
+See https://logback.qos.ch/codes.html#callerContradiction for details</pre>
+
+  <p>These messages point to a <em>contradiction</em> among the
+  instructions that your configuration gives about caller data.
+  </p>
+
+  <h4>Caller data inclusion instructions</h4>
+
+  <p>Caller data is the class, method, file and line of the logging
+  call site.  Extracting it is relatively expensive, so logback does
+  not always capture it.  Different parts of a configuration can
+  express different wishes about that capture:
+  </p>
+
+  <ul>
+    <li><p>A layout or encoder pattern that uses a caller-data
+    converter (<code>%C</code>, <code>%M</code>, <code>%L</code>,
+    <code>%F</code>, <code>%l</code>, <code>%class</code>,
+    <code>%method</code>, <code>%line</code>, <code>%file</code> or
+    <code>%caller</code>) <em>instructs in favor</em> of caller data:
+    without that information the converter cannot print a useful
+    value.</p></li>
+
+    <li><p>Certain appenders&mdash;notably
+    <code>AsyncAppender</code>, <code>SocketAppender</code> and
+    <code>SMTPAppender</code>&mdash;decide whether to capture caller
+    data via the <span class="prop">includeCallerData</span> property
+    (default <code>false</code>).  Setting it to <code>true</code>
+    <em>instructs in favor</em> of extraction so that a nested
+    appender, a remote host or an SMTP layout can use the data later.
+    Leaving it at <code>false</code> <em>instructs against</em>
+    extraction, which is the usual choice for performance.</p></li>
+  </ul>
+
+  <h4>What is a contradiction?</h4>
+
+  <p>A contradiction arises when those instructions cannot be
+  satisfied together.  The most common case is that one part of the
+  configuration asks for caller data (for example a pattern with
+  <code>%C</code>), while another part refuses to include it (for
+  example an <code>AsyncAppender</code> with
+  <span class="prop">includeCallerData</span> left at the default
+  <code>false</code>).  At runtime the pattern will not receive usable
+  caller information, even though it was written as if that
+  information were available.
+  </p>
+
+  <p>The opposite mismatch is also a contradiction: an appender is
+  told to pay the cost of capturing caller data
+  (<span class="prop">includeCallerData</span> set to
+  <code>true</code>), yet nothing in the configuration actually uses
+  that data.
+  </p>
+
+  <p>In short, the instructions for and against caller-data inclusion
+  must agree.  If they pull in opposite directions, logback warns so
+  that you can align them.
+  </p>
+
+  <h4>How to resolve the warning</h4>
+
+  <p>Make the configuration consistent.  If you want caller data in
+  the output, set <span class="prop">includeCallerData</span> to
+  <code>true</code> on the relevant
+  <code>AsyncAppender</code>, <code>SocketAppender</code> or
+  <code>SMTPAppender</code>.  If you do not need caller data, remove
+  the caller-data converters from the pattern (or leave
+  <span class="prop">includeCallerData</span> at
+  <code>false</code> and stop requesting extraction elsewhere).
+  </p>
+
+  <p class="red bold">CONTRADICTORY</p>
+  <pre><code>&lt;configuration>
+  &lt;appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+    &lt;encoder>
+      &lt;pattern>%d [%thread] %-5level %C.%M:%L - %msg%n&lt;/pattern>
+    &lt;/encoder>
+  &lt;/appender>
+
+  &lt;appender name="ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+    &lt;!-- includeCallerData defaults to false: instructs against extraction -->
+    &lt;appender-ref ref="CONSOLE"/>
+  &lt;/appender>
+
+  &lt;root level="DEBUG">
+    &lt;appender-ref ref="ASYNC"/>
+  &lt;/root>
+&lt;/configuration></code></pre>
+
+  <p class="green bold">CONSISTENT</p>
+  <pre><code>&lt;configuration>
+  &lt;appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+    &lt;encoder>
+      &lt;pattern>%d [%thread] %-5level %C.%M:%L - %msg%n&lt;/pattern>
+    &lt;/encoder>
+  &lt;/appender>
+
+  &lt;appender name="ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+    <b>&lt;includeCallerData>true&lt;/includeCallerData></b>
+    &lt;appender-ref ref="CONSOLE"/>
+  &lt;/appender>
+
+  &lt;root level="DEBUG">
+    &lt;appender-ref ref="ASYNC"/>
+  &lt;/root>
+&lt;/configuration></code></pre>
+
+  <h4>Turning off contradiction analysis</h4>
+
+  <p>If you prefer not to run this check, set the
+  <code>logback.skipCallerContradictionAnalysis</code> variable to
+  <code>true</code>.  You can do so as a system property:
+  </p>
+
+  <pre>-Dlogback.skipCallerContradictionAnalysis=true</pre>
+
+  <p>or as a property in the configuration file:
+  </p>
+
+  <pre><code>&lt;property name="logback.skipCallerContradictionAnalysis" value="true"/></code></pre>
+
+  <p>When that variable is true, logback skips caller-contradiction
+  analysis and does not emit the warnings described above.  Prefer
+  fixing the configuration when you can; skip only when the warning is
+  intentional or otherwise unhelpful in your environment.
+  </p>
+
  
   <script src="templates/footer.js" type="text/javascript"></script>
    </div>
