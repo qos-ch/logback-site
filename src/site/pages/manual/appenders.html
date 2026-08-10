@@ -2031,10 +2031,15 @@ public interface TriggeringPolicy&lt;E&gt; extends LifeCycle {
     
     <h4><a name="simpleSocketServer"></a>Using SimpleSocketServer</h4>
     <p>
-    The <code>SimpleSocketServer</code> application takes two command-line
-    arguments: <em>port</em> and <em>configFile</em>; 
-    where <em>port</em> is the port to listen on and
-    <em>configFile</em> is a configuration script in XML format.
+    The <code>SimpleSocketServer</code> application takes the following
+    command-line arguments: <em>port</em>, <em>configFile</em>, and one
+    or more <em>allowedAddress</em> values.  Here <em>port</em> is the
+    port to listen on, <em>configFile</em> is a configuration script in
+    XML format, and each <em>allowedAddress</em> is a client IP address
+    or CIDR range that is permitted to connect (for example
+    <code>192.168.1.10</code> or <code>192.168.1.0/24</code>).
+    <span class="label notice">since 1.6.2</span> At least one allowed
+    address must be specified on the command line.
     </p>
 	
     <p>
@@ -2043,15 +2048,20 @@ public interface TriggeringPolicy&lt;E&gt; extends LifeCycle {
     </p>
     
     <p class="source">java ch.qos.logback.classic.&#8203;net.SimpleSocketServer 6000 \
-  src/main/java/chapters/&#8203;appenders/socket/&#8203;server1.xml</p>
+  src/main/java/chapters/&#8203;appenders/socket/&#8203;server1.xml \
+  127.0.0.1 ::1</p>
 
-    <p>where 6000 is the port number to listen on and
+    <p>where 6000 is the port number to listen on,
     <em>server1.xml</em> is a configuration script that adds a
     <code>ConsoleAppender</code> and a
-    <code>RollingFileAppender</code> to the root logger.  After you
-    have started <code>SimpleSocketServer</code>, you can send it log
-    events from multiple clients using <code>SocketAppender</code>.
-    The examples associated with this manual include two such clients:
+    <code>RollingFileAppender</code> to the root logger, and
+    <code>127.0.0.1</code> together with <code>::1</code> are the
+    client addresses allowed to connect (IPv4 and IPv6 loopback).
+    After you have started <code>SimpleSocketServer</code>, you can
+    send it log events from multiple clients using
+    <code>SocketAppender</code>, provided each client's remote address
+    matches an entry on the whitelist.  The examples associated with
+    this manual include two such clients:
     <code>chapters.appenders.&#8203;SocketClient1</code> and
     <code>chapters.appenders.&#8203;SocketClient2</code> Both clients wait for the user
     to type a line of text on the console.  The text is encapsulated
@@ -2142,7 +2152,8 @@ public interface TriggeringPolicy&lt;E&gt; extends LifeCycle {
     </p>
 
     <p class="source"> java ch.qos.logback.classic.&#8203;net.SimpleSocketServer 6000 \
-  src/main/java/chapters/&#8203;appenders/socket/&#8203;server2.xml</p>
+  src/main/java/chapters/&#8203;appenders/socket/&#8203;server2.xml \
+  127.0.0.1 ::1</p>
 
    <p>The configuration file <em>server2.xml</em> creates a
    <code>ConsoleAppender</code> whose layout outputs the caller's file
@@ -2171,12 +2182,57 @@ public interface TriggeringPolicy&lt;E&gt; extends LifeCycle {
 		servers where the first server tunnels the events it receives from
 		its clients to a second server.
 		</p>
+
+    <h4><a name="simpleSocketServerClientAccess"></a>Restricting
+    client access</h4>
+
+    <p><span class="label notice">since 1.6.2</span>
+    <code>SimpleSocketServer</code> accepts connections only from
+    clients whose remote address matches a configured whitelist.  On
+    the command line, pass one or more allowed addresses after the
+    configuration file.  Each entry may be a single IP address or a
+    CIDR network range.  For example, the following command allows
+    connections from a single host and from an entire subnet:
+    </p>
+
+    <p class="source">java ch.qos.logback.classic.&#8203;net.SimpleSocketServer 6000 \
+  src/main/java/chapters/&#8203;appenders/socket/&#8203;server1.xml \
+  10.0.0.5 192.168.1.0/24</p>
+
+    <p>At least one allowed address is required on the command line.
+    If none is provided, the server prints a usage message and exits.
+    Connections from hosts that are not on the whitelist are closed
+    immediately after <code>accept()</code>, and a warning is logged.
+    </p>
+
+    <p>When you embed <code>SimpleSocketServer</code> in your own
+    application, register allowed addresses before clients connect by
+    calling <code>addAllowedClientAddress(String)</code> for each
+    entry, or
+    <code>setAllowedClientAddresses(Collection&lt;String&gt;)</code>
+    to replace the full set.  An empty whitelist means that no clients
+    are accepted.  Passing an empty collection or <code>null</code> to
+    <code>setAllowedClientAddresses</code> clears the whitelist and
+    therefore denies all clients.  Invalid specifications throw
+    <code>IllegalArgumentException</code>.
+    </p>
+
+    <p class="source">LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
+SimpleSocketServer server = new SimpleSocketServer(lc, 6000);
+server.addAllowedClientAddress("10.0.0.5");
+server.addAllowedClientAddress("192.168.1.0/24");
+server.start();</p>
+
+    <p>The same whitelist rules apply to
+    <code>SimpleSSLSocketServer</code>, which inherits this behavior.
+    </p>
 		
 		<h4><a name="simpleSSLSocketServer"></a>Using SimpleSSLSocketServer</h4>
 
     <p>The <code>SimpleSSLSocketServer</code> requires the same
-    <em>port</em> and <em>configFile</em> command-line arguments used
-    by <code>SimpleSocketServer</code>.  Additionally, you must provide
+    <em>port</em>, <em>configFile</em>, and one or more
+    <em>allowedAddress</em> command-line arguments used by
+    <code>SimpleSocketServer</code>.  Additionally, you must provide
     the location and password for your logging server's X.509 credential
     using system properties specified on the command line.
     </p>
@@ -2188,7 +2244,8 @@ public interface TriggeringPolicy&lt;E&gt; extends LifeCycle {
     <p class="source">java -Djavax.net.ssl.&#8203;keyStore=src/main/&#8203;java/chapters/appenders/&#8203;socket/ssl/keystore.&#8203;jks \
     -Djavax.net.ssl.&#8203;keyStorePassword=&#8203;changeit \
     ch.qos.logback.classic.&#8203;net.SimpleSSLSocketServer 6000 \
-    src/main/java/chapters/&#8203;appenders/socket/&#8203;ssl/server.xml
+    src/main/java/chapters/&#8203;appenders/socket/&#8203;ssl/server.xml \
+    127.0.0.1 ::1
     </p>
 	
     <p>This example runs <code>SimpleSSLSocketServer</code> using an
