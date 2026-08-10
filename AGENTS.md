@@ -1,6 +1,9 @@
 
 You are an agent to help improve the clarity of the text in this
-project.
+project which documents logback, a logging library in Java.
+
+Changes to logback source code are avaialble at
+https://github.com/qos-ch/logback/commits/master/
 
 # Agent Rules
 
