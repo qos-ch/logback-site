@@ -1,7 +1,7 @@
 # Logback Manual — Comprehensive Summary
 
 This document is a long-form summary of the official Logback manual
-(under `src/site/pages/manual/`). It reorganizes the manual’s core
+(under `src/site/pages/manual/`). It reorganizes the manual's core
 chapters into continuous prose while preserving technical substance:
 architecture, configuration idioms, appenders, encoders, layouts,
 filters, MDC, SSL, and Joran. It is a companion to the HTML manual, not
@@ -17,40 +17,3860 @@ connecting loggers, appenders, layouts, and filters.
 
 ---
 
-
 ## 1. Introduction to Logback
 
-Logback is a reliable, fast, and flexible logging framework for Java. It is the technical successor to log4j, redesigned by log4j’s original author with years of production experience. In typical applications, business code never imports a logback type: it logs through the SLF4J API (`org.slf4j.Logger` and `LoggerFactory`), while logback-classic provides the runtime binding, configuration model, appenders, and status diagnostics. ### Modules The project is modular: - **logback-core** supplies generic infrastructure—appenders, layouts, encoders, filters, life-cycle and context APIs, and the Joran configuration engine. Core does not define loggers. - **logback-classic** is the SLF4J implementation used by ordinary server and desktop applications. It adds hierarchical loggers, levels, MDC, turbo filters, and classic-specific appenders such as `SocketAppender` and `AsyncAppender`. - **logback-access** integrates with servlet containers to produce HTTP access logs. Much of its documentation lives in a dedicated access guide. When the manual says “logback” without qualification, it means logback-classic. ### First program A minimal “hello world” obtains a named logger and writes a debug event: ```java import org.slf4j.Logger; import org.slf4j.LoggerFactory; public class HelloWorld1 { public static void main(String[] args) { Logger logger = LoggerFactory.getLogger(HelloWorld1.class); logger.debug("Hello world."); } } ``` Classpath requirements are `slf4j-api`, `logback-classic`, and `logback-core`. Keep SLF4J and logback versions aligned with the matrix published for your logback series (for the 1.6.x line, SLF4J 2.0.x and JDK 11+ at runtime are typical). If no configuration file is found, logback’s default policy attaches a `ConsoleAppender` to the root logger so output still appears. That default is convenient for experiments and dangerous as a silent production fallback: production systems should ship an explicit `logback.xml` (or equivalent) that routes events to files, remote collectors, or other durable sinks. ### Logging statements versus configuration Inserting log requests into application code is deliberate design work. Field experience cited in the manual puts logging at roughly four percent of application code; large systems therefore contain thousands of statements. Configuration is how those statements are managed without recompiling: levels, appenders, filters, and layouts decide at runtime which events are emitted, where they go, and how they look. ### Internal status Logback records its own initialization decisions and errors in a **status** system. Application loggers may not be ready when configuration fails, so status output is the primary self-diagnostic channel. Enabling `debug="true"` on `<configuration>` or installing `OnConsoleStatusListener` surfaces those messages during development. When “nothing logs,” check status first. ### Reading path for this summary The chapters that follow summarize
+Logback is a reliable, fast, and flexible logging framework for Java.
+It is the technical successor to log4j, redesigned by log4j's original
+author with years of production experience. In typical applications,
+business code never imports a logback type: it logs through the SLF4J
+API (`org.slf4j.Logger` and `LoggerFactory`), while logback-classic
+provides the runtime binding, configuration model, appenders, and
+status diagnostics.
+
+### Modules
+
+The project is modular:
+
+- **logback-core** supplies generic infrastructure—appenders, layouts,
+ encoders, filters, life-cycle and context APIs, and the Joran
+ configuration engine. Core does not define loggers.
+- **logback-classic** is the SLF4J implementation used by ordinary
+ server and desktop applications. It adds hierarchical loggers,
+ levels, MDC, turbo filters, and classic-specific appenders such as
+ `SocketAppender` and `AsyncAppender`.
+- **logback-access** integrates with servlet containers to produce HTTP
+ access logs. Much of its documentation lives in a dedicated access
+ guide.
+
+When the manual says "logback" without qualification, it means
+logback-classic.
+
+### First program
+
+A minimal "hello world" obtains a named logger and writes a debug event:
+
+```java
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class HelloWorld1 {
+  public static void main(String[] args) {
+    Logger logger = LoggerFactory.getLogger(HelloWorld1.class);
+    logger.debug("Hello world.");
+  }
+}
+```
+
+Classpath requirements are `slf4j-api`, `logback-classic`, and
+`logback-core`. Keep SLF4J and logback versions aligned with the matrix
+published for your logback series (for the 1.6.x line, SLF4J 2.0.x and
+JDK 11+ at runtime are typical).
+
+If no configuration file is found, logback's default policy attaches a
+`ConsoleAppender` to the root logger so output still appears. That
+default is convenient for experiments and dangerous as a silent
+production fallback: production systems should ship an explicit
+`logback.xml` (or equivalent) that routes events to files, remote
+collectors, or other durable sinks.
+
+### Logging statements versus configuration
+
+Inserting log requests into application code is deliberate design work.
+Field experience cited in the manual puts logging at roughly four
+percent of application code; large systems therefore contain thousands
+of statements. Configuration is how those statements are managed without
+recompiling: levels, appenders, filters, and layouts decide at runtime
+which events are emitted, where they go, and how they look.
+
+### Internal status
+
+Logback records its own initialization decisions and errors in a
+**status** system. Application loggers may not be ready when
+configuration fails, so status output is the primary self-diagnostic
+channel. Enabling `debug="true"` on `<configuration>` or installing
+`OnConsoleStatusListener` surfaces those messages during development.
+When "nothing logs," check status first.
+
+### Reading path for this summary
+
+The chapters that follow summarize architecture; configuration search
+order and XML; appenders; encoders; layouts; filters; MDC; SSL; Joran;
+and migration from log4j. Chapters on receivers, logging separation,
+JMX configuration, and Groovy configuration are intentionally omitted.
+
 ## 2. Architecture
 
-It is difficult, if not impossible, for anyone to learn a subject purely by reading about it, without applying the information to specific problems and thereby forcing himself to think about what has been read. Furthermore, we all learn best the things that we have discovered ourselves. Logback's basic architecture is sufficiently generic so as to apply under different circumstances. At the present time, logback is divided into three modules, logback-core, logback-classic and logback-access. The core module lays the groundwork for the other two modules. The classic module extends core . The classic module corresponds to a significantly improved version of log4j. Logback-classic natively implements the SLF4J API so that you can readily switch back and forth between logback and other logging systems such as log4j or java.util.logging (JUL) introduced in JDK 1.4. The third module called access integrates with Servlet containers to provide HTTP-access log functionality. A separate document covers access module documentation . In the remainder of this document, we will write "logback" to refer to the logback-classic module. Logback is built upon three main classes: Logger , Appender and Layout . These three types of components work together to enable developers to log messages according to message type and level, and to control at runtime how these messages are formatted and where they are reported. The Logger class is part of the logback-classic module. On the other hand, the Appender and Layout interfaces are part of logback-core. As a general-purpose module, logback-core has no notion of loggers. The first and foremost advantage of any logging API over plain System.out.println resides in its ability to disable certain log statements while allowing others to print unhindered. This capability assumes that the logging space, that is, the space of all possible logging statements, is categorized according to some developer-chosen criteria. In logback-classic, this categorization is an inherent part of loggers. Every single logger is attached to a LoggerContext which is responsible for manufacturing loggers as well as arranging them in a tree like hierarchy. Loggers are named entities. Their names are case-sensitive and they follow the hierarchical naming rule: Named Hierarchy A logger is said to be an ancestor of another logger if its name followed by a dot is a prefix of the descendant logger name. A logger is said to be a parent of a child logger if there are no ancestors between itself and the descendant logger. For example, the logger named "com.foo" is a parent of the logger named "com.foo.Bar" . Similarly, "java" is a parent of "java.util" and an ancestor of "java.util.Vector" . This naming scheme should be familiar to most developers. The root logger resides at the top of the logger hierarchy. It is exceptional in that it is part of every hierarchy at its inception. Like every logger, it can be retrieved by its name, as follows: Logger rootLogger = LoggerFactory.getLogger(org.slf4j.Logger. ROOT_LOGGER_NAME ); All other loggers are also retrieved with the class static getLogger method found in the org.slf4j.LoggerFactory class. This method takes the name of the desired logger as a parameter. Some of the basic methods in the Logger interface are listed below. // Printing methods: public void trace(String message); public void debug(String message); public void info(String message); public void warn(String message); public void error(String message); } Effective Level aka Level Inheritance Loggers may be assigned levels. The set of possible levels (TRACE, DEBUG, INFO, WARN and ERROR) are defined in the ch.qos.logback.classic.Level class. Note that in logback, the Level class is final and cannot be subclassed, as a much more flexible approach exists in the form of Marker objects. If a given logger is not assigned a level, then it inherits one from its closest ancestor with an assigned level. More formally: The effective level for a given logger L , is equal to the first non-null level in its hierarchy, starting at L itself and proceeding upwards in the hierarchy towards the root logger. To ensure that all loggers can eventually inherit a level, the root logger always has an assigned level. By default, this level is DEBUG. Below are four examples with various assigned level values and the resulting effective (inherited) levels according to the level inheritance rule. Example 1 Logger name Assigned level Effective level In example 1 above, only the root logger is assigned a level. This level value, DEBUG , is inherited by the other loggers X , X.Y and X.Y.Z Example 2 Logger name Assigned level Effective level In example 2 above, all loggers have an assigned level value. Level inheritance does not come into play. Example 3 Logger name Assigned level Effective level In example 3 above, the loggers root , X and X.Y.Z are assigned the levels DEBUG , INFO and ERROR respectively. Logger X.Y inherits its level value from its parent X . Example 4 Logger name Assigned level Effective level In example 4 above, the loggers root and X and are assigned the levels DEBUG and INFO respectively. The loggers X.Y and X.Y.Z inherit their level value from their nearest parent X , which has an assigned level. By definition, the printing method determines the level of a logging request. For example, if L is a logger instance, then the statement L.info("..") is a logging statement of level INFO. A logging request is said to be enabled if its level is higher than or equal to the effective level of its logger. Otherwise, the request is said to be disabled . As described previously, a logger without an assigned level will inherit one from its nearest ancestor. This rule is summarized below. Basic Selection Rule A log request of level p issued to a logger having an effective level q , is enabled if p >= q . This rule is at the heart of logback. It assumes that levels are ordered as follows: TRACE < DEBUG < INFO < WARN < ERROR . In a more graphic way, here is how the selection rule works. In the following table, the vertical header shows the level of the logging request, designated by p , while the horizontal header shows effective level of the logger, designated by q . The intersection of the rows (level request) and columns (effective level) is the boolean resulting from the basic selection rule. ``` import ch.qos.logback.classic.Level; import org.slf4j.Logger; import org.slf4j.LoggerFactory; .... ``` // get a logger instance named "com.foo". Let us further assume that the // logger is of type ch.qos.logback.classic.Logger so that we can // set its level ch.qos.logback.classic.Logger logger = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger("com.foo"); //set its Level to INFO . The setLevel() method requires a logback logger logger.setLevel(Level. INFO ); // This request is enabled, because WARN >= INFO logger. warn ("Low fuel level."); // This request is disabled, because DEBUG < INFO . logger. debug ("Starting search for nearest gas station."); // The logger instance barlogger, named "com.foo.Bar", // will inherit its level from the logger named // "com.foo" Thus, the following request is enabled // because INFO >= INFO . barlogger. info ("Located nearest gas station."); // This request is disabled, because DEBUG < INFO . barlogger. debug ("Exiting gas station search"); Retrieving Loggers Calling the LoggerFactory.getLogger method with the same name will always return a reference to the exact same logger object. Logger x = LoggerFactory.getLogger("wombat"); Logger y = LoggerFactory.getLogger("wombat"); x and y refer to exactly the same logger object. Thus, it is possible to configure a logger and then to retrieve the same instance somewhere else in the code without passing around references. In fundamental contradiction to biological parenthood, where parents always precede their children, logback loggers can be created and configured in any order. In particular, a "parent" logger will find and link to its descendants even if it is instantiated after them. Configuration of the logback environment is typically done at application initialization. The preferred way is by reading a configuration file. This approach will be discussed shortly. Logback makes it easy to name loggers by software component . This can be accomplished by instantiating a logger in each class, with the logger name equal to the fully qualified name of the class. This is a useful and straightforward method of defining loggers. As the log output bears the name of the generating logger, this naming strategy makes it easy to identify the origin of a log message. However, this is only one possible, albeit common, strategy for naming loggers. Logback does not restrict the possible set of loggers. As a developer, you are free to name loggers as you wish. Nevertheless, naming loggers after the class where they are located seems to be the best general strategy known so far. The ability to selectively enable or disable logging requests based on their logger is only part of the picture. Logback allows logging requests to print to multiple destinations. In logback speak, an output destination is called an appender. Currently, appenders exist for the console, files, remote socket servers, to MySQL, PostgreSQL, Oracle and other databases, JMS, and remote UNIX Syslog daemons. The addAppender method adds an appender to a given logger. Each enabled logging request for a given logger will be forwarded to all the appenders in that logger as well as the appenders higher in the hierarchy. In other words, appenders are inherited additively from the logger hierarchy. For example, if a console appender is added to the root logger, then all enabled logging requests will at least print on the console. If in addition a file appender is added to a logger, say L , then enabled logging requests for L and L 's children will print on a file and on the console. It is possible to override this default behavior so that appender accumulation is no longer additive by setting the additivity flag of a logger to false. The output of a log statement of logger L will go to all the appenders in L and its ancestors. This is the meaning of the term "appender additivity". However, if an ancestor of logger L , say P , has the additivity flag set to false, then L 's output will be directed to all the appenders in L and its ancestors up to and including P but not the appenders in any of the ancestors of P . Loggers have their additivity flag set to true by default. The table below shows an example: Logger Name Attached Appenders Additivity Flag Output Targets Comment root A1 not applicable A1 Since the root logger stands at the top of the logger hierarchy, the additivity flag does not apply to it. x.y.z A-xyz1 true A1, A-x1, A-x2, A-xyz1 Appenders of "x.y.z", "x" and of root. security A-sec false A-sec No appender accumulation since the additivity flag is set to false . Only appender A-sec will be used. security.access none true A-sec Only appenders of "security" because the additivity flag in "security" is set to false . More often than not, users wish to customize not only the output destination but also the output format. This is accomplished by associating a layout with an appender. The layout is responsible for formatting the logging request according to the user's wishes, whereas an appender takes care of sending the formatted output to its destination. The PatternLayout , part of the standard logback distribution, lets the user specify the output format according to conversion patterns similar to the C language printf function. For example, the PatternLayout with the conversion pattern "%-4relative [%thread] %-5level %logger{32} - %msg%n" will output something akin to: 176 [main] DEBUG manual.architecture.HelloWorld2 - Hello world. The first field is the number of milliseconds elapsed since the start of the program. The second field is the thread making the log request. The third field is the level of the log request. The fourth field is the name of the logger associated with the log request. The text after the '-' is the message of the request. Given that loggers in logback-classic implement the SLF4J's Logger interface , certain printing methods admit more than one parameter. These printing method variants are mainly intended to improve performance while minimizing the impact on the readability of the code. logger.debug("Entry number: " + i + " is " + String.valueOf(entry[i])); incurs the cost of constructing the message parameter, that is converting both integer i and entry[i] to a String, and concatenating intermediate strings. This is regardless of whether the message will be logged or not. One possible way to avoid the cost of parameter construction is by surrounding the log statement with a test. Here is an example. if(logger.isDebugEnabled()) { logger.debug("Entry number: " + i + " is " + String.valueOf(entry[i])); } This way you will not incur the cost of parameter construction if debugging is disabled for logger . On the other hand, if the logger is enabled for the DEBUG level, you will incur the cost of evaluating whether the logger is enabled or not, twice: once in debugEnabled and once in debug . In practice, this overhead is insignificant because evaluating a logger takes less than 1% of the time it takes to actually log a request. There exists a convenient alternative based on message formats. Assuming entry is an object, you can write: Object entry = new SomeObject(); logger.debug("The entry is {}.", entry); Only after evaluating whether to log or not, and only if the decision is positive, will the logger implementation format the message and replace the '{}' pair with the string value of entry . In other words, this form does not incur the cost of parameter construction when the log statement is disabled. The following two lines will yield the exact same output. However, in case of a disabled logging statement, the second variant will outperform the first variant by a factor of at least 30. logger.debug("The new entry is "+entry+"."); logger.debug("The new entry is {}.", entry); A two argument variant is also available. For example, you can write: logger.debug("The new entry is {}. It replaces {}.", entry, oldEntry); If three or more arguments need to be passed, a varargs (Object...) variant is also available. For example, you can write: logger.debug("Value {} was inserted between {} and {}.", newVal, below, above); Note that the varags variant incurs the cost of the creation of an Object[] instance. After we have introduced the essential logback components, we are now ready to describe the steps that the logback framework takes when the user invokes a logger’s printing method. Let us now analyze the steps logback takes when the user invokes the info() method of a logger named com.wombat . If it exists, the TurboFilter chain is invoked. Turbo filters can set a context-wide threshold,
+Logback's basic architecture is sufficiently generic so as to apply under different
+circumstances. At the present time, logback is divided into three modules,
+logback-core, logback-classic and logback-access.
+
+The core module lays the groundwork for the other two modules. The classic module
+extends core. The classic module corresponds to a significantly improved version of
+log4j. Logback-classic natively implements the SLF4J API so that you can readily switch
+back and forth between logback and other logging systems such as log4j or
+java.util.logging (JUL) introduced in JDK 1.4. The third module called access
+integrates with Servlet containers to provide HTTP-access log functionality. A
+separate document covers access module documentation.
+
+In the remainder of this document, we will write "logback" to refer to the
+logback-classic module.
+
+Logback is built upon three main classes: Logger, Appender and Layout. These three types
+of components work together to enable developers to log messages according to message
+type and level, and to control at runtime how these messages are formatted and where
+they are reported.
+
+The Logger class is part of the logback-classic module. On the other hand, the Appender
+and Layout interfaces are part of logback-core. As a general-purpose module,
+logback-core has no notion of loggers.
+
+The first and foremost advantage of any logging API over plain System.out.println
+resides in its ability to disable certain log statements while allowing others to print
+unhindered. This capability assumes that the logging space, that is, the space of all
+possible logging statements, is categorized according to some developer-chosen
+criteria. In logback-classic, this categorization is an inherent part of loggers. Every
+single logger is attached to a LoggerContext which is responsible for manufacturing
+loggers as well as arranging them in a tree like hierarchy.
+
+Loggers are named entities. Their names are case-sensitive and they follow the
+hierarchical naming rule:
+
+### Named Hierarchy
+
+ A logger is said to be an ancestor of another logger if its name followed by a dot is
+a prefix of the descendant logger name. A logger is said to be a parent of a child
+logger if there are no ancestors between itself and the descendant logger.
+
+For example, the logger named "com.foo" is a parent of the logger named "com.foo.Bar".
+Similarly, "java" is a parent of "java.util" and an ancestor of "java.util.Vector".
+This naming scheme should be familiar to most developers.
+
+The root logger resides at the top of the logger hierarchy. It is exceptional in that
+it is part of every hierarchy at its inception. Like every logger, it can be retrieved
+by its name, as follows:
+
+Logger rootLogger = LoggerFactory.getLogger(org.slf4j.Logger. ROOT_LOGGER_NAME); All
+other loggers are also retrieved with the class static getLogger method found in the
+org.slf4j.LoggerFactory class. This method takes the name of the desired logger as a
+parameter. Some of the basic methods in the Logger interface are listed below.
+
+```java
+// Printing methods: 
+ public void trace(String message);
+public void debug(String message);
+public void info(String message);
+public void warn(String message);
+public void error(String message);
+
+}
+Effective Level aka
+ Level Inheritance
+```
+
+Loggers may be assigned levels. The set of possible levels (TRACE, DEBUG, INFO, WARN
+and ERROR) are defined in the ch.qos.logback.classic.Level class. Note that in logback,
+the Level class is final and cannot be subclassed, as a much more flexible approach
+exists in the form of Marker objects.
+
+If a given logger is not assigned a level, then it inherits one from its closest
+ancestor with an assigned level. More formally:
+
+The effective level for a given logger L, is equal to the first non-null level in its
+hierarchy, starting at L itself and proceeding upwards in the hierarchy towards the
+root logger.
+
+To ensure that all loggers can eventually inherit a level, the root logger always has
+an assigned level. By default, this level is DEBUG.
+
+Below are four examples with various assigned level values and the resulting effective
+(inherited) levels according to the level inheritance rule. Example 1 Logger name
+Assigned level Effective level
+
+In example 1 above, only the root logger is assigned a level. This level value, DEBUG,
+is inherited by the other loggers X, X.Y and X.Y.Z Example 2 Logger name Assigned
+level Effective level
+
+In example 2 above, all loggers have an assigned level value. Level inheritance does
+not come into play. Example 3 Logger name Assigned level Effective level
+
+In example 3 above, the loggers root, X and X.Y.Z are assigned the levels DEBUG, INFO
+and ERROR respectively. Logger X.Y inherits its level value from its parent X. Example
+4 Logger name Assigned level Effective level
+
+In example 4 above, the loggers root and X and are assigned the levels DEBUG and INFO
+respectively. The loggers X.Y and X.Y.Z inherit their level value from their nearest
+parent X, which has an assigned level.
+
+By definition, the printing method determines the level of a logging request. For
+example, if L is a logger instance, then the statement L.info("..") is a logging
+statement of level INFO.
+
+A logging request is said to be enabled if its level is higher than or equal to the
+effective level of its logger. Otherwise, the request is said to be disabled. As
+described previously, a logger without an assigned level will inherit one from its
+nearest ancestor. This rule is summarized below.
+
+### Basic Selection Rule
+
+ A log request of level p issued to a logger having an effective level q, is enabled if
+p >= q.
+
+This rule is at the heart of logback. It assumes that levels are ordered as follows:
+TRACE < DEBUG < INFO <  WARN < ERROR.
+
+In a more graphic way, here is how the selection rule works. In the following table,
+the vertical header shows the level of the logging request, designated by p, while the
+horizontal header shows effective level of the logger, designated by q. The
+intersection of the rows (level request) and columns (effective level) is the boolean
+resulting from the basic selection rule.
+
+```java
+import ch.qos.logback.classic.Level;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+....
+```
+
+// get a logger instance named "com.foo". Let us further assume that the // logger is of
+type ch.qos.logback.classic.Logger so that we can // set its level
+ch.qos.logback.classic.Logger logger = (ch.qos.logback.classic.Logger)
+LoggerFactory.getLogger("com.foo"); //set its Level to INFO. The setLevel() method
+requires a logback logger logger.setLevel(Level. INFO);
+
+Logger barlogger = LoggerFactory.getLogger("com.foo.Bar");
+
+// This request is enabled, because WARN >= INFO logger. warn ("Low fuel level.");
+
+// This request is disabled, because DEBUG < INFO. logger. debug ("Starting search for
+nearest gas station.");
+
+// The logger instance barlogger, named "com.foo.Bar", // will inherit its level from
+the logger named // "com.foo" Thus, the following request is enabled // because INFO
+>= INFO. barlogger. info ("Located nearest gas station.");
+
+// This request is disabled, because DEBUG < INFO. barlogger. debug ("Exiting gas
+station search"); Retrieving Loggers
+
+Calling the LoggerFactory.getLogger method with the same name will always return a
+reference to the exact same logger object.
+
+Logger x = LoggerFactory.getLogger("wombat"); Logger y =
+LoggerFactory.getLogger("wombat"); x and y refer to exactly the same logger object.
+
+Thus, it is possible to configure a logger and then to retrieve the same instance
+somewhere else in the code without passing around references. In fundamental
+contradiction to biological parenthood, where parents always precede their children,
+logback loggers can be created and configured in any order. In particular, a "parent"
+logger will find and link to its descendants even if it is instantiated after them.
+
+Configuration of the logback environment is typically done at application
+initialization. The preferred way is by reading a configuration file. This approach
+will be discussed shortly.
+
+Logback makes it easy to name loggers by software component. This can be accomplished
+by instantiating a logger in each class, with the logger name equal to the fully
+qualified name of the class. This is a useful and straightforward method of defining
+loggers. As the log output bears the name of the generating logger, this naming
+strategy makes it easy to identify the origin of a log message. However, this is only
+one possible, albeit common, strategy for naming loggers. Logback does not restrict
+the possible set of loggers. As a developer, you are free to name loggers as you wish.
+
+Nevertheless, naming loggers after the class where they are located seems to be the
+best general strategy known so far.
+
+The ability to selectively enable or disable logging requests based on their logger is
+only part of the picture. Logback allows logging requests to print to multiple
+destinations. In logback speak, an output destination is called an appender. Currently,
+appenders exist for the console, files, remote socket servers, to MySQL, PostgreSQL,
+Oracle and other databases, JMS, and remote UNIX Syslog daemons.
+
+The addAppender method adds an appender to a given logger. Each enabled logging request
+for a given logger will be forwarded to all the appenders in that logger as well as the
+appenders higher in the hierarchy. In other words, appenders are inherited additively
+from the logger hierarchy. For example, if a console appender is added to the root
+logger, then all enabled logging requests will at least print on the console. If in
+addition a file appender is added to a logger, say L, then enabled logging requests
+for L and L 's children will print on a file and on the console. It is possible to
+override this default behavior so that appender accumulation is no longer additive by
+setting the additivity flag of a logger to false.
+
+The rules governing appender additivity are summarized below.
+
+The output of a log statement of logger L will go to all the appenders in L and its
+ancestors. This is the meaning of the term "appender additivity".
+
+However, if an ancestor of logger L, say P, has the additivity flag set to false, then
+L 's output will be directed to all the appenders in L and its ancestors up to and
+including P but not the appenders in any of the ancestors of P.
+
+Loggers have their additivity flag set to true by default. The table below shows an
+example: Logger Name Attached Appenders Additivity Flag Output Targets Comment
+
+root A1 not applicable A1 Since the root logger stands at the top of the logger
+hierarchy, the additivity flag does not apply to it.
+
+x A-x1, A-x2 true A1, A-x1, A-x2 Appenders of "x" and of root.
+
+x.y none true A1, A-x1, A-x2 Appenders of "x" and of root.
+
+x.y.z A-xyz1 true A1, A-x1, A-x2, A-xyz1 Appenders of "x.y.z", "x" and of root.
+
+security A-sec false A-sec No appender accumulation since the additivity flag is set to
+false. Only appender A-sec will be used.
+
+security.access none true A-sec Only appenders of "security" because the additivity
+flag in "security" is set to false.
+
+More often than not, users wish to customize not only the output destination but also
+the output format. This is accomplished by associating a layout with an appender. The
+layout is responsible for formatting the logging request according to the user's
+wishes, whereas an appender takes care of sending the formatted output to its
+destination. The PatternLayout, part of the standard logback distribution, lets the
+user specify the output format according to conversion patterns similar to the C
+language printf function.
+
+For example, the PatternLayout with the conversion pattern "%-4relative [%thread]
+%-5level %logger{32} - %msg%n" will output something akin to:
+
+176 [main] DEBUG manual.architecture.HelloWorld2 - Hello world. The first field is the
+number of milliseconds elapsed since the start of the program. The second field is the
+thread making the log request. The third field is the level of the log request. The
+fourth field is the name of the logger associated with the log request. The text after
+the '-' is the message of the request.
+
+Given that loggers in logback-classic implement the SLF4J's Logger interface, certain
+printing methods admit more than one parameter. These printing method variants are
+mainly intended to improve performance while minimizing the impact on the readability
+of the code.
+
+logger.debug("Entry number: " + i + " is " + String.valueOf(entry[i])); incurs the cost
+of constructing the message parameter, that is converting both integer i and entry[i]
+to a String, and concatenating intermediate strings. This is regardless of whether the
+message will be logged or not.
+
+One possible way to avoid the cost of parameter construction is by surrounding the log
+statement with a test. Here is an example.
+
+if(logger.isDebugEnabled()) { logger.debug("Entry number: " + i + " is " +
+String.valueOf(entry[i])); } This way you will not incur the cost of parameter
+construction if debugging is disabled for logger. On the other hand, if the logger is
+enabled for the DEBUG level, you will incur the cost of evaluating whether the logger
+is enabled or not, twice: once in debugEnabled and once in debug. In practice, this
+overhead is insignificant because evaluating a logger takes less than 1% of the time it
+takes to actually log a request.
+
+There exists a convenient alternative based on message formats. Assuming entry is an
+object, you can write:
+
+Object entry = new SomeObject(); logger.debug("The entry is {}.", entry); Only after
+evaluating whether to log or not, and only if the decision is positive, will the logger
+implementation format the message and replace the '{}' pair with the string value of
+entry. In other words, this form does not incur the cost of parameter construction
+when the log statement is disabled.
+
+The following two lines will yield the exact same output. However, in case of a
+disabled logging statement, the second variant will outperform the first variant by a
+factor of at least 30.
+
+logger.debug("The new entry is "+entry+"."); logger.debug("The new entry is {}.",
+entry); A two argument variant is also available. For example, you can write:
+
+logger.debug("The new entry is {}. It replaces {}.", entry, oldEntry); If three or more
+arguments need to be passed, a varargs (Object...) variant is also available. For
+example, you can write:
+
+logger.debug("Value {} was inserted between {} and {}.", newVal, below, above); Note
+that the varags variant incurs the cost of the creation of an Object[] instance.
+
+After we have introduced the essential logback components, we are now ready to describe
+the steps that the logback framework takes when the user invokes a logger’s printing
+method. Let us now analyze the steps logback takes when the user invokes the info()
+method of a logger named com.wombat.
+
+If it exists, the TurboFilter chain is invoked. Turbo filters can set a context-wide
+threshold, or filter out certain events based on information such as Marker, Level,
+Logger, message, or the Throwable that are associated with each logging request. If the
+reply of the filter chain is FilterReply.DENY, then the logging request is dropped. If
+it is FilterReply.NEUTRAL, then we continue with the next step, i.e. step 2. In case
+the reply is FilterReply.ACCEPT, we skip the next and directly jump to step 3.
+
+At this step, logback compares the effective level of the logger with the level of the
+request. If the logging request is disabled according to this test, then logback will
+drop the request without further processing. Otherwise, it proceeds to the next step.
+
+If the request survived the previous filters, logback will create a
+ch.qos.logback.classic.LoggingEvent object containing all the relevant parameters of
+the request, such as the logger of the request, the request level, the message itself,
+the exception that might have been passed along with the request, the current time,
+the current thread, various data about the class that issued the logging request and
+the MDC. Note that some of these fields are initialized lazily, that is only when they
+are actually needed. The MDC is used to decorate the logging request with additional
+contextual information. MDC is discussed in a subsequent chapter.
+
 ## 3. Configuration
 
-In symbols one observes an advantage in discovery which is greatest when they express the exact nature of a thing briefly and, as it were, picture it; then indeed the labor of thought is wonderfully diminished. We start by presenting ways for configuring logback, with many example configuration scripts. Joran, the configuration framework upon which logback relies will be presented in a later chapter . Inserting log requests into the application code requires a fair amount of planning and effort. Observation shows that approximately four percent of code is dedicated to logging. Consequently, even a moderately sized application will contain thousands of logging statements embedded within its code. Given their number, we need tools to manage these log statements. Logback can be configured programmatically or via a configuration script written in XML, Groovy, or as a serialized model. Existing log4j users can convert their log4j.properties files to logback.xml using the properties translator web application. Let us begin by discussing the initialization steps that logback follows to try to configure itself: Logback will search for any custom Configurator providers using service-provider loading facility . If any such custom provider is found, it takes precedence over logback's own configurators, e.g. DefaultJoranConfigurator (see below). A custom Configurator is an implementation of ch.qos.logback.classic.spi.Configurator interface. Custom configurators are searched by looking up file resources located under META-INF/services/ch.qos.logback.classic.spi.Configurator . The contents of this file should specify the fully qualified class name of the desired Configurator implementation. Nominal step If the previous configurators could not locate their required resources, then an instance of DefaultJoranConfigurator will be created and invoked. • If the system property "logback.configurationFile" is set, then DefaultJoranConfigurator will try to locate the file specified by the aforementioned system property. If this file can be located, it will be read and interpreted for configuration. • If the previous step fails, DefaultJoranConfigurator will try to locate the configuration file " logback-test.xml " on the classpath . If this file can be located, it will be read and interpreted for configuration. • If no such file is found, it will try to locate the configuration file " logback.xml " in the classpath . If this file can be located, it will be read and interpreted for configuration. Note that this is the nominal configuration step. since 1.5.8 PropertiesConfigurator , introduced in version 1.5.8, allows for setting logger levels via a properties file. The location of properties files can be specified as a file path as well as a URL via HTTP or HTTPS protocols. Watching files and reconfiguration upon change is also supported. Note that configuration files in properties format are intended to be part of a main configuration file in XML format or a configurator produced by logback-tyler . • If no configuration file could be located, DefaultJoranConfigurator will return with an execution status asking for the next available configurator, i.e. BasicConfigurator , to be invoked. If none of the above succeeds, logback-classic will configure itself using the BasicConfigurator which will cause logging output to be directed to the console. The last step is meant as a last-ditch effort to provide a default (but very basic) logging functionality in the absence of a configuration file. If you are using a build tool according to Maven's folder structure, then if you place the logback-test.xml under the src/test/resources folder, Maven will ensure that it won't be included in the artifact produced. Thus, you can use a different configuration file, namely logback-test.xml during testing, and another file, namely, logback.xml , in production. Fast start-up It takes about 100 milliseconds for Joran to parse a given logback configuration file. To shave off those milliseconds at application start up, you can use the service-provider loading facility (item 1 above) to load your own custom Configurator class with BasicConfigurator serving as a good starting point. Better yet, converting an XML file to Java using TylerConfigurator is a quick and quite convenient way of improving configuration times. Groovy Given that Groovy is a full-fledged language, we have dropped support for logback.groovy in order to protect against potential attacks. Fortunately, groovy support was picked up at virtualdogbert/logback-groovy-config by Tucker Pelletier. The simplest way to configure logback is by letting logback fall back to its default configuration. Let us give a taste of how this is done in an imaginary application called MyApp1 . Example: Simple example of BasicConfigurator usage (logback-examples/src/main/java/chapters/configuration/MyApp1.java) ``` public class MyApp1 { final static Logger logger = LoggerFactory.getLogger(MyApp1.class); ``` ``` public static void main(String[] args) { logger.info("Entering application."); ``` Foo foo = new Foo(); foo.doIt(); logger.info("Exiting application."); } } This class defines a static logger variable. It then instantiates a Foo object. The Foo class is listed below: Example: Small class doing logging (logback-examples/src/main/java/chapters/configuration/Foo.java) ``` public class Foo { static final Logger logger = LoggerFactory.getLogger(Foo.class); ``` ``` public void doIt() { logger.debug("Did it again!"); } } In order to run the examples in this chapter, you need to make sure that certain jar files are present on the class path. Please refer to the setup page for further details. ``` Assuming the configuration files logback-test.xml or logback.xml are not present, logback will default to invoking BasicConfigurator which will set up a minimal configuration. This minimal configuration consists of a ConsoleAppender attached to the root logger. The output is formatted using a PatternLayoutEncoder set to the pattern %d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} -%kvp- %msg%n . Moreover, by default the root logger is assigned the DEBUG level. Thus, the output of the command java chapters.configuration.MyApp1 should be similar to: 16:06:09.031 [main] INFO chapters.configuration.MyApp1 -- Entering application. 16:06:09.046 [main] DEBUG chapters.configuration.Foo -- Did it again! 16:06:09.046 [main] INFO chapters.configuration.MyApp1 -- Exiting application. Except for code that configures logback (if such code exists) client code does not need to depend on logback. Applications that use logback as their logging framework will have a compile-time dependency on SLF4J but not logback. The MyApp1 application links to logback via calls to org.slf4j.LoggerFactory and org.slf4j.Logger classes, retrieve the loggers it wishes to use, and chugs on. Note that the only dependencies of the Foo class on logback are through org.slf4j.LoggerFactory and org.slf4j.Logger imports. Except code that configures logback (if such code exists) client code does not need to depend on logback. Since SLF4J permits the use of any logging framework under its abstraction layer, it is easy to migrate large bodies of code from one logging framework to another. As mentioned earlier, logback will try to configure itself using the files logback-test.xml or logback.xml if found on the class path. Here is a configuration file equivalent to the one established by BasicConfigurator we've just seen. Example: Basic configuration file (logback-examples/src/main/resources/chapters/configuration/sample0.xml) ``` <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender"> <!-- encoders are assigned the type ch.qos.logback.classic.encoder.PatternLayoutEncoder by default --> <encoder> <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} -%kvp- %msg%n</pattern> </encoder> </appender> ``` ``` <root level="debug"> <appender-ref ref="STDOUT" /> </root> </configuration> ``` After you have renamed sample0.xml as logback.xml (or logback-test.xml ) place it into a directory accessible from the class path. Running the MyApp1 application should give identical results to its previous run. When warnings or errors occur while parsing the configuration file, Logback prints its internal status messages to the console to aid diagnosis. If warnings or errors occur during the parsing of the configuration file, logback will automatically print its internal status data on the console. Note that to avoid duplication, automatic status printing is disabled if the user explicitly registers a status listener ( discussed below ). In the absence of warnings or errors, if you still wish to inspect logback's internal status, then you can instruct logback to print status data by invoking the print() of the StatusPrinter class. The MyApp2 application shown below is identical to MyApp1 except for the addition of two lines of code for printing internal status data. Example: Print logback's internal status information (logback-examples/src/main/java/chapters/configuration/MyApp2.java) ``` public static void main(String[] args) { // assume SLF4J is bound to logback in the current environment LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory(); // print logback's internal status StatusPrinter.print(lc); ... } If everything goes well, you should see the following output on the console ``` 17:44:58,578 |-INFO in ch.qos.logback.classic.LoggerContext[default] - Found resource [logback-test.xml] 17:44:58,671 |-INFO in ch.qos.logback.classic.joran.action.ConfigurationAction - debug attribute not set 17:44:58,671 |-INFO in ch.qos.logback.core.joran.action.AppenderAction - About to instantiate appender of type [ch.qos.logback.core.ConsoleAppender] 17:44:58,687 |-INFO in ch.qos.logback.core.joran.action.AppenderAction - Naming appender as [STDOUT] 17:44:58,812 |-INFO in ch.qos.logback.core.joran.action.AppenderAction - Popping appender named [STDOUT] from the object stack 17:44:58,812 |-INFO in ch.qos.logback.classic.joran.action.LevelAction - root level set to DEBUG 17:44:58,812 |-INFO in ch.qos.logback.core.joran.action.AppenderRefAction - Attaching appender named [STDOUT] to Logger[root] 17:44:58.828 [main] INFO chapters.configuration.MyApp2 -- Entering application. 17:44:58.828 [main] DEBUG chapters.configuration.Foo -- Did it again! 17:44:58.828 [main] INFO chapters.configuration.MyApp2 -- Exiting application. At the end of this output, you can recognize the lines that were printed in the previous example. You should also notice logback's internal messages, a.k.a. Status objects, which allow convenient access to logback's internal state. Enabling status output is often helpful when diagnosing issues with Logback. Errors can also occur after configuration, for example when a disk is full or log files cannot be archived due to wrong permissions. Registering a StatusListener is recommended; it receives status events as they occur and facilitates troubleshooting. The next example illustrates the installation of OnConsoleStatusListener . Example: Registering a status listener (logback-examples/src/main/resources/chapters/configuration/onConsoleStatusListener.xml) ``` <configuration> <!-- Recommendation: place status listeners towards the the top of the configuration file --> <statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener" /> <!-- ... the rest of the configuration file --> ``` A StatusListener can be installed using a configuration file assuming that: If any of these two conditions is not fulfilled, Joran cannot interpret the configuration file and in particular the <statusListener> element. If the configuration file is found but is malformed, then logback will detect the error condition and automatically print its internal status on the console. However, if the configuration file cannot be found, logback will not automatically print its status data, since this is not necessarily an error condition. Programmatically invoking StatusPrinter.print() as shown in the MyApp2 application above ensures that status information is printed in every case. Forcing status output In the absence of status messages, tracking down a rogue logback.xml configuration file can be difficult, especially in production where the application source cannot be easily modified. To help identify the location of a rogue configuration file, you can set a StatusListener via the "logback.statusListenerClass" system property ( discussed below ) to force output of status messages. The "logback.statusListenerClass" system property can also be used to silence output automatically generated in case of errors. As a shorthand, it is possible to register an OnConsoleStatusListener by setting the debug attribute to true within the <configuration> element, as shown below. Example: Basic configuration file using debug mode (logback-examples/src/main/resources/chapters/configuration/sample1.xml) ``` <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender"> <!-- encoders are by default assigned the type ch.qos.logback.classic.encoder.PatternLayoutEncoder --> <encoder> <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} -%kvp- %msg%n</pattern> </encoder> </appender> ``` ``` <root level="debug"> <appender-ref ref="STDOUT" /> </root> </configuration> ``` By the way, setting debug="true" is strictly equivalent to installing an OnConsoleStatusListener as shown previously. One may also register a status listener by setting the "logback.statusListenerClass" Java system property to the name of the listener class you wish to register. For example, java -Dlogback.statusListenerClass =ch.qos.logback.core.status.OnConsoleStatusListener .... As a shorthand, the string "ch.qos.logback.core.status.OnConsoleStatusListener" can be replaced by the case insensitive strings "STDOUT" or "SYSOUT". For example: java -Dlogback.statusListenerClass= stdout ... Logback ships with several status listener implementations. OnConsoleStatusListener prints incoming status messages on the console, i.e. on System.out. OnErrorConsoleStatusListener prints incoming status messages on System.err. NopStatusListener drops incoming status messages. Note that automatic status printing (in case of errors) is disabled if any status listener is registered during configuration and in particular if the user specifies a status listener via the "logback.statusListenerClass" system property. Thus, by setting NopStatusListener as a status listener, you can silence internal status printing altogether. java -Dlogback.statusListenerClass=ch.qos.logback.core.status. NopStatusListener ... Logback collects its internal status data in a StatusManager object, accessible via the LoggerContext . Given a StatusManager you can access all the status data associated with a logback context. To keep memory usage at reasonable levels, the default StatusManager implementation stores the status messages in two separate parts: the header part and the tail part. The header part stores the first H status messages whereas the tail part stores the last T messages. At present time H = T =150, although these values may change in future releases. Logback-classic ships with a servlet called ViewStatusMessagesServlet. This servlet prints the contents of the StatusManager associated with the current LoggerContext as an HTML table. Here is sample output. To add this servlet to your web-application, add the following lines to its WEB-INF/web.xml file. ``` <servlet> <servlet-name>ViewStatusMessages</servlet-name> <servlet-class>ch.qos.logback.classic.ViewStatusMessagesServlet</servlet-class> </servlet> ``` ``` <servlet-mapping> <servlet-name>ViewStatusMessages</servlet-name> <url-pattern>/lbClassicStatus</url-pattern> </servlet-mapping> The ViewStatusMessages servlet will be viewable at the URL http://host/yourWebapp/lbClassicStatus ``` You may also register a StatusListener via Java code. Here is sample code . LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory(); StatusManager statusManager = lc.getStatusManager(); OnConsoleStatusListener onConsoleListener = new OnConsoleStatusListener(); statusManager.add(onConsoleListener); Note that the registered status listener will only receive status events subsequent to its registration. It will not receive prior messages. Thus, it is usually a good idea to place status listener registration directives at the top of the configuration file before other directives. You may specify the location of the default configuration file with a system property named "logback.configurationFile" . The value of this property can be a URL, a resource on the class path or a path to a file external to the application. java -Dlogback.configurationFile=/path/to/config.xml chapters.configuration.MyApp1 Note that the file extension must be ".xml" or ".groovy". Other extensions are ignored. Explicitly registering a status listener may help debugging issues with locating the configuration file. Given that "logback.configurationFile" is a Java system property, it may be set within your application as well. However, the system property must be set before any logger instance is created. ``` public class ServerMain { public static void main(String args[]) throws IOException, InterruptedException { // must be set before the first call to LoggerFactory.getLogger(); // ContextInitializer.CONFIG_FILE_PROPERTY is set to "logback.configurationFile" System.setProperty(ContextInitializer.CONFIG_FILE_PROPERTY, "/path/to/config.xml"); ... } } Automatically reloading configuration file upon modification ``` Logback-classic can scan for changes in its configuration file and automatically reconfigure itself when the configuration file changes. If instructed to do so, logback-classic will scan for changes in its configuration file and automatically reconfigure itself when the configuration file changes. In order to instruct logback-classic to scan for changes in its configuration file and to automatically re-configure itself set the scan attribute of the <configuration> element to true, as shown next. Example: Scanning for changes in configuration file and automatic re-configuration (logback-examples/src/main/resources/chapters/configuration/scan1.xml) ``` <configuration scan="true" > ... </configuration> By default, the configuration file will be scanned for changes once every minute. You can specify a different scanning period by setting the scanPeriod attribute of the <configuration> element. Values can be specified in units of milliseconds, seconds, minutes or hours. Here is an example: ``` Example: Specifying a different scanning period (logback-examples/src/main/resources/chapters/configuration/scan2.xml) ``` <configuration scan="true" scanPeriod="30 seconds" > ... </configuration> Note If no unit of time is specified, then the unit of time is assumed to be milliseconds, which is usually inappropriate. If you change the default scanning period, do not forget to specify a time unit. ``` Behind the scenes, when you set the scan attribute to true , a ReconfigureOnChangeTask will be installed. This task run in a separate thread and will check whether your configuration file has changed. ReconfigureOnChangeTask will automatically watch for any included files as well. As it is easy to make errors while editing a configuration file, in case the latest version of the configuration file has XML syntax errors, it will fall back to a previous configuration file free of XML syntax errors. Since 1.5.9 It is possible to watch for modifications in configuration files in properties format. See PropertiesConfigurator for further details. While useful, packaging data is expensive to compute, especially in applications that frequently throw exceptions. If instructed to do so, logback can include packaging data for each stack trace line it outputs. Packaging data consists of the name and version of the jar file whence the class of the stack trace line originated. Packaging data can be very useful in identifying software versioning issues. However, it is rather expensive to compute, especially in applications where exceptions are thrown frequently. Here is a sample output: 14:28:48.835 [btpool0-7] INFO c.q.l.demo.prime.PrimeAction - 99 is not a valid value java.lang.Exception: 99 is invalid at ch.qos.logback.demo.prime.PrimeAction.execute(PrimeAction.java:28) [classes/:na] at org.apache.struts.action.RequestProcessor.processActionPerform(RequestProcessor.java:431) [struts-1.2.9.jar:1.2.9] at org.apache.struts.action.RequestProcessor.process(RequestProcessor.java:236) [struts-1.2.9.jar:1.2.9] at org.apache.struts.action.ActionServlet.doPost(ActionServlet.java:432) [struts-1.2.9.jar:1.2.9] at javax.servlet.http.HttpServlet.service(HttpServlet.java:820) [servlet-api-2.5-6.1.12.jar:6.1.12] at org.mortbay.jetty.servlet.ServletHolder.handle(ServletHolder.java:502) [jetty-6.1.12.jar:6.1.12] at ch.qos.logback.demo.UserServletFilter.doFilter(UserServletFilter.java:44) [classes/:na] at org.mortbay.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1115) [jetty-6.1.12.jar:6.1.12] at org.mortbay.jetty.servlet.ServletHandler.handle(ServletHandler.java:361) [jetty-6.1.12.jar:6.1.12] at org.mortbay.jetty.webapp.WebAppContext.handle(WebAppContext.java:417) [jetty-6.1.12.jar:6.1.12] at org.mortbay.jetty.handler.ContextHandlerCollection.handle(ContextHandlerCollection.java:230) [jetty-6.1.12.jar:6.1.12] Packaging data is disabled by default but can be enabled by configuration: ``` <configuration packagingData="true" > ... </configuration> Alternatively, packaging data can be enabled/disabled programmatically by invoking the setPackagingDataEnabled(boolean) method in LoggerContext , as shown next: ``` LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory(); lc.setPackagingDataEnabled(true); Invoking JoranConfigurator directly Logback relies on a configuration library called Joran, part of logback-core. Logback's default configuration mechanism invokes JoranConfigurator on the default configuration file it finds on the class path. If you wish to override logback's default configuration mechanism for whatever reason, you can do so by invoking JoranConfigurator directly. The next application, MyApp3 , invokes JoranConfigurator on a configuration file passed as a parameter. Example: Invoking JoranConfigurator directly (logback-examples/src/main/java/chapters/configuration/MyApp3.java) ``` import ch.qos.logback.classic.LoggerContext; import ch.qos.logback.classic.joran.JoranConfigurator; import ch.qos.logback.core.joran.spi.JoranException; import ch.qos.logback.core.util.StatusPrinter; ``` ``` public class MyApp3 { final static Logger logger = LoggerFactory.getLogger(MyApp3.class); ``` ``` public static void main(String[] args) { // assume SLF4J is bound to logback in the current environment LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory(); try { JoranConfigurator configurator = new JoranConfigurator(); configurator.setContext(context); // Call context.reset() to clear any previous configuration, e.g. default // configuration. For multi-step configuration, omit calling context.reset(). context.reset(); configurator.doConfigure(args[0]); } catch (JoranException je) { // StatusPrinter will handle this } StatusPrinter.printInCaseOfErrorsOrWarnings(context); logger.info("Entering application."); ``` Foo foo = new Foo(); foo.doIt(); logger.info("Exiting application."); } } This application fetches the LoggerContext currently in effect, creates a new JoranConfigurator , sets the context on which it will operate, resets the logger context, and then finally asks the configurator to configure the context using the configuration file passed as a parameter to the application. Internal status data is printed in case of warnings or errors. Note that for multi-step configuration, context.reset() invocation should be omitted. In order to release the resources used by logback-classic, it is always a good idea to stop the logback context. Stopping the context will close all appenders attached to loggers defined by the context and stop any active threads in an orderly way. Please also read the section on "shutdown hooks" just below. ``` import org.slf4j.LoggerFactory; import ch.qos.logback.classic.LoggerContext; ... ``` // assume SLF4J is bound to logback-classic in the current environment LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory(); loggerContext.stop(); In web-applications the above code could be invoked from within the contextDestroyed method of ServletContextListener in order to stop logback-classic and release resources. Starting with version 1.1.10, the appropriate ServletContextListener is installed automatically for you ( see just below ). Installing a JVM shutdown hook is a convenient way for shutting down logback and releasing associated resources. ``` <configuration debug="true"> <!-- in the absence of the class attribute, assume ch.qos.logback.core.hook.DefaultShutdownHook --> <shutdownHook/> <!-- rest of the config file.. --> ``` Note that you may install a shutdown hook of your own making by setting the class attribute to correspond to your shutdown hook's class name. The default shutdown hook, namely DefaultShutdownHook , will stop the logback context after a specified delay (0 by default). Stopping the context will allow up to 30 seconds for any log file compression tasks running in the background to finish. In standalone Java applications, adding a <shutdownHook/> directive to your configuration file is an easy way to ensure that any ongoing compression tasks are allowed to finish before JVM exit. In applications within a Web server, webShutdownHook will be installed automatically making <shutdownHook/> directive quite redundant and unnecessary. As of version 1.5.7, installing a shutdown hook replaces any previously installed hook. Therefore, at most one Logback shutdown hook can be installed via the usual logback.xml configuration. since 1.1.10 Logback-classic will automatically ask the web-server to install a LogbackServletContainerInitializer implementing the ServletContainerInitializer interface (available in servlet-api 3.x and later). This initializer will in turn install an instance of LogbackServletContextListener .w This listener will stop the current logback-classic context when the web-app is stopped or reloaded. You may disable automatic installation of LogbackServletContextListener by setting a <context-param> named logbackDisableServletContainerInitializer in your web application's WEB-INF/web.xml . Here is the relevant snippet. ``` <web-app> <context-param> <param-name>logbackDisableServletContainerInitializer</param-name> <param-value>true</param-value> </context-param> .... </web-app> Note that logbackDisableServletContainerInitializer variable can also be set as a Java system property or an OS environment variable. The most local setting has priority, i.e. web-app first, system property second and OS environment last. ``` As you have seen thus far in the manual with plenty of examples still to follow, logback allows you to redefine logging behavior without needing to recompile your code. Indeed, you can easily configure logback so as to disable logging for certain parts of your application, or direct output to a UNIX Syslog daemon, to a database, to a log visualizer, or forward logging events to a remote logback server, which would log according to local server policy, for example by forwarding the log event to a second logback server. The remainder of this section presents the syntax of configuration files. As will be demonstrated over and over, the syntax of logback configuration files is extremely flexible. As such, it is not possible to specify the allowed syntax with a DTD file or an XML schema. Nevertheless, the very basic structure of the configuration file can be described as, <configuration> element, containing zero or more <appender> elements, followed by zero or more <logger> elements, followed by at most one <root> element. The following diagram illustrates this basic structure. If you are unsure which case to use for a given tag name, just follow the camelCase convention which is almost always the correct convention. Since logback version 0.9.17, tag names pertaining to explicit rules are case-insensitive. For example, <logger> , <Logger> and <LOGGER> are valid configuration elements and will be interpreted in the same way. Note that XML well-formedness rules still apply, if you open a tag as <xyz> you must close it as </xyz> , </XyZ> will not work. As for implicit rules , tag names are case-sensitive except for the first letter. Thus, <xyz> and <Xyz> are equivalent but not <xYz> . Implicit rules usually follow the camelCase convention, common in the Java world. Since it is not easy to tell when a tag is associated with an explicit action and when it is associated with an implicit action, it is not trivial to say whether an XML tag is case-sensitive or insensitive with respect to the first letter. If you are unsure which case to use for a given tag name, just follow the camelCase convention which is almost always the correct convention. At this point you should have at least some understanding of level inheritance and the basic selection rule . Otherwise, and unless you are an egyptologist, logback configuration will be no more meaningful to you than are hieroglyphics. A logger is configured using the logger element. A <logger> element takes exactly one mandatory name attribute, an optional level attribute, and an optional additivity attribute, admitting the values true or false . The value of the level attribute admitting one of the case-insensitive string values TRACE, DEBUG, INFO, WARN, ERROR, ALL or OFF. The special case-insensitive value INHERITED , or its synonym NULL , will force the level of the logger to be inherited from higher up in the hierarchy. This comes in handy if you set the level of a logger and later decide that it should inherit its level. Note that unlike log4j, logback-classic does not close nor remove any previously referenced appenders when configuring a given logger. The logger element may contain zero or more <appender-ref> elements; each appender thus referenced is added to the named logger. Note that unlike log4j, logback-classic does not close nor remove any previously referenced appenders when configuring a given logger. The <root> element configures the root logger. It supports a single attribute, namely the level attribute. It does not allow any other attributes because the additivity flag does not apply to the root logger. Moreover, since the root logger is already named as "ROOT", it does not allow a name attribute either. The value of the level attribute can be one of the case-insensitive strings TRACE, DEBUG, INFO, WARN, ERROR, ALL or OFF. Note that the level of the root logger cannot be set to INHERITED or NULL. Note that unlike log4j, logback-classic does not close nor remove any previously referenced appenders when configuring the root logger. Similarly to the <logger> element, the <root> element may contain zero or more <appender-ref> elements; each appender thus referenced is added to the root logger. Note that unlike log4j, logback-classic does not close nor remove any previously referenced appenders when configuring the root logger. Setting the level of a logger or root logger is as simple as declaring it and setting its level, as the next example illustrates. Suppose we are no longer interested in seeing any DEBUG messages from any component belonging to the "chapters.configuration" package. The following configuration file shows how to achieve that. Example: Setting the level of a logger (logback-examples/src/main/resources/chapters/configuration/sample2.xml) ``` <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender"> <!-- encoders are assigned the type ch.qos.logback.classic.encoder.PatternLayoutEncoder by default --> <encoder> <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} -%kvp- %msg%n</pattern> </encoder> </appender> <logger name="chapters.configuration" level="INFO"/> <!-- Strictly speaking, the level attribute is not necessary since --> <!-- the level of the root level is set to DEBUG by default. --> <root level="DEBUG"> <appender-ref ref="STDOUT" /> </root> ``` When the above configuration file is given as argument to the MyApp3 application, it will yield the following output: 17:34:07.578 [main] INFO chapters.configuration.MyApp3 -- Entering application. 17:34:07.578 [main] INFO chapters.configuration.MyApp3 -- Exiting application. Note that the message of level DEBUG generated by the "chapters.configuration.Foo" logger has been suppressed. See also the Foo class. You can configure the levels of as many loggers as you wish. In the next configuration file, we set the level of the chapters.configuration logger to INFO but at the same time set the level of the chapters.configuration.Foo logger to DEBUG . Example: Setting the level of multiple loggers (logback-examples/src/main/resources/chapters/configuration/sample3.xml) ``` <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender"> <encoder> <pattern> %d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} -%kvp- %msg%n </pattern> </encoder> </appender> <logger name="chapters.configuration" level="INFO" /> <logger name="chapters.configuration.Foo" level="DEBUG" /> <root level="DEBUG"> <appender-ref ref="STDOUT" /> </root> ``` Running MyApp3 with this configuration file will result in the following output on the console: 17:39:27.593 [main] INFO chapters.configuration.MyApp3 -- Entering application. 17:39:27.593 [main] DEBUG chapters.configuration.Foo -- Did it again! 17:39:27.593 [main] INFO chapters.configuration.MyApp3 -- Exiting application. The table below list the loggers and their levels, after JoranConfigurator has configured logback with the sample3.xml configuration file. It follows that the two logging statements of level INFO in the MyApp3 class as well as the DEBUG messages in Foo.doIt() are all enabled. Note that the level of the root logger is always set to a non-null value, DEBUG by default. Let us note that the basic-selection rule depends on the effective level of the logger being invoked, not the level of the logger where appenders are attached. Logback will first determine whether a logging statement is enabled or not, and if enabled, it will invoke the appenders found in the logger hierarchy, regardless of their level. The configuration file sample4.xml is a case in point: Example: Logger level sample (logback-examples/src/main/resources/chapters/configuration/sample4.xml) ``` <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender"> <encoder> <pattern> %d{HH:mm:ss.SSS} [%thread] %-5level
+We start by presenting ways for configuring logback, with many example configuration
+scripts. Joran, the configuration framework upon which logback relies will be presented
+in a later chapter.
+
+Inserting log requests into the application code requires a fair amount of planning and
+effort. Observation shows that approximately four percent of code is dedicated to
+logging. Consequently, even a moderately sized application will contain thousands of
+logging statements embedded within its code. Given their number, we need tools to
+manage these log statements.
+
+Logback can be configured programmatically or via a configuration script written in XML,
+Groovy, or as a serialized model. Existing log4j users can convert their
+log4j.properties files to logback.xml using the properties translator web application.
+
+Let us begin by discussing the initialization steps that logback follows to try to
+configure itself:
+
+Logback will search for any custom Configurator providers using service-provider loading
+facility. If any such custom provider is found, it takes precedence over logback's own
+configurators, e.g. DefaultJoranConfigurator (see below).
+
+A custom Configurator is an implementation of ch.qos.logback.classic.spi.Configurator
+interface. Custom configurators are searched by looking up file resources located under
+META-INF/services/ch.qos.logback.classic.spi.Configurator. The contents of this file
+should specify the fully qualified class name of the desired Configurator
+implementation.
+
+Nominal step If the previous configurators could not locate their required resources,
+then an instance of DefaultJoranConfigurator will be created and invoked.
+
+• If the system property "logback.configurationFile" is set, then
+DefaultJoranConfigurator will try to locate the file specified by the aforementioned
+system property. If this file can be located, it will be read and interpreted for
+configuration.
+
+• If the previous step fails, DefaultJoranConfigurator will try to locate the
+configuration file " logback-test.xml " on the classpath. If this file can be located,
+it will be read and interpreted for configuration.
+
+• If no such file is found, it will try to locate the configuration file " logback.xml
+" in the classpath. If this file can be located, it will be read and interpreted for
+configuration. Note that this is the nominal configuration step.
+
+since 1.5.8 PropertiesConfigurator, introduced in version 1.5.8, allows for setting
+logger levels via a properties file. The location of properties files can be specified
+as a file path as well as a URL via HTTP or HTTPS protocols. Watching files and
+reconfiguration upon change is also supported. Note that configuration files in
+properties format are intended to be part of a main configuration file in XML format
+or a configurator produced by logback-tyler.
+
+• If no configuration file could be located, DefaultJoranConfigurator will return with
+an execution status asking for the next available configurator, i.e.
+BasicConfigurator, to be invoked.
+
+If none of the above succeeds, logback-classic will configure itself using the
+BasicConfigurator which will cause logging output to be directed to the console.
+
+The last step is meant as a last-ditch effort to provide a default (but very basic)
+logging functionality in the absence of a configuration file.
+
+If you are using a build tool according to Maven's folder structure, then if you place
+the logback-test.xml under the src/test/resources folder, Maven will ensure that it
+won't be included in the artifact produced. Thus, you can use a different configuration
+file, namely logback-test.xml during testing, and another file, namely, logback.xml, in
+production.
+
+Fast start-up It takes about 100 milliseconds for Joran to parse a given logback
+configuration file. To shave off those milliseconds at application start up, you can
+use the service-provider loading facility (item 1 above) to load your own custom
+Configurator class with BasicConfigurator serving as a good starting point. Better yet,
+converting an XML file to Java using TylerConfigurator is a quick and quite convenient
+way of improving configuration times.
+
+Groovy Given that Groovy is a full-fledged language, we have dropped support for
+logback.groovy in order to protect against potential attacks. Fortunately, groovy
+support was picked up at virtualdogbert/logback-groovy-config by Tucker Pelletier.
+
+The simplest way to configure logback is by letting logback fall back to its default
+configuration. Let us give a taste of how this is done in an imaginary application
+called MyApp1.
+
+Example: Simple example of BasicConfigurator usage
+(logback-examples/src/main/java/chapters/configuration/MyApp1.java)
+
+```java
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+```
+
+```java
+public class MyApp1  {
+final static Logger logger = LoggerFactory.getLogger(MyApp1.class);
+```
+
+public static void main(String[] args) { logger.info("Entering application.");
+
+Foo foo = new Foo(); foo.doIt(); logger.info("Exiting application."); } } This class
+defines a static logger variable. It then instantiates a Foo object. The Foo class is
+listed below:
+
+Example: Small class doing logging
+(logback-examples/src/main/java/chapters/configuration/Foo.java)
+
+```java
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+```
+
+```java
+public class Foo  {
+static final Logger logger = LoggerFactory.getLogger(Foo.class);
+```
+
+public void doIt() { logger.debug("Did it again!"); } } In order to run the examples
+in this chapter, you need to make sure that certain jar files are present on the class
+path. Please refer to the setup page for further details.
+
+Assuming the configuration files logback-test.xml or logback.xml are not present,
+logback will default to invoking BasicConfigurator which will set up a minimal
+configuration. This minimal configuration consists of a ConsoleAppender attached to
+the root logger. The output is formatted using a PatternLayoutEncoder set to the pattern
+%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} -%kvp- %msg%n. Moreover, by default the
+root logger is assigned the DEBUG level.
+
+Thus, the output of the command java chapters.configuration.MyApp1 should be similar to:
+
+16:06:09.031 [main] INFO chapters.configuration.MyApp1 -- Entering application.
+16:06:09.046 [main] DEBUG chapters.configuration.Foo -- Did it again! 16:06:09.046
+[main] INFO chapters.configuration.MyApp1 -- Exiting application.
+
+Except for code that configures logback (if such code exists) client code does not need
+to depend on logback. Applications that use logback as their logging framework will
+have a compile-time dependency on SLF4J but not logback.
+
+The MyApp1 application links to logback via calls to org.slf4j.LoggerFactory and
+org.slf4j.Logger classes, retrieve the loggers it wishes to use, and chugs on. Note
+that the only dependencies of the Foo class on logback are through
+org.slf4j.LoggerFactory and org.slf4j.Logger imports. Except code that configures
+logback (if such code exists) client code does not need to depend on logback. Since
+SLF4J permits the use of any logging framework under its abstraction layer, it is easy
+to migrate large bodies of code from one logging framework to another.
+
+As mentioned earlier, logback will try to configure itself using the files
+logback-test.xml or logback.xml if found on the class path. Here is a configuration
+file equivalent to the one established by BasicConfigurator we've just seen.
+
+Example: Basic configuration file
+(logback-examples/src/main/resources/chapters/configuration/sample0.xml)
+
+```xml
+<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+<!-- encoders are assigned the type
+ ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+<encoder>
+<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} -%kvp- %msg%n</pattern>
+</encoder>
+</appender>
+```
+
+<root level="debug"> <appender-ref ref="STDOUT" /> </root> </configuration>
+
+After you have renamed sample0.xml as logback.xml (or logback-test.xml) place it into a
+directory accessible from the class path. Running the MyApp1 application should give
+identical results to its previous run.
+
+Automatic printing of status messages in case of warnings or errors
+
+When warnings or errors occur while parsing the configuration file, Logback prints its
+internal status messages to the console to aid diagnosis.
+
+If warnings or errors occur during the parsing of the configuration file, logback will
+automatically print its internal status data on the console. Note that to avoid
+duplication, automatic status printing is disabled if the user explicitly registers a
+status listener (discussed below).
+
+In the absence of warnings or errors, if you still wish to inspect logback's internal
+status, then you can instruct logback to print status data by invoking the print() of
+the StatusPrinter class. The MyApp2 application shown below is identical to MyApp1
+except for the addition of two lines of code for printing internal status data.
+
+Example: Print logback's internal status information
+(logback-examples/src/main/java/chapters/configuration/MyApp2.java)
+
+public static void main(String[] args) { // assume SLF4J is bound to logback in the
+current environment LoggerContext lc = (LoggerContext)
+LoggerFactory.getILoggerFactory(); // print logback's internal status
+StatusPrinter.print(lc);... } If everything goes well, you should see the following
+output on the console
+
+17:44:58,578 |-INFO in ch.qos.logback.classic.LoggerContext[default] - Found resource
+[logback-test.xml] 17:44:58,671 |-INFO in
+ch.qos.logback.classic.joran.action.ConfigurationAction - debug attribute not set
+17:44:58,671 |-INFO in ch.qos.logback.core.joran.action.AppenderAction - About to
+instantiate appender of type [ch.qos.logback.core.ConsoleAppender] 17:44:58,687 |-INFO
+in ch.qos.logback.core.joran.action.AppenderAction - Naming appender as [STDOUT]
+17:44:58,812 |-INFO in ch.qos.logback.core.joran.action.AppenderAction - Popping
+appender named [STDOUT] from the object stack 17:44:58,812 |-INFO in
+ch.qos.logback.classic.joran.action.LevelAction - root level set to DEBUG 17:44:58,812
+|-INFO in ch.qos.logback.core.joran.action.AppenderRefAction - Attaching appender named
+[STDOUT] to Logger[root]
+
+17:44:58.828 [main] INFO chapters.configuration.MyApp2 -- Entering application.
+17:44:58.828 [main] DEBUG chapters.configuration.Foo -- Did it again! 17:44:58.828
+[main] INFO chapters.configuration.MyApp2 -- Exiting application. At the end of this
+output, you can recognize the lines that were printed in the previous example. You
+should also notice logback's internal messages, a.k.a. Status objects, which allow
+convenient access to logback's internal state.
+
+Enabling status output is often helpful when diagnosing issues with Logback.
+
+Errors can also occur after configuration, for example when a disk is full or log files
+cannot be archived due to wrong permissions. Registering a StatusListener is
+recommended; it receives status events as they occur and facilitates troubleshooting.
+
+The next example illustrates the installation of OnConsoleStatusListener.
+
+Example: Registering a status listener
+(logback-examples/src/main/resources/chapters/configuration/onConsoleStatusListener.xml)
+
+```xml
+<configuration>
+<!-- Recommendation: place status listeners towards the the top of the configuration file -->
+<statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener" />
+<!--... the rest of the configuration file -->
+```
+
+A StatusListener can be installed using a configuration file assuming that:
+
+If any of these two conditions is not fulfilled, Joran cannot interpret the
+configuration file and in particular the <statusListener> element. If the configuration
+file is found but is malformed, then logback will detect the error condition and
+automatically print its internal status on the console. However, if the configuration
+file cannot be found, logback will not automatically print its status data, since this
+is not necessarily an error condition. Programmatically invoking StatusPrinter.print()
+as shown in the MyApp2 application above ensures that status information is printed in
+every case.
+
+Forcing status output In the absence of status messages, tracking down a rogue
+logback.xml configuration file can be difficult, especially in production where the
+application source cannot be easily modified. To help identify the location of a rogue
+configuration file, you can set a StatusListener via the "logback.statusListenerClass"
+system property (discussed below) to force output of status messages. The
+"logback.statusListenerClass" system property can also be used to silence output
+automatically generated in case of errors.
+
+As a shorthand, it is possible to register an OnConsoleStatusListener by setting the
+debug attribute to true within the <configuration> element, as shown below.
+
+Example: Basic configuration file using debug mode
+(logback-examples/src/main/resources/chapters/configuration/sample1.xml)
+
+```xml
+<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+<!-- encoders are by default assigned the type
+ ch.qos.logback.classic.encoder.PatternLayoutEncoder -->
+<encoder>
+<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} -%kvp- %msg%n</pattern>
+</encoder>
+</appender>
+```
+
+<root level="debug"> <appender-ref ref="STDOUT" /> </root> </configuration>
+
+By the way, setting debug="true" is strictly equivalent to installing an
+OnConsoleStatusListener as shown previously.
+
+One may also register a status listener by setting the "logback.statusListenerClass"
+Java system property to the name of the listener class you wish to register. For
+example,
+
+java -Dlogback.statusListenerClass
+=ch.qos.logback.core.status.OnConsoleStatusListener ....
+
+As a shorthand, the string "ch.qos.logback.core.status.OnConsoleStatusListener" can be
+replaced by the case insensitive strings "STDOUT" or "SYSOUT". For example: java
+-Dlogback.statusListenerClass= stdout...
+
+Logback ships with several status listener implementations. OnConsoleStatusListener
+prints incoming status messages on the console, i.e. on System.out.
+OnErrorConsoleStatusListener prints incoming status messages on System.err.
+NopStatusListener drops incoming status messages.
+
+Note that automatic status printing (in case of errors) is disabled if any status
+listener is registered during configuration and in particular if the user specifies a
+status listener via the "logback.statusListenerClass" system property. Thus, by setting
+NopStatusListener as a status listener, you can silence internal status printing
+altogether.
+
+java -Dlogback.statusListenerClass=ch.qos.logback.core.status. NopStatusListener...
+
+Logback collects its internal status data in a StatusManager object, accessible via the
+LoggerContext.
+
+Given a StatusManager you can access all the status data associated with a logback
+context. To keep memory usage at reasonable levels, the default StatusManager
+implementation stores the status messages in two separate parts: the header part and
+the tail part. The header part stores the first H status messages whereas the tail part
+stores the last T messages. At present time H = T =150, although these values may
+change in future releases.
+
+Logback-classic ships with a servlet called ViewStatusMessagesServlet. This servlet
+prints the contents of the StatusManager associated with the current LoggerContext as an
+HTML table. Here is sample output.
+
+To add this servlet to your web-application, add the following lines to its
+WEB-INF/web.xml file.
+
+```xml
+<servlet>
+<servlet-name>ViewStatusMessages</servlet-name>
+<servlet-class>ch.qos.logback.classic.ViewStatusMessagesServlet</servlet-class>
+</servlet>
+```
+
+```xml
+<servlet-mapping>
+<servlet-name>ViewStatusMessages</servlet-name>
+<url-pattern>/lbClassicStatus</url-pattern>
+</servlet-mapping> 
+The ViewStatusMessages servlet will be viewable at
+ the URL http://host/yourWebapp/lbClassicStatus
+```
+
+You may also register a StatusListener via Java code. Here is sample code.
+
+LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory(); StatusManager
+statusManager = lc.getStatusManager(); OnConsoleStatusListener onConsoleListener = new
+OnConsoleStatusListener(); statusManager.add(onConsoleListener); Note that the
+registered status listener will only receive status events subsequent to its
+registration. It will not receive prior messages. Thus, it is usually a good idea to
+place status listener registration directives at the top of the configuration file
+before other directives.
+
+Setting the location of the configuration file via a system property
+
+You may specify the location of the default configuration file with a system property
+named "logback.configurationFile". The value of this property can be a URL, a resource
+on the class path or a path to a file external to the application.
+
+java -Dlogback.configurationFile=/path/to/config.xml chapters.configuration.MyApp1
+
+Note that the file extension must be ".xml" or ".groovy". Other extensions are ignored.
+Explicitly registering a status listener may help debugging issues with locating the
+configuration file.
+
+Given that "logback.configurationFile" is a Java system property, it may be set within
+your application as well. However, the system property must be set before any logger
+instance is created.
+
+```java
+public class ServerMain  {
+public static void main(String args[]) throws IOException, InterruptedException  {
+// must be set before the first call to LoggerFactory.getLogger();
+// ContextInitializer.CONFIG_FILE_PROPERTY is set to "logback.configurationFile"
+ System.setProperty(ContextInitializer.CONFIG_FILE_PROPERTY, "/path/to/config.xml");
+...
+ 
+}
+
+}
+Automatically reloading
+ configuration file upon modification
+```
+
+Logback-classic can scan for changes in its configuration file and automatically
+reconfigure itself when the configuration file changes.
+
+If instructed to do so, logback-classic will scan for changes in its configuration file
+and automatically reconfigure itself when the configuration file changes. In order to
+instruct logback-classic to scan for changes in its configuration file and to
+automatically re-configure itself set the scan attribute of the <configuration> element
+to true, as shown next.
+
+Example: Scanning for changes in configuration file and automatic re-configuration
+(logback-examples/src/main/resources/chapters/configuration/scan1.xml)
+
+```xml
+<configuration scan="true" >
+...
+</configuration> 
+By default, the configuration file will be scanned for changes
+ once every minute. You can specify a different scanning period by
+ setting the scanPeriod attribute of the <configuration> element. Values can be specified in
+ units of milliseconds, seconds, minutes or hours. Here is an
+ example:
+```
+
+Example: Specifying a different scanning period
+(logback-examples/src/main/resources/chapters/configuration/scan2.xml)
+
+```xml
+<configuration scan="true" scanPeriod="30 seconds" >
+...
+</configuration> 
+Note If no unit of time is specified,
+ then the unit of time is assumed to be milliseconds, which is
+ usually inappropriate. If you change the default scanning period,
+ do not forget to specify a time unit.
+```
+
+Behind the scenes, when you set the scan attribute to true, a ReconfigureOnChangeTask
+will be installed. This task run in a separate thread and will check whether your
+configuration file has changed. ReconfigureOnChangeTask will automatically watch for
+any included files as well.
+
+As it is easy to make errors while editing a configuration file, in case the latest
+version of the configuration file has XML syntax errors, it will fall back to a
+previous configuration file free of XML syntax errors.
+
+Since 1.5.9 It is possible to watch for modifications in configuration files in
+properties format. See PropertiesConfigurator for further details.
+
+While useful, packaging data is expensive to compute, especially in applications that
+frequently throw exceptions.
+
+NOTE As of version 1.1.4, packaging data is disabled by default.
+
+If instructed to do so, logback can include packaging data for each stack trace line it
+outputs. Packaging data consists of the name and version of the jar file whence the
+class of the stack trace line originated. Packaging data can be very useful in
+identifying software versioning issues. However, it is rather expensive to compute,
+especially in applications where exceptions are thrown frequently. Here is a sample
+output:
+
+14:28:48.835 [btpool0-7] INFO c.q.l.demo.prime.PrimeAction - 99 is not a valid value
+java.lang.Exception: 99 is invalid at
+ch.qos.logback.demo.prime.PrimeAction.execute(PrimeAction.java:28) [classes/:na] at
+org.apache.struts.action.RequestProcessor.processActionPerform(RequestProcessor.java:431)
+[struts-1.2.9.jar:1.2.9] at
+org.apache.struts.action.RequestProcessor.process(RequestProcessor.java:236)
+[struts-1.2.9.jar:1.2.9] at
+org.apache.struts.action.ActionServlet.doPost(ActionServlet.java:432)
+[struts-1.2.9.jar:1.2.9] at
+javax.servlet.http.HttpServlet.service(HttpServlet.java:820)
+[servlet-api-2.5-6.1.12.jar:6.1.12] at
+org.mortbay.jetty.servlet.ServletHolder.handle(ServletHolder.java:502)
+[jetty-6.1.12.jar:6.1.12] at
+ch.qos.logback.demo.UserServletFilter.doFilter(UserServletFilter.java:44) [classes/:na]
+at
+org.mortbay.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1115)
+[jetty-6.1.12.jar:6.1.12] at
+org.mortbay.jetty.servlet.ServletHandler.handle(ServletHandler.java:361)
+[jetty-6.1.12.jar:6.1.12] at
+org.mortbay.jetty.webapp.WebAppContext.handle(WebAppContext.java:417)
+[jetty-6.1.12.jar:6.1.12] at
+org.mortbay.jetty.handler.ContextHandlerCollection.handle(ContextHandlerCollection.java:230)
+[jetty-6.1.12.jar:6.1.12] Packaging data is disabled by default but can be enabled by
+configuration:
+
+```xml
+<configuration packagingData="true" >
+...
+</configuration> 
+Alternatively, packaging data can be enabled/disabled
+ programmatically by invoking the setPackagingDataEnabled(boolean) method in LoggerContext, as shown next:
+```
+
+LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
+lc.setPackagingDataEnabled(true); Invoking JoranConfigurator directly
+
+Logback relies on a configuration library called Joran, part of logback-core. Logback's
+default configuration mechanism invokes JoranConfigurator on the default configuration
+file it finds on the class path. If you wish to override logback's default
+configuration mechanism for whatever reason, you can do so by invoking
+JoranConfigurator directly. The next application, MyApp3, invokes JoranConfigurator on
+a configuration file passed as a parameter.
+
+Example: Invoking JoranConfigurator directly
+(logback-examples/src/main/java/chapters/configuration/MyApp3.java)
+
+```java
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+```
+
+```java
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.joran.JoranConfigurator;
+import ch.qos.logback.core.joran.spi.JoranException;
+import ch.qos.logback.core.util.StatusPrinter;
+```
+
+```java
+public class MyApp3  {
+final static Logger logger = LoggerFactory.getLogger(MyApp3.class);
+```
+
+```java
+public static void main(String[] args)  {
+// assume SLF4J is bound to logback in the current environment LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
+try  {
+JoranConfigurator configurator = new JoranConfigurator();
+configurator.setContext(context);
+// Call context.reset() to clear any previous configuration, e.g. default
+ // configuration. For multi-step configuration, omit calling context.reset().
+ context.reset();
+configurator.doConfigure(args[0]);
+
+}
+catch (JoranException je)  {
+// StatusPrinter will handle this
+ 
+}
+StatusPrinter.printInCaseOfErrorsOrWarnings(context);
+logger.info("Entering application.");
+```
+
+Foo foo = new Foo(); foo.doIt(); logger.info("Exiting application."); } } This
+application fetches the LoggerContext currently in effect, creates a new
+JoranConfigurator, sets the context on which it will operate, resets the logger
+context, and then finally asks the configurator to configure the context using the
+configuration file passed as a parameter to the application. Internal status data is
+printed in case of warnings or errors. Note that for multi-step configuration,
+context.reset() invocation should be omitted.
+
+In order to release the resources used by logback-classic, it is always a good idea to
+stop the logback context. Stopping the context will close all appenders attached to
+loggers defined by the context and stop any active threads in an orderly way. Please
+also read the section on "shutdown hooks" just below.
+
+```java
+import org.slf4j.LoggerFactory;
+import ch.qos.logback.classic.LoggerContext;
+...
+```
+
+// assume SLF4J is bound to logback-classic in the current environment LoggerContext
+loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory(); loggerContext.stop();
+In web-applications the above code could be invoked from within the contextDestroyed
+method of ServletContextListener in order to stop logback-classic and release
+resources. Starting with version 1.1.10, the appropriate ServletContextListener is
+installed automatically for you (see just below).
+
+Installing a JVM shutdown hook is a convenient way for shutting down logback and
+releasing associated resources.
+
+```xml
+<configuration debug="true">
+<!-- in the absence
+ of the class attribute, assume
+ ch.qos.logback.core.hook.DefaultShutdownHook -->
+<shutdownHook/>
+<!-- rest of the config file.. -->
+```
+
+Note that you may install a shutdown hook of your own making by setting the class
+attribute to correspond to your shutdown hook's class name.
+
+The default shutdown hook, namely DefaultShutdownHook, will stop the logback context
+after a specified delay (0 by default). Stopping the context will allow up to 30
+seconds for any log file compression tasks running in the background to finish. In
+standalone Java applications, adding a <shutdownHook/> directive to your configuration
+file is an easy way to ensure that any ongoing compression tasks are allowed to finish
+before JVM exit. In applications within a Web server, webShutdownHook will be
+installed automatically making <shutdownHook/> directive quite redundant and
+unnecessary.
+
+As of version 1.5.7, installing a shutdown hook replaces any previously installed hook.
+Therefore, at most one Logback shutdown hook can be installed via the usual logback.xml
+configuration.
+
+WebShutdownHook or stopping logback-classic in web-applications
+
+since 1.1.10 Logback-classic will automatically ask the web-server to install a
+LogbackServletContainerInitializer implementing the ServletContainerInitializer
+interface (available in servlet-api 3.x and later). This initializer will in turn
+install an instance of LogbackServletContextListener.w This listener will stop the
+current logback-classic context when the web-app is stopped or reloaded.
+
+You may disable automatic installation of LogbackServletContextListener by setting a
+<context-param> named logbackDisableServletContainerInitializer in your web
+application's WEB-INF/web.xml. Here is the relevant snippet.
+
+```xml
+<web-app>
+<context-param>
+<param-name>logbackDisableServletContainerInitializer</param-name>
+<param-value>true</param-value>
+</context-param>
+....
+</web-app> 
+Note that logbackDisableServletContainerInitializer variable
+ can also be set as a Java system property or an OS environment
+ variable. The most local setting has priority, i.e. web-app first,
+ system property second and OS environment last.
+```
+
+As you have seen thus far in the manual with plenty of examples still to follow,
+logback allows you to redefine logging behavior without needing to recompile your code.
+Indeed, you can easily configure logback so as to disable logging for certain parts of
+your application, or direct output to a UNIX Syslog daemon, to a database, to a log
+visualizer, or forward logging events to a remote logback server, which would log
+according to local server policy, for example by forwarding the log event to a second
+logback server.
+
+The remainder of this section presents the syntax of configuration files.
+
+As will be demonstrated over and over, the syntax of logback configuration files is
+extremely flexible. As such, it is not possible to specify the allowed syntax with a
+DTD file or an XML schema. Nevertheless, the very basic structure of the configuration
+file can be described as, <configuration> element, containing zero or more <appender>
+elements, followed by zero or more <logger> elements, followed by at most one <root>
+element. The following diagram illustrates this basic structure.
+
+If you are unsure which case to use for a given tag name, just follow the camelCase
+convention which is almost always the correct convention.
+
+```java
+Since logback version 0.9.17, tag names pertaining to explicit
+ rules are case-insensitive. For example, <logger>, <Logger> and <LOGGER> are valid configuration elements and will
+ be interpreted in the same way. Note that XML well-formedness
+ rules still apply, if you open a tag as <xyz> you
+ must close it as </xyz>, </XyZ> will not work. As for implicit
+ rules, tag names are case-sensitive except for the first
+ letter. Thus, <xyz> and <Xyz> are
+ equivalent but not <xYz>. Implicit rules usually
+ follow the camelCase convention, common in the Java world. Since it is not easy to tell
+ when a tag is associated with an explicit action and when it is
+ associated with an implicit action, it is not trivial to say
+ whether an XML tag is case-sensitive or insensitive with respect
+ to the first letter. If you are unsure which case to use for a
+ given tag name, just follow the camelCase convention which is
+ almost always the correct convention.
+```
+
+At this point you should have at least some understanding of level inheritance and the
+basic selection rule. Otherwise, and unless you are an egyptologist, logback
+configuration will be no more meaningful to you than are hieroglyphics.
+
+A logger is configured using the logger element. A <logger> element takes exactly one
+mandatory name attribute, an optional level attribute, and an optional additivity
+attribute, admitting the values true or false. The value of the level attribute
+admitting one of the case-insensitive string values TRACE, DEBUG, INFO, WARN, ERROR,
+ALL or OFF. The special case-insensitive value INHERITED, or its synonym NULL, will
+force the level of the logger to be inherited from higher up in the hierarchy. This
+comes in handy if you set the level of a logger and later decide that it should
+inherit its level.
+
+Note that unlike log4j, logback-classic does not close nor remove any previously
+referenced appenders when configuring a given logger.
+
+The logger element may contain zero or more <appender-ref> elements; each appender thus
+referenced is added to the named logger. Note that unlike log4j, logback-classic does
+not close nor remove any previously referenced appenders when configuring a given
+logger.
+
+The <root> element configures the root logger. It supports a single attribute, namely
+the level attribute. It does not allow any other attributes because the additivity flag
+does not apply to the root logger. Moreover, since the root logger is already named as
+"ROOT", it does not allow a name attribute either. The value of the level attribute can
+be one of the case-insensitive strings TRACE, DEBUG, INFO, WARN, ERROR, ALL or OFF.
+Note that the level of the root logger cannot be set to INHERITED or NULL.
+
+Note that unlike log4j, logback-classic does not close nor remove any previously
+referenced appenders when configuring the root logger.
+
+Similarly to the <logger> element, the <root> element may contain zero or more
+<appender-ref> elements; each appender thus referenced is added to the root logger.
+Note that unlike log4j, logback-classic does not close nor remove any previously
+referenced appenders when configuring the root logger.
+
+Setting the level of a logger or root logger is as simple as declaring it and setting
+its level, as the next example illustrates. Suppose we are no longer interested in
+seeing any DEBUG messages from any component belonging to the "chapters.configuration"
+package. The following configuration file shows how to achieve that.
+
+Example: Setting the level of a logger
+(logback-examples/src/main/resources/chapters/configuration/sample2.xml)
+
+```xml
+<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+<!-- encoders are assigned the type
+ ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+<encoder>
+<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} -%kvp- %msg%n</pattern>
+</encoder>
+</appender>
+<logger name="chapters.configuration" level="INFO"/>
+<!-- Strictly speaking, the level attribute is not necessary since -->
+<!-- the level of the root level is set to DEBUG by default. -->
+<root level="DEBUG">
+<appender-ref ref="STDOUT" />
+</root>
+```
+
+When the above configuration file is given as argument to the MyApp3 application, it
+will yield the following output:
+
+17:34:07.578 [main] INFO chapters.configuration.MyApp3 -- Entering application.
+17:34:07.578 [main] INFO chapters.configuration.MyApp3 -- Exiting application. Note
+that the message of level DEBUG generated by the "chapters.configuration.Foo" logger has
+been suppressed. See also the Foo class.
+
+You can configure the levels of as many loggers as you wish. In the next configuration
+file, we set the level of the chapters.configuration logger to INFO but at the same time
+set the level of the chapters.configuration.Foo logger to DEBUG.
+
+Example: Setting the level of multiple loggers
+(logback-examples/src/main/resources/chapters/configuration/sample3.xml)
+
+```xml
+<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+<encoder>
+<pattern>
+ %d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} -%kvp- %msg%n
+ </pattern>
+</encoder>
+</appender>
+<logger name="chapters.configuration" level="INFO" />
+<logger name="chapters.configuration.Foo" level="DEBUG" />
+<root level="DEBUG">
+<appender-ref ref="STDOUT" />
+</root>
+```
+
+Running MyApp3 with this configuration file will result in the following output on the
+console:
+
+17:39:27.593 [main] INFO chapters.configuration.MyApp3 -- Entering application.
+17:39:27.593 [main] DEBUG chapters.configuration.Foo -- Did it again! 17:39:27.593
+[main] INFO chapters.configuration.MyApp3 -- Exiting application. The table below list
+the loggers and their levels, after JoranConfigurator has configured logback with the
+sample3.xml configuration file.
+
+It follows that the two logging statements of level INFO in the MyApp3 class as well as
+the DEBUG messages in Foo.doIt() are all enabled. Note that the level of the root
+logger is always set to a non-null value, DEBUG by default.
+
+Let us note that the basic-selection rule depends on the effective level of the logger
+being invoked, not the level of the logger where appenders are attached. Logback will
+first determine whether a logging statement is enabled or not, and if enabled, it will
+invoke the appenders found in the logger hierarchy, regardless of their level. The
+configuration file sample4.xml is a case in point:
+
+Example: Logger level sample
+(logback-examples/src/main/resources/chapters/configuration/sample4.xml)
+
+```xml
+<appender name="STDOUT"
+ class="ch.qos.logback.core.ConsoleAppender">
+<encoder>
+<pattern>
+ %d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} -%kvp- %msg%n
+ </pattern>
+</encoder>
+</appender>
+<logger name="chapters.configuration" level="INFO" />
+<!-- turn OFF all logging (children can override) -->
+<root level="OFF" >
+<appender-ref ref="STDOUT" />
+</root>
+```
+
+The following table lists the loggers and their levels after applying the sample4.xml
+configuration file.
+
+The ConsoleAppender named STDOUT, the only configured appender in sample4.xml, is
+attached to the root logger whose level is set to OFF. However, running MyApp3 with
+configuration script sample4.xml will yield:
+
+17:52:23.609 [main] INFO chapters.configuration.MyApp3 - Entering application.
+17:52:23.609 [main] INFO chapters.configuration.MyApp3 - Exiting application. Thus, the
+level of the root logger has no apparent effect because the loggers in
+chapters.configuration.MyApp3 and chapters.configuration.Foo classes are all enabled for
+the INFO level. As a side note, the chapters.configuration logger exists by virtue of
+its declaration in the configuration file - even if the Java source code does not
+directly refer to it.
+
+```java
+An appender is configured with the <appender> element, which takes two mandatory attributes name and class. The name attribute specifies the name of the
+ appender whereas the class attribute
+ specifies the fully qualified name of the appender class to
+ instantiate. The <appender> element may contain zero
+ or one <layout> elements, zero or more <encoder> elements and zero or more <filter> elements. Apart from these three common
+ elements, <appender> elements may contain any number
+ of elements corresponding to JavaBean properties of the appender
+ class. Seamlessly supporting any property of a given logback
+ component is one of the major strengths of Joran as discussed in a later chapter. The
+ following diagram illustrates the common structure. Note that
+ support for properties is not shown in the diagram below.
+```
+
+The <layout> element takes a mandatory class attribute specifying the fully qualified
+name of the layout class to instantiate. As with the <appender> element, <layout> may
+contain other elements corresponding to properties of the layout instance. Since it's
+such a common case, if the layout class is PatternLayout, then the class attribute can
+be omitted as specified by default class mapping rules.
+
 ## 4. Appenders
 
-There is so much to tell about the Western country in that day that it is hard to know where to start. One thing sets off a hundred others. The problem is to decide which one to tell first. Logback delegates the task of writing a logging event to components called appenders. Appenders must implement the ch.qos.logback.core.Appender interface. The salient methods of this interface are summarized below: ``` import ch.qos.logback.core.spi.ContextAware; import ch.qos.logback.core.spi.FilterAttachable; import ch.qos.logback.core.spi.LifeCycle; ``` ``` public interface Appender<E> extends LifeCycle, ContextAware, FilterAttachable { ``` ``` public String getName(); public void setName(String name); void doAppend(E event); } Most of the methods in the Appender interface are setters and getters. A notable exception is the doAppend() method taking an object instance of type E as its only parameter. The actual type of E will vary depending on the logback module. Within the logback-classic module E would be of type ILoggingEvent and within the logback-access module it would be of type AccessEvent . The doAppend() method is perhaps the most important in the logback framework. It is responsible for outputting the logging events in a suitable format to the appropriate output device. ``` Appenders are named entities. This ensures that they can be referenced by name, a quality confirmed to be instrumental in configuration scripts. The Appender interface extends the FilterAttachable interface. It follows that one or more filters can be attached to an appender instance. Filters are discussed in detail in a subsequent chapter. Appenders are ultimately responsible for outputting logging events. However, they may delegate the actual formatting of the event to a Layout or to an Encoder object. Each layout/encoder is associated with one and only one appender, referred to as the owning appender. Some appenders have a built-in or fixed event format. Consequently, they do not require nor have a layout/encoder. For example, the SocketAppender simply serializes logging events before transmitting them over the wire. The ch.qos.logback.core.AppenderBase class is an abstract class implementing the Appender interface. It provides basic functionality shared by all appenders, such as methods for getting or setting their name, their activation status, their layout and their filters. It is the super-class of all appenders shipped with logback. Although an abstract class, AppenderBase actually implements the doAppend() method in the Append interface. Perhaps the clearest way to discuss AppenderBase class is by presenting an excerpt of actual source code. if (!this.started) { if (statusRepeatCount++ < ALLOWED_REPEATS) { addStatus(new WarnStatus( "Attempted to append to non started appender [" + name + "].",this)); } return; } if (getFilterChainDecision(eventObject) == FilterReply.DENY) { return; } // ok, we now invoke the derived class's implementation of append this.append(eventObject); } finally { guard = false; } } This implementation of the doAppend() method is synchronized. It follows that logging to the same appender from different threads is safe. While a thread, say T , is executing the doAppend() method, subsequent calls by other threads are queued until T leaves the doAppend() method, ensuring T 's exclusive access to the appender. Since such synchronization is not always appropriate, logback ships with ch.qos.logback.core.UnsynchronizedAppenderBase which is very similar to the AppenderBase class. For the sake of conciseness, we will be discussing UnsynchronizedAppenderBase in the remainder of this document. The first thing the doAppend() method does is to check whether the guard is set to true. If it is, it immediately exits. If the guard is not set, it is set to true at the next statement. The guard ensures that the doAppend() method will not recursively call itself. Just imagine that a component, called somewhere beyond the append() method, wants to log something. Its call could be directed to the very same appender that just called it resulting in an infinite loop and a stack overflow. In the following statement we check whether the started field is true. If it is not, doAppend() will send a warning message and return. In other words, once an appender is closed, it is impossible to write to it. Appender objects implement the LifeCycle interface, which implies that they implement start() , stop() and isStarted() methods. After setting all the properties of an appender, Joran, logback's configuration framework, calls the start() method to signal the appender to activate its properties. Depending on its kind, an appender may fail to start if certain properties are missing or because of interference between various properties. For example, given that file creation depends on truncation mode, FileAppender cannot act on the value of its File option until the value of the Append option is also known with certainty. The explicit activation step ensures that an appender acts on its properties after their values become known. If the appender could not be started or if it has been stopped, a warning message will be issued through logback's internal status management system. After several attempts, in order to avoid flooding the internal status system with copies of the same warning message, the doAppend() method will stop issuing these warnings. The next if statement checks the result of the attached filters. Depending on the decision resulting from the filter chain, events can be denied or explicitly accepted. In the absence of a decision by the filter chain, events are accepted by default. The doAppend() method then invokes the derived classes' implementation of the append() method. This method does the actual work of appending the event to the appropriate device. Finally, the guard is released so as to allow a subsequent invocation of the doAppend() method. For the remainder of this manual, we reserve the term "option" or alternatively "property" for any attribute that is inferred dynamically using JavaBeans introspection through setter and getter methods. Logback-core lays the foundation upon which the other logback modules are built. In general, the components in logback-core require some, albeit minimal, customization. However, in the next few sections, we describe several appenders which are ready for use out of the box. OutputStreamAppender appends events to a java.io.OutputStream . This class provides basic services that other appenders build upon. Users do not usually instantiate OutputStreamAppender objects directly, since in general the java.io.OutputStream type cannot be conveniently mapped to a string, as there is no way to specify the target OutputStream object in a configuration script. Simply put, you cannot configure a OutputStreamAppender from a configuration file. However, this does not mean that OutputStreamAppender lacks configurable properties. These properties are described next. encoder Encoder Determines the manner in which an event is written to the underlying OutputStreamAppender . Encoders are described in a dedicated chapter . immediateFlush boolean The default value for immediateFlush is 'true'. Immediate flushing of the output stream ensures that logging events are immediately written out and will not be lost in case your application exits without properly closing appenders. On the other hand, setting this property to 'false' is likely to quadruple (your mileage may vary) logging throughput. Again, if immediateFlush is set to 'false' and if appenders are not closed properly when your application exits, then logging events not yet written to disk may be lost. The OutputStreamAppender is the super-class of three other appenders, namely ConsoleAppender , FileAppender which in turn is the super class of RollingFileAppender . The next figure illustrates the class diagram for OutputStreamAppender and its subclasses. The ConsoleAppender , as the name indicates, appends on the console, or more precisely on System.out or System.err , the former being the default target. ConsoleAppender formats events with the help of an encoder specified by the user. Encoders will be discussed in a subsequent chapter. Both System.out and System.err are of type java.io.PrintStream . Consequently, they are wrapped inside an OutputStreamWriter which buffers I/O operations. WARNING Please note the console is comparatively slow, even very slow. You should avoid logging to the console in production, especially in high volume systems. target String One of the String values System.out or System.err . The default target is System.out . withJansi boolean since 1.6.3 Deprecated. Prefer JansiConsoleAppender instead of setting withJansi on a plain ConsoleAppender . When set to true , logback emits a deprecation warning and this option will be removed in a future release. By default withJansi is false . Setting it to true still activates Jansi via reflection so that ANSI color codes work on platforms that need it (notably Windows). The implementation probes JLine's org.jline.jansi.AnsiConsole first and falls back to the legacy FuseSource org.fusesource.jansi.AnsiConsole . Put the matching artifact on the class path ( org.jline:jansi-core or org.fusesource.jansi:jansi ). Unix-based systems such as Linux and macOS already support ANSI color codes by default. Example: ConsoleAppender configuration (logback-examples/src/main/resources/chapters/appenders/conf/logback-Console.xml) ``` <configuration> <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender"> <!-- encoders are assigned the type ch.qos.logback.classic.encoder.PatternLayoutEncoder by default --> <encoder> <pattern>%-4relative [%thread] %-5level %logger{35} -%kvp- %msg %n</pattern> </encoder> </appender> <root level="DEBUG"> <appender-ref ref="STDOUT" /> </root> </configuration> ``` After you have set your current path to the logback-examples directory and set up your class path , you can give the above configuration file a whirl by issuing the following command: java chapters.appenders.ConfigurationTester src/main/java/chapters/appenders/conf/logback-Console.xml since 1.6.3 The JansiConsoleAppender is a ConsoleAppender that always writes through JLine's org.jline.jansi.AnsiConsole . It is the recommended way to enable ANSI sequences on platforms that need Jansi (notably Windows). Unlike the deprecated withJansi path on ConsoleAppender , this class talks to AnsiConsole directly and does not use reflection. You must place org.jline:jansi-core on the class path. On start, the appender calls AnsiConsole.systemInstall() and routes output to AnsiConsole.out() or AnsiConsole.err() according to the target property. On stop, if this appender performed the install, it pairs that call with AnsiConsole.systemUninstall() . As with ConsoleAppender , stop flushes the console stream but does not close process-wide stdout or stderr. JansiConsoleAppender admits the same encoder and target properties as ConsoleAppender . You do not set withJansi ; Jansi wrapping is always applied. Here is a sample configuration that uses JansiConsoleAppender instead of a plain ConsoleAppender with <withJansi>true</withJansi> : ``` <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender"> <withJansi>true</withJansi> <encoder> <pattern>%highlight(%-5level) %logger{35} - %msg%n</pattern> </encoder> </appender> RECOMMENDED ``` ``` <appender name="STDOUT" class="ch.qos.logback.core.JansiConsoleAppender"> <encoder> <pattern>%highlight(%-5level) %logger{35} - %msg%n</pattern> </encoder> </appender> FileAppender ``` The FileAppender , a subclass of OutputStreamAppender , appends log events into a file. The target file is specified by the File option. If the file already exists, it is either appended to, or truncated depending on the value of the append property. append boolean If true, events are appended at the end of an existing file. Otherwise, if append is false, any existing file is truncated. The append option is set to true by default. file String The name of the file to write to. If the file does not exist, it is created. On the MS Windows platform users frequently forget to escape backslashes. For example, the value c:\temp\test.log is not likely to be interpreted properly as '\t' is an escape sequence interpreted as a single tab character (\u0009) . Correct values can be specified as c:/temp/test.log or alternatively as c:\\temp\\test.log . The File option has no default value. If the parent directory of the file does not exist, FileAppender will automatically create it, including any necessary but nonexistent parent directories. bufferSize FileSize The bufferSize option set the size of the output buffer in case immediateFlush option is set to false. Default value for bufferSize is 8192. The value 256 KB seems to sufficient even in cases of very heavy and persistent loads. Options in defined in units of "FileSize" can be specified in bytes, kilobytes, megabytes or gigabytes by suffixing a numeric value with KB, MB and respectively GB. For example, 5242880, 5120KB, 5120 KB, 5MB, 5 MB, 2 GB and 2GB are all valid values, with the first five being equivalent. A numerical value with no suffix is taken to be in units of bytes. prudent boolean In prudent mode, FileAppender will safely write to the specified file, even in the presence of other FileAppender instances running in different JVMs, potentially running on different hosts. The default value for prudent mode is false . Prudent mode can be used in conjunction with RollingFileAppender although some restrictions apply . Prudent mode implies that append property is automatically set to true. Prudent more relies on exclusive file locks. Experiments show that file locks approximately triple (x3) the cost of writing a logging event. On an "average" PC writing to a file located on a local hard disk, when prudent mode is off, it takes about 10 microseconds to write a single logging event. When prudent mode is on, it takes approximately 30 microseconds to output a single logging event. This translates to logging throughput of 100'000 events per second when prudent mode is off and approximately 33'000 events per second in prudent mode. Prudent mode effectively serializes I/O operations between all JVMs writing to the same file. Thus, as the number of JVMs competing to access a file increases so will the delay incurred by each I/O operation. As long as the total number of I/O operations is in the order of 20 log requests per second, the impact on performance should be negligible. Applications generating 100 or more I/O operations per second can see an impact on performance and should avoid using prudent mode. Networked file locks When the log file is located on a networked file system, the cost of prudent mode is even greater. Just as importantly, file locks over a networked file system can be sometimes strongly biased such that the process currently owning the lock immediately re-obtains the lock upon its release. Thus, while one process hogs the lock for the log file, other processes starve waiting for the lock to the point of appearing deadlocked. The impact of prudent mode is highly dependent on network speed as well as the OS implementation details. We provide a very small application called FileLockSimulator which can help you simulate the behavior of prudent mode in your environment. Immediate Flush By default, each log event is immediately flushed to the underlying output stream. This default approach is safer in the sense that logging events are not lost in case your application exits without properly closing appenders. However, for significantly increased logging throughput, you may want to set the immediateFlush property to false . Example: FileAppender configuration (logback-examples/src/main/resources/chapters/appenders/conf/logback-fileAppender.xml) ``` <configuration> <appender name="FILE" class="ch.qos.logback.core.FileAppender"> <file>testFile.log</file> <append>true</append> <!-- set immediateFlush to false for much higher logging throughput --> <immediateFlush>true</immediateFlush> <!-- encoders are assigned the type ch.qos.logback.classic.encoder.PatternLayoutEncoder by default --> <encoder> <pattern>%-4relative [%thread] %-5level %logger{35} -%kvp- %msg%n</pattern> </encoder> </appender> <root level="DEBUG"> <appender-ref ref="FILE" /> </root> </configuration> ``` After changing the current directory to logback-examples , run this example by launching the following command: java chapters.appenders.ConfigurationTester src/main/java/chapters/appenders/conf/logback-fileAppender.xml During the application development phase or in the case of short-lived applications, e.g. batch applications, it is desirable to create a new log file at each new application launch. This is fairly easy to do with the help of the <timestamp> element. Here's an example. Example: Uniquely named FileAppender configuration by timestamp (logback-examples/src/main/resources/chapters/appenders/conf/logback-timestamp.xml) ``` <!-- Insert the current time formatted as "yyyyMMdd'T'HHmmss" under the key "bySecond" into the logger context. This value will be available to all subsequent configuration elements. --> <timestamp key="bySecond" datePattern="yyyyMMdd'T'HHmmss"/> <appender name="FILE" class="ch.qos.logback.core.FileAppender"> <!-- use the previously created timestamp to create a uniquely named log file --> <file> log-${bySecond}.txt </file> <encoder> <pattern>%logger{35} -%kvp- %msg%n</pattern> </encoder> </appender> ``` ``` <root level="DEBUG"> <appender-ref ref="FILE" /> </root> </configuration> ``` The timestamp element takes two mandatory attributes key and datePattern and an optional timeReference attribute. The key attribute is the name of the key under which the timestamp will be available to subsequent configuration elements as a variable . The datePattern attribute denotes the date pattern used to convert the current time (at which the configuration file is parsed) into a string. The date pattern should follow the conventions defined in SimpleDateFormat . The timeReference attribute denotes the time reference for the time stamp. The default is the interpretation/parsing time of the configuration file, i.e. the current time. However, under certain circumstances it might be useful to use the context birth time as time reference. This can be accomplished by setting the timeReference attribute to "contextBirth" . java chapters.appenders.ConfigurationTester src/main/resources/chapters/appenders/conf/logback-timestamp.xml To use the logger context birthdate as time reference, you would set the timeReference attribute to "contextBirth" as shown below. Example: Timestamp using context birthdate as time reference (logback-examples/src/main/resources/chapters/appenders/conf/logback-timestamp-contextBirth.xml) ``` <configuration> <timestamp key="bySecond" datePattern="yyyyMMdd'T'HHmmss" timeReference="contextBirth" /> ... </configuration> RollingFileAppender ``` RollingFileAppender extends FileAppender with the capability to rollover log files. For example, RollingFileAppender can log to a file named log.txt file and, once a certain condition is met, change its logging target to another file. There are two important subcomponents that interact with RollingFileAppender . The first RollingFileAppender sub-component, namely RollingPolicy , ( see below ) is responsible for undertaking the actions required for a rollover. A second subcomponent of RollingFileAppender , namely TriggeringPolicy , ( see below ) will determine if and exactly when rollover occurs. Thus, RollingPolicy is responsible for the what and TriggeringPolicy is responsible for the when . To be of any use, a RollingFileAppender must have both a RollingPolicy and a TriggeringPolicy set up. However, if its RollingPolicy also implements the TriggeringPolicy interface, then only the former needs to be specified explicitly. file String See FileAppender properties. Note that file can be null in which case the output is written only to the target specified by the RollingPolicy . rollingPolicy RollingPolicy This option is the component that will dictate RollingFileAppender 's behavior when rollover occurs. See more information below. triggeringPolicy TriggeringPolicy This option is the component that will tell RollingFileAppender when to activate the rollover procedure. See more information below. prudent boolean FixedWindowRollingPolicy is not supported in prudent mode. RollingFileAppender supports the prudent mode in conjunction with TimeBasedRollingPolicy albeit with two restrictions. In prudent mode, file compression is not supported nor allowed. (We can't have one JVM writing to a file while another JVM is compressing it.) The file property of FileAppender cannot be set and must be left blank. Indeed, most operating systems do not allow renaming of a file while another process has it opened. See also properties for FileAppender . RollingPolicy is responsible for the rollover procedure which involves file moving and renaming. ``` import ch.qos.logback.core.FileAppender; import ch.qos.logback.core.spi.LifeCycle; ``` ``` public interface RollingPolicy extends LifeCycle { public void rollover() throws RolloverFailure; public String getActiveFileName(); public CompressionMode getCompressionMode(); public void setParent(FileAppender appender); } The rollover method accomplishes the work involved in archiving the current log file. The getActiveFileName() method is called to compute the file name of the current log file (where live logs are written to). As indicated by getCompressionMode method a RollingPolicy is also responsible for determining the compression mode. Lastly, a RollingPolicy is given a reference to its parent via the setParent method. ``` TimeBasedRollingPolicy is possibly the most popular rolling policy. It defines a rollover policy based on time, for example by day or by month. TimeBasedRollingPolicy assumes the responsibility for rollover as well as for the triggering of said rollover. Indeed, TimeBasedTriggeringPolicy implements both RollingPolicy and TriggeringPolicy interfaces. TimeBasedRollingPolicy 's configuration takes one mandatory fileNamePattern property and several optional properties. fileNamePattern String The mandatory fileNamePattern property defines the name of the rolled-over (archived) log files. Its value should consist of the name of the file, plus a suitably placed %d conversion specifier. The %d conversion specifier may contain a date-and-time pattern as specified by the java.text.SimpleDateFormat class. If the date-and-time pattern is omitted, then the default pattern yyyy-MM-dd is assumed. The rollover period is inferred from the value of fileNamePattern . Note that the file property in RollingFileAppender (the parent of TimeBasedRollingPolicy ) can be either set to a value or omitted (=null). By setting the file property of the containing FileAppender , you can decouple the location of the active log file and the location of the archived log files. The current logs will always be targeted at the file specified by the file property. It follows that the name of the currently active log file will not change over time. However, if you choose to omit the file property, then the active file will be computed anew for each period based on the value of fileNamePattern . In this configuration no roll over occurs, unless file compression is specified. The examples below should clarify this point. The date-and-time pattern, as found within the accolades of %d{} follow java.text.SimpleDateFormat conventions. The forward slash '/' or backward slash '\' characters anywhere within the fileNamePattern property or within the date-and-time pattern will be interpreted as directory separators. Multiple %d specifiers It is possible to specify multiple %d specifiers but only one of which can be primary, i.e. used to infer the rollover period. All other tokens must be marked as auxiliary by passing the 'aux' parameter (see examples below). Multiple %d specifiers allow you to organize archive files in a folder structure different than that of the roll-over period. For example, the file name pattern shown below organizes log folders by year and month but roll-over log files every day at midnight. /var/log/ %d{yyyy/MM, aux} /myapplication. %d{yyyy-MM-dd} .log TimeZone Under certain circumstances, you might wish to roll-over log files according to a clock in a timezone different than that of the host. It is possible to pass a timezone argument following the date-and-time pattern within the %d conversion specifier. For example: aFolder/test. %d {yyyy-MM-dd-HH, UTC }.log If the specified timezone identifier is unknown or misspelled, the GMT timezone is assumed as dictated by the TimeZone.getTimeZone(String) method specification. maxHistory int The optional maxHistory property controls the maximum number of archive files to keep, asynchronously deleting older files. For example, if you specify monthly rollover, and set maxHistory to 6, then 6 months worth of archives files will be kept with files older than 6 months deleted. Note as old archived log files are removed, any folders which were created for the purpose of log file archiving will be removed as appropriate. Setting maxHistory to zero disables archive removal. By default, maxHistory is set to zero, i.e. by default there is no archive removal. totalSizeCap FileSize The optional totalSizeCap property controls the total size of all archive files. Oldest archives are deleted asynchronously when the total size cap is exceeded. The totalSizeCap property requires maxHistory property to be set as well. Moreover, the "max history" restriction is always applied first and the "total size cap" restriction applied second. In other words, if enabled, both restrictions are applied, albeit sequentially. The totalSizeCap property can be specified in units of bytes, kilobytes, megabytes or gigabytes by suffixing a numeric value with KB, MB and respectively GB. For example, 5242880, 5120KB, 5120 KB, 5MB, 5 MB, 2 GB and 2GB are all valid values, with the first five being equivalent. A numerical value with no suffix is taken to be in units of bytes. By default, totalSizeCap is set to zero, meaning that there is no total size cap. cleanHistoryOnStart boolean If set to true, archive removal will be executed on appender start up. By default, this property is set to false. Archive removal is normally performed during roll over. However, some applications may not live long enough for roll over to be triggered. It follows that for such short-lived applications archive removal may never get a chance to execute. By setting cleanHistoryOnStart to true, archive removal is performed at appender start up. Here are a few fileNamePattern values with an explanation of their effects. /wombat/foo.%d Daily rollover (at midnight). Due to the omission of the optional time and date pattern for the %d token specifier, the default pattern of yyyy-MM-dd is assumed, which corresponds to daily rollover. file property not set: During November 23rd, 2006, logging output will go to the file /wombat/foo.2006-11-23 . At midnight and for the rest of the 24th, logging output will be directed to /wombat/foo.2006-11-24 . file property set to /wombat/foo.txt : During November 23rd, 2006, logging output will go to the file /wombat/foo.txt . At midnight, foo.txt will be renamed as /wombat/foo.2006-11-23 . A new /wombat/foo.txt file will be created and for the rest of November 24th logging output will be directed to foo.txt . /wombat/%d{yyyy/MM}/foo.txt Rollover at the beginning of each month. file property not set: During the month of October 2006, logging output will go to /wombat/2006/10/foo.txt . After midnight of October 31st and for the rest of November, logging output will be directed to /wombat/2006/11/foo.txt . file property set to /wombat/foo.txt : The active log file will always be /wombat/foo.txt . During the month of October 2006, logging output will go to /wombat/foo.txt . At midnight of October 31st, /wombat/foo.txt will be renamed as /wombat/2006/10/foo.txt . A new /wombat/foo.txt file will be created where logging output will go for the rest of November. At midnight of November 30th, /wombat/foo.txt will be renamed as /wombat/2006/11/foo.txt and so on. /wombat/foo.%d{yyyy-ww}.log Rollover at the first day of each week. Note that the first day of the week depends on the locale. Similar to previous cases, except that rollover will occur at the beginning of every new week. /wombat/foo%d{yyyy-MM-dd_HH}.log Rollover at the top of each hour. Similar to previous cases, except that rollover will occur at the top of every hour. /wombat/foo%d{yyyy-MM-dd_HH-mm}.log Rollover at the beginning of every minute. Similar to previous cases, except that rollover will occur at the beginning of every minute. /wombat/foo%d{yyyy-MM-dd_HH-mm, UTC}.log Rollover at the beginning of every minute. Similar to previous cases, except that file names will be expressed in UTC. /foo/%d{yyyy-MM, aux }/%d.log Rollover daily. Archives located under a folder containing year and month. In this example, the first %d token is marked as aux iliary. The second %d token, with time and date pattern omitted, is then assumed to be primary. Thus, rollover will occur daily (default for %d) and the folder name will depend on the year and month. For example, during the month of November 2006, archived files will all placed under the /foo/2006-11/ folder, e.g /foo/2006-11/2006-11-14.log . Any forward or backward slash characters are interpreted as folder (directory) separators. Any required folder will be created as necessary. You can thus easily place your log files in separate folders. TimeBasedRollingPolicy supports automatic file compression. This feature is enabled if the value of the fileNamePattern option ends with .gz .zip or .xz . Note that xz compression requires Tukaani project's XZ library for Java . In case XZ compression is requested but the XZ library is missing, then logback will substitute GZ compression as a fallback. /wombat/foo.%d.gz Daily rollover (at midnight) with automatic GZIP compression of the archived files. file property not set: During November 23rd, 2009, logging output will go to the file /wombat/foo.2009-11-23 . However, at midnight that file will be compressed to become /wombat/foo.2009-11-23.gz . For the 24th of November, logging output will be directed to /wombat/folder/foo.2009-11-24 until it's rolled over at the beginning of the next day. file property set to /wombat/foo.txt: During November 23rd, 2009, logging output will go to the file /wombat/foo.txt . At midnight that file will be compressed and renamed as /wombat/foo.2009-11-23.gz . A new /wombat/foo.txt file will be created where logging output will go for the rest of November 24th. At midnight November 24th, /wombat/foo.txt will be compressed and renamed as /wombat/foo.2009-11-24.gz and so on. The fileNamePattern serves a dual purpose. First, by studying the pattern, logback computes the requested rollover periodicity. Second, it computes each archived file's name. Note that it is possible for two different patterns to specify the same periodicity. The patterns yyyy-MM and yyyy@MM both specify monthly rollover, although the resulting archive files will carry different names. By setting the file property you can decouple the location of the active log file and the location of the archived log files. The logging output will be targeted into the file specified by the file property. It follows that the name of the active log file will not change over time. However, if you choose to omit the file property, then the active file will be computed anew for each period based on the value of fileNamePattern . By leaving the file option unset you can avoid file renaming errors which occur while there exist external file handles referencing log files during roll over. The maxHistory property controls the maximum number of archive files to keep, deleting older files. For example, if you specify monthly rollover, and set maxHistory to 6, then 6 months worth of archives files will be kept with files older than 6 months deleted. Note as old archived log files are removed, any folders which were created for the purpose of log file archiving will be removed as appropriate. For various technical reasons, rollovers are not clock-driven but depend on the arrival of logging events. For example, on 8th of March 2002, assuming the fileNamePattern is set to yyyy-MM-dd (daily rollover), the arrival of the first event after midnight will trigger a rollover. If there are no logging events during, say 23 minutes and 47 seconds after midnight, then rollover will actually occur at 00:23'47 AM on March 9th and not at 0:00 AM. Thus, depending on the arrival rate of events, rollovers might be triggered with some latency. However, regardless of the delay, the rollover algorithm is known to be correct, in the sense that all logging events generated during a certain period will be output in the correct file delimiting that period. Here is a sample configuration for RollingFileAppender in conjunction with a TimeBasedRollingPolicy . Example: Sample configuration of a RollingFileAppender using a TimeBasedRollingPolicy (logback-examples/src/main/resources/chapters/appenders/conf/logback-RollingTimeBased.xml) ``` <configuration> <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender"> <file>logFile.log</file> <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy"> <!-- daily rollover --> <fileNamePattern>logFile.%d{yyyy-MM-dd}.log</fileNamePattern> ``` ``` <!-- keep 30 days' worth of history capped at 3GB total size --> <maxHistory>30</maxHistory> <totalSizeCap>3GB</totalSizeCap> ``` ``` </rollingPolicy> <encoder> <pattern>%-4relative [%thread] %-5level %logger{35} -%kvp- %msg%n</pattern> </encoder> </appender> ``` ``` <root level="DEBUG"> <appender-ref ref="FILE" /> </root> </configuration> ``` The next configuration sample illustrates the use of RollingFileAppender associated with TimeBasedRollingPolicy in prudent mode. Example: Sample configuration of a RollingFileAppender using a TimeBasedRollingPolicy (logback-examples/src/main/resources/chapters/appenders/conf/logback-PrudentTimeBasedRolling.xml) ``` <configuration> <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender"> <!-- Support multiple-JVM writing to the same log file --> <prudent>true</prudent> <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy"> <fileNamePattern>logFile.%d{yyyy-MM-dd}.log</fileNamePattern> <maxHistory>30</maxHistory> <totalSizeCap>3GB</totalSizeCap> </rollingPolicy> ``` ``` <encoder> <pattern>%-4relative [%thread] %-5level %logger{35} -%kvp -%msg%n</pattern> </encoder> </appender> ``` ``` <root level="DEBUG"> <appender-ref ref="FILE" /> </root> </configuration> ``` Sometimes you may wish to archive files essentially by date but at the same time limit the size of each log file, in particular if post-processing tools impose size limits on the log files. In order to address this requirement, logback ships with SizeAndTimeBasedRollingPolicy . Note that TimeBasedRollingPolicy already allows limiting the combined size of archived log files. If you only wish to limit the combined size of log archives, then TimeBasedRollingPolicy described above and setting the totalSizeCap property should be amply sufficient. Moreover, given that file renaming is a relatively slow process and is frought with problems, we discourage the use of SizeAndTimeBasedRollingPolicy unless you have a real-world use case. The roll over based on size relies on the "%i" conversion token in addition to "%d" . Both the %i and %d tokens are mandatory. Each time the current log file reaches maxFileSize before the current time period ends, it will be archived with an increasing index, starting at 0. The table below lists the properties applicable for SizeAndTimeBasedRollingPolicy . Note these properties complement those applicable for TimeBasedRollingPolicy . maxFileSize FileSize Each time the current log file reaches maxFileSize before the current time period ends, it will be archived with an increasing index, starting at 0. Options in defined in units of "FileSize" can be specified in bytes, kilobytes, megabytes or gigabytes by suffixing a numeric value with KB, MB and respectively GB. For example, 5000000, 5000KB, 5MB and 2GB are all valid values, with the first three being equivalent. checkIncrement Duration since 1.5.8 The checkIncrement property is no longer needed as logback now counts the number of bytes written to file. Here is a sample configuration file demonstrating time and size based log file archiving. Example: Sample configuration for SizeAndTimeBasedRollingPolicy (logback-examples/src/main/resources/chapters/appenders/conf/logback-sizeAndTime.xml) ``` <configuration> <appender name="ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender"> <file>mylog.txt</file> <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy"> <!-- rollover daily --> <fileNamePattern> mylog-%d{yyyy-MM-dd}. %i .txt </fileNamePattern> <!-- each file should be at most 100MB, keep 60 days worth of history, but at most 20GB --> <maxFileSize>100MB</maxFileSize> <maxHistory>60</maxHistory> <totalSizeCap>20GB</totalSizeCap> </rollingPolicy> <encoder> <pattern>%msg%n</pattern> </encoder> </appender> ``` Note the "%i" conversion token in addition to "%d". Both the %i and %d tokens are mandatory. Each time the current log file reaches maxFileSize before the current time period ends, it will be archived with an increasing index, starting at 0. Size and time based archiving supports deletion of old archive files. You need to specify the number of periods to preserve with the maxHistory property. When your application is stopped and restarted, logging will continue at the correct location, i.e. at the largest index number for the current period. In versions prior to 1.1.7, this document mentioned a component called SizeAndTimeBasedFNATP . However, given that SizeAndTimeBasedRollingPolicy offers a simpler configuration structure, we no longer document SizeAndTimeBasedFNATP . Moreover, in logback version 1.5.8, SizeAndTimeBasedFNATP was renamed as SizeAndTimeBasedFileNamingAndTriggeringPolicy . Thus, earlier configuration files using SizeAndTimeBasedFNATP will no longer work. Given that file renaming is a relatively slow process and is frought with problems, we consider FixedWindowRollingPolicy as a deprecated policy and do not recommend its use . When rolling over, FixedWindowRollingPolicy renames files according to a fixed window algorithm as described below. The fileNamePattern option represents the file name pattern for the archived (rolled over) log files. This option is required and must include an integer token %i somewhere within the pattern. minIndex int This option represents the lower bound for the window's index. maxIndex int This option represents the upper bound for the window's index. fileNamePattern String This option represents the pattern that will be followed by the FixedWindowRollingPolicy when renaming the log files. It must contain the string %i , which will indicate the position where the value of the current window index will be inserted. For example, using MyLogFile%i.log associated with minimum and maximum values of 1 and 3 will produce archive files named MyLogFile1.log , MyLogFile2.log and MyLogFile3.log . Note that file compression is also specified via this property. For example, fileNamePattern set to MyLogFile%i.log.zip means that archived files must be compressed using the zip format; gz format is also supported. Given that the fixed window rolling policy requires as many file renaming operations as the window size, large window sizes are strongly discouraged. When large values are specified by the user, the current implementation will automatically reduce the window size to 20. Let
+Logback delegates the task of writing a logging event to components called appenders.
+Appenders must implement the ch.qos.logback.core.Appender interface. The salient
+methods of this interface are summarized below:
+
+```java
+import ch.qos.logback.core.spi.ContextAware;
+import ch.qos.logback.core.spi.FilterAttachable;
+import ch.qos.logback.core.spi.LifeCycle;
+```
+
+```java
+public interface Appender<E> extends LifeCycle, ContextAware, FilterAttachable  {
+```
+
+public String getName(); public void setName(String name); void doAppend(E event); }
+Most of the methods in the Appender interface are setters and getters. A notable
+exception is the doAppend() method taking an object instance of type E as its only
+parameter. The actual type of E will vary depending on the logback module. Within the
+logback-classic module E would be of type ILoggingEvent and within the logback-access
+module it would be of type AccessEvent. The doAppend() method is perhaps the most
+important in the logback framework. It is responsible for outputting the logging
+events in a suitable format to the appropriate output device.
+
+Appenders are named entities. This ensures that they can be referenced by name, a
+quality confirmed to be instrumental in configuration scripts. The Appender interface
+extends the FilterAttachable interface. It follows that one or more filters can be
+attached to an appender instance. Filters are discussed in detail in a subsequent
+chapter.
+
+Appenders are ultimately responsible for outputting logging events. However, they may
+delegate the actual formatting of the event to a Layout or to an Encoder object. Each
+layout/encoder is associated with one and only one appender, referred to as the owning
+appender. Some appenders have a built-in or fixed event format. Consequently, they do
+not require nor have a layout/encoder. For example, the SocketAppender simply
+serializes logging events before transmitting them over the wire.
+
+The ch.qos.logback.core.AppenderBase class is an abstract class implementing the
+Appender interface. It provides basic functionality shared by all appenders, such as
+methods for getting or setting their name, their activation status, their layout and
+their filters. It is the super-class of all appenders shipped with logback. Although an
+abstract class, AppenderBase actually implements the doAppend() method in the Append
+interface. Perhaps the clearest way to discuss AppenderBase class is by presenting an
+excerpt of actual source code.
+
+if (!this.started) { if (statusRepeatCount++ < ALLOWED_REPEATS) { addStatus(new
+WarnStatus( "Attempted to append to non started appender [" + name + "].",this)); }
+return; }
+
+if (getFilterChainDecision(eventObject) == FilterReply.DENY) { return; }
+
+// ok, we now invoke the derived class's implementation of append
+this.append(eventObject);
+
+} finally { guard = false; } } This implementation of the doAppend() method is
+synchronized. It follows that logging to the same appender from different threads is
+safe. While a thread, say T, is executing the doAppend() method, subsequent calls by
+other threads are queued until T leaves the doAppend() method, ensuring T 's exclusive
+access to the appender.
+
+Since such synchronization is not always appropriate, logback ships with
+ch.qos.logback.core.UnsynchronizedAppenderBase which is very similar to the AppenderBase
+class. For the sake of conciseness, we will be discussing UnsynchronizedAppenderBase in
+the remainder of this document.
+
+The first thing the doAppend() method does is to check whether the guard is set to
+true. If it is, it immediately exits. If the guard is not set, it is set to true at the
+next statement. The guard ensures that the doAppend() method will not recursively call
+itself. Just imagine that a component, called somewhere beyond the append() method,
+wants to log something. Its call could be directed to the very same appender that just
+called it resulting in an infinite loop and a stack overflow.
+
+In the following statement we check whether the started field is true. If it is not,
+doAppend() will send a warning message and return. In other words, once an appender is
+closed, it is impossible to write to it. Appender objects implement the LifeCycle
+interface, which implies that they implement start(), stop() and isStarted() methods.
+After setting all the properties of an appender, Joran, logback's configuration
+framework, calls the start() method to signal the appender to activate its properties.
+Depending on its kind, an appender may fail to start if certain properties are missing
+or because of interference between various properties. For example, given that file
+creation depends on truncation mode, FileAppender cannot act on the value of its File
+option until the value of the Append option is also known with certainty. The explicit
+activation step ensures that an appender acts on its properties after their values
+become known.
+
+If the appender could not be started or if it has been stopped, a warning message will
+be issued through logback's internal status management system. After several attempts,
+in order to avoid flooding the internal status system with copies of the same warning
+message, the doAppend() method will stop issuing these warnings.
+
+The next if statement checks the result of the attached filters. Depending on the
+decision resulting from the filter chain, events can be denied or explicitly accepted.
+In the absence of a decision by the filter chain, events are accepted by default.
+
+The doAppend() method then invokes the derived classes' implementation of the append()
+method. This method does the actual work of appending the event to the appropriate
+device.
+
+Finally, the guard is released so as to allow a subsequent invocation of the doAppend()
+method.
+
+For the remainder of this manual, we reserve the term "option" or alternatively
+"property" for any attribute that is inferred dynamically using JavaBeans introspection
+through setter and getter methods.
+
+Logback-core lays the foundation upon which the other logback modules are built. In
+general, the components in logback-core require some, albeit minimal, customization.
+However, in the next few sections, we describe several appenders which are ready for
+use out of the box.
+
+OutputStreamAppender appends events to a java.io.OutputStream. This class provides
+basic services that other appenders build upon. Users do not usually instantiate
+OutputStreamAppender objects directly, since in general the java.io.OutputStream type
+cannot be conveniently mapped to a string, as there is no way to specify the target
+OutputStream object in a configuration script. Simply put, you cannot configure a
+OutputStreamAppender from a configuration file. However, this does not mean that
+OutputStreamAppender lacks configurable properties. These properties are described next.
+
+encoder Encoder Determines the manner in which an event is written to the underlying
+OutputStreamAppender. Encoders are described in a dedicated chapter.
+
+immediateFlush boolean The default value for immediateFlush is 'true'. Immediate
+flushing of the output stream ensures that logging events are immediately written out
+and will not be lost in case your application exits without properly closing appenders.
+On the other hand, setting this property to 'false' is likely to quadruple (your
+mileage may vary) logging throughput. Again, if immediateFlush is set to 'false' and if
+appenders are not closed properly when your application exits, then logging events not
+yet written to disk may be lost.
+
+The OutputStreamAppender is the super-class of three other appenders, namely
+ConsoleAppender, FileAppender which in turn is the super class of RollingFileAppender.
+The next figure illustrates the class diagram for OutputStreamAppender and its
+subclasses.
+
+The ConsoleAppender, as the name indicates, appends on the console, or more precisely
+on System.out or System.err, the former being the default target. ConsoleAppender
+formats events with the help of an encoder specified by the user. Encoders will be
+discussed in a subsequent chapter. Both System.out and System.err are of type
+java.io.PrintStream. Consequently, they are wrapped inside an OutputStreamWriter which
+buffers I/O operations.
+
+WARNING Please note the console is comparatively slow, even very slow. You should avoid
+logging to the console in production, especially in high volume systems.
+
+target String One of the String values System.out or System.err. The default target is
+System.out.
+
+withJansi boolean since 1.6.3 Deprecated. Prefer JansiConsoleAppender instead of
+setting withJansi on a plain ConsoleAppender. When set to true, logback emits a
+deprecation warning and this option will be removed in a future release.
+
+By default withJansi is false. Setting it to true still activates Jansi via reflection
+so that ANSI color codes work on platforms that need it (notably Windows). The
+implementation probes JLine's org.jline.jansi.AnsiConsole first and falls back to the
+legacy FuseSource org.fusesource.jansi.AnsiConsole. Put the matching artifact on the
+class path (org.jline:jansi-core or org.fusesource.jansi:jansi). Unix-based systems
+such as Linux and macOS already support ANSI color codes by default.
+
+Here is a sample configuration that uses ConsoleAppender.
+
+Example: ConsoleAppender configuration
+(logback-examples/src/main/resources/chapters/appenders/conf/logback-Console.xml)
+
+```xml
+<configuration>
+<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+<!-- encoders are assigned the type
+ ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+<encoder>
+<pattern>%-4relative [%thread] %-5level %logger{35} -%kvp- %msg %n</pattern>
+</encoder>
+</appender>
+<root level="DEBUG">
+<appender-ref ref="STDOUT" />
+</root>
+</configuration>
+```
+
+After you have set your current path to the logback-examples directory and set up your
+class path, you can give the above configuration file a whirl by issuing the following
+command:
+
+java chapters.appenders.ConfigurationTester
+src/main/java/chapters/appenders/conf/logback-Console.xml
+
+since 1.6.3 The JansiConsoleAppender is a ConsoleAppender that always writes through
+JLine's org.jline.jansi.AnsiConsole. It is the recommended way to enable ANSI sequences
+on platforms that need Jansi (notably Windows). Unlike the deprecated withJansi path on
+ConsoleAppender, this class talks to AnsiConsole directly and does not use reflection.
+
+You must place org.jline:jansi-core on the class path. On start, the appender calls
+AnsiConsole.systemInstall() and routes output to AnsiConsole.out() or AnsiConsole.err()
+according to the target property. On stop, if this appender performed the install, it
+pairs that call with AnsiConsole.systemUninstall(). As with ConsoleAppender, stop
+flushes the console stream but does not close process-wide stdout or stderr.
+
+JansiConsoleAppender admits the same encoder and target properties as ConsoleAppender.
+You do not set withJansi; Jansi wrapping is always applied.
+
+Here is a sample configuration that uses JansiConsoleAppender instead of a plain
+ConsoleAppender with <withJansi>true</withJansi>:
+
+```xml
+<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+<withJansi>true</withJansi>
+<encoder>
+<pattern>%highlight(%-5level) %logger{35} - %msg%n</pattern>
+</encoder>
+</appender> 
+RECOMMENDED
+```
+
+```xml
+<appender name="STDOUT" class="ch.qos.logback.core.JansiConsoleAppender">
+<encoder>
+<pattern>%highlight(%-5level) %logger{35} - %msg%n</pattern>
+</encoder>
+</appender> 
+FileAppender
+```
+
+The FileAppender, a subclass of OutputStreamAppender, appends log events into a file.
+The target file is specified by the File option. If the file already exists, it is
+either appended to, or truncated depending on the value of the append property.
+
+append boolean If true, events are appended at the end of an existing file. Otherwise,
+if append is false, any existing file is truncated. The append option is set to true by
+default.
+
+file String The name of the file to write to. If the file does not exist, it is
+created. On the MS Windows platform users frequently forget to escape backslashes. For
+example, the value c:\temp\test.log is not likely to be interpreted properly as '\t'
+is an escape sequence interpreted as a single tab character (\u0009). Correct values
+can be specified as c:/temp/test.log or alternatively as c:\\temp\\test.log. The File
+option has no default value. If the parent directory of the file does not exist,
+FileAppender will automatically create it, including any necessary but nonexistent
+parent directories.
+
+bufferSize FileSize The bufferSize option set the size of the output buffer in case
+immediateFlush option is set to false. Default value for bufferSize is 8192. The value
+256 KB seems to sufficient even in cases of very heavy and persistent loads.
+
+Options in defined in units of "FileSize" can be specified in bytes, kilobytes,
+megabytes or gigabytes by suffixing a numeric value with KB, MB and respectively GB.
+For example, 5242880, 5120KB, 5120 KB, 5MB, 5 MB, 2 GB and 2GB are all valid values,
+with the first five being equivalent. A numerical value with no suffix is taken to be
+in units of bytes.
+
+prudent boolean In prudent mode, FileAppender will safely write to the specified file,
+even in the presence of other FileAppender instances running in different JVMs,
+potentially running on different hosts. The default value for prudent mode is false.
+Prudent mode can be used in conjunction with RollingFileAppender although some
+restrictions apply.
+
+Prudent mode implies that append property is automatically set to true.
+
+Prudent more relies on exclusive file locks. Experiments show that file locks
+approximately triple (x3) the cost of writing a logging event. On an "average" PC
+writing to a file located on a local hard disk, when prudent mode is off, it takes
+about 10 microseconds to write a single logging event. When prudent mode is on, it
+takes approximately 30 microseconds to output a single logging event. This translates
+to logging throughput of 100'000 events per second when prudent mode is off and
+approximately 33'000 events per second in prudent mode.
+
+Prudent mode effectively serializes I/O operations between all JVMs writing to the same
+file. Thus, as the number of JVMs competing to access a file increases so will the
+delay incurred by each I/O operation. As long as the total number of I/O operations is
+in the order of 20 log requests per second, the impact on performance should be
+negligible. Applications generating 100 or more I/O operations per second can see an
+impact on performance and should avoid using prudent mode.
+
+Networked file locks When the log file is located on a networked file system, the cost
+of prudent mode is even greater. Just as importantly, file locks over a networked file
+system can be sometimes strongly biased such that the process currently owning the lock
+immediately re-obtains the lock upon its release. Thus, while one process hogs the
+lock for the log file, other processes starve waiting for the lock to the point of
+appearing deadlocked.
+
+The impact of prudent mode is highly dependent on network speed as well as the OS
+implementation details. We provide a very small application called FileLockSimulator
+which can help you simulate the behavior of prudent mode in your environment.
+
+Immediate Flush By default, each log event is immediately flushed to the underlying
+output stream. This default approach is safer in the sense that logging events are not
+lost in case your application exits without properly closing appenders. However, for
+significantly increased logging throughput, you may want to set the immediateFlush
+property to false.
+
+Below is an example of a configuration file for FileAppender:
+
+Example: FileAppender configuration
+(logback-examples/src/main/resources/chapters/appenders/conf/logback-fileAppender.xml)
+
+```xml
+<configuration>
+<appender name="FILE" class="ch.qos.logback.core.FileAppender">
+<file>testFile.log</file>
+<append>true</append>
+<!-- set immediateFlush to false for much higher logging throughput -->
+<immediateFlush>true</immediateFlush>
+<!-- encoders are assigned the type
+ ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+<encoder>
+<pattern>%-4relative [%thread] %-5level %logger{35} -%kvp- %msg%n</pattern>
+</encoder>
+</appender>
+<root level="DEBUG">
+<appender-ref ref="FILE" />
+</root>
+</configuration>
+```
+
+After changing the current directory to logback-examples, run this example by launching
+the following command:
+
+java chapters.appenders.ConfigurationTester
+src/main/java/chapters/appenders/conf/logback-fileAppender.xml
+
+During the application development phase or in the case of short-lived applications,
+e.g. batch applications, it is desirable to create a new log file at each new
+application launch. This is fairly easy to do with the help of the <timestamp> element.
+Here's an example.
+
+Example: Uniquely named FileAppender configuration by timestamp
+(logback-examples/src/main/resources/chapters/appenders/conf/logback-timestamp.xml)
+
+```xml
+<!-- Insert the current time formatted as "yyyyMMdd'T'HHmmss" under
+ the key "bySecond" into the logger context. This value will be
+ available to all subsequent configuration elements. -->
+<timestamp key="bySecond" datePattern="yyyyMMdd'T'HHmmss"/>
+<appender name="FILE" class="ch.qos.logback.core.FileAppender">
+<!-- use the previously created timestamp to create a uniquely
+ named log file -->
+<file> log-${bySecond}.txt </file>
+<encoder>
+<pattern>%logger{35} -%kvp- %msg%n</pattern>
+</encoder>
+</appender>
+```
+
+<root level="DEBUG"> <appender-ref ref="FILE" /> </root> </configuration>
+
+The timestamp element takes two mandatory attributes key and datePattern and an optional
+timeReference attribute. The key attribute is the name of the key under which the
+timestamp will be available to subsequent configuration elements as a variable. The
+datePattern attribute denotes the date pattern used to convert the current time (at
+which the configuration file is parsed) into a string. The date pattern should follow
+the conventions defined in SimpleDateFormat. The timeReference attribute denotes the
+time reference for the time stamp. The default is the interpretation/parsing time of
+the configuration file, i.e. the current time. However, under certain circumstances it
+might be useful to use the context birth time as time reference. This can be
+accomplished by setting the timeReference attribute to "contextBirth".
+
+Experiment with the <timestamp> element by running the command:
+
+java chapters.appenders.ConfigurationTester
+src/main/resources/chapters/appenders/conf/logback-timestamp.xml To use the logger
+context birthdate as time reference, you would set the timeReference attribute to
+"contextBirth" as shown below.
+
+Example: Timestamp using context birthdate as time reference
+(logback-examples/src/main/resources/chapters/appenders/conf/logback-timestamp-contextBirth.xml)
+
+```xml
+<configuration>
+<timestamp key="bySecond" datePattern="yyyyMMdd'T'HHmmss" timeReference="contextBirth" />
+...
+</configuration> 
+RollingFileAppender
+```
+
+### RollingFileAppender
+
+extends FileAppender with the capability to rollover log files. For example,
+RollingFileAppender can log to a file named log.txt file and, once a certain condition
+is met, change its logging target to another file.
+
+There are two important subcomponents that interact with RollingFileAppender. The first
+RollingFileAppender sub-component, namely RollingPolicy, (see below) is responsible for
+undertaking the actions required for a rollover. A second subcomponent of
+RollingFileAppender, namely TriggeringPolicy, (see below) will determine if and exactly
+when rollover occurs. Thus, RollingPolicy is responsible for the what and
+TriggeringPolicy is responsible for the when.
+
+To be of any use, a RollingFileAppender must have both a RollingPolicy and a
+TriggeringPolicy set up. However, if its RollingPolicy also implements the
+TriggeringPolicy interface, then only the former needs to be specified explicitly.
+
+Here are the available properties for RollingFileAppender:
+
+file String See FileAppender properties. Note that file can be null in which case the
+output is written only to the target specified by the RollingPolicy.
+
+rollingPolicy RollingPolicy This option is the component that will dictate
+RollingFileAppender 's behavior when rollover occurs. See more information below.
+
+triggeringPolicy TriggeringPolicy This option is the component that will tell
+RollingFileAppender when to activate the rollover procedure. See more information
+below.
+
+prudent boolean FixedWindowRollingPolicy is not supported in prudent mode.
+RollingFileAppender supports the prudent mode in conjunction with
+TimeBasedRollingPolicy albeit with two restrictions.
+
+In prudent mode, file compression is not supported nor allowed. (We can't have one JVM
+writing to a file while another JVM is compressing it.)
+
+The file property of FileAppender cannot be set and must be left blank. Indeed, most
+operating systems do not allow renaming of a file while another process has it opened.
+See also properties for FileAppender.
+
+RollingPolicy is responsible for the rollover procedure which involves file moving and
+renaming.
+
+```java
+import ch.qos.logback.core.FileAppender;
+import ch.qos.logback.core.spi.LifeCycle;
+```
+
+```java
+public interface RollingPolicy extends LifeCycle  {
+public void rollover() throws RolloverFailure;
+public String getActiveFileName();
+public CompressionMode getCompressionMode();
+public void setParent(FileAppender appender);
+
+}
+The rollover method accomplishes the work involved
+ in archiving the current log file. The getActiveFileName() method is called to compute the
+ file name of the current log file (where live logs are written
+ to). As indicated by getCompressionMode method a
+ RollingPolicy is also responsible for determining the compression
+ mode. Lastly, a RollingPolicy is given a reference to
+ its parent via the setParent method.
+```
+
+TimeBasedRollingPolicy is possibly the most popular rolling policy. It defines a
+rollover policy based on time, for example by day or by month. TimeBasedRollingPolicy
+assumes the responsibility for rollover as well as for the triggering of said rollover.
+Indeed, TimeBasedTriggeringPolicy implements both RollingPolicy and TriggeringPolicy
+interfaces.
+
+TimeBasedRollingPolicy 's configuration takes one mandatory fileNamePattern property
+and several optional properties.
+
+fileNamePattern String The mandatory fileNamePattern property defines the name of the
+rolled-over (archived) log files. Its value should consist of the name of the file,
+plus a suitably placed %d conversion specifier. The %d conversion specifier may contain
+a date-and-time pattern as specified by the java.text.SimpleDateFormat class. If the
+date-and-time pattern is omitted, then the default pattern yyyy-MM-dd is assumed. The
+rollover period is inferred from the value of fileNamePattern. Note that the file
+property in RollingFileAppender (the parent of TimeBasedRollingPolicy) can be either set
+to a value or omitted (=null). By setting the file property of the containing
+FileAppender, you can decouple the location of the active log file and the location of
+the archived log files. The current logs will always be targeted at the file specified
+by the file property. It follows that the name of the currently active log file will
+not change over time.
+
+However, if you choose to omit the file property, then the active file will be
+computed anew for each period based on the value of fileNamePattern. In this
+configuration no roll over occurs, unless file compression is specified. The examples
+below should clarify this point.
+
+The date-and-time pattern, as found within the accolades of %d{} follow
+java.text.SimpleDateFormat conventions. The forward slash '/' or backward slash '\'
+characters anywhere within the fileNamePattern property or within the date-and-time
+pattern will be interpreted as directory separators.
+
+Multiple %d specifiers It is possible to specify multiple %d specifiers but only one
+of which can be primary, i.e. used to infer the rollover period. All other tokens must
+be marked as auxiliary by passing the 'aux' parameter (see examples below).
+
+Multiple %d specifiers allow you to organize archive files in a folder structure
+different than that of the roll-over period. For example, the file name pattern shown
+below organizes log folders by year and month but roll-over log files every day at
+midnight.
+
+/var/log/ %d{yyyy/MM, aux} /myapplication. %d{yyyy-MM-dd}.log TimeZone Under certain
+circumstances, you might wish to roll-over log files according to a clock in a timezone
+different than that of the host. It is possible to pass a timezone argument following
+the date-and-time pattern within the %d conversion specifier. For example:
+
+aFolder/test. %d {yyyy-MM-dd-HH, UTC }.log If the specified timezone identifier is
+unknown or misspelled, the GMT timezone is assumed as dictated by the
+TimeZone.getTimeZone(String) method specification.
+
+maxHistory int The optional maxHistory property controls the maximum number of archive
+files to keep, asynchronously deleting older files. For example, if you specify
+monthly rollover, and set maxHistory to 6, then 6 months worth of archives files will
+be kept with files older than 6 months deleted. Note as old archived log files are
+removed, any folders which were created for the purpose of log file archiving will be
+removed as appropriate.
+
+Setting maxHistory to zero disables archive removal. By default, maxHistory is set to
+zero, i.e. by default there is no archive removal.
+
+totalSizeCap FileSize The optional totalSizeCap property controls the total size of all
+archive files. Oldest archives are deleted asynchronously when the total size cap is
+exceeded. The totalSizeCap property requires maxHistory property to be set as well.
+Moreover, the "max history" restriction is always applied first and the "total size
+cap" restriction applied second. In other words, if enabled, both restrictions are
+applied, albeit sequentially.
+
+The totalSizeCap property can be specified in units of bytes, kilobytes, megabytes or
+gigabytes by suffixing a numeric value with KB, MB and respectively GB. For example,
+5242880, 5120KB, 5120 KB, 5MB, 5 MB, 2 GB and 2GB are all valid values, with the first
+five being equivalent. A numerical value with no suffix is taken to be in units of
+bytes.
+
+By default, totalSizeCap is set to zero, meaning that there is no total size cap.
+
+cleanHistoryOnStart boolean If set to true, archive removal will be executed on
+appender start up. By default, this property is set to false.
+
+Archive removal is normally performed during roll over. However, some applications may
+not live long enough for roll over to be triggered. It follows that for such
+short-lived applications archive removal may never get a chance to execute. By setting
+cleanHistoryOnStart to true, archive removal is performed at appender start up.
+
+Here are a few fileNamePattern values with an explanation of their effects.
+
+/wombat/foo.%d Daily rollover (at midnight). Due to the omission of the optional time
+and date pattern for the %d token specifier, the default pattern of yyyy-MM-dd is
+assumed, which corresponds to daily rollover. file property not set: During November
+23rd, 2006, logging output will go to the file /wombat/foo.2006-11-23. At midnight and
+for the rest of the 24th, logging output will be directed to /wombat/foo.2006-11-24.
+
+file property set to /wombat/foo.txt: During November 23rd, 2006, logging output will
+go to the file /wombat/foo.txt. At midnight, foo.txt will be renamed as
+/wombat/foo.2006-11-23. A new /wombat/foo.txt file will be created and for the rest of
+November 24th logging output will be directed to foo.txt.
+
+/wombat/%d{yyyy/MM}/foo.txt Rollover at the beginning of each month. file property not
+set: During the month of October 2006, logging output will go to
+/wombat/2006/10/foo.txt. After midnight of October 31st and for the rest of November,
+logging output will be directed to /wombat/2006/11/foo.txt.
+
+file property set to /wombat/foo.txt: The active log file will always be
+/wombat/foo.txt. During the month of October 2006, logging output will go to
+/wombat/foo.txt. At midnight of October 31st, /wombat/foo.txt will be renamed as
+/wombat/2006/10/foo.txt. A new /wombat/foo.txt file will be created where logging
+output will go for the rest of November. At midnight of November 30th, /wombat/foo.txt
+will be renamed as /wombat/2006/11/foo.txt and so on.
+
+/wombat/foo.%d{yyyy-ww}.log Rollover at the first day of each week. Note that the first
+day of the week depends on the locale. Similar to previous cases, except that rollover
+will occur at the beginning of every new week.
+
+/wombat/foo%d{yyyy-MM-dd_HH}.log Rollover at the top of each hour. Similar to previous
+cases, except that rollover will occur at the top of every hour.
+
+/wombat/foo%d{yyyy-MM-dd_HH-mm}.log Rollover at the beginning of every minute. Similar
+to previous cases, except that rollover will occur at the beginning of every minute.
+
+/wombat/foo%d{yyyy-MM-dd_HH-mm, UTC}.log Rollover at the beginning of every minute.
+Similar to previous cases, except that file names will be expressed in UTC.
+
+/foo/%d{yyyy-MM, aux }/%d.log Rollover daily. Archives located under a folder containing
+year and month. In this example, the first %d token is marked as aux iliary. The second
+%d token, with time and date pattern omitted, is then assumed to be primary. Thus,
+rollover will occur daily (default for %d) and the folder name will depend on the year
+and month. For example, during the month of November 2006, archived files will all
+placed under the /foo/2006-11/ folder, e.g /foo/2006-11/2006-11-14.log.
+
+Any forward or backward slash characters are interpreted as folder (directory)
+separators. Any required folder will be created as necessary. You can thus easily place
+your log files in separate folders.
+
+TimeBasedRollingPolicy supports automatic file compression. This feature is enabled if
+the value of the fileNamePattern option ends with.gz.zip or.xz. Note that xz compression
+requires Tukaani project's XZ library for Java. In case XZ compression is requested
+but the XZ library is missing, then logback will substitute GZ compression as a
+fallback.
+
+/wombat/foo.%d.gz Daily rollover (at midnight) with automatic GZIP compression of the
+archived files. file property not set: During November 23rd, 2009, logging output will
+go to the file /wombat/foo.2009-11-23. However, at midnight that file will be
+compressed to become /wombat/foo.2009-11-23.gz. For the 24th of November, logging
+output will be directed to /wombat/folder/foo.2009-11-24 until it's rolled over at the
+beginning of the next day.
+
+file property set to /wombat/foo.txt: During November 23rd, 2009, logging output will
+go to the file /wombat/foo.txt. At midnight that file will be compressed and renamed as
+/wombat/foo.2009-11-23.gz. A new /wombat/foo.txt file will be created where logging
+output will go for the rest of November 24th. At midnight November 24th,
+/wombat/foo.txt will be compressed and renamed as /wombat/foo.2009-11-24.gz and so on.
+
+The fileNamePattern serves a dual purpose. First, by studying the pattern, logback
+computes the requested rollover periodicity. Second, it computes each archived file's
+name. Note that it is possible for two different patterns to specify the same
+periodicity. The patterns yyyy-MM and yyyy@MM both specify monthly rollover, although
+the resulting archive files will carry different names.
+
+By setting the file property you can decouple the location of the active log file and
+the location of the archived log files. The logging output will be targeted into the
+file specified by the file property. It follows that the name of the active log file
+will not change over time. However, if you choose to omit the file property, then the
+active file will be computed anew for each period based on the value of
+fileNamePattern. By leaving the file option unset you can avoid file renaming errors
+which occur while there exist external file handles referencing log files during roll
+over.
+
+The maxHistory property controls the maximum number of archive files to keep, deleting
+older files. For example, if you specify monthly rollover, and set maxHistory to 6,
+then 6 months worth of archives files will be kept with files older than 6 months
+deleted. Note as old archived log files are removed, any folders which were created for
+the purpose of log file archiving will be removed as appropriate.
+
+For various technical reasons, rollovers are not clock-driven but depend on the arrival
+of logging events. For example, on 8th of March 2002, assuming the fileNamePattern is
+set to yyyy-MM-dd (daily rollover), the arrival of the first event after midnight will
+trigger a rollover. If there are no logging events during, say 23 minutes and 47
+seconds after midnight, then rollover will actually occur at 00:23'47 AM on March 9th
+and not at 0:00 AM. Thus, depending on the arrival rate of events, rollovers might be
+triggered with some latency. However, regardless of the delay, the rollover algorithm
+is known to be correct, in the sense that all logging events generated during a certain
+period will be output in the correct file delimiting that period.
+
+Here is a sample configuration for RollingFileAppender in conjunction with a
+TimeBasedRollingPolicy.
+
+Example: Sample configuration of a RollingFileAppender using a TimeBasedRollingPolicy
+(logback-examples/src/main/resources/chapters/appenders/conf/logback-RollingTimeBased.xml)
+
+```xml
+<configuration>
+<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+<file>logFile.log</file>
+<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+<!-- daily rollover -->
+<fileNamePattern>logFile.%d{yyyy-MM-dd}.log</fileNamePattern>
+```
+
+<!-- keep 30 days' worth of history capped at 3GB total size -->
+<maxHistory>30</maxHistory> <totalSizeCap>3GB</totalSizeCap>
+
+```xml
+</rollingPolicy>
+<encoder>
+<pattern>%-4relative [%thread] %-5level %logger{35} -%kvp- %msg%n</pattern>
+</encoder>
+</appender>
+```
+
+<root level="DEBUG"> <appender-ref ref="FILE" /> </root> </configuration>
+
+The next configuration sample illustrates the use of RollingFileAppender associated with
+TimeBasedRollingPolicy in prudent mode.
+
+Example: Sample configuration of a RollingFileAppender using a TimeBasedRollingPolicy
+(logback-examples/src/main/resources/chapters/appenders/conf/logback-PrudentTimeBasedRolling.xml)
+
+```xml
+<configuration>
+<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+<!-- Support multiple-JVM writing to the same log file -->
+<prudent>true</prudent>
+<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+<fileNamePattern>logFile.%d{yyyy-MM-dd}.log</fileNamePattern>
+<maxHistory>30</maxHistory>
+<totalSizeCap>3GB</totalSizeCap>
+</rollingPolicy>
+```
+
+```xml
+<encoder>
+<pattern>%-4relative [%thread] %-5level %logger{35} -%kvp -%msg%n</pattern>
+</encoder>
+</appender>
+```
+
+<root level="DEBUG"> <appender-ref ref="FILE" /> </root> </configuration>
+
+Sometimes you may wish to archive files essentially by date but at the same time limit
+the size of each log file, in particular if post-processing tools impose size limits on
+the log files. In order to address this requirement, logback ships with
+SizeAndTimeBasedRollingPolicy.
+
+Note that TimeBasedRollingPolicy already allows limiting the combined size of archived
+log files. If you only wish to limit the combined size of log archives, then
+TimeBasedRollingPolicy described above and setting the totalSizeCap property should be
+amply sufficient. Moreover, given that file renaming is a relatively slow process and
+is frought with problems, we discourage the use of SizeAndTimeBasedRollingPolicy unless
+you have a real-world use case.
+
+The roll over based on size relies on the "%i" conversion token in addition to "%d".
+Both the %i and %d tokens are mandatory. Each time the current log file reaches
+maxFileSize before the current time period ends, it will be archived with an increasing
+index, starting at 0.
+
+The table below lists the properties applicable for SizeAndTimeBasedRollingPolicy. Note
+these properties complement those applicable for TimeBasedRollingPolicy.
+
+maxFileSize FileSize Each time the current log file reaches maxFileSize before the
+current time period ends, it will be archived with an increasing index, starting at 0.
+
+Options in defined in units of "FileSize" can be specified in bytes, kilobytes,
+megabytes or gigabytes by suffixing a numeric value with KB, MB and respectively GB.
+For example, 5000000, 5000KB, 5MB and 2GB are all valid values, with the first three
+being equivalent.
+
+checkIncrement Duration since 1.5.8 The checkIncrement property is no longer needed as
+logback now counts the number of bytes written to file.
+
+Here is a sample configuration file demonstrating time and size based log file
+archiving.
+
+Example: Sample configuration for SizeAndTimeBasedRollingPolicy
+(logback-examples/src/main/resources/chapters/appenders/conf/logback-sizeAndTime.xml)
+
+```xml
+<configuration>
+<appender name="ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
+<file>mylog.txt</file>
+<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+<!-- rollover daily -->
+<fileNamePattern> mylog-%d{yyyy-MM-dd}. %i.txt </fileNamePattern>
+<!-- each file should be at most 100MB, keep 60 days worth of history, but at most 20GB -->
+<maxFileSize>100MB</maxFileSize>
+<maxHistory>60</maxHistory>
+<totalSizeCap>20GB</totalSizeCap>
+</rollingPolicy>
+<encoder>
+<pattern>%msg%n</pattern>
+</encoder>
+</appender>
+```
+
+<root level="DEBUG"> <appender-ref ref="ROLLING" /> </root>
+
+Note the "%i" conversion token in addition to "%d". Both the %i and %d tokens are
+mandatory. Each time the current log file reaches maxFileSize before the current time
+period ends, it will be archived with an increasing index, starting at 0.
+
+Size and time based archiving supports deletion of old archive files. You need to
+specify the number of periods to preserve with the maxHistory property. When your
+application is stopped and restarted, logging will continue at the correct location,
+i.e. at the largest index number for the current period.
+
+In versions prior to 1.1.7, this document mentioned a component called
+SizeAndTimeBasedFNATP. However, given that SizeAndTimeBasedRollingPolicy offers a
+simpler configuration structure, we no longer document SizeAndTimeBasedFNATP. Moreover,
+in logback version 1.5.8, SizeAndTimeBasedFNATP was renamed as
+SizeAndTimeBasedFileNamingAndTriggeringPolicy. Thus, earlier configuration files using
+SizeAndTimeBasedFNATP will no longer work.
+
+Given that file renaming is a relatively slow process and is frought with problems, we
+consider FixedWindowRollingPolicy as a deprecated policy and do not recommend its use.
+
+When rolling over, FixedWindowRollingPolicy renames files according to a fixed window
+algorithm as described below.
+
+The fileNamePattern option represents the file name pattern for the archived (rolled
+over) log files. This option is required and must include an integer token %i somewhere
+within the pattern.
+
+Here are the available properties for FixedWindowRollingPolicy
+
+minIndex int This option represents the lower bound for the window's index.
+
+maxIndex int This option represents the upper bound for the window's index.
+
+fileNamePattern String This option represents the pattern that will be followed by the
+FixedWindowRollingPolicy when renaming the log files. It must contain the string %i,
+which will indicate the position where the value of the current window index will be
+inserted.
+
 ## 5. Encoders
 
-ACTION THIS DAY Make sure they have all they want on extreme priority and report to me that this has been done. —CHURCHILL on October 1941 to General Hastings Ismay in response to a request for more resources requested by Alan Turing and his cryptanalyst colleagues at Bletchley Park Encoders are responsible for transforming an event into a byte array as well as writing out that byte array into an OutputStream . Encoders were introduced in logback version 0.9.19. In previous versions, most appenders relied on a layout to transform an event into a string and write it out using a java.io.Writer . In previous versions of logback, users would nest a PatternLayout within FileAppender . Since logback 0.9.19, FileAppender and subclasses expect an encoder and no longer take a layout . Layouts, as discussed in detail in the next chapter, are only able to transform an event into a String which restricts their scope to non-binary output. Encoders are responsible for transforming an incoming event into a byte array. Here is the Encoder interface: ``` package ch.qos.logback.core.encoder; /** * Encoders are responsible for transform an incoming event into a byte array */ public interface Encoder<E> extends ContextAware, LifeCycle { ``` /** * Get header bytes. This method is typically called upon opening of an output * stream. * * @return header bytes. Null values are allowed. */ byte[] headerBytes(); /** * Encode an event as bytes. * * @param event */ byte[] encode(E event); /** * Get footer bytes. This method is typically called prior to the closing of the * stream where events are written. * * @return footer bytes. Null values are allowed. */ byte[] footerBytes(); } As you can see, the Encoder interface consists of few methods, but surprisingly many useful things can be accomplished with these methods. Until logback version 0.9.19, many appenders relied on the Layout instances to control the format of log output. As there exists substantial amount of code based on the layout interface, we needed a way for encoders to interoperate with layouts. LayoutWrappingEncoder bridges the gap between encoders and layouts. It implements the encoder interface and wraps a layout to which it delegates the work of transforming an event into string. Below is an excerpt from the LayoutWrappingEncoder class illustrating how delegation to the wrapped layout instance is done. // encode a given event as a byte[] public byte[] encode(E event) { String txt = layout.doLayout(event); return convertToBytes(txt); } private byte[] convertToBytes(String s) { if (charset == null) { return s.getBytes(); } else { return s.getBytes(charset); } } } The doEncode () method starts by having the wrapped layout convert the incoming event into string. The resulting text string is converted to bytes according to the charset encoding chosen by the user. Given that PatternLayout is the most commonly used layout, logback caters for this common use-case with PatternLayoutEncoder , an extension of LayoutWrappingEncoder restricted to wrapping instances of PatternLayout . As of logback version 0.9.19, whenever a FileAppender or one of its subclasses was configured with a PatternLayout , a PatternLayoutEncoder must be used instead. This is explained in the relevant entry in the logback error codes . As of logback 1.2.0 , the immediateFlush property is part of the enclosing Appender. In order to facilitate parsing of log files, logback can insert the pattern used for the log output at the top of log files. This feature is disabled by default. It can be enabled by setting the outputPatternAsHeader property to 'true' for relevant PatternLayoutEncoder . Here is an example: ``` <configuration> <!-- omitted lines ... --> <appender name="FILE" class="ch.qos.logback.core.FileAppender"> <file>foo.log</file> <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder"> <pattern>%d %-5level [%thread] %logger{0}: %msg%n</pattern> <outputPatternAsHeader>true</outputPatternAsHeader> </encoder> </appender> <!-- omitted lines ... --> </configuration> ``` #logback.classic pattern: %d [%thread] %-5level %logger{36} - %msg%n 2012-04-26 14:54:38,461 [main] DEBUG com.foo.App - Hello world 2012-04-26 14:54:38,461 [main] DEBUG com.foo.App - Hi again ... The line starting with "#logback.classic pattern" is newly inserted pattern line. JsonEncoder follows the JSON Lines standard. It transforms a logging event into a valid json text in conformance with [ RFC-8259 ]. Each logging event in JSON text format is followed by a new line. More specifically, certain characters such as quotations marks, backslash, forward slash, form feed, line feed, carriage return characters are escaped according to the rules described in section 7 of RFC-8259 . { "sequenceNumber":0, "timestamp":1686403686358, "nanoseconds":358357100, "level":"INFO", "threadName":"main", "loggerName":"org.foo.Bar", "context":{ "name":"default", "birthdate":1686403685679, "properties":{ "moo":"299857071" } }, "mdc":{ "a1":"v1299857071" }, "kvpList":[ { "ik299857071":"iv299857071" }, { "a":"b" } ], "message":"Hello \"Alice\"", "throwable":{ "className":"java.lang.RuntimeException", "message":"an error", "stepArray":[ { "className":"org.foo.Bar", "methodName":"httpCall", "fileName":"Bar.java",
+ACTION THIS DAY Make sure they have all they want on extreme priority and report to me
+that this has been done.
+
+—CHURCHILL on October 1941 to General Hastings Ismay in response to a request for more
+resources requested by Alan Turing and his cryptanalyst colleagues at Bletchley Park
+
+Encoders are responsible for transforming an event into a byte array as well as writing
+out that byte array into an OutputStream. Encoders were introduced in logback version
+0.9.19. In previous versions, most appenders relied on a layout to transform an event
+into a string and write it out using a java.io.Writer. In previous versions of logback,
+users would nest a PatternLayout within FileAppender. Since logback 0.9.19, FileAppender
+and subclasses expect an encoder and no longer take a layout.
+
+Layouts, as discussed in detail in the next chapter, are only able to transform an
+event into a String which restricts their scope to non-binary output.
+
+Encoders are responsible for transforming an incoming event into a byte array. Here is
+the Encoder interface:
+
+```java
+package ch.qos.logback.core.encoder;
+/**
+ * Encoders are responsible for transform an incoming event into a byte array
+ */
+public interface Encoder<E> extends ContextAware, LifeCycle  {
+```
+
+/** * Get header bytes. This method is typically called upon opening of an output *
+stream. * * @return header bytes. Null values are allowed. */ byte[] headerBytes();
+
+/** * Encode an event as bytes. * * @param event */ byte[] encode(E event);
+
+/** * Get footer bytes. This method is typically called prior to the closing of the *
+stream where events are written. * * @return footer bytes. Null values are allowed.
+*/ byte[] footerBytes(); } As you can see, the Encoder interface consists of few
+methods, but surprisingly many useful things can be accomplished with these methods.
+
+Until logback version 0.9.19, many appenders relied on the Layout instances to control
+the format of log output. As there exists substantial amount of code based on the
+layout interface, we needed a way for encoders to interoperate with layouts.
+LayoutWrappingEncoder bridges the gap between encoders and layouts. It implements the
+encoder interface and wraps a layout to which it delegates the work of transforming an
+event into string.
+
+Below is an excerpt from the LayoutWrappingEncoder class illustrating how delegation to
+the wrapped layout instance is done.
+
+```java
+public class LayoutWrappingEncoder<E> extends EncoderBase<E>  {
+```
+
+// encode a given event as a byte[] public byte[] encode(E event) { String txt =
+layout.doLayout(event); return convertToBytes(txt); }
+
+private byte[] convertToBytes(String s) { if (charset == null) { return s.getBytes();
+} else { return s.getBytes(charset); } } } The doEncode () method starts by having
+the wrapped layout convert the incoming event into string. The resulting text string
+is converted to bytes according to the charset encoding chosen by the user.
+
+Given that PatternLayout is the most commonly used layout, logback caters for this
+common use-case with PatternLayoutEncoder, an extension of LayoutWrappingEncoder
+restricted to wrapping instances of PatternLayout.
+
+As of logback version 0.9.19, whenever a FileAppender or one of its subclasses was
+configured with a PatternLayout, a PatternLayoutEncoder must be used instead. This is
+explained in the relevant entry in the logback error codes.
+
+As of logback 1.2.0, the immediateFlush property is part of the enclosing Appender.
+
+In order to facilitate parsing of log files, logback can insert the pattern used for
+the log output at the top of log files. This feature is disabled by default. It can be
+enabled by setting the outputPatternAsHeader property to 'true' for relevant
+PatternLayoutEncoder. Here is an example:
+
+```xml
+<configuration>
+<!-- omitted lines... -->
+<appender name="FILE" class="ch.qos.logback.core.FileAppender">
+<file>foo.log</file>
+<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+<pattern>%d %-5level [%thread] %logger{0}: %msg%n</pattern>
+<outputPatternAsHeader>true</outputPatternAsHeader>
+</encoder>
+</appender>
+<!-- omitted lines... -->
+</configuration>
+```
+
+This will result output akin to the following in the log file:
+
+#logback.classic pattern: %d [%thread] %-5level %logger{36} - %msg%n 2012-04-26
+14:54:38,461 [main] DEBUG com.foo.App - Hello world 2012-04-26 14:54:38,461 [main] DEBUG
+com.foo.App - Hi again ... The line starting with "#logback.classic pattern" is newly
+inserted pattern line.
+
+JsonEncoder follows the JSON Lines standard. It transforms a logging event into a
+valid json text in conformance with [ RFC-8259 ]. Each logging event in JSON text
+format is followed by a new line. More specifically, certain characters such as
+quotations marks, backslash, forward slash, form feed, line feed, carriage return
+characters are escaped according to the rules described in section 7 of RFC-8259.
+
+{ "sequenceNumber":0, "timestamp":1686403686358, "nanoseconds":358357100,
+"level":"INFO", "threadName":"main", "loggerName":"org.foo.Bar", "context":{
+"name":"default", "birthdate":1686403685679, "properties":{ "moo":"299857071" } },
+"mdc":{ "a1":"v1299857071" }, "kvpList":[ { "ik299857071":"iv299857071" }, {
+"a":"b" } ], "message":"Hello \"Alice\"", "throwable":{
+"className":"java.lang.RuntimeException", "message":"an error", "stepArray":[ {
+"className":"org.foo.Bar", "methodName":"httpCall", "fileName":"Bar.java",
+"lineNumber":293 }, { "className":"jdk.internal.reflect.DirectMethodHandleAccessor",
+"methodName":"invoke", "fileName":"DirectMethodHandleAccessor.java", "lineNumber":104
+}, .... omitted lines ] } } Note that actual output will be denser, with only one
+logging event per line.
+
+```xml
+<configuration>
+<appender name="FILE" class="ch.qos.logback.core.FileAppender">
+<file>foo.json</file>
+<encoder class="ch.qos.logback.classic.encoder.JsonEncoder"/>
+</appender>
+```
+
+<root> <level value="DEBUG"/> <appender-ref ref="FILE"/> </root>
+
+since versions 1.5.0 Output of all top-level (json) members can be enabled or disabled.
+By default all top-level members are enabled except for the "formattedMessage". Below
+is a configuration file which enables "formattedMessage" and disables output of the raw
+"message" and the "arguments" members.
+
+```xml
+<configuration>
+<appender name="FILE" class="ch.qos.logback.core.FileAppender">
+<file>foo.json</file>
+<encoder class="ch.qos.logback.classic.encoder.JsonEncoder">
+<withFormattedMessage>true</withFormattedMessage>
+<withMessage>false</withMessage>
+<withArguments>false</withArguments>
+</encoder>
+</appender>
+```
+
+<root> <level value="DEBUG"/> <appender-ref ref="FILE"/> </root>
+
+As the above example suggests, output of a top-level member with the name "pellam" can
+be enabled/disabled using the XML element <withPellam>.
+
 ## 6. Layouts
 
-TCP implementations will follow a general principle of robustness: be conservative in what you do, be liberal in what you accept from others. In case you were wondering, layouts have nothing to do with large estates in Florida. Layouts are logback components responsible for transforming an incoming event into a String. The doLayout() method in the Layout interface takes an object that represents an event (of any type) and returns a String. A synopsis of the Layout interface is shown below. String doLayout(E event); String getFileHeader(); String getPresentationHeader(); String getFileFooter(); String getPresentationFooter(); String getContentType(); } This interface is rather simple and yet is sufficient for many formatting needs. The Texan developer from Texas, whom you might know from Joseph Heller's Catch-22 , might exclaim: it just takes five methods to implement a layout!!? Logback-classic is wired to process only events of type ch.qos.logback.classic.spi.ILoggingEvent . This fact will be apparent throughout this section. Let us implement a simple yet functional layout for the logback-classic module that prints the time elapsed since the start of the application, the level of the logging event, the caller thread between brackets, its logger name, a dash followed by the event message and a new line. 10489 DEBUG [main] com.marsupial.Pouch - Hello world. Here is a possible implementation, authored by the Texan developer: Example: Sample implementation of a Layout (logback-examples/src/main/java/chapters/layouts/MySampleLayout.java) package chapters.layouts; ``` import ch.qos.logback.classic.spi.ILoggingEvent; import ch.qos.logback.core.LayoutBase; ``` ``` public String doLayout(ILoggingEvent event) { StringBuffer sbuf = new StringBuffer(128); sbuf.append(event.getTimeStamp() - event.getLoggingContextVO.getBirthTime()); sbuf.append(" "); sbuf.append(event.getLevel()); sbuf.append(" ["); sbuf.append(event.getThreadName()); sbuf.append("] "); sbuf.append(event.getLoggerName(); sbuf.append(" - "); sbuf.append(event.getFormattedMessage()); sbuf.append(CoreConstants.LINE_SEP); return sbuf.toString(); } } Note that MySampleLayout extends LayoutBase . This class manages state common to all layout instances, such as whether the layout is started or stopped, header, footer and content type data. It allows the developer to concentrate on the formatting expected from his/her Layout . Note that the LayoutBase class is generic. In its class declaration, MySampleLayout extends LayoutBase<ILoggingEvent> . ``` The doLayout(ILoggingEvent event) method, i.e. the only method in MySampleLayout , begins by instantiating a StringBuffer . It proceeds by adding various fields of the event parameter. The Texan from Texas was careful to print the formatted form of the message. This is significant if one or more parameters were passed along with the logging request. After adding these various characters to the string buffer, the doLayout() method converts the buffer into a String and returns the resulting value. In the above example, the doLayout method ignores any eventual exceptions contained in the event. In a real world layout implementation, you would most probably want to print the contents of exceptions as well. Custom layouts are configured as any other component. As mentioned earlier, FileAppender and its subclasses expect an encoder. In order to fulfill this requirement, we pass to FileAppender an instance of LayoutWrappingEncoder which wraps our MySampleLayout . Here is the configuration file: Example: Configuration of MySampleLayout (logback-examples/src/main/resources/chapters/layouts/sampleLayoutConfig.xml) Legacy Canonical (1.3) Tyler ``` <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender"> <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder"> <layout class="chapters.layouts.MySampleLayout" /> </encoder> </appender> ``` ``` <root level="DEBUG"> <appender-ref ref="STDOUT" /> </root> </configuration> ``` The sample application chapters.layouts.SampleLogging configures logback with the configuration script passed as its first argument and then logs a debug message, followed by an error message. To run this example issue the following command from within the logback-examples directory. java chapters.layouts.SampleLogging src/main/java/chapters/layouts/sampleLayoutConfig.xml This will produce: 0 DEBUG [main] chapters.layouts.SampleLogging - Everything's going well 0 ERROR [main] chapters.layouts.SampleLogging - maybe not quite... That was simple enough. The skeptic Pyrrho of Elea, who insists that nothing is certain except perhaps uncertainty itself, which is by no means certain either, might ask: how about a layout with options? The reader shall find a slightly modified version of our custom layout in MySampleLayout2.java . As mentioned throughout this manual, adding a property to a layout or any other logback component is as simple as declaring a setter method for the property. The MySampleLayout2 class contains two properties. The first one is a prefix that can be added to the output. The second property is used to choose whether to display the name of the thread from which the logging request was sent. ``` import ch.qos.logback.classic.spi.ILoggingEvent; import ch.qos.logback.core.LayoutBase; ``` String prefix = null; boolean printThreadName = true; public void setPrefix(String prefix) { this.prefix = prefix; } ``` public void setPrintThreadName(boolean printThreadName) { this.printThreadName = printThreadName; } public String doLayout(ILoggingEvent event) { StringBuffer sbuf = new StringBuffer(128); if (prefix != null) { sbuf.append(prefix + ": "); } sbuf.append(event.;getTimeStamp() - event.getLoggerContextVO().getBirthTime()); sbuf.append(" "); sbuf.append(event.;getLevel()); if (printThreadName) { sbuf.append(" ["); sbuf.append(event.;getThreadName()); sbuf.append("] "); } else { sbuf.append(" "); } sbuf.append(event.;getLoggerName()); sbuf.append(" - "); sbuf.append(event.;getFormattedMessage()); sbuf.append(LINE_SEP); return sbuf.toString(); } } The addition of the corresponding setter method is all that is needed to enable the configuration of a property. Note that the PrintThreadName property is a boolean and not a String . Configuration of logback components was covered in detail in the chapter on configuration . The chapter on Joran provides further detail. Here is the configuration file tailor made for MySampleLayout2 . ``` ``` <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender"> <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder"> <layout class="chapters.layouts.MySampleLayout2"> <prefix>MyPrefix</prefix> <printThreadName>false</printThreadName> </layout> </encoder> </appender> ``` ``` <root level="DEBUG"> <appender-ref ref="STDOUT" /> </root> </configuration> ``` Logback classic ships with a flexible layout called PatternLayout . As all layouts, PatternLayout takes a logging event and returns a String . However, this String can be customized by tweaking PatternLayout 's conversion pattern. The conversion pattern of PatternLayout is closely related to the conversion pattern of the printf() function in the C programming language. A conversion pattern is composed of literal text and format control expressions called conversion specifiers . You are free to insert any literal text within the conversion pattern. Each conversion specifier starts with a percent sign '%' and is followed by optional format modifiers , a conversion word and optional parameters between braces. The conversion word controls the data field to convert, e.g. logger name, level, date or thread name. The format modifiers control field width, padding, and left or right justification. As already mentioned on several occasions, FileAppender and subclasses expect an encoder. Consequently, when used in conjunction with FileAppender or its subclasses a PatternLayout must be wrapped within an encoder. Given that the FileAppender / PatternLayout combination is so common, logback ships with an encoder named PatternLayoutEncoder , designed solely for the purpose of wrapping a PatternLayout instance so that it can be seen as encoder. Below is an example which programmatically configures a ConsoleAppender with a PatternLayoutEncoder : Example: Sample usage of a PatternLayout (logback-examples/src/main/java/chapters/layouts/PatternSample.java) package chapters.layouts; ``` import ch.qos.logback.classic.;Logger; import ch.qos.logback.classic.;LoggerContext; import ch.qos.logback.classic.;encoder.PatternLayoutEncoder; import ch.qos.logback.classic.;spi.ILoggingEvent; import ch.qos.logback.core.;ConsoleAppender; ``` static public void main(String[] args) throws Exception { Logger rootLogger = (Logger)LoggerFactory.;getLogger(Logger.;ROOT_LOGGER_NAME); LoggerContext loggerContext = rootLogger.getLoggerContext(); // we are not interested in auto-configuration loggerContext.reset(); PatternLayoutEncoder encoder = new PatternLayoutEncoder(); encoder.setContext(loggerContext); encoder.setPattern("%-5level [%thread]: %message%n"); encoder.start(); ConsoleAppender<ILoggingEvent> appender = new ConsoleAppender<ILoggingEvent>(); appender.setContext(loggerContext); appender.setEncoder(encoder); appender.start(); rootLogger.debug("Message 1"); rootLogger.warn("Message 2"); } } In the above example, the conversion pattern is set to be "%-5level [%thread]: %message%n" . A synopsis of conversion word included in logback will be given shortly. Running PatternSample application as: Note that in the conversion pattern "%-5level [%thread]: %message%n" there is no explicit separator between literal text and conversion specifiers. When parsing a conversion pattern, PatternLayout is capable of differentiating between literal text (space characters, the brackets, colon character) and conversion specifiers. In the example above, the conversion specifier %-5level means the level of the logging event should be left justified to a width of five characters. Format specifiers will be explained below. In PatternLayout , parenthesis can be used to group conversion patterns. It follows that the '(' and ')' carry special meaning and need to be escaped if intended to be used as literals. The special nature of parenthesis is further explained below . As mentioned previously, certain conversion specifiers may include optional parameters passed between braces. A sample conversion specifier with options could be %logger{10} . Here "logger" is the conversion word, and 10 is the option. Options are further discussed below . The recognized conversions words along with their options are described in the table below. When multiple conversion words are listed in the same table cell, they are considered as aliases. This conversion word takes an integer as its first and only option. The converter's abbreviation algorithm will shorten the logger name, usually without significant loss of meaning. Setting the value of length option to zero constitutes an exception. It will cause the conversion word to return the sub-string right to the rightmost dot character in the logger name. The next table provides examples of the abbreviation algorithm in action. Please note that the rightmost segment in a logger name is never abbreviated, even if its length is longer than the length option. Other segments may be shortened to at most a single character but are never removed. Outputs the fully-qualified class name of the caller issuing the logging request. Just like the %logger conversion word above, this conversion takes an integer as an option to shorten the class name. Zero carries special meaning and will cause the simple class name to be printed without the package name prefix. By default the class name is printed in full. Generating the caller class information is not particularly fast. Thus, its use should be avoided unless execution speed is not an issue. contextName cn Outputs the name of the logger context to which the logger at the origin of the event was attached to. d { pattern } date { pattern } d { pattern , timezone } date { pattern , timezone } d { pattern , timezone , locale } date { pattern , timezone , locale } Used to output the date of the logging event. The date conversion word admits a pattern string as a parameter. The pattern syntax is compatible with the format accepted by java.text.SimpleDateFormat (in logback 1.2.x) and java.time.format.DateTimeFormatter (in logback 1.3.x). You can specify the string "ISO8601" for the ISO8601 date format , equivalent to setting "yyyy-MM-dd HH:mm:ss,SSS". Please note the space included between the date and the time parts which is not strictly ISO8601 compliant. Since 1.5.7 For strict ISO8601 format, use STRICT which is equivalent to setting the pattern "yyyy-MM-dd'T'HH:mm:ss,SSS". In the absence of a pattern parameter, the %date conversion word defaults to ISO8601 (non strict) date format. Here are some sample parameter values. They assume that the actual date is Monday 20th of October, 2036 and that the author has returned from the future to work on this document. The second parameter specifies a timezone. For example, the pattern '%date{HH:mm:ss.SSS, Australia/Perth}' would print the time in the time zone of Perth, Australia, the most isolated city on Earth. In the absence of the timezone parameter, the default timezone of the host Java platform is used. If the specified timezone identifier is unknown or misspelled, the GMT timezone is assumed as dictated by the TimeZone.getTimeZone(String) method specification. Since 1.3.6/1.4.6 The third parameter specifies the locale. For example, writing '%date{HH:mm:ss.SSS, Australia/Perth, en-AU }' would print the date in the time zone of Perth, Australia, using the english australian locale. If the locale parameter is absent, then the system's default locale is used. If an option includes special characters such as a braces, spaces or commas, you can enclose it between single or double quotes. common error Given that the comma ',' character is interpreted as the parameter separator, the pattern HH:mm:ss,SSS will be interpreted as the pattern HM:mm:ss and the timezone SSS . If you wish to include a comma in your date pattern, then simply enclose the pattern between single or double quotes. For example, %date{ " HH:mm:ss,SSS " } or %date{ ' HH:mm:ss,SSS ' }. common error Parameters must be supplied in the expected order. For example, "%date{UTC}" will not be correctly interpreted and must be provided as "%date{ISO8601, UTC}". Since 1.5.25 Outputs the timestamp of the logging event in milliseconds since the UNIX epoch (Jan 1st 1970 at midnight UTC). Options: Can be configured to output the timestamp in seconds by using "%epoch{seconds}" or "%ep{seconds}", which produces something like "1768472130". If no option (or an unrecognized option) is specified, default behaviour is to output milliseconds. ex {depth, evaluator-1, ..., evaluator-n} exception {depth, evaluator-1, ..., evaluator-n} throwable {depth, evaluator-1, ..., evaluator-n} Outputs the stack trace of the exception associated with the logging event, if any. By default the full stack trace will be output. The throwable conversion word can be followed by one of the following options: %ex mainPackage.foo.bar.TestException: Houston we have a problem at mainPackage.foo.bar.TestThrower.fire(TestThrower.java:22) at mainPackage.foo.bar.TestThrower.readyToLaunch(TestThrower.java:17) at mainPackage.ExceptionLauncher.main(ExceptionLauncher.java:38) %ex{short} mainPackage.foo.bar.TestException: Houston we have a problem at mainPackage.foo.bar.TestThrower.fire(TestThrower.java:22) %ex{full} mainPackage.foo.bar.TestException: Houston we have a problem at mainPackage.foo.bar.TestThrower.fire(TestThrower.java:22) at mainPackage.foo.bar.TestThrower.readyToLaunch(TestThrower.java:17) at mainPackage.ExceptionLauncher.main(ExceptionLauncher.java:38) %ex{2} mainPackage.foo.bar.TestException: Houston we have a problem at mainPackage.foo.bar.TestThrower.fire(TestThrower.java:22) at mainPackage.foo.bar.TestThrower.readyToLaunch(TestThrower.java:17) This conversion word can also use evaluators to test logging events against a given criterion before creating the output. For example, using %ex{full, EX_DISPLAY_EVAL} will display the full stack trace of the exception only if the evaluator called EX_DISPLAY_EVAL returns a negative answer. Evaluators are described further down in this document. If you do not specify %throwable or another throwable-related conversion word in the conversion pattern, PatternLayout will automatically add it as the last conversion word, on account of the importance of stack trace information. The $nopex conversion word can be substituted for %throwable, if you do not wish stack trace information to be displayed. See also the %nopex conversion word. F / file Outputs the file name of the Java source file where the logging request was issued. Generating the file information is not particularly fast. Thus, its use should be avoided unless execution speed is not an issue. caller{depth} caller{depthStart..depthEnd} caller{depth, evaluator-1, ... evaluator-n} caller{depthStart..depthEnd, evaluator-1, ... evaluator-n} Outputs location information of the caller which generated the logging event. The location information depends on the JVM implementation but usually consists of the fully qualified name of the calling method followed by the caller's source, the file name and line number between parentheses. A integer can be added to the caller conversion specifier's options to configure the depth of the information to be displayed. 0 [main] DEBUG - logging statement Caller+0 at mainPackage.sub.;sample.Bar.sampleMethodName(Bar.java:22) Caller+1 at mainPackage.sub.;sample.Bar.createLoggingRequest(Bar.java:17) And %caller{3} would display this other excerpt: 16 [main] DEBUG - logging statement Caller+0 at mainPackage.sub.;sample.Bar.sampleMethodName(Bar.java:22) Caller+1 at mainPackage.sub.;sample.Bar.createLoggingRequest(Bar.java:17) Caller+2 at mainPackage.ConfigTester.;main(ConfigTester.;java:38) A range specifier can be added to the caller conversion specifier's options to configure the depth range of the information to be displayed. 0 [main] DEBUG - logging statement Caller+0 at mainPackage.sub.;sample.Bar.createLoggingRequest(Bar.java:17) This conversion word can also use evaluators to test logging events against a given criterion before computing caller data. For example, using %caller{3, CALLER_DISPLAY_EVAL} will display three lines of stacktrace, only if the evaluator called CALLER_DISPLAY_EVAL returns a positive answer. kvp{NONE|SINGLE|DOUBLE} Outputs the key value pairs contained in the logging event. You can override the default by specifying NONE for no quote character or SINGLE for a single quote character, DOUBLE for double quotes. By default, the value part will be surrounded by double quotes. The key value pairs (k1, v1) and (k2, v2) contained in the event will be output as follows: If you wish to mask the value of some keys, see the %maskedKvp converter. L / line Outputs the line number from where the logging request was issued. Generating the line number information is not particularly fast. Thus, its use should be avoided unless execution speed is not an issue. m / msg / message Outputs the application-supplied message associated with the logging event. In case the marker contains children markers, the converter displays the parent as well as childrens' names according to the format shown below. Since 1.5.7 Under most circumstances, you may probably wish to print all key-value pairs. However, sometimes you wish to mask values of certain keys, typically passwords, credit card numbers and such. While replace converter can acheive that, pattern replacement comes at a computational cost. On the other hand, the %maskedKvp converter will mask values for all specified keys at practiacally no computational cost. For example, assuming key value pairs (k1, v1), (k2, v2) and (k3, v3) in the logging event, %maskedKvp{k2, k3} will output: If you wish to specify a quotation character, you may place an optional quotation specifier (QUOTATION_SPEC abobe) as the first argument. For example, for the same key vales %maskedKvp{NONE, k2} will output: Outputs the MDC (mapped diagnostic context) associated with the thread that generated the logging event. If the mdc conversion word is followed by a key between braces, as in %mdc{userid} , then the MDC value corresponding to the key 'userid' will be output. If the value is null, then the default value specified after the :- operator is output. If no default value is specified than the empty string is output. If no key is given, then the entire content of the MDC will be output in the format "key1=val1, key2=val2". M / method Outputs the method name where the logging request was issued. Generating the method name is not particularly fast. Thus, its use should be avoided unless execution speed is not an issue. micros / ms Since 1.3 Outputs the microseconds of the timestamp included in the event. For performance reasons, the microseconds have to be specified separately and in addition to %date. n Outputs the platform dependent line separator character or characters. This conversion word offers practically the same performance as using non-portable line separator strings such as "\n", or "\r\n". Thus, it is the preferred way of specifying a line separator. nopex nopexception Although it pretends to handle stack trace data, this conversion word does not output any data, thus, effectively ignoring exceptions. The %nopex conversion word allows the user to override PatternLayout 's internal safety mechanism which silently adds the %xThrowable conversion keyword in the absence of another conversion word handling exceptions. prefix( p ) For all the child converters contained in pattern 'p', prefixes the output of each converter with the name of the converter. In environments where log contents need to be analysed, it is often useful to prefix the contents of a pattern with a prefix. For example, you may wish to use the following pattern to facilitate parsing of log files: %d thread=%thread level=%level logger=%logger user=%X{user} %message The %prefix composite converter can take care of the prefixing for you: %d %prefix( %thread %level %logger %X{user} ) %message The two previous patterns will generate equivalent output. The usefulness of the %prefix converter increases with the number of child converters contained in the pattern 'p'. property{key} Outputs the value associated with a property named key . The relevant docs on how to define ion entitled define variables and variable scopes . If key is not a property of the logger context, then key will be looked up in the System properties. There is no default value for key . If it is omitted, the returned value will be "Property_HAS_NO_KEY", expliciting the error condition. r / relative Outputs the number of milliseconds elapsed since the start of the application until the creation of the logging event. rEx {depth, evaluator-1, ..., evaluator-n} rootException {depth, evaluator-1, ..., evaluator-n} Outputs the stack trace of the exception associated with the logging event, if any. The root cause will be output first instead of the standard "root cause last". Here is a sample output (edited for space): java.lang.NullPointerException at com.xyz.Wombat(Wombat.;java:57) ~[wombat-1.3.jar:1.3] at com.xyz.Wombat(Wombat.;java:76) ~[wombat-1.3.jar:1.3] Wrapped by: org.springframework.;BeanCreationException: Error creating bean with name 'wombat': at org.springframework.;AbstractBeanFactory.;getBean(AbstractBeanFactory.;java:248) [spring-2.0.jar:2.0] at org.springframework.;AbstractBeanFactory.;getBean(AbstractBeanFactory.;java:170) [spring-2.0.jar:2.0] at org.apache.catalina.;StandardContext.;listenerStart(StandardContext.;java:3934) [tomcat-6.0.26.jar:6.0.26] The %rootException converter admits the same optional parameters as the %xException converter described above, including depth and evaluators. It outputs also packaging information. In short, %rootException is very similar to %xException, only the order of exception output is reversed. Tomasz Nurkiewicz, the author of %rootException converter, documents his contribution in a blog entry entitled < "Logging exceptions root cause first" . replace( p ){r, t} Replaces occurrences of 'r', a regex, with its replacement 't' in the string produces by the sub-pattern 'p'. For example, "%replace(%msg){'\s', ''}" will remove all spaces contained in the event message.
+In case you were wondering, layouts have nothing to do with large estates in Florida.
+Layouts are logback components responsible for transforming an incoming event into a
+String. The doLayout() method in the Layout interface takes an object that represents an
+event (of any type) and returns a String. A synopsis of the Layout interface is shown
+below.
+
+```java
+public interface Layout<E> extends ContextAware, LifeCycle  {
+```
+
+String doLayout(E event); String getFileHeader(); String getPresentationHeader();
+String getFileFooter(); String getPresentationFooter(); String getContentType(); }
+This interface is rather simple and yet is sufficient for many formatting needs. The
+Texan developer from Texas, whom you might know from Joseph Heller's Catch-22, might
+exclaim: it just takes five methods to implement a layout!!?
+
+Logback-classic is wired to process only events of type
+ch.qos.logback.classic.spi.ILoggingEvent. This fact will be apparent throughout this
+section.
+
+Let us implement a simple yet functional layout for the logback-classic module that
+prints the time elapsed since the start of the application, the level of the logging
+event, the caller thread between brackets, its logger name, a dash followed by the
+event message and a new line.
+
+10489 DEBUG [main] com.marsupial.Pouch - Hello world. Here is a possible
+implementation, authored by the Texan developer: Example: Sample implementation of a
+Layout (logback-examples/src/main/java/chapters/layouts/MySampleLayout.java) package
+chapters.layouts;
+
+```java
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.LayoutBase;
+```
+
+```java
+public class MySampleLayout extends LayoutBase<ILoggingEvent>  {
+```
+
+```java
+public String doLayout(ILoggingEvent event)  {
+StringBuffer sbuf = new StringBuffer(128);
+sbuf.append(event.getTimeStamp() - event.getLoggingContextVO.getBirthTime());
+sbuf.append(" ");
+sbuf.append(event.getLevel());
+sbuf.append(" [");
+sbuf.append(event.getThreadName());
+sbuf.append("] ");
+sbuf.append(event.getLoggerName();
+sbuf.append(" - ");
+sbuf.append(event.getFormattedMessage());
+sbuf.append(CoreConstants.LINE_SEP);
+return sbuf.toString();
+
+}
+
+}
+Note that MySampleLayout extends LayoutBase. This class manages state common to
+ all layout instances, such as whether the layout is started or
+ stopped, header, footer and content type data. It allows the
+ developer to concentrate on the formatting expected from his/her Layout. Note that the LayoutBase class
+ is generic. In its class declaration, MySampleLayout extends LayoutBase<ILoggingEvent>.
+```
+
+The doLayout(ILoggingEvent event) method, i.e. the only method in MySampleLayout,
+begins by instantiating a StringBuffer. It proceeds by adding various fields of the
+event parameter. The Texan from Texas was careful to print the formatted form of the
+message. This is significant if one or more parameters were passed along with the
+logging request.
+
+After adding these various characters to the string buffer, the doLayout() method
+converts the buffer into a String and returns the resulting value.
+
+In the above example, the doLayout method ignores any eventual exceptions contained in
+the event. In a real world layout implementation, you would most probably want to print
+the contents of exceptions as well.
+
+Custom layouts are configured as any other component. As mentioned earlier,
+FileAppender and its subclasses expect an encoder. In order to fulfill this
+requirement, we pass to FileAppender an instance of LayoutWrappingEncoder which wraps
+our MySampleLayout. Here is the configuration file: Example: Configuration of
+MySampleLayout
+(logback-examples/src/main/resources/chapters/layouts/sampleLayoutConfig.xml) Legacy
+Canonical (1.3) Tyler
+
+```xml
+<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+<encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+<layout class="chapters.layouts.MySampleLayout" />
+</encoder>
+</appender>
+```
+
+<root level="DEBUG"> <appender-ref ref="STDOUT" /> </root> </configuration>
+
+The sample application chapters.layouts.SampleLogging configures logback with the
+configuration script passed as its first argument and then logs a debug message,
+followed by an error message.
+
+To run this example issue the following command from within the logback-examples
+directory.
+
+java chapters.layouts.SampleLogging
+src/main/java/chapters/layouts/sampleLayoutConfig.xml This will produce:
+
+0 DEBUG [main] chapters.layouts.SampleLogging - Everything's going well 0 ERROR [main]
+chapters.layouts.SampleLogging - maybe not quite... That was simple enough. The skeptic
+Pyrrho of Elea, who insists that nothing is certain except perhaps uncertainty itself,
+which is by no means certain either, might ask: how about a layout with options? The
+reader shall find a slightly modified version of our custom layout in
+MySampleLayout2.java. As mentioned throughout this manual, adding a property to a
+layout or any other logback component is as simple as declaring a setter method for
+the property.
+
+The MySampleLayout2 class contains two properties. The first one is a prefix that can
+be added to the output. The second property is used to choose whether to display the
+name of the thread from which the logging request was sent.
+
+```java
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.LayoutBase;
+```
+
+```java
+public class MySampleLayout2 extends LayoutBase<ILoggingEvent>  {
+```
+
+String prefix = null; boolean printThreadName = true; public void setPrefix(String
+prefix) { this.prefix = prefix; }
+
+```java
+public void setPrintThreadName(boolean printThreadName)  {
+this.printThreadName = printThreadName;
+
+}
+public String doLayout(ILoggingEvent event)  {
+StringBuffer sbuf = new StringBuffer(128);
+if (prefix!= null)  {
+sbuf.append(prefix + ": ");
+
+}
+sbuf.append(event.;
+getTimeStamp() - event.getLoggerContextVO().getBirthTime());
+sbuf.append(" ");
+sbuf.append(event.;
+getLevel());
+if (printThreadName)  {
+sbuf.append(" [");
+sbuf.append(event.;
+getThreadName());
+sbuf.append("] ");
+
+}
+else  {
+sbuf.append(" ");
+
+}
+sbuf.append(event.;
+getLoggerName());
+sbuf.append(" - ");
+sbuf.append(event.;
+getFormattedMessage());
+sbuf.append(LINE_SEP);
+return sbuf.toString();
+
+}
+
+}
+The addition of the corresponding setter method is all that is
+ needed to enable the configuration of a property. Note that the PrintThreadName property is a boolean and not a String. Configuration of logback components was
+ covered in detail in the chapter on configuration. The chapter on Joran provides further detail. Here is
+ the configuration file tailor made for MySampleLayout2.
+```
+
+```xml
+<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+<encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+<layout class="chapters.layouts.MySampleLayout2">
+<prefix>MyPrefix</prefix>
+<printThreadName>false</printThreadName>
+</layout>
+</encoder>
+</appender>
+```
+
+<root level="DEBUG"> <appender-ref ref="STDOUT" /> </root> </configuration>
+
+Logback classic ships with a flexible layout called PatternLayout. As all layouts,
+PatternLayout takes a logging event and returns a String. However, this String can be
+customized by tweaking PatternLayout 's conversion pattern.
+
+The conversion pattern of PatternLayout is closely related to the conversion pattern of
+the printf() function in the C programming language. A conversion pattern is composed
+of literal text and format control expressions called conversion specifiers. You are
+free to insert any literal text within the conversion pattern. Each conversion
+specifier starts with a percent sign '%' and is followed by optional format modifiers,
+a conversion word and optional parameters between braces. The conversion word controls
+the data field to convert, e.g. logger name, level, date or thread name. The format
+modifiers control field width, padding, and left or right justification.
+
+As already mentioned on several occasions, FileAppender and subclasses expect an
+encoder. Consequently, when used in conjunction with FileAppender or its subclasses a
+PatternLayout must be wrapped within an encoder. Given that the FileAppender /
+PatternLayout combination is so common, logback ships with an encoder named
+PatternLayoutEncoder, designed solely for the purpose of wrapping a PatternLayout
+instance so that it can be seen as encoder. Below is an example which programmatically
+configures a ConsoleAppender with a PatternLayoutEncoder: Example: Sample usage of a
+PatternLayout (logback-examples/src/main/java/chapters/layouts/PatternSample.java)
+package chapters.layouts;
+
+```java
+import ch.qos.logback.classic.;
+Logger;
+import ch.qos.logback.classic.;
+LoggerContext;
+import ch.qos.logback.classic.;
+encoder.PatternLayoutEncoder;
+import ch.qos.logback.classic.;
+spi.ILoggingEvent;
+import ch.qos.logback.core.;
+ConsoleAppender;
+```
+
+```java
+static public void main(String[] args) throws Exception  {
+Logger rootLogger = (Logger)LoggerFactory.;
+getLogger(Logger.;
+ROOT_LOGGER_NAME);
+LoggerContext loggerContext = rootLogger.getLoggerContext();
+// we are not interested in auto-configuration
+ loggerContext.reset();
+PatternLayoutEncoder encoder = new PatternLayoutEncoder();
+encoder.setContext(loggerContext);
+encoder.setPattern("%-5level [%thread]: %message%n");
+encoder.start();
+ConsoleAppender<ILoggingEvent> appender = new ConsoleAppender<ILoggingEvent>();
+appender.setContext(loggerContext);
+appender.setEncoder(encoder);
+appender.start();
+```
+
+rootLogger.debug("Message 1"); rootLogger.warn("Message 2"); } } In the above
+example, the conversion pattern is set to be "%-5level [%thread]: %message%n". A
+synopsis of conversion word included in logback will be given shortly. Running
+PatternSample application as:
+
+Note that in the conversion pattern "%-5level [%thread]: %message%n" there is no
+explicit separator between literal text and conversion specifiers. When parsing a
+conversion pattern, PatternLayout is capable of differentiating between literal text
+(space characters, the brackets, colon character) and conversion specifiers. In the
+example above, the conversion specifier %-5level means the level of the logging event
+should be left justified to a width of five characters. Format specifiers will be
+explained below.
+
+In PatternLayout, parenthesis can be used to group conversion patterns. It follows that
+the '(' and ')' carry special meaning and need to be escaped if intended to be used as
+literals. The special nature of parenthesis is further explained below.
+
+As mentioned previously, certain conversion specifiers may include optional parameters
+passed between braces. A sample conversion specifier with options could be %logger{10}.
+Here "logger" is the conversion word, and 10 is the option. Options are further
+discussed below.
+
+The recognized conversions words along with their options are described in the table
+below. When multiple conversion words are listed in the same table cell, they are
+considered as aliases.
+
+Outputs the name of the logger at the origin of the logging event.
+
+This conversion word takes an integer as its first and only option. The converter's
+abbreviation algorithm will shorten the logger name, usually without significant loss
+of meaning. Setting the value of length option to zero constitutes an exception. It
+will cause the conversion word to return the sub-string right to the rightmost dot
+character in the logger name. The next table provides examples of the abbreviation
+algorithm in action.
+
+%logger mainPackage.sub.sample.Bar mainPackage.sub.sample.Bar
+
+%logger{16} mainPackage.sub.sample.Bar m.sub.sample.Bar
+
+%logger{26} mainPackage.sub.sample.Bar mainPackage.sub.sample.Bar
+
+Please note that the rightmost segment in a logger name is never abbreviated, even if
+its length is longer than the length option. Other segments may be shortened to at most
+a single character but are never removed.
+
+Outputs the fully-qualified class name of the caller issuing the logging request.
+
+Just like the %logger conversion word above, this conversion takes an integer as an
+option to shorten the class name. Zero carries special meaning and will cause the
+simple class name to be printed without the package name prefix. By default the class
+name is printed in full.
+
+Generating the caller class information is not particularly fast. Thus, its use should
+be avoided unless execution speed is not an issue.
+
+contextName cn Outputs the name of the logger context to which the logger at the
+origin of the event was attached to.
+
+d { pattern } date { pattern } d { pattern, timezone } date { pattern, timezone } d
+{ pattern, timezone, locale } date { pattern, timezone, locale }
+
+Used to output the date of the logging event. The date conversion word admits a pattern
+string as a parameter. The pattern syntax is compatible with the format accepted by
+java.text.SimpleDateFormat (in logback 1.2.x) and java.time.format.DateTimeFormatter (in
+logback 1.3.x).
+
+For microseconds, use the micros/ms conversion specifier.
+
+For epoch timestamps, use the epoch/ep conversion specifier.
+
+You can specify the string "ISO8601" for the ISO8601 date format, equivalent to setting
+"yyyy-MM-dd HH:mm:ss,SSS". Please note the space included between the date and the time
+parts which is not strictly ISO8601 compliant.
+
+Since 1.5.7 For strict ISO8601 format, use STRICT which is equivalent to setting the
+pattern "yyyy-MM-dd'T'HH:mm:ss,SSS".
+
+In the absence of a pattern parameter, the %date conversion word defaults to ISO8601
+(non strict) date format.
+
+Here are some sample parameter values. They assume that the actual date is Monday 20th
+of October, 2036 and that the author has returned from the future to work on this
+document.
+
+%date{dd MMM yyyy;HH:mm:ss.SSS} 20 oct. 2006;14:06:49.812
+
+The second parameter specifies a timezone. For example, the pattern
+'%date{HH:mm:ss.SSS, Australia/Perth}' would print the time in the time zone of Perth,
+Australia, the most isolated city on Earth. In the absence of the timezone parameter,
+the default timezone of the host Java platform is used. If the specified timezone
+identifier is unknown or misspelled, the GMT timezone is assumed as dictated by the
+TimeZone.getTimeZone(String) method specification.
+
+Since 1.3.6/1.4.6 The third parameter specifies the locale. For example, writing
+'%date{HH:mm:ss.SSS, Australia/Perth, en-AU }' would print the date in the time zone of
+Perth, Australia, using the english australian locale. If the locale parameter is
+absent, then the system's default locale is used.
+
+If an option includes special characters such as a braces, spaces or commas, you can
+enclose it between single or double quotes.
+
+common error Given that the comma ',' character is interpreted as the parameter
+separator, the pattern HH:mm:ss,SSS will be interpreted as the pattern HM:mm:ss and the
+timezone SSS. If you wish to include a comma in your date pattern, then simply enclose
+the pattern between single or double quotes. For example, %date{ " HH:mm:ss,SSS " } or
+%date{ ' HH:mm:ss,SSS ' }.
+
+common error Parameters must be supplied in the expected order. For example,
+"%date{UTC}" will not be correctly interpreted and must be provided as "%date{ISO8601,
+UTC}".
+
+Since 1.5.25 Outputs the timestamp of the logging event in milliseconds since the UNIX
+epoch (Jan 1st 1970 at midnight UTC).
+
+Example: "%epoch", which produces something like "1768472130321".
+
+Options: Can be configured to output the timestamp in seconds by using "%epoch{seconds}"
+or "%ep{seconds}", which produces something like "1768472130". If no option (or an
+unrecognized option) is specified, default behaviour is to output milliseconds.
+
+ex {depth, evaluator-1,..., evaluator-n} exception {depth, evaluator-1,...,
+evaluator-n} throwable {depth, evaluator-1,..., evaluator-n} Outputs the stack trace
+of the exception associated with the logging event, if any. By default the full stack
+trace will be output.
+
+The throwable conversion word can be followed by one of the following options:
+
+Any integer: prints the given number of lines of the stack trace
+
+%ex mainPackage.foo.bar.TestException: Houston we have a problem at
+mainPackage.foo.bar.TestThrower.fire(TestThrower.java:22) at
+mainPackage.foo.bar.TestThrower.readyToLaunch(TestThrower.java:17) at
+mainPackage.ExceptionLauncher.main(ExceptionLauncher.java:38)
+
+%ex{short} mainPackage.foo.bar.TestException: Houston we have a problem at
+mainPackage.foo.bar.TestThrower.fire(TestThrower.java:22)
+
+%ex{full} mainPackage.foo.bar.TestException: Houston we have a problem at
+mainPackage.foo.bar.TestThrower.fire(TestThrower.java:22) at
+mainPackage.foo.bar.TestThrower.readyToLaunch(TestThrower.java:17) at
+mainPackage.ExceptionLauncher.main(ExceptionLauncher.java:38)
+
+%ex{2} mainPackage.foo.bar.TestException: Houston we have a problem at
+mainPackage.foo.bar.TestThrower.fire(TestThrower.java:22) at
+mainPackage.foo.bar.TestThrower.readyToLaunch(TestThrower.java:17)
+
+This conversion word can also use evaluators to test logging events against a given
+criterion before creating the output. For example, using %ex{full, EX_DISPLAY_EVAL}
+will display the full stack trace of the exception only if the evaluator called
+EX_DISPLAY_EVAL returns a negative answer. Evaluators are described further down in
+this document.
+
+If you do not specify %throwable or another throwable-related conversion word in the
+conversion pattern, PatternLayout will automatically add it as the last conversion
+word, on account of the importance of stack trace information. The $nopex conversion
+word can be substituted for %throwable, if you do not wish stack trace information to
+be displayed. See also the %nopex conversion word.
+
+F / file Outputs the file name of the Java source file where the logging request was
+issued.
+
+Generating the file information is not particularly fast. Thus, its use should be
+avoided unless execution speed is not an issue.
+
+caller{depth} caller{depthStart..depthEnd} caller{depth, evaluator-1,... evaluator-n}
+caller{depthStart..depthEnd, evaluator-1,... evaluator-n} Outputs location information
+of the caller which generated the logging event.
+
+The location information depends on the JVM implementation but usually consists of the
+fully qualified name of the calling method followed by the caller's source, the file
+name and line number between parentheses.
+
+A integer can be added to the caller conversion specifier's options to configure the
+depth of the information to be displayed.
+
+For example, %caller{2} would display the following excerpt:
+
+0 [main] DEBUG - logging statement Caller+0 at
+mainPackage.sub.;sample.Bar.sampleMethodName(Bar.java:22) Caller+1 at
+mainPackage.sub.;sample.Bar.createLoggingRequest(Bar.java:17) And %caller{3} would
+display this other excerpt:
+
+16 [main] DEBUG - logging statement Caller+0 at
+mainPackage.sub.;sample.Bar.sampleMethodName(Bar.java:22) Caller+1 at
+mainPackage.sub.;sample.Bar.createLoggingRequest(Bar.java:17) Caller+2 at
+mainPackage.ConfigTester.;main(ConfigTester.;java:38) A range specifier can be added to
+the caller conversion specifier's options to configure the depth range of the
+information to be displayed.
+
+For example, %caller{1..2} would display the following excerpt:
+
+0 [main] DEBUG - logging statement Caller+0 at
+mainPackage.sub.;sample.Bar.createLoggingRequest(Bar.java:17) This conversion word can
+also use evaluators to test logging events against a given criterion before computing
+caller data. For example, using %caller{3, CALLER_DISPLAY_EVAL} will display three
+lines of stacktrace, only if the evaluator called CALLER_DISPLAY_EVAL returns a
+positive answer.
+
+kvp{NONE|SINGLE|DOUBLE} Outputs the key value pairs contained in the logging event.
+You can override the default by specifying NONE for no quote character or SINGLE for a
+single quote character, DOUBLE for double quotes. By default, the value part will be
+surrounded by double quotes.
+
+The key value pairs (k1, v1) and (k2, v2) contained in the event will be output as
+follows:
+
+If you wish to mask the value of some keys, see the %maskedKvp converter.
+
+L / line Outputs the line number from where the logging request was issued.
+
+Generating the line number information is not particularly fast. Thus, its use should
+be avoided unless execution speed is not an issue.
+
+m / msg / message Outputs the application-supplied message associated with the logging
+event.
+
+marker Outputs the marker associated with the logger request.
+
+In case the marker contains children markers, the converter displays the parent as well
+as childrens' names according to the format shown below.
+
+Since 1.5.7 Under most circumstances, you may probably wish to print all key-value
+pairs. However, sometimes you wish to mask values of certain keys, typically
+passwords, credit card numbers and such. While replace converter can acheive that,
+pattern replacement comes at a computational cost.
+
+On the other hand, the %maskedKvp converter will mask values for all specified keys at
+practiacally no computational cost.
+
+For example, assuming key value pairs (k1, v1), (k2, v2) and (k3, v3) in the logging
+event, %maskedKvp{k2, k3} will output:
+
+If you wish to specify a quotation character, you may place an optional quotation
+specifier (QUOTATION_SPEC abobe) as the first argument. For example, for the same key
+vales %maskedKvp{NONE, k2} will output:
+
+Outputs the MDC (mapped diagnostic context) associated with the thread that generated
+the logging event.
+
+If the mdc conversion word is followed by a key between braces, as in %mdc{userid},
+then the MDC value corresponding to the key 'userid' will be output. If the value is
+null, then the default value specified after the:- operator is output. If no default
+value is specified than the empty string is output.
+
+If no key is given, then the entire content of the MDC will be output in the format
+"key1=val1, key2=val2".
+
+See the chapter on MDC for more details on the subject.
+
+M / method Outputs the method name where the logging request was issued.
+
+Generating the method name is not particularly fast. Thus, its use should be avoided
+unless execution speed is not an issue.
+
+micros / ms Since 1.3 Outputs the microseconds of the timestamp included in the event.
+
+For performance reasons, the microseconds have to be specified separately and in
+addition to %date.
+
+n Outputs the platform dependent line separator character or characters.
+
+This conversion word offers practically the same performance as using non-portable line
+separator strings such as "\n", or "\r\n". Thus, it is the preferred way of specifying
+a line separator.
+
+nopex nopexception Although it pretends to handle stack trace data, this conversion
+word does not output any data, thus, effectively ignoring exceptions.
+
+The %nopex conversion word allows the user to override PatternLayout 's internal safety
+mechanism which silently adds the %xThrowable conversion keyword in the absence of
+another conversion word handling exceptions.
+
+prefix(p) For all the child converters contained in pattern 'p', prefixes the output
+of each converter with the name of the converter. In environments where log contents
+need to be analysed, it is often useful to prefix the contents of a pattern with a
+prefix.
+
+For example, you may wish to use the following pattern to facilitate parsing of log
+files:
+
+%d thread=%thread level=%level logger=%logger user=%X{user} %message The %prefix
+composite converter can take care of the prefixing for you:
+
+%d %prefix(%thread %level %logger %X{user}) %message The two previous patterns will
+generate equivalent output. The usefulness of the %prefix converter increases with the
+number of child converters contained in the pattern 'p'.
+
+property{key} Outputs the value associated with a property named key. The relevant docs
+on how to define ion entitled define variables and variable scopes.
+
+If key is not a property of the logger context, then key will be looked up in the
+System properties.
+
+There is no default value for key. If it is omitted, the returned value will be
+"Property_HAS_NO_KEY", expliciting the error condition.
+
+r / relative Outputs the number of milliseconds elapsed since the start of the
+application until the creation of the logging event.
+
+rEx {depth, evaluator-1,..., evaluator-n} rootException {depth, evaluator-1,...,
+evaluator-n} Outputs the stack trace of the exception associated with the logging
+event, if any. The root cause will be output first instead of the standard "root cause
+last". Here is a sample output (edited for space):
+
+java.lang.NullPointerException at com.xyz.Wombat(Wombat.;java:57) ~[wombat-1.3.jar:1.3]
+at com.xyz.Wombat(Wombat.;java:76) ~[wombat-1.3.jar:1.3] Wrapped by:
+org.springframework.;BeanCreationException: Error creating bean with name 'wombat': at
+org.springframework.;AbstractBeanFactory.;getBean(AbstractBeanFactory.;java:248)
+[spring-2.0.jar:2.0] at
+org.springframework.;AbstractBeanFactory.;getBean(AbstractBeanFactory.;java:170)
+[spring-2.0.jar:2.0] at
+org.apache.catalina.;StandardContext.;listenerStart(StandardContext.;java:3934)
+[tomcat-6.0.26.jar:6.0.26] The %rootException converter admits the same optional
+parameters as the %xException converter described above, including depth and
+evaluators. It outputs also packaging information. In short, %rootException is very
+similar to %xException, only the order of exception output is reversed.
+
+Tomasz Nurkiewicz, the author of %rootException converter, documents his contribution
+in a blog entry entitled < "Logging exceptions root cause first".
+
+replace(p){r, t} Replaces occurrences of 'r', a regex, with its replacement 't' in the
+string produces by the sub-pattern 'p'. For example, "%replace(%msg){'\s', ''}" will
+remove all spaces contained in the event message.
+
+The pattern 'p' can be arbitrarily complex and in particular can contain multiple
+conversion keywords. For instance, "%replace(%logger %msg){'\.', '/'}" will replace
+all dots in the logger or the message of the event with a forward slash.
+
+sn / sequenceNumber Print the sequence number of the event if any. Sequence numbers
+are kept per logger context.
+
 ## 7. Filters
 
-Have lots of ideas and throw away the bad ones. You aren not going to have good ideas unless you have lots of ideas and some sort of principle of selection. In the preceding chapters, the basic selection rule , which lies at the heart of logback-classic, has been presented. In this chapter, additional filtering methods will be introduced. Logback filters are based on ternary logic allowing them to be assembled or chained together to compose an arbitrarily complex filtering policy. They are largely inspired by Linux’s iptables. Logback-classic offers two types of filters, regular filters and turbo filters. Regular logback-classic filters extend the Filter abstract class which essentially consists of a single decide() method taking an ILoggingEvent instance as its parameter. Filters are organized as an ordered list and are based on ternary logic. The decide(ILoggingEvent event) method of each filter is called in sequence. This method returns one of the FilterReply enumeration values, i.e. one of DENY , NEUTRAL or ACCEPT . If the value returned by decide () is DENY , then the log event is dropped immediately without consulting the remaining filters. If the value returned is NEUTRAL , then the next filter in the list is consulted. If there are no further filters to consult, then the logging event is processed normally. If the returned value is ACCEPT , then the logging event is processed immediately skipping the invocation of the remaining filters. In logback-classic, filters can be added to Appender instances. By adding one or more filters to an appender, you can filter events by arbitrary criteria, such as the contents of the log message, the contents of the MDC, the time of day or any other part of the logging event. Creating your own filter is easy. All you have to do is extend the Filter abstract class and implement the decide() method. The SampleFilter class shown below provides an example. Its decide method returns ACCEPT for logging events containing the string "sample" in its message field. For other events, the value NEUTRAL is returned. Example: Basic custom filter ( logback-examples/src/main/java/chapters/filters/SampleFilter.java ) package chapters.filters; ``` import ch.qos.logback.classic.spi.ILoggingEvent; import ch.qos.logback.core.filter.Filter; import ch.qos.logback.core.spi.FilterReply; ``` @Override public FilterReply decide(ILoggingEvent event) { if (event.getMessage().contains("sample")) { return FilterReply.ACCEPT; } else { return FilterReply.NEUTRAL; } } } The configuration files shown next attaches a SampleFilter to a ConsoleAppender . Example: SampleFilter configuration (logback-examples/src/main/resources/chapters/filters/SampleFilterConfig.xml) Legacy Canonical (1.3) Tyler ``` <configuration> <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender"> <filter class="chapters.filters.SampleFilter" /> <encoder> <pattern> %-4relative [%thread] %-5level %logger -%kvp -%msg%n </pattern> </encoder> </appender> ``` With the help of Joran, logback's configuration framework, specifying properties or subcomponents to filters is also easy. After adding the corresponding setter method in the filter class, specify the value of the property in an XML element named after the property, nesting it within a <filter> element. Often, the desired filter logic consists of two orthogonal parts, a match/mismatch test and a response depending on the match/mismatch. For example, for a given test, e.g. message equals "foobar", one filter might respond ACCEPT on match and NEUTRAL on mismatch, and another filter might respond NEUTRAL on match and DENY on mismatch. Taking notice of this orthogonality, logback ships with the AbstractMatcherFilter class which provides a useful skeleton for specifying the appropriate response on match and on mismatch, with the help of two properties, named OnMatch and OnMismatch . Most of the regular filters included in logback are derived from AbstractMatcherFilter . LevelFilter filters events based on exact level matching. If the event's level is equal to the configured level, the filter accepts or denies the event, depending on the configuration of the onMatch and onMismatch properties. Here is a sample configuration file. Example: Sample LevelFilter configuration (logback-examples/src/main/resources/chapters/filters/levelFilterConfig.xml) Legacy Canonical (1.3) Tyler ``` <configuration> <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender"> <filter class="ch.qos.logback.classic.filter.LevelFilter"> <level>INFO</level> <onMatch>ACCEPT</onMatch> <onMismatch>DENY</onMismatch> </filter> <encoder> <pattern> %-4relative [%thread] %-5level %logger{30} -%kvp -%msg%n </pattern> </encoder> </appender> <root level="DEBUG"> <appender-ref ref="CONSOLE" /> </root> </configuration> ``` The ThresholdFilter filters events below the specified threshold. For events of level equal or above the threshold, ThresholdFilter will respond NEUTRAL when its decide () method is invoked. However, events with a level below the threshold will be denied. Here is a sample configuration file. Example: Sample ThresholdFilter configuration (logback-examples/src/main/resources/chapters/filters/thresholdFilterConfig.xml) Legacy Canonical (1.3) Tyler ``` <configuration> <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender"> <!-- deny all events with a level below INFO, that is TRACE and DEBUG --> <filter class="ch.qos.logback.classic.filter.ThresholdFilter"> <level>INFO</level> </filter> <encoder> <pattern> %-4relative [%thread] %-5level %logger{30} -%kvp -%msg%n </pattern> </encoder> </appender> <root level="DEBUG"> <appender-ref ref="CONSOLE" /> </root> </configuration> ``` EvaluatorFilter is a generic filter encapsulating an EventEvaluator . As the name suggests, an EventEvaluator evaluates whether a given criteria is met for a given event. On match and on mismatch, the hosting EvaluatorFilter will returl the vaue specified by the onMatch or onMismatch properties respectively. Note that EventEvaluator is an abstract class. You can implement your own event evaluation logic by subclassing EventEvaluator . since 1.5.13 For security reasons, JaninoEvaluator has been removed with no replacement. However, it is a rather easy exercise to migrate the logic within an existing evaluator expression (which is just Java) into a custom EventEvaluator . To migrate evaluation logic, we suggest to subclass EventEvaluatorBase and copy the logic previously in the evaluation expression into the evaluate(ILoggingEvent) method. You might also want to try the Janino Expression Migrator available online. For example, let us migrate the following basic evaluator configuration. ``` <configuration> <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender"> <filter class="ch.qos.logback.core.filter.EvaluatorFilter"> <evaluator> <!-- defaults to type ch.qos.logback.classic.boolex.JaninoEventEvaluator --> <expression> return message.contains("billing"); </expression> </evaluator> <OnMismatch>NEUTRAL</OnMismatch> <OnMatch>DENY</OnMatch> </filter> <encoder> <pattern> %-4relative [%thread] %-5level %logger -%kvp -%msg%n </pattern> </encoder> </appender> ``` ``` <root level="INFO"> <appender-ref ref="STDOUT" /> </root> </configuration> Supplying the expression return message.contains("billing"); to the online mogrator will result in the generation of following custom evaluator code. ``` ``` import ch.qos.logback.classic.Level; import ch.qos.logback.classic.boolex.MarkerList; import ch.qos.logback.classic.spi.ILoggingEvent; import ch.qos.logback.classic.spi.IThrowableProxy; import ch.qos.logback.classic.spi.LoggerContextVO; import ch.qos.logback.classic.spi.ThrowableProxy; import ch.qos.logback.core.boolex.EvaluationException; import ch.qos.logback.core.boolex.EventEvaluatorBase; import ch.qos.logback.core.boolex.Matcher; import org.slf4j.Marker; ``` ``` import java.util.ArrayList; import java.util.List; import java.util.Map; ``` /** * <p>This class was generated when migrating a logback-classic configuration * using JaninoEventEvaluator. * * <p>JaninoEventEvaluator has been removed due to identified vulnerabilities. which * * <p>Note that the generated code in the {@link #evaluate(ILoggingEvent)} method will * depend on the boolean expression, more specifically on the variables referenced * in the original boolean expression. */ public class GeneratedExpressionEvaluator extends EventEvaluatorBase { ``` public boolean evaluate(ILoggingEvent event) throws NullPointerException, EvaluationException { String message = event.getMessage(); return message.contains("billing"); } } Below is an example integrating this custom evaluator. ``` ``` <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender"> <filter class="ch.qos.logback.core.filter.EvaluatorFilter"> <evaluator class="PACKAGE_NAME_OF_YOUR_CHOICE.GeneratedExpressionEvaluator"> <!‐‐ Note that like all logback components, this custom evaluator can also be parameterized ‐‐> </evaluator> <OnMismatch>NEUTRAL</OnMismatch> <OnMatch>DENY</OnMatch> </filter> <layout> <pattern>%d [%thread] %-5level %logger{36} -%kvp- %msg%n</pattern> </layout> </appender> ``` ``` <root level="DEBUG"> <appender-ref ref="STDOUT" /> </root> </configuration> TurboFilters ``` TurboFilter objects all extend the TurboFilter abstract class. Like the regular filters, they use ternary logic to return their evaluation of the logging event. Overall, they work much like the previously mentioned filters. However, there are two main differences between Filter and TurboFilter objects. TurboFilter objects are tied to the whole logging context not just a single appender. Thus, their scope is wider than appender-attached filters. Moreover, they are called each and every time a logging request is issued. In principle, they are called before the LoggingEvent object creation. TurboFilter objects do not require the instantiation of a logging event to filter a logging request. As such, turbo filters are intended for high performance filtering of logging events, even before the events are created. With the advent of fluent API in SLF4J 2.0, turbo filters are called twice, once when the atDebug(), atInfo(), etc methods are invoked, and a second time from the log() method of an enabled log statement . Please note that the call to turbo filters in log() method for an enabled log statement is new in logback-classic version 1.5.21 and later, prior versions did not call turbo filters form the log() methods. To create your own TurboFilter component, just extend the TurboFilter abstract class. As previously, when implementing a customized filter object, developing a custom TurboFilter only asks that one implement the decide() method. In the next example, we create a slightly more complex filter: Example: Basic custom TurboFilter ( logback-examples/src/main/java/chapters/filters/SampleTurboFilter.java ) package chapters.filters; ``` import ch.qos.logback.classic.Level; import ch.qos.logback.classic.Logger; import ch.qos.logback.classic.turbo.TurboFilter; import ch.qos.logback.core.spi.FilterReply; ``` @Override public FilterReply decide(Marker marker, Logger logger, Level level, String format, Object[] params, Throwable t) { if ((markerToAccept.equals(marker))) { return FilterReply.ACCEPT; } else { return FilterReply.NEUTRAL; } } @Override public void start() { if (marker != null && marker.trim().length() > 0) { markerToAccept = MarkerFactory.getMarker(marker); super.start(); } } } The TurboFilter above accepts events that contain a specific marker. If said marker is not found, then the filter passes the responsibility to the next filter in the chain. To allow more flexibility, the marker that will be tested can be specified in the configuration file, hence the getter and setter methods. We also implemented the start() method, to check that the option has been specified during the configuration process. Here is a sample configuration that makes use of our newly created TurboFilter . Example: Basic custom TurboFilter configuration (logback-examples/src/main/resources/chapters/filters/sampleTurboFilterConfig.xml) Legacy Canonical (1.3) Tyler ``` <configuration> <turboFilter class="chapters.filters.SampleTurboFilter"> <Marker>sample</Marker> </turboFilter> <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender"> <encoder> <pattern> %-4relative [%thread] %-5level %logger -%kvp -%msg%n </pattern> </encoder> </appender> ``` Logback classic ships with several TurboFilter classes ready for use. The MDCFilter checks the presence of a given value in the MDC whereas DynamicThresholdFilter allows filtering based on MDC key/level threshold associations. On the other hand, MarkerFilter checks for the presence of a specific marker associated with the logging request. Here is a sample configuration, using both MDCFilter and MarkerFilter . Example: MDCFilter and MarkerFilter configuration (logback-examples/src/main/resources/chapters/filters/turboFilters.xml) Legacy Canonical (1.3) Tyler ``` <turboFilter class="ch.qos.logback.classic.turbo.MDCFilter"> <MDCKey>username</MDCKey> <Value>sebastien</Value> <OnMatch>ACCEPT</OnMatch> </turboFilter> ``` ``` <turboFilter class="ch.qos.logback.classic.turbo.MarkerFilter"> <Marker>billing</Marker> <OnMatch>DENY</OnMatch> </turboFilter> ``` ``` <appender name="console" class="ch.qos.logback.core.ConsoleAppender"> <encoder> <pattern>%date [%thread] %-5level %logger -%kvp -%msg%n</pattern> </encoder> </appender> ``` ``` <root level="INFO"> <appender-ref ref="console" /> </root> </configuration> ``` You can see this configuration in action by issuing the following command: java chapters.filters.FilterEvents src/main/java/chapters/filters/turboFilters.xml As we've seen previously, the FilterEvents application issues 10 logging requests, numbered 0 to 9. Except for requests 3 and 6, all of the requests are of level INFO , the same level as the one assigned to the root logger. The 3rd request, is issued at the the DEBUG level, which is below the effective level. However, since the MDC key "username" is set to "sebastien" just before the 3rd request and removed just afterwards, the MDCFilter specifically accepts the request (and only that request). The 6th request, issued at the ERROR level, is marked as "billing". As such, it is denied by the MarkerFilter (the second turbo filter in the configuration). Thus, the output of FilterEvents application configured with turboFilters.xml file shown above is: 2006-12-04 15:17:22,859 [main] INFO chapters.filters.FilterEvents - logging statement 0 2006-12-04 15:17:22,875 [main] INFO chapters.filters.FilterEvents - logging statement 1 2006-12-04 15:17:22,875 [main] INFO chapters.filters.FilterEvents - logging statement 2 2006-12-04 15:17:22,875 [main] DEBUG chapters.filters.FilterEvents - logging statement 3 2006-12-04 15:17:22,875 [main] INFO chapters.filters.FilterEvents - logging statement 4 2006-12-04 15:17:22,875 [main] INFO chapters.filters.FilterEvents - logging statement 5 2006-12-04 15:17:22,875 [main] INFO chapters.filters.FilterEvents - logging statement 7 2006-12-04 15:17:22,875 [main] INFO chapters.filters.FilterEvents - logging statement 8 2006-12-04 15:17:22,875 [main] INFO chapters.filters.FilterEvents - logging statement 9 One can see that the 3rd request, which should not be displayed if we only followed the overall INFO level, appears anyway, because it matched the first TurboFilter requirements and was accepted. On the other hand, the 6th request, that is an ERROR level request should have been displayed. But it satisfied the second TurboFilter whose OnMatch option is set to DENY . Thus, the 6th request was not displayed. The DuplicateMessageFilter merits a separate presentation. This filter detects duplicate messages, and beyond a certain number of repetitions, drops repeated messages. To detect repetition, this
+Have lots of ideas and throw away the bad ones. You aren not going to have good ideas
+unless you have lots of ideas and some sort of principle of selection.
+
+In the preceding chapters, the basic selection rule, which lies at the heart of
+logback-classic, has been presented. In this chapter, additional filtering methods will
+be introduced.
+
+Logback filters are based on ternary logic allowing them to be assembled or chained
+together to compose an arbitrarily complex filtering policy. They are largely inspired
+by Linux’s iptables.
+
+Logback-classic offers two types of filters, regular filters and turbo filters.
+
+Regular logback-classic filters extend the Filter abstract class which essentially
+consists of a single decide() method taking an ILoggingEvent instance as its parameter.
+
+Filters are organized as an ordered list and are based on ternary logic. The
+decide(ILoggingEvent event) method of each filter is called in sequence. This method
+returns one of the FilterReply enumeration values, i.e. one of DENY, NEUTRAL or ACCEPT.
+If the value returned by decide () is DENY, then the log event is dropped immediately
+without consulting the remaining filters. If the value returned is NEUTRAL, then the
+next filter in the list is consulted. If there are no further filters to consult, then
+the logging event is processed normally. If the returned value is ACCEPT, then the
+logging event is processed immediately skipping the invocation of the remaining
+filters.
+
+In logback-classic, filters can be added to Appender instances. By adding one or more
+filters to an appender, you can filter events by arbitrary criteria, such as the
+contents of the log message, the contents of the MDC, the time of day or any other part
+of the logging event.
+
+Creating your own filter is easy. All you have to do is extend the Filter abstract
+class and implement the decide() method.
+
+The SampleFilter class shown below provides an example. Its decide method returns ACCEPT
+for logging events containing the string "sample" in its message field. For other
+events, the value NEUTRAL is returned. Example: Basic custom filter
+(logback-examples/src/main/java/chapters/filters/SampleFilter.java) package
+chapters.filters;
+
+```java
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.filter.Filter;
+import ch.qos.logback.core.spi.FilterReply;
+```
+
+```java
+public class SampleFilter extends Filter<ILoggingEvent>  {
+```
+
+@Override public FilterReply decide(ILoggingEvent event) { if
+(event.getMessage().contains("sample")) { return FilterReply.ACCEPT; } else { return
+FilterReply.NEUTRAL; } } } The configuration files shown next attaches a SampleFilter
+to a ConsoleAppender. Example: SampleFilter configuration
+(logback-examples/src/main/resources/chapters/filters/SampleFilterConfig.xml) Legacy
+Canonical (1.3) Tyler
+
+```xml
+<configuration>
+<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+<filter class="chapters.filters.SampleFilter" />
+<encoder>
+<pattern>
+ %-4relative [%thread] %-5level %logger -%kvp -%msg%n
+ </pattern>
+</encoder>
+</appender>
+```
+
+<root> <appender-ref ref="STDOUT" /> </root> </configuration>
+
+With the help of Joran, logback's configuration framework, specifying properties or
+subcomponents to filters is also easy. After adding the corresponding setter method in
+the filter class, specify the value of the property in an XML element named after the
+property, nesting it within a <filter> element.
+
+Often, the desired filter logic consists of two orthogonal parts, a match/mismatch test
+and a response depending on the match/mismatch. For example, for a given test, e.g.
+message equals "foobar", one filter might respond ACCEPT on match and NEUTRAL on
+mismatch, and another filter might respond NEUTRAL on match and DENY on mismatch.
+
+Taking notice of this orthogonality, logback ships with the AbstractMatcherFilter class
+which provides a useful skeleton for specifying the appropriate response on match and
+on mismatch, with the help of two properties, named OnMatch and OnMismatch. Most of the
+regular filters included in logback are derived from AbstractMatcherFilter.
+
+### LevelFilter
+
+filters events based on exact level matching. If the event's level is equal to the
+configured level, the filter accepts or denies the event, depending on the
+configuration of the onMatch and onMismatch properties. Here is a sample configuration
+file. Example: Sample LevelFilter configuration
+(logback-examples/src/main/resources/chapters/filters/levelFilterConfig.xml) Legacy
+Canonical (1.3) Tyler
+
+```xml
+<configuration>
+<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+<filter class="ch.qos.logback.classic.filter.LevelFilter">
+<level>INFO</level>
+<onMatch>ACCEPT</onMatch>
+<onMismatch>DENY</onMismatch>
+</filter>
+<encoder>
+<pattern>
+ %-4relative [%thread] %-5level %logger{30} -%kvp -%msg%n
+ </pattern>
+</encoder>
+</appender>
+<root level="DEBUG">
+<appender-ref ref="CONSOLE" />
+</root>
+</configuration>
+```
+
+The ThresholdFilter filters events below the specified threshold. For events of level
+equal or above the threshold, ThresholdFilter will respond NEUTRAL when its decide ()
+method is invoked. However, events with a level below the threshold will be denied.
+Here is a sample configuration file. Example: Sample ThresholdFilter configuration
+(logback-examples/src/main/resources/chapters/filters/thresholdFilterConfig.xml) Legacy
+Canonical (1.3) Tyler
+
+```xml
+<configuration>
+<appender name="CONSOLE"
+ class="ch.qos.logback.core.ConsoleAppender">
+<!-- deny all events with a level below INFO, that is TRACE and DEBUG -->
+<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+<level>INFO</level>
+</filter>
+<encoder>
+<pattern>
+ %-4relative [%thread] %-5level %logger{30} -%kvp -%msg%n
+ </pattern>
+</encoder>
+</appender>
+<root level="DEBUG">
+<appender-ref ref="CONSOLE" />
+</root>
+</configuration>
+```
+
+### EvaluatorFilter
+
+is a generic filter encapsulating an EventEvaluator. As the name suggests, an
+EventEvaluator evaluates whether a given criteria is met for a given event. On match
+and on mismatch, the hosting EvaluatorFilter will returl the vaue specified by the
+onMatch or onMismatch properties respectively.
+
+Note that EventEvaluator is an abstract class. You can implement your own event
+evaluation logic by subclassing EventEvaluator.
+
+since 1.5.13 For security reasons, JaninoEvaluator has been removed with no
+replacement. However, it is a rather easy exercise to migrate the logic within an
+existing evaluator expression (which is just Java) into a custom EventEvaluator.
+
+To migrate evaluation logic, we suggest to subclass EventEvaluatorBase and copy the
+logic previously in the evaluation expression into the evaluate(ILoggingEvent) method.
+
+You might also want to try the Janino Expression Migrator available online.
+
+For example, let us migrate the following basic evaluator configuration.
+
+```xml
+<configuration>
+<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+<filter class="ch.qos.logback.core.filter.EvaluatorFilter">
+<evaluator>
+<!-- defaults to type ch.qos.logback.classic.boolex.JaninoEventEvaluator -->
+<expression> return message.contains("billing"); </expression>
+</evaluator>
+<OnMismatch>NEUTRAL</OnMismatch>
+<OnMatch>DENY</OnMatch>
+</filter>
+<encoder>
+<pattern>
+ %-4relative [%thread] %-5level %logger -%kvp -%msg%n
+ </pattern>
+</encoder>
+</appender>
+```
+
+<root level="INFO"> <appender-ref ref="STDOUT" /> </root> </configuration> Supplying
+the expression return message.contains("billing"); to the online mogrator will result
+in the generation of following custom evaluator code.
+
+```java
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.boolex.MarkerList;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.classic.spi.IThrowableProxy;
+import ch.qos.logback.classic.spi.LoggerContextVO;
+import ch.qos.logback.classic.spi.ThrowableProxy;
+import ch.qos.logback.core.boolex.EvaluationException;
+import ch.qos.logback.core.boolex.EventEvaluatorBase;
+import ch.qos.logback.core.boolex.Matcher;
+import org.slf4j.Marker;
+```
+
+```java
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+```
+
+/** * <p>This class was generated when migrating a logback-classic configuration *
+using JaninoEventEvaluator. * * <p>JaninoEventEvaluator has been removed due to
+identified vulnerabilities. which * * <p>Note that the generated code in the {@link
+#evaluate(ILoggingEvent)} method will * depend on the boolean expression, more
+specifically on the variables referenced * in the original boolean expression. */
+public class GeneratedExpressionEvaluator extends EventEvaluatorBase {
+
+public boolean evaluate(ILoggingEvent event) throws NullPointerException,
+EvaluationException { String message = event.getMessage(); return
+message.contains("billing"); } } Below is an example integrating this custom
+evaluator.
+
+```xml
+<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+<filter class="ch.qos.logback.core.filter.EvaluatorFilter">
+<evaluator class="PACKAGE_NAME_OF_YOUR_CHOICE.GeneratedExpressionEvaluator">
+<!‐‐ Note that like all logback components, this custom evaluator can also
+ be parameterized ‐‐>
+</evaluator>
+<OnMismatch>NEUTRAL</OnMismatch>
+<OnMatch>DENY</OnMatch>
+</filter>
+<layout>
+<pattern>%d [%thread] %-5level %logger{36} -%kvp- %msg%n</pattern>
+</layout>
+</appender>
+```
+
+<root level="DEBUG"> <appender-ref ref="STDOUT" /> </root> </configuration>
+TurboFilters
+
+TurboFilter objects all extend the TurboFilter abstract class. Like the regular
+filters, they use ternary logic to return their evaluation of the logging event.
+
+Overall, they work much like the previously mentioned filters. However, there are two
+main differences between Filter and TurboFilter objects.
+
+TurboFilter objects are tied to the whole logging context not just a single appender.
+Thus, their scope is wider than appender-attached filters. Moreover, they are called
+each and every time a logging request is issued.
+
+In principle, they are called before the LoggingEvent object creation. TurboFilter
+objects do not require the instantiation of a logging event to filter a logging
+request. As such, turbo filters are intended for high performance filtering of logging
+events, even before the events are created.
+
+With the advent of fluent API in SLF4J 2.0, turbo filters are called twice, once when
+the atDebug(), atInfo(), etc methods are invoked, and a second time from the log()
+method of an enabled log statement.
+
+Please note that the call to turbo filters in log() method for an enabled log statement
+is new in logback-classic version 1.5.21 and later, prior versions did not call turbo
+filters form the log() methods.
+
+To create your own TurboFilter component, just extend the TurboFilter abstract class.
+As previously, when implementing a customized filter object, developing a custom
+TurboFilter only asks that one implement the decide() method. In the next example, we
+create a slightly more complex filter: Example: Basic custom TurboFilter
+(logback-examples/src/main/java/chapters/filters/SampleTurboFilter.java) package
+chapters.filters;
+
+```java
+import org.slf4j.Marker;
+import org.slf4j.MarkerFactory;
+```
+
+```java
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.turbo.TurboFilter;
+import ch.qos.logback.core.spi.FilterReply;
+```
+
+@Override public FilterReply decide(Marker marker, Logger logger, Level level, String
+format, Object[] params, Throwable t) {
+
+if ((markerToAccept.equals(marker))) { return FilterReply.ACCEPT; } else { return
+FilterReply.NEUTRAL; } }
+
+public void setMarker(String markerStr) { this.marker = markerStr; }
+
+@Override public void start() { if (marker!= null && marker.trim().length() > 0) {
+markerToAccept = MarkerFactory.getMarker(marker); super.start(); } } } The
+TurboFilter above accepts events that contain a specific marker. If said marker is not
+found, then the filter passes the responsibility to the next filter in the chain.
+
+To allow more flexibility, the marker that will be tested can be specified in the
+configuration file, hence the getter and setter methods. We also implemented the
+start() method, to check that the option has been specified during the configuration
+process.
+
+Here is a sample configuration that makes use of our newly created TurboFilter.
+Example: Basic custom TurboFilter configuration
+(logback-examples/src/main/resources/chapters/filters/sampleTurboFilterConfig.xml)
+Legacy Canonical (1.3) Tyler
+
+```xml
+<configuration>
+<turboFilter class="chapters.filters.SampleTurboFilter">
+<Marker>sample</Marker>
+</turboFilter>
+<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+<encoder>
+<pattern>
+ %-4relative [%thread] %-5level %logger -%kvp -%msg%n
+ </pattern>
+</encoder>
+</appender>
+```
+
+<root> <appender-ref ref="STDOUT" /> </root> </configuration>
+
+Logback classic ships with several TurboFilter classes ready for use. The MDCFilter
+checks the presence of a given value in the MDC whereas DynamicThresholdFilter allows
+filtering based on MDC key/level threshold associations. On the other hand,
+MarkerFilter checks for the presence of a specific marker associated with the logging
+request.
+
+Here is a sample configuration, using both MDCFilter and MarkerFilter. Example:
+MDCFilter and MarkerFilter configuration
+(logback-examples/src/main/resources/chapters/filters/turboFilters.xml) Legacy
+Canonical (1.3) Tyler
+
+<turboFilter class="ch.qos.logback.classic.turbo.MDCFilter"> <MDCKey>username</MDCKey>
+<Value>sebastien</Value> <OnMatch>ACCEPT</OnMatch> </turboFilter>
+
+<turboFilter class="ch.qos.logback.classic.turbo.MarkerFilter">
+<Marker>billing</Marker> <OnMatch>DENY</OnMatch> </turboFilter>
+
+```xml
+<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+<encoder>
+<pattern>%date [%thread] %-5level %logger -%kvp -%msg%n</pattern>
+</encoder>
+</appender>
+```
+
+<root level="INFO"> <appender-ref ref="console" /> </root> </configuration>
+
+You can see this configuration in action by issuing the following command:
+
+java chapters.filters.FilterEvents src/main/java/chapters/filters/turboFilters.xml
+
+As we've seen previously, the FilterEvents application issues 10 logging requests,
+numbered 0 to 9. Except for requests 3 and 6, all of the requests are of level INFO,
+the same level as the one assigned to the root logger. The 3rd request, is issued at
+the the DEBUG level, which is below the effective level. However, since the MDC key
+"username" is set to "sebastien" just before the 3rd request and removed just
+afterwards, the MDCFilter specifically accepts the request (and only that request). The
+6th request, issued at the ERROR level, is marked as "billing". As such, it is denied
+by the MarkerFilter (the second turbo filter in the configuration).
+
+Thus, the output of FilterEvents application configured with turboFilters.xml file
+shown above is:
+
+2006-12-04 15:17:22,859 [main] INFO chapters.filters.FilterEvents - logging statement 0
+2006-12-04 15:17:22,875 [main] INFO chapters.filters.FilterEvents - logging statement 1
+2006-12-04 15:17:22,875 [main] INFO chapters.filters.FilterEvents - logging statement 2
+2006-12-04 15:17:22,875 [main] DEBUG chapters.filters.FilterEvents - logging statement 3
+2006-12-04 15:17:22,875 [main] INFO chapters.filters.FilterEvents - logging statement 4
+2006-12-04 15:17:22,875 [main] INFO chapters.filters.FilterEvents - logging statement 5
+2006-12-04 15:17:22,875 [main] INFO chapters.filters.FilterEvents - logging statement 7
+2006-12-04 15:17:22,875 [main] INFO chapters.filters.FilterEvents - logging statement 8
+2006-12-04 15:17:22,875 [main] INFO chapters.filters.FilterEvents - logging statement 9
+
+One can see that the 3rd request, which should not be displayed if we only followed the
+overall INFO level, appears anyway, because it matched the first TurboFilter
+requirements and was accepted.
+
+On the other hand, the 6th request, that is an ERROR level request should have been
+displayed. But it satisfied the second TurboFilter whose OnMatch option is set to DENY.
+Thus, the 6th request was not displayed.
+
+The DuplicateMessageFilter merits a separate presentation. This filter detects
+duplicate messages, and beyond a certain number of repetitions, drops repeated
+messages.
+
+To detect repetition, this filter uses simple String equality between messages. It does
+not detect messages which are very similar, varying only by few characters. For
+example, if you write:
+
+logger.debug("Hello "+name0); logger.debug("Hello "+name1); Assuming name0 and name1
+have different values, the two "Hello" messages will be considered as unrelated.
+Depending on user demand, future releases may check for string similarity, eliminating
+repetitions of similar but not identical messages.
+
 ## 8. Mapped Diagnostic Context (MDC)
 
-One of the design goals of logback is to audit and debug complex distributed applications. Most real-world distributed systems need to deal with multiple clients simultaneously. In a typical multithreaded implementation of such a system, different threads will handle different clients. A possible but slightly discouraged approach to differentiate the logging output of one client from another consists of instantiating a new and separate logger for each client. This technique promotes the proliferation of loggers and may increase their management overhead. A lighter technique consists of uniquely stamping each log request servicing a given client. Neil Harrison described this method in the book Patterns for Logging Diagnostic Messages in Pattern Languages of Program Design 3, edited by R. Martin, D. Riehle, and F. Buschmann (Addison-Wesley, 1997). Logback leverages a variant of this technique included in the SLF4J API: Mapped Diagnostic Contexts (MDC). To uniquely stamp each request, the user puts contextual information into the MDC , the abbreviation of Mapped Diagnostic Context. The salient parts of the MDC class are shown below. Please refer to the MDC javadocs for a complete list of methods. ``` public class MDC { //Put a context value as identified by key //into the current thread's context map. public static void put(String key, String val); //Get the context identified by the key parameter. public static String get(String key); //Remove the context identified by the key parameter. public static void remove(String key); //Clear all entries in the MDC. public static void clear(); } The MDC class contains only static methods. It lets the developer place information in a diagnostic context that can be subsequently retrieved by certain logback components. The MDC manages contextual information on a per thread basis . Typically, while starting to service a new client request, the developer will insert pertinent contextual information, such as the client id, client's IP address, request parameters etc. into the MDC . Logback components, if appropriately configured, will automatically include this information in each log entry. ``` Please note that MDC as implemented by logback-classic assumes that values are placed into the MDC with moderate frequency. Also note that a child thread does not automatically inherit a copy of the mapped diagnostic context of its parent. The next application named SimpleMDC demonstrates this basic principle. Example 7.1: Basic MDC usage ( logback-examples/src/main/java/chapters/mdc/SimpleMDC.java) ``` import org.slf4j.Logger; import org.slf4j.LoggerFactory; import org.slf4j.MDC; ``` ``` import ch.qos.logback.classic.PatternLayout; import ch.qos.logback.core.ConsoleAppender; ``` ``` public class SimpleMDC { static public void main(String[] args) throws Exception { ``` // You can put values in the MDC at any time. Before anything else // we put the first name MDC.put("first", "Dorothy"); Logger logger = LoggerFactory.getLogger(SimpleMDC.class); // We now put the last name MDC.put("last", "Parker"); // The most beautiful two words in the English language according // to Dorothy Parker: logger.info("Check enclosed."); logger.debug("The most beautiful two words in English."); MDC.put("first", "Richard"); MDC.put("last", "Nixon"); logger.info("I am not a crook."); logger.info("Attributed to the former US president. 17 Nov 1973."); } } The main method starts by associating the value Dorothy with the key first in the MDC . You can place as many value/key associations in the MDC as you wish. Multiple insertions with the same key will overwrite older values. The code then proceeds to configure logback. For the sake of conciseness, we have omitted the code that configures logback with the configuration file simpleMDC.xml . Here is the relevant section from that file. ``` <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender"> <layout> <Pattern> %X{first} %X{last} - %m%n</Pattern> </layout> </appender> Note the usage of the %X specifier within the PatternLayout conversion pattern. The %X conversion specifier is employed twice, once for the key named first and once for the key named last . After obtaining a logger corresponding to SimpleMDC.class , the code associates the value Parker with the key named last . It then invokes the logger twice with different messages. The code finishes by setting the MDC to different values and issuing several logging requests. Running SimpleMDC yields: ``` Dorothy Parker - Check enclosed. Dorothy Parker - The most beautiful two words in English. Richard Nixon - I am not a crook. Richard Nixon - Attributed to the former US president. 17 Nov 1973. The SimpleMDC application illustrates how logback layouts, if configured appropriately, can automatically output MDC information. Moreover, the information placed into the MDC can be used by multiple logger invocations. Mapped Diagnostic Contexts shine brightest within client server architectures. Typically, multiple clients will be served by multiple threads on the server. Although the methods in the MDC class are static, the diagnostic context is managed on a per-thread basis, allowing each server thread to bear a distinct MDC stamp. MDC operations such as put() and get() affect only the MDC of the current thread, and the children of the current thread. The MDC in other threads remain unaffected. Given that MDC information is managed on a per-thread basis, each thread will have its own copy of the MDC . Thus, there is no need for the developer to worry about thread-safety or synchronization when programming with the MDC because it handles these issues safely and transparently. The next example is somewhat more advanced. It shows how the MDC can be used in a client-server setting. The server-side implements the NumberCruncher interface shown in Example 7.2 below. The NumberCruncher interface contains a single method named factor() . Using RMI technology, the client invokes the factor() method of the server application to retrieve the distinct factors of an integer. Example 7.2: The service interface ( logback-examples/src/main/java/chapters/mdc/NumberCruncher.java) package chapters.mdc; /** * NumberCruncher factors positive integers. */ public interface NumberCruncher extends Remote { /** * Factor a positive integer number and return its * distinct factor's as an integer array. * */ int[] factor(int number) throws RemoteException; } The NumberCruncherServer application, listed in Example 7.3 below, implements the NumberCruncher interface. Its main method exports an RMI Registry on the local host that accepts requests on a well-known port. Example 7.3: The server side ( logback-examples/src/main/java/chapters/mdc/NumberCruncherServer.java) package chapters.mdc; ``` import java.rmi.RemoteException; import java.rmi.registry.LocateRegistry; import java.rmi.registry.Registry; import java.rmi.server.UnicastRemoteObject; import java.util.Vector; ``` ``` import org.slf4j.Logger; import org.slf4j.LoggerFactory; import org.slf4j.MDC; ``` ``` import ch.qos.logback.classic.LoggerContext; import ch.qos.logback.classic.joran.JoranConfigurator; import ch.qos.logback.core.joran.spi.JoranException; ``` /** * A simple NumberCruncher implementation that logs its progress when * factoring numbers. The purpose of the whole exercise is to show the * use of mapped diagnostic contexts in order to distinguish the log * output from different client requests. * */ public class NumberCruncherServer extends UnicastRemoteObject implements NumberCruncher { static Logger logger = LoggerFactory.getLogger(NumberCruncherServer.class); ``` public int[] factor(int number) throws RemoteException { // The client's host is an important source of information. try { MDC.put("client", NumberCruncherServer.getClientHost()); } catch (java.rmi.server.ServerNotActiveException e) { logger.warn("Caught unexpected ServerNotActiveException.", e); } ``` // The information contained within the request is another source // of distinctive information. It might reveal the users name, // date of request, request ID etc. In servlet type environments, // useful information is contained in the HttpRequest or in the // HttpSession. MDC.put("number", String.valueOf(number)); logger.info("Beginning to factor."); if (number <= 0) { throw new IllegalArgumentException(number + " is not a positive integer."); } else if (number == 1) { return new int[] { 1 }; } for (int i = 2; (i <= n) && ((i * i) <= number); i++) { // It is bad practice to place log requests within tight loops. // It is done here to show interleaved log output from // different requests. logger.debug("Trying " + i + " as a factor."); if ((n % i) == 0) { logger.info("Found factor " + i); factors.addElement(new Integer(i)); // Placing artificial delays in tight loops will also lead to // sub-optimal results. :-) delay(100); } if (n != 1) { logger.info("Found factor " + n); factors.addElement(new Integer(n)); } for (int i = 0; i < len; i++) { result[i] = ((Integer) factors.elementAt(i)).intValue(); } // clean up MDC.remove("client"); MDC.remove("number"); return result; } static void usage(String msg) { System.err.println(msg); System.err.println("Usage: java chapters.mdc.NumberCruncherServer configFile\n" + " where configFile is a logback configuration file."); System.exit(1); } ``` public static void delay(int millis) { try { Thread.sleep(millis); } catch (InterruptedException e) { } } ``` ``` public static void main(String[] args) { if (args.length != 1) { usage("Wrong number of arguments."); } ``` if (configFile.endsWith(".xml")) { try { LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory(); JoranConfigurator configurator = new JoranConfigurator(); configurator.setContext(lc); lc.reset(); configurator.doConfigure(args[0]); } catch (JoranException je) { je.printStackTrace(); } } try { ncs = new NumberCruncherServer(); logger.info("Creating registry."); Registry registry = LocateRegistry.createRegistry(Registry.REGISTRY_PORT); registry.rebind("Factor", ncs); logger.info("NumberCruncherServer bound and ready."); } catch (Exception e) { logger.error("Could not bind NumberCruncherServer.", e); return; } } } The implementation of the factor(int number) method is of particular relevance. It starts by putting the client's hostname into the MDC under the key client . The number to factor, as requested by the client, is put into the MDC under the key number . After computing the distinct factors of the integer parameter, the result is returned to the client. Before returning the result however, the values for the client and number are cleared by calling the MDC.remove() method. Normally, a put() operation should be balanced by the corresponding remove() operation. Otherwise, the MDC will contain stale values for certain keys. We would recommend that whenever possible, remove() operations be performed within finally blocks, ensuring their invocation regardless of the execution path of the code. After these theoretical explanations, we are ready to run the number cruncher example. Start the server with the following command: java chapters.mdc.NumberCruncherServer src/main/java/chapters/mdc/mdc1.xml The mdc1.xml configuration file is listed below: Example 7.4: Configuration file (logback-examples/src/main/java/chapters/mdc/mdc1.xml) <configuration> <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender"> <layout> <Pattern>%-4r [%thread] %-5level C:%X{client} N:%X{number} - %msg%n</Pattern> </layout> </appender> ``` <root level="debug"> <appender-ref ref="CONSOLE"/> </root> </configuration> Note the use of the %X conversion specifier within the Pattern option. ``` The following command starts an instance of NumberCruncherClient application: java chapters.mdc.NumberCruncherClient hostname where hostname is the host where the NumberCruncherServer is running Executing multiple instances of the client and requesting the server to factor the numbers 129 from the first client and shortly thereafter the number 71 from the second client, the server outputs the following: 70984 [RMI TCP Connection(4)-192.168.1.6] INFO C:orion N:129 - Beginning to factor. 70984 [RMI TCP Connection(4)-192.168.1.6] DEBUG C:orion N:129 - Trying 2 as a factor. 71093 [RMI TCP Connection(4)-192.168.1.6] DEBUG C:orion N:129 - Trying 3 as a factor. 71093 [RMI TCP Connection(4)-192.168.1.6] INFO C:orion N:129 - Found factor 3 71187 [RMI TCP Connection(4)-192.168.1.6] DEBUG C:orion N:129 - Trying 4 as a factor. 71297 [RMI TCP Connection(4)-192.168.1.6] DEBUG C:orion N:129
+One of the design goals of logback is to audit and debug complex distributed
+applications. Most real-world distributed systems need to deal with multiple clients
+simultaneously. In a typical multithreaded implementation of such a system, different
+threads will handle different clients. A possible but slightly discouraged approach to
+differentiate the logging output of one client from another consists of instantiating a
+new and separate logger for each client. This technique promotes the proliferation of
+loggers and may increase their management overhead.
+
+A lighter technique consists of uniquely stamping each log request servicing a given
+client. Neil Harrison described this method in the book Patterns for Logging Diagnostic
+Messages in Pattern Languages of Program Design 3, edited by R. Martin, D. Riehle, and
+F. Buschmann (Addison-Wesley, 1997). Logback leverages a variant of this technique
+included in the SLF4J API: Mapped Diagnostic Contexts (MDC).
+
+To uniquely stamp each request, the user puts contextual information into the MDC, the
+abbreviation of Mapped Diagnostic Context. The salient parts of the MDC class are shown
+below. Please refer to the MDC javadocs for a complete list of methods.
+
+```java
+public class MDC  {
+//Put a context value as identified by key //into the current thread's context map. public static void put(String key, String val);
+//Get the context identified by the key parameter. public static String get(String key);
+//Remove the context identified by the key parameter. public static void remove(String key);
+//Clear all entries in the MDC. public static void clear();
+
+}
+The MDC class contains only static methods. It
+ lets the developer place information in a diagnostic
+ context that can be subsequently retrieved by certain logback
+ components. The MDC manages contextual information on
+ a per thread basis. Typically, while starting to service
+ a new client request, the developer will insert pertinent
+ contextual information, such as the client id, client's IP
+ address, request parameters etc. into the MDC.
+ Logback components, if appropriately configured, will
+ automatically include this information in each log entry.
+```
+
+Please note that MDC as implemented by logback-classic assumes that values are placed
+into the MDC with moderate frequency. Also note that a child thread does not
+automatically inherit a copy of the mapped diagnostic context of its parent.
+
+The next application named SimpleMDC demonstrates this basic principle.
+
+Example 7.1: Basic MDC usage
+(logback-examples/src/main/java/chapters/mdc/SimpleMDC.java)
+
+```java
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
+```
+
+```java
+import ch.qos.logback.classic.PatternLayout;
+import ch.qos.logback.core.ConsoleAppender;
+```
+
+```java
+public class SimpleMDC  {
+static public void main(String[] args) throws Exception  {
+```
+
+// You can put values in the MDC at any time. Before anything else // we put the first
+name MDC.put("first", "Dorothy");
+
+Logger logger = LoggerFactory.getLogger(SimpleMDC.class); // We now put the last name
+MDC.put("last", "Parker");
+
+// The most beautiful two words in the English language according // to Dorothy Parker:
+logger.info("Check enclosed."); logger.debug("The most beautiful two words in
+English.");
+
+MDC.put("first", "Richard"); MDC.put("last", "Nixon"); logger.info("I am not a
+crook."); logger.info("Attributed to the former US president. 17 Nov 1973."); }
+
+} The main method starts by associating the value Dorothy with the key first in the
+MDC. You can place as many value/key associations in the MDC as you wish. Multiple
+insertions with the same key will overwrite older values. The code then proceeds to
+configure logback.
+
+For the sake of conciseness, we have omitted the code that configures logback with the
+configuration file simpleMDC.xml. Here is the relevant section from that file.
+
+```xml
+<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+<layout>
+<Pattern> %X{first} %X{last} - %m%n</Pattern>
+</layout>
+</appender> 
+Note the usage of the %X specifier within the PatternLayout conversion pattern. The %X conversion specifier is employed twice, once for the key named first and once for the key named last. After
+ obtaining a logger corresponding to SimpleMDC.class,
+ the code associates the value Parker with the key named last. It then invokes the logger twice with different
+ messages. The code finishes by setting the MDC to
+ different values and issuing several logging requests. Running
+ SimpleMDC yields:
+```
+
+Dorothy Parker - Check enclosed. Dorothy Parker - The most beautiful two words in
+English. Richard Nixon - I am not a crook. Richard Nixon - Attributed to the former US
+president. 17 Nov 1973. The SimpleMDC application illustrates how logback layouts, if
+configured appropriately, can automatically output MDC information. Moreover, the
+information placed into the MDC can be used by multiple logger invocations.
+
+Mapped Diagnostic Contexts shine brightest within client server architectures.
+Typically, multiple clients will be served by multiple threads on the server. Although
+the methods in the MDC class are static, the diagnostic context is managed on a
+per-thread basis, allowing each server thread to bear a distinct MDC stamp. MDC
+operations such as put() and get() affect only the MDC of the current thread, and the
+children of the current thread. The MDC in other threads remain unaffected. Given that
+MDC information is managed on a per-thread basis, each thread will have its own copy
+of the MDC. Thus, there is no need for the developer to worry about thread-safety or
+synchronization when programming with the MDC because it handles these issues safely
+and transparently.
+
+The next example is somewhat more advanced. It shows how the MDC can be used in a
+client-server setting. The server-side implements the NumberCruncher interface shown
+in Example 7.2 below. The NumberCruncher interface contains a single method named
+factor(). Using RMI technology, the client invokes the factor() method of the server
+application to retrieve the distinct factors of an integer. Example 7.2: The service
+interface (logback-examples/src/main/java/chapters/mdc/NumberCruncher.java) package
+chapters.mdc;
+
+```java
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+```
+
+/** * NumberCruncher factors positive integers. */ public interface NumberCruncher
+extends Remote { /** * Factor a positive integer number and return its * distinct
+factor's as an integer array. * */ int[] factor(int number) throws RemoteException; }
+The NumberCruncherServer application, listed in Example 7.3 below, implements the
+NumberCruncher interface. Its main method exports an RMI Registry on the local host
+that accepts requests on a well-known port. Example 7.3: The server side
+(logback-examples/src/main/java/chapters/mdc/NumberCruncherServer.java) package
+chapters.mdc;
+
+```java
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
+import java.util.Vector;
+```
+
+```java
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
+```
+
+```java
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.joran.JoranConfigurator;
+import ch.qos.logback.core.joran.spi.JoranException;
+```
+
+/** * A simple NumberCruncher implementation that logs its progress when * factoring
+numbers. The purpose of the whole exercise is to show the * use of mapped diagnostic
+contexts in order to distinguish the log * output from different client requests. * */
+public class NumberCruncherServer extends UnicastRemoteObject implements NumberCruncher
+{
+
+static Logger logger = LoggerFactory.getLogger(NumberCruncherServer.class);
+
+public NumberCruncherServer() throws RemoteException { }
+
+public int[] factor(int number) throws RemoteException { // The client's host is an
+important source of information. try { MDC.put("client",
+NumberCruncherServer.getClientHost()); } catch (java.rmi.server.ServerNotActiveException
+e) { logger.warn("Caught unexpected ServerNotActiveException.", e); }
+
+// The information contained within the request is another source // of distinctive
+information. It might reveal the users name, // date of request, request ID etc. In
+servlet type environments, // useful information is contained in the HttpRequest or in
+the // HttpSession. MDC.put("number", String.valueOf(number)); logger.info("Beginning
+to factor.");
+
+if (number <= 0) { throw new IllegalArgumentException(number + " is not a positive
+integer."); } else if (number == 1) { return new int[] { 1 }; }
+
+Vector<Integer> factors = new Vector<Integer>(); int n = number;
+
+for (int i = 2; (i <= n) && ((i * i) <= number); i++) { // It is bad practice to place
+log requests within tight loops. // It is done here to show interleaved log output from
+// different requests. logger.debug("Trying " + i + " as a factor.");
+
+if ((n % i) == 0) { logger.info("Found factor " + i); factors.addElement(new
+Integer(i));
+
+// Placing artificial delays in tight loops will also lead to // sub-optimal
+results.:-) delay(100); }
+
+if (n!= 1) { logger.info("Found factor " + n); factors.addElement(new Integer(n)); }
+
+```java
+for (int i = 0;
+i < len;
+i++)  {
+result[i] = ((Integer) factors.elementAt(i)).intValue();
+
+}
+// clean up
+ MDC.remove("client");
+MDC.remove("number");
+return result;
+
+}
+```
+
+static void usage(String msg) { System.err.println(msg); System.err.println("Usage:
+java chapters.mdc.NumberCruncherServer configFile\n" + " where configFile is a logback
+configuration file."); System.exit(1); }
+
+public static void delay(int millis) { try { Thread.sleep(millis); } catch
+(InterruptedException e) { } }
+
+public static void main(String[] args) { if (args.length!= 1) { usage("Wrong number of
+arguments."); }
+
+if (configFile.endsWith(".xml")) { try { LoggerContext lc = (LoggerContext)
+LoggerFactory.getILoggerFactory(); JoranConfigurator configurator = new
+JoranConfigurator(); configurator.setContext(lc); lc.reset();
+configurator.doConfigure(args[0]); } catch (JoranException je) { je.printStackTrace();
+} }
+
+try { ncs = new NumberCruncherServer(); logger.info("Creating registry.");
+
+Registry registry = LocateRegistry.createRegistry(Registry.REGISTRY_PORT);
+registry.rebind("Factor", ncs); logger.info("NumberCruncherServer bound and ready.");
+} catch (Exception e) { logger.error("Could not bind NumberCruncherServer.", e);
+
+return; } } } The implementation of the factor(int number) method is of particular
+relevance. It starts by putting the client's hostname into the MDC under the key
+client. The number to factor, as requested by the client, is put into the MDC under the
+key number. After computing the distinct factors of the integer parameter, the result
+is returned to the client. Before returning the result however, the values for the
+client and number are cleared by calling the MDC.remove() method. Normally, a put()
+operation should be balanced by the corresponding remove() operation. Otherwise, the MDC
+will contain stale values for certain keys. We would recommend that whenever possible,
+remove() operations be performed within finally blocks, ensuring their invocation
+regardless of the execution path of the code.
+
+After these theoretical explanations, we are ready to run the number cruncher example.
+Start the server with the following command:
+
+```java
+java chapters.mdc.NumberCruncherServer src/main/java/chapters/mdc/mdc1.xml 
+The mdc1.xml configuration file is listed below: 
+Example 7.4: Configuration file (logback-examples/src/main/java/chapters/mdc/mdc1.xml) 
+<configuration>
+ <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+ <layout>
+ <Pattern>%-4r [%thread] %-5level C:%X {
+client
+}
+N:%X {
+number
+}
+- %msg%n</Pattern>
+ </layout> 
+ </appender>
+```
+
+<root level="debug"> <appender-ref ref="CONSOLE"/> </root> </configuration> Note the
+use of the %X conversion specifier within the Pattern option.
+
+The following command starts an instance of NumberCruncherClient application:
+
 ## 9. Using SSL
 
-The whole difference between construction and creation is exactly this: that a thing constructed can only be loved after it is constructed; but a thing created is loved before it exists. Logback supports the use of the Secure Sockets Layer (SSL) when delivering log events from a socket-based appender to a remote receiver. When using an SSL-enabled appender and corresponding receiver, serialized logging events are delivered over a secure channel. Logback components such as appenders and receivers may act in either the server role or the client role, with respect to network connection initiation. When acting in the server role, a logback component passively listens for connections from remote client components. Conversely, a component acting in the client role initiates a connection to remote server component. For example, an appender acting in the client role connects to a receiver acting in the server role. Or a receiver acting in the client role connects to an appender acting in the server role. The roles of the components are generally determined by the component type. For example, an SSLServerSocketAppender is an appender component that acts in the server role, while an SSLSocketAppender is an appender component that acts in the client role. Thus the developer or application administrator can configure Logback components to support the desired direction of network connection initiation. The direction of connection initiation is significant in the context of SSL, because in SSL a server component must possess an X.509 credential to identify itself to connecting clients. A client component, when connecting to the server, uses the server's certificate to validate that the server is trusted. The developer or application administrator must be aware of the roles of Logback components, so as to properly configure the server's key store (containing the server's X.509 credential) and the client's trust store (containing self-signed root certificates used when validating server trust). When SSL is configured for mutual authentication , then both the server component and the client component must possess valid X.509 credentials whose trust can be asserted by their respective peer. Mutual authentication is configured in the server component, therefore the developer or application administrator must be aware of which components are acting in the server role. In this chapter, we use the term server component or simply server to refer to a Logback component such as an appender or receiver that is acting in the server role. We use the term client component or simply client to refer to a component that is acting in the client role. SSL and X.509 Certificates In order to use SSL-enabled Logback components, you will need an X.509 credential (a private key, corresponding certificate, and CA certification chain) to identify your components that act as SSL servers. If you wish to use mutual authentication, you will also need credentials for your components that act as SSL clients. While you can use a credential issued by a commercial certification authority (CA), you can also use a certificate issued from your own internal CA or even a self-signed certificate. The following is all that is required: The server component must be configured with a key store containing the server's private key, corresponding certificate, and CA certification chain (if not using a self-signed certificate). The client component must be configured with a trust store containing trusted root CA certificate(s) or the server's self-signed root certificate. The Java Secure Sockets Extension (JSSE) and Java Cryptography Architecture (JCA) which is used to implement Logback's SSL support has many configurable options, and a pluggable provider framework that allows the built-in SSL and cryptographic capabilities of the platform to be replaced or augmented. SSL-enabled Logback components provide the ability to fully specify all of the configurable aspects of the SSL engine and cryptographic providers, to meet your unique security needs. Fortunately, nearly all of the configurable SSL properties for SSL-enabled Logback components have reasonable defaults. In most cases all that is needed is the configuration of some JSSE system properties. The remainder of this section describes the specific JSSE properties that are needed in most environments. See Customizing JSSE in the JSSE Reference Guide for more information on setting JSSE system properties to customize JSSE. If you're using any of Logback's SSL-enabled appender or receiver components that act in the server role (e.g. SSLServerSocketReceiver , SSLServerSocketAppender , or SimpleSSLSocketServer ) you'll need to configure JSSE system properties that provide the location, type, and password of the key store containing a private key and certificate. javax.net.ssl.keyStore Specifies a filesystem path to the file containing your server components' private key and certificate. javax.net.ssl.keyStoreType Specifies the key store type. If this property is not specified, the platform's default type (JKS) is assumed. javax.net.ssl.keyStorePassword Specifies the password needed to access the key store. See Examples below for examples of setting these system properties when starting an application that uses Logback's SSL-enabled server components. If your server component is using a certificate that was signed by a commercial certification authority (CA), you probably don't need to provide any SSL configuration in your applications that use SSL-enabled client components . When using a commercially-signed certificate for your server component, simply setting the system key store properties for JVM that runs the server component is usually all that is needed. If you are using either a self-signed server certificate or your server certificate was signed by a certification authority (CA) that is not among those whose root certificates are in the Java platform's default trust store (e.g. when your organization has its own internal certification authority), you will need to configure the JSSE system properties that provide the location, type, and password of the trust store containing your server's certificate or trusted root certificates for the certification authority (CA) that signed your server's certificate. These properties will need to be set in each application that utilizes an SSL-enabled client component . javax.net.ssl.trustStore Specifies a filesystem path to the file containing your server component's certificate or trusted root certificate(s) for the certification authority (CA) that signed the server certificate. javax.net.ssl.trustStoreType Specifies the trust store type. If this property is not specified, the platform's default type (JKS) is assumed. javax.net.ssl.trustStorePassword Specifies the password needed to access the trust store. See Examples below for examples of setting these system properties when starting an application that utilizes Logback's SSL-enabled client components. In certain situations, the basic SSL configuration using JSSE system properties is not adequate. For example, if you are using the SSLServerSocketReceiver component in a web application, you may wish to use a different credential to identify your logging server for your remote logging clients than the credential that your web server uses to identify itself to web clients. You might wish to use SSL client authentication on your logging server to ensure that only authentic and authorized remote loggers can connect. Or perhaps your organization has strict policies regarding the SSL protocols and cipher suites that may be utilized on the organization's network. For any of these needs, you will need to make use of Logback's advanced configuration options for SSL. When configuring a Logback component that supports SSL, you specify the SSL configuration using the ssl property in the configuration of the component. For example, if you wish to use SSLServerSocketReceiver and configure the key store properties for your logging server's credential, you could use a configuration such as the following. ``` <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender"> <encoder> <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n</pattern> </encoder> </appender> ``` ``` <receiver class="ch.qos.logback.classic.net.server.SSLServerSocketReceiver"> <ssl> <keyStore> <location>classpath:/logging-server-keystore.jks</location> <password>changeit</password> </keyStore> </ssl> </receiver> ``` This configuration specifies the location of the key store as logging-server-keystore.jks at the root of the application's classpath. You could alternatively specify a file: URL to identify the location of the key store. If you wanted to use SSLSocketAppender in your application's Logback configuration, but did not want to change the application's default trust store using the JSSE javax.net.ssl.trustStore property, you could configure the appender as follows. ``` <configuration> <appender name="SOCKET" class="ch.qos.logback.classic.net.SSLSocketAppender"> <ssl> <trustStore> <location>classpath:/logging-server-truststore.jks</location> <password>changeit</password> </trustStore> </ssl> </appender> ``` This configuration specifies the location of the trust store as logging-server-truststore.jks at the root of the application's classpath. You could alternatively specify a file: URL to identify the location of the trust store. JSSE exposes a large number of configurable options, and Logback's SSL support makes nearly all of them available for you to specify in your SSL-enabled component configuration. When using XML configuration, SSL properties are introduced to these components by nesting an <ssl> element in the component configuration. This configuration element corresponds to the SSLConfiguration class. When configuring SSL for your components you need only configure those SSL properties for which the defaults are not adequate. Over-specifying the SSL configuration is often the cause of difficult-to-diagnose problems. The following table describes the top-level SSL configuration properties. Many of these properties introduce additional subproperties, which are described in tables that follow after the top-level properties are described. keyManagerFactory KeyManagerFactoryFactoryBean Specifies the configuration used to create a KeyManagerFactory . The Java platform's default factory will be used if this property is not configured. See Key Manager Factory Configuration below. keyStore KeyStoreFactoryBean Specifies the configuration used to create a KeyStore . The KeyStore created by this property should contain a single X.509 credential (consisting of a private key, corresponding certificate, and CA certificate chain). This credential is presented by the local SSL peer to the remote SSL peer. When configuring an SSL client (e.g. SSLSocketAppender ), the keyStore property is needed only if the remote peer is configured to require client authentication. When configuring an SSL server (e.g. SimpleSSLSocketServer ) the keyStore property specifies the key
+The whole difference between construction and creation is exactly this: that a thing
+constructed can only be loved after it is constructed; but a thing created is loved
+before it exists.
+
+Logback supports the use of the Secure Sockets Layer (SSL) when delivering log events
+from a socket-based appender to a remote receiver. When using an SSL-enabled appender
+and corresponding receiver, serialized logging events are delivered over a secure
+channel.
+
+Logback components such as appenders and receivers may act in either the server role or
+the client role, with respect to network connection initiation. When acting in the
+server role, a logback component passively listens for connections from remote client
+components. Conversely, a component acting in the client role initiates a connection
+to remote server component. For example, an appender acting in the client role
+connects to a receiver acting in the server role. Or a receiver acting in the client
+role connects to an appender acting in the server role.
+
+The roles of the components are generally determined by the component type. For
+example, an SSLServerSocketAppender is an appender component that acts in the server
+role, while an SSLSocketAppender is an appender component that acts in the client role.
+Thus the developer or application administrator can configure Logback components to
+support the desired direction of network connection initiation.
+
+The direction of connection initiation is significant in the context of SSL, because
+in SSL a server component must possess an X.509 credential to identify itself to
+connecting clients. A client component, when connecting to the server, uses the
+server's certificate to validate that the server is trusted. The developer or
+application administrator must be aware of the roles of Logback components, so as to
+properly configure the server's key store (containing the server's X.509 credential)
+and the client's trust store (containing self-signed root certificates used when
+validating server trust).
+
+When SSL is configured for mutual authentication, then both the server component and
+the client component must possess valid X.509 credentials whose trust can be asserted
+by their respective peer. Mutual authentication is configured in the server
+component, therefore the developer or application administrator must be aware of which
+components are acting in the server role.
+
+In this chapter, we use the term server component or simply server to refer to a Logback
+component such as an appender or receiver that is acting in the server role. We use
+the term client component or simply client to refer to a component that is acting in the
+client role. SSL and X.509 Certificates
+
+In order to use SSL-enabled Logback components, you will need an X.509 credential (a
+private key, corresponding certificate, and CA certification chain) to identify your
+components that act as SSL servers. If you wish to use mutual authentication, you
+will also need credentials for your components that act as SSL clients.
+
+While you can use a credential issued by a commercial certification authority (CA), you
+can also use a certificate issued from your own internal CA or even a self-signed
+certificate. The following is all that is required:
+
+The server component must be configured with a key store containing the server's
+private key, corresponding certificate, and CA certification chain (if not using a
+self-signed certificate).
+
+The client component must be configured with a trust store containing trusted root CA
+certificate(s) or the server's self-signed root certificate.
+
+The Java Secure Sockets Extension (JSSE) and Java Cryptography Architecture (JCA)
+which is used to implement Logback's SSL support has many configurable options, and a
+pluggable provider framework that allows the built-in SSL and cryptographic
+capabilities of the platform to be replaced or augmented. SSL-enabled Logback
+components provide the ability to fully specify all of the configurable aspects of the
+SSL engine and cryptographic providers, to meet your unique security needs.
+
+Fortunately, nearly all of the configurable SSL properties for SSL-enabled Logback
+components have reasonable defaults. In most cases all that is needed is the
+configuration of some JSSE system properties.
+
+The remainder of this section describes the specific JSSE properties that are needed in
+most environments. See Customizing JSSE in the JSSE Reference Guide for more information
+on setting JSSE system properties to customize JSSE.
+
+If you're using any of Logback's SSL-enabled appender or receiver components that act
+in the server role (e.g. SSLServerSocketReceiver, SSLServerSocketAppender, or
+SimpleSSLSocketServer) you'll need to configure JSSE system properties that provide
+the location, type, and password of the key store containing a private key and
+certificate.
+
+javax.net.ssl.keyStore Specifies a filesystem path to the file containing your server
+components' private key and certificate.
+
+javax.net.ssl.keyStoreType Specifies the key store type. If this property is not
+specified, the platform's default type (JKS) is assumed.
+
+javax.net.ssl.keyStorePassword Specifies the password needed to access the key store.
+
+See Examples below for examples of setting these system properties when starting an
+application that uses Logback's SSL-enabled server components.
+
+If your server component is using a certificate that was signed by a commercial
+certification authority (CA), you probably don't need to provide any SSL configuration
+in your applications that use SSL-enabled client components. When using a
+commercially-signed certificate for your server component, simply setting the system
+key store properties for JVM that runs the server component is usually all that is
+needed.
+
+If you are using either a self-signed server certificate or your server certificate was
+signed by a certification authority (CA) that is not among those whose root
+certificates are in the Java platform's default trust store (e.g. when your
+organization has its own internal certification authority), you will need to configure
+the JSSE system properties that provide the location, type, and password of the trust
+store containing your server's certificate or trusted root certificates for the
+certification authority (CA) that signed your server's certificate. These properties
+will need to be set in each application that utilizes an SSL-enabled client
+component.
+
+javax.net.ssl.trustStore Specifies a filesystem path to the file containing your server
+component's certificate or trusted root certificate(s) for the certification authority
+(CA) that signed the server certificate.
+
+javax.net.ssl.trustStoreType Specifies the trust store type. If this property is not
+specified, the platform's default type (JKS) is assumed.
+
+javax.net.ssl.trustStorePassword Specifies the password needed to access the trust
+store.
+
+See Examples below for examples of setting these system properties when starting an
+application that utilizes Logback's SSL-enabled client components.
+
+In certain situations, the basic SSL configuration using JSSE system properties is not
+adequate. For example, if you are using the SSLServerSocketReceiver component in a web
+application, you may wish to use a different credential to identify your logging server
+for your remote logging clients than the credential that your web server uses to
+identify itself to web clients. You might wish to use SSL client authentication on
+your logging server to ensure that only authentic and authorized remote loggers can
+connect. Or perhaps your organization has strict policies regarding the SSL protocols
+and cipher suites that may be utilized on the organization's network. For any of these
+needs, you will need to make use of Logback's advanced configuration options for SSL.
+
+When configuring a Logback component that supports SSL, you specify the SSL
+configuration using the ssl property in the configuration of the component.
+
+For example, if you wish to use SSLServerSocketReceiver and configure the key store
+properties for your logging server's credential, you could use a configuration such as
+the following.
+
+```xml
+<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+<encoder>
+<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n</pattern>
+</encoder>
+</appender>
+```
+
+<root level="debug"> <appender-ref ref="CONSOLE" /> </root>
+
+<receiver class="ch.qos.logback.classic.net.server.SSLServerSocketReceiver"> <ssl>
+<keyStore> <location>classpath:/logging-server-keystore.jks</location>
+<password>changeit</password> </keyStore> </ssl> </receiver>
+
+This configuration specifies the location of the key store as
+logging-server-keystore.jks at the root of the application's classpath. You could
+alternatively specify a file: URL to identify the location of the key store.
+
+If you wanted to use SSLSocketAppender in your application's Logback configuration, but
+did not want to change the application's default trust store using the JSSE
+javax.net.ssl.trustStore property, you could configure the appender as follows.
+
+```xml
+<configuration>
+<appender name="SOCKET" class="ch.qos.logback.classic.net.SSLSocketAppender">
+<ssl>
+<trustStore>
+<location>classpath:/logging-server-truststore.jks</location>
+<password>changeit</password>
+</trustStore>
+</ssl>
+</appender>
+```
+
+<root level="debug"> <appender-ref ref="SOCKET" /> </root>
+
+This configuration specifies the location of the trust store as
+logging-server-truststore.jks at the root of the application's classpath. You could
+alternatively specify a file: URL to identify the location of the trust store.
+
+JSSE exposes a large number of configurable options, and Logback's SSL support makes
+nearly all of them available for you to specify in your SSL-enabled component
+configuration. When using XML configuration, SSL properties are introduced to these
+components by nesting an <ssl> element in the component configuration. This
+configuration element corresponds to the SSLConfiguration class.
+
+When configuring SSL for your components you need only configure those SSL properties
+for which the defaults are not adequate. Over-specifying the SSL configuration is
+often the cause of difficult-to-diagnose problems.
+
+The following table describes the top-level SSL configuration properties. Many of these
+properties introduce additional subproperties, which are described in tables that
+follow after the top-level properties are described.
+
+keyManagerFactory KeyManagerFactoryFactoryBean Specifies the configuration used to
+create a KeyManagerFactory. The Java platform's default factory will be used if this
+property is not configured. See Key Manager Factory Configuration below.
+
+keyStore KeyStoreFactoryBean Specifies the configuration used to create a KeyStore. The
+KeyStore created by this property should contain a single X.509 credential (consisting
+of a private key, corresponding certificate, and CA certificate chain). This
+credential is presented by the local SSL peer to the remote SSL peer.
+
+When configuring an SSL client (e.g. SSLSocketAppender), the keyStore property is
+needed only if the remote peer is configured to require client authentication.
+
+When configuring an SSL server (e.g. SimpleSSLSocketServer) the keyStore property
+specifies the key store containing the server's credential. If this property is not
+configured, the JSSE's javax.net.ssl.keyStore system property must be configured to
+provide the location of the server's key store. See Customizing JSSE in the JSSE
+Reference Guide for more information on setting JSSE system properties.
+
 ## 10. Joran Configuration Framework
 
-The answer, my friend, is blowin' in the wind, The answer is blowin' in the wind. This chapter is outdated and needs to be re-written to account for the massive changes occurring in 1.3 Joran stands for a cold north-west wind which, every now and then, blows forcefully on Lake Geneva. Located right in the middle of Western-Europe, the surface of Lake Geneva is smaller than many other European lakes. However, with its average depth of 153 meters, it is unusually deep, and happens to be, by volume, the largest sweet water reserve in Western-Europe. As apparent in previous chapters, logback relies on Joran, a mature, flexible and powerful configuration framework. Many of the capabilities offered by logback modules are only possible on account of Joran. This chapter focuses on Joran, its basic design and its salient features. Joran is actually a generic configuration system which can be used independently of logging. To emphasize this point, we should mention that the logback-core module does not have a notion of loggers. In that spirit, most of the examples in this chapter have nothing to do with loggers, appenders or layouts. The examples presented in this chapter can be found under LOGBACK_HOME/logback-examples/src/main/java/chapters/onJoran/ folder. To install Joran, simply download logback and add logback-core-${project.version}.jar to your classpath. Reflection is a powerful feature of the Java language, making it possible to configure software systems declaratively. For example, many important properties of an EJB are configured with the ejb.xml file. While EJBs are written in Java, many of their properties are specified within the ejb.xml file. Similarly, logback settings can be specified in a configuration file, expressed in XML format. Annotations available in JDK 1.5 and heavily used in EJB 3.0 replace many directives previously found in XML files. Joran also makes use of annotations but at a much smaller extent. Due to the dynamic nature of logback configuration data (compared to EJBs) Joran's use of annotations is rather limited. In log4j, logback's predecessor, the DOMConfigurator class, which is part of log4j version 1.2.x and later, could also parse configuration files written in XML. DOMConfigurator was written in a way that forced us, the developers, to tweak the code each time the structure of the configuration file changed. The modified code had to be recompiled and redeployed. Just as importantly, the code of the DOMConfigurator consisted of loops dealing with child elements containing many interspersed if/else statements. One could not help but notice that this particular code reeked of redundancy and duplication. The commons-digester project had shown us that it was possible to parse XML files using pattern matching rules. At parse time, digester would apply rules that matched designated patterns. Rule classes were usually quite small and specialized. Consequently, they were relatively easy to understand and maintain. Armed with the DOMConfigurator experience, we began developing Joran , a powerful configuration framework to be used in logback. Joran was largely inspired by the commons-digester project. Nevertheless, it uses a slightly different terminology. In commons-digester, a rule can be seen as consisting of a pattern and a rule, as shown by the Digester.addRule(String pattern, Rule rule) method. We find it unnecessarily confusing to have a rule to consist of itself, not recursively but with a different meaning. In Joran, a rule consists of a pattern and an action. An action is invoked when a match occurs for the corresponding pattern. This relation between patterns and actions lies at the core of Joran. Quite remarkably, one can deal with quite complex requirements by using simple patterns, or more precisely with exact matches and wildcard matches. Due to the event-based architecture of the SAX API, a tool based on SAX cannot easily deal with forward references, that is, references to elements which are defined later than the current element being processed. Elements with cyclical references are equally problematic. More generally, the DOM API allows the user to perform searches on all the elements and make forward jumps. This extra flexibility initially led us to choose the DOM API as the underlying parsing API for Joran. After some experimentation, it quickly became clear that dealing with jumps to distant elements while parsing the DOM tree did not make sense when the interpretation rules were expressed in the form of patterns and actions. Joran only needs to be given the elements in the XML document in a sequential, depth-first order. Moreover, the SAX API offers element location information which allows Joran to display the exact line and column number where an error occurred. Location information comes in very handy in the identification of parsing problems. Given its highly dynamic nature, the Joran API is not intended to be used to parse very large XML documents with many thousands of elements. A Joran pattern is essentially a string. There are two kind of patterns, exact and wildcard . The pattern "a/b" can be used to match a <b> element nested within a top-level <a> element. The "a/b" pattern will not match any other element, hence the exact match designation. Wildcards can be used to match suffixes or prefixes. For example, the "*/a" pattern can be used to match any suffix ending with "a", that is any <a> element within an XML document but not any elements nested within <a> . The "a/*" pattern will match any element prefixed by <a> , that is any element nested within an <a> element. As mentioned above, Joran parsing rules consists of the association of patterns. Actions extend the Action class, consisting of the following abstract methods. Other methods have been omitted for brevity. ``` import org.xml.sax.Attributes; import org.xml.sax.Locator; import ch.qos.logback.core.joran.spi.InterpretationContext; ``` ``` public abstract class Action extends ContextAwareBase { /** * Called when the parser encounters an element matching a * {@link ch.qos.logback.core.joran.spi.Pattern Pattern}. */ public abstract void begin(InterpretationContext ic, String name, Attributes attributes) throws ActionException; ``` /** * Called to pass the body (as text) contained within an element. */ public void body(InterpretationContext ic, String body) throws ActionException { // NOP } /* * Called when the parser encounters an endElement event matching a * {@link ch.qos.logback.core.joran.spi.Pattern Pattern}. */ public abstract void end(InterpretationContext ic, String name) throws ActionException; } Thus, every action must implement the begin() and end() methods. The implementation of the body() method is optional on account of the empty/nop implementation provided by Action . As mentioned previously, the invocation of actions according to matching patterns is a central concept in Joran. A rule is an association of a pattern and an action. Rules are stored in a RuleStore . As mentioned above, Joran is built on top of the SAX API. As an XML document is parsed, each element generates events corresponding to the start, body and end of each element. When a Joran configurator receives these events, it will attempt to find in its rule store an action corresponding to the current pattern . For example, the current pattern for the start, body or end event of element B nested within a top-level A element is "A/B". The current pattern is a data structure maintained automatically by Joran as it receives and processes SAX events. When several rules match the current pattern, then exact matches override suffix matches, and suffix matches override prefix matches. For exact details of the implementation, please see the SimpleRuleStore class. To allow various actions to collaborate, the invocation of begin and end methods include an interpretation context as the first parameter. The interpretation context includes an object stack, an object map, an error list and a reference to the Joran interpreter invoking the action. Please see the InterpretationContext class for the exact list of fields contained in the interpretation context. Actions can collaborate together by fetching, pushing or popping objects from the common object stack, or by putting and fetching keyed objects on the common object map. Actions can report any error conditions by adding error items on the interpretation context's StatusManager . The first example in this chapter illustrates the minimal plumbing required for using Joran. The example consists of a trivial action called HelloWorldAction which prints "Hello World" on the console when its begin() method is invoked. The parsing of XML files is done by a configurator. For the purposes of this chapter, we have developed a very simple configurator called SimpleConfigurator . The HelloWorld application brings all these pieces together: It creates a parsing rule by associating the hello-world pattern with a corresponding HelloWorldAction instance It creates a SimpleConfigurator , passing it the aforementioned rules map It then invokes the doConfigure method of the configurator, passing the designated XML file as parameter As a last step, the accumulated Status message in the context, if any, are printed The hello.xml file contains one <hello-world> element, without any other nested elements. See the logback-examples/src/main/java/chapters/onJoran/helloWorld/ folder for exact contents. Running the HelloWorld application with hello.xml file will print "Hello World" on the console. java chapters.onJoran.helloWorld.HelloWorld src/main/java/chapters/onJoran/helloWorld/hello.xml You are highly encouraged to poke about in this example, by adding new rules on the rule store, modifying the XML document (hello.xml) and adding new actions. The logback-examples/src/main/java/joran/calculator/ directory includes several actions which collaborate together through the common object stack in order to accomplish simple computations. The calculator1.xml file contains a computation element, with a nested literal element. Here are its contents. Example 10. : First calculator example (logback-examples/src/main/java/chapters/onJoran/calculator/calculator1.xml) <computation name="total"> <literal value="3"/> </computation> In the Calculator1 application, we declare various parsing rules (patterns and actions) collaborating together to compute a result based on the contents of an XML document. java chapters.onJoran.calculator.Calculator1 src/main/java/chapters/onJoran/calculator/calculator1.xml will print: Parsing the calculator1.xml document (listed above) involves the following steps: The start event corresponding to the <computation> element translates into the current pattern "/computation". Since in the Calculator1 application we associated the pattern "/computation" with a ComputationAction1 instance, the begin() method of that ComputationAction1 instance is invoked. The start event corresponding to the <literal> element translates into the current pattern "/computation/literal". Given the association of the "/computation/literal" pattern with a LiteralAction instance, the begin() method of that LiteralAction instance is called. By the same token, the end event corresponding to the <literal> element triggers the invocation of the end () method of the same LiteralAction instance. Similarly, the event corresponding to the end of <computation>
+The answer, my friend, is blowin' in the wind, The answer is blowin' in the wind.
+
+This chapter is outdated and needs to be re-written to account for the massive changes
+occurring in 1.3
+
+Joran stands for a cold north-west wind which, every now and then, blows forcefully on
+Lake Geneva. Located right in the middle of Western-Europe, the surface of Lake Geneva
+is smaller than many other European lakes. However, with its average depth of 153
+meters, it is unusually deep, and happens to be, by volume, the largest sweet water
+reserve in Western-Europe.
+
+As apparent in previous chapters, logback relies on Joran, a mature, flexible and
+powerful configuration framework. Many of the capabilities offered by logback modules
+are only possible on account of Joran. This chapter focuses on Joran, its basic design
+and its salient features.
+
+Joran is actually a generic configuration system which can be used independently of
+logging. To emphasize this point, we should mention that the logback-core module does
+not have a notion of loggers. In that spirit, most of the examples in this chapter have
+nothing to do with loggers, appenders or layouts.
+
+The examples presented in this chapter can be found under
+LOGBACK_HOME/logback-examples/src/main/java/chapters/onJoran/ folder.
+
+To install Joran, simply download logback and add logback-core-${project.version}.jar to
+your classpath.
+
+Reflection is a powerful feature of the Java language, making it possible to configure
+software systems declaratively. For example, many important properties of an EJB are
+configured with the ejb.xml file. While EJBs are written in Java, many of their
+properties are specified within the ejb.xml file. Similarly, logback settings can be
+specified in a configuration file, expressed in XML format. Annotations available in
+JDK 1.5 and heavily used in EJB 3.0 replace many directives previously found in XML
+files. Joran also makes use of annotations but at a much smaller extent. Due to the
+dynamic nature of logback configuration data (compared to EJBs) Joran's use of
+annotations is rather limited.
+
+In log4j, logback's predecessor, the DOMConfigurator class, which is part of log4j
+version 1.2.x and later, could also parse configuration files written in XML.
+DOMConfigurator was written in a way that forced us, the developers, to tweak the code
+each time the structure of the configuration file changed. The modified code had to be
+recompiled and redeployed. Just as importantly, the code of the DOMConfigurator
+consisted of loops dealing with child elements containing many interspersed if/else
+statements. One could not help but notice that this particular code reeked of
+redundancy and duplication. The commons-digester project had shown us that it was
+possible to parse XML files using pattern matching rules. At parse time, digester would
+apply rules that matched designated patterns. Rule classes were usually quite small
+and specialized. Consequently, they were relatively easy to understand and maintain.
+
+Armed with the DOMConfigurator experience, we began developing Joran, a powerful
+configuration framework to be used in logback. Joran was largely inspired by the
+commons-digester project. Nevertheless, it uses a slightly different terminology. In
+commons-digester, a rule can be seen as consisting of a pattern and a rule, as shown by
+the Digester.addRule(String pattern, Rule rule) method. We find it unnecessarily
+confusing to have a rule to consist of itself, not recursively but with a different
+meaning. In Joran, a rule consists of a pattern and an action. An action is invoked
+when a match occurs for the corresponding pattern. This relation between patterns and
+actions lies at the core of Joran. Quite remarkably, one can deal with quite complex
+requirements by using simple patterns, or more precisely with exact matches and
+wildcard matches.
+
+Due to the event-based architecture of the SAX API, a tool based on SAX cannot easily
+deal with forward references, that is, references to elements which are defined later
+than the current element being processed. Elements with cyclical references are
+equally problematic. More generally, the DOM API allows the user to perform searches on
+all the elements and make forward jumps.
+
+This extra flexibility initially led us to choose the DOM API as the underlying parsing
+API for Joran. After some experimentation, it quickly became clear that dealing with
+jumps to distant elements while parsing the DOM tree did not make sense when the
+interpretation rules were expressed in the form of patterns and actions. Joran only
+needs to be given the elements in the XML document in a sequential, depth-first order.
+
+Moreover, the SAX API offers element location information which allows Joran to display
+the exact line and column number where an error occurred. Location information comes in
+very handy in the identification of parsing problems.
+
+Given its highly dynamic nature, the Joran API is not intended to be used to parse very
+large XML documents with many thousands of elements.
+
+A Joran pattern is essentially a string. There are two kind of patterns, exact and
+wildcard. The pattern "a/b" can be used to match a <b> element nested within a
+top-level <a> element. The "a/b" pattern will not match any other element, hence the
+exact match designation.
+
+Wildcards can be used to match suffixes or prefixes. For example, the "*/a" pattern can
+be used to match any suffix ending with "a", that is any <a> element within an XML
+document but not any elements nested within <a>. The "a/*" pattern will match any
+element prefixed by <a>, that is any element nested within an <a> element.
+
+As mentioned above, Joran parsing rules consists of the association of patterns.
+Actions extend the Action class, consisting of the following abstract methods. Other
+methods have been omitted for brevity.
+
+```java
+import org.xml.sax.Attributes;
+import org.xml.sax.Locator;
+import ch.qos.logback.core.joran.spi.InterpretationContext;
+```
+
+```java
+public abstract class Action extends ContextAwareBase  {
+/**
+ * Called when the parser encounters an element matching a
+ *  {
+@link ch.qos.logback.core.joran.spi.Pattern Pattern
+}
+.
+ */
+ public abstract void begin(InterpretationContext ic, String name,
+ Attributes attributes) throws ActionException;
+```
+
+/** * Called to pass the body (as text) contained within an element. */ public void
+body(InterpretationContext ic, String body) throws ActionException { // NOP }
+
+/* * Called when the parser encounters an endElement event matching a * {@link
+ch.qos.logback.core.joran.spi.Pattern Pattern}. */ public abstract void
+end(InterpretationContext ic, String name) throws ActionException; } Thus, every
+action must implement the begin() and end() methods. The implementation of the body()
+method is optional on account of the empty/nop implementation provided by Action.
+
+As mentioned previously, the invocation of actions according to matching patterns is a
+central concept in Joran. A rule is an association of a pattern and an action. Rules
+are stored in a RuleStore.
+
+As mentioned above, Joran is built on top of the SAX API. As an XML document is parsed,
+each element generates events corresponding to the start, body and end of each element.
+When a Joran configurator receives these events, it will attempt to find in its rule
+store an action corresponding to the current pattern. For example, the current pattern
+for the start, body or end event of element B nested within a top-level A element is
+"A/B". The current pattern is a data structure maintained automatically by Joran as it
+receives and processes SAX events.
+
+When several rules match the current pattern, then exact matches override suffix
+matches, and suffix matches override prefix matches. For exact details of the
+implementation, please see the SimpleRuleStore class.
+
+To allow various actions to collaborate, the invocation of begin and end methods
+include an interpretation context as the first parameter. The interpretation context
+includes an object stack, an object map, an error list and a reference to the Joran
+interpreter invoking the action. Please see the InterpretationContext class for the
+exact list of fields contained in the interpretation context.
+
+Actions can collaborate together by fetching, pushing or popping objects from the
+common object stack, or by putting and fetching keyed objects on the common object map.
+Actions can report any error conditions by adding error items on the interpretation
+context's StatusManager.
+
+The first example in this chapter illustrates the minimal plumbing required for using
+Joran. The example consists of a trivial action called HelloWorldAction which prints
+"Hello World" on the console when its begin() method is invoked. The parsing of XML
+files is done by a configurator. For the purposes of this chapter, we have developed a
+very simple configurator called SimpleConfigurator. The HelloWorld application brings
+all these pieces together:
+
+It creates a parsing rule by associating the hello-world pattern with a corresponding
+HelloWorldAction instance
+
+It creates a SimpleConfigurator, passing it the aforementioned rules map
+
+It then invokes the doConfigure method of the configurator, passing the designated XML
+file as parameter
+
+As a last step, the accumulated Status message in the context, if any, are printed
+
+The hello.xml file contains one <hello-world> element, without any other nested
+elements. See the logback-examples/src/main/java/chapters/onJoran/helloWorld/ folder for
+exact contents.
+
+Running the HelloWorld application with hello.xml file will print "Hello World" on the
+console.
+
+java chapters.onJoran.helloWorld.HelloWorld
+src/main/java/chapters/onJoran/helloWorld/hello.xml You are highly encouraged to poke
+about in this example, by adding new rules on the rule store, modifying the XML
+document (hello.xml) and adding new actions.
+
+The logback-examples/src/main/java/joran/calculator/ directory includes several actions
+which collaborate together through the common object stack in order to accomplish
+simple computations.
+
+The calculator1.xml file contains a computation element, with a nested literal element.
+Here are its contents. Example 10.: First calculator example
+(logback-examples/src/main/java/chapters/onJoran/calculator/calculator1.xml)
+<computation name="total"> <literal value="3"/> </computation> In the Calculator1
+application, we declare various parsing rules (patterns and actions) collaborating
+together to compute a result based on the contents of an XML document.
+
+java chapters.onJoran.calculator.Calculator1
+src/main/java/chapters/onJoran/calculator/calculator1.xml will print:
+
+Parsing the calculator1.xml document (listed above) involves the following steps:
+
+The start event corresponding to the <computation> element translates into the current
+pattern "/computation". Since in the Calculator1 application we associated the pattern
+"/computation" with a ComputationAction1 instance, the begin() method of that
+ComputationAction1 instance is invoked.
+
 ## 11. Migration from Log4j
 
-This chapter deals with the topic of migrating custom log4j 1.x components such as appenders or layouts to logback-classic. Software which merely invokes log4j 1.x client API, that is the Logger or Category classes in org.apache.log4j package, can be automatically migrated to use SLF4J via the SLF4J migrator tool . To migrate log4j.property files into its logback equivalent, you can use the log4j.properties translator . From a broader perspective, log4j and logback-classic are closely related. The core components, such as loggers, appenders and layouts exist in both frameworks and serve identical purposes. Similarly, the most important internal data-structure, namely LoggingEvent , exists in both frameworks with rather similar but non-identical implementations. Most notably, in logback-classic LoggingEvent implements the ILoggingEvent interface. Most of the changes required in migrating log4j components to logback-classic are related to differences in implementation of the LoggingEvent class. Rest assured, these differences are rather limited. If in spite of your best efforts you are unable to migrate any given log4j component to logback-classic, do post a question on the logback-dev mailing list . A logback developer should be able to provide guidance. Let us begin by migrating a hypothetical and trivially simple log4j layout named TrivialLog4jLayout which returns the message contained in a logging events as the formatted message. Here is the code. ``` import org.apache.log4j.Layout; import org.apache.log4j.spi.LoggingEvent; ``` ``` public String format(LoggingEvent loggingEvent) { return loggingEvent.getRenderedMessage(); } ``` ``` public boolean ignoresThrowable() { return true; } } The logback-classic equivalent named TrivialLogbackLayout would be ``` ``` import ch.qos.logback.classic.spi.ILoggingEvent; import ch.qos.logback.core.LayoutBase; ``` ``` public String doLayout (ILoggingEvent loggingEvent) { return loggingEvent.getMessage(); } } As you can see, in a logback-classic layout, the formatting method is named doLayout instead of format () in log4j. The ignoresThrowable () method is not needed and has no equivalent in logback-classic. Note that a logback-classic layout must extend the LayoutBase<ILoggingEvent> class. ``` The activateOptions () method merits further discussion. In log4j, a layout will have its activateOptions () method invoked by log4j configurators, that is PropertyConfigurator or DOMConfigurator just after all the options of the layout have been set. Thus, the layout will have an opportunity to check that its options are coherent and if so, proceed to fully initialize itself. In logback-classic, layouts must implement the LifeCycle interface which includes a method called start (). The start () method is the equivalent of log4j's activateOptions () method. Migrating an appender is quite similar to migrating a layout. Here is a trivially simple appender called TrivialLog4jAppender which writes on the console the string returned by its layout. ``` import org.apache.log4j.AppenderSkeleton; import org.apache.log4j.spi.LoggingEvent; ``` protected void append(LoggingEvent loggingevent) { String s = this.layout.format(loggingevent); System.out.println(s); } ``` public boolean requiresLayout() { return true;
+The more things change, the more they remain the same.
+
+This chapter deals with the topic of migrating custom log4j 1.x components such as
+appenders or layouts to logback-classic.
+
+Software which merely invokes log4j 1.x client API, that is the Logger or Category
+classes in org.apache.log4j package, can be automatically migrated to use SLF4J via the
+SLF4J migrator tool. To migrate log4j.property files into its logback equivalent, you
+can use the log4j.properties translator.
+
+From a broader perspective, log4j and logback-classic are closely related. The core
+components, such as loggers, appenders and layouts exist in both frameworks and serve
+identical purposes. Similarly, the most important internal data-structure, namely
+LoggingEvent, exists in both frameworks with rather similar but non-identical
+implementations. Most notably, in logback-classic LoggingEvent implements the
+ILoggingEvent interface. Most of the changes required in migrating log4j components to
+logback-classic are related to differences in implementation of the LoggingEvent class.
+Rest assured, these differences are rather limited. If in spite of your best efforts
+you are unable to migrate any given log4j component to logback-classic, do post a
+question on the logback-dev mailing list. A logback developer should be able to provide
+guidance.
+
+Let us begin by migrating a hypothetical and trivially simple log4j layout named
+TrivialLog4jLayout which returns the message contained in a logging events as the
+formatted message. Here is the code.
+
+```java
+import org.apache.log4j.Layout;
+import org.apache.log4j.spi.LoggingEvent;
+```
+
+public void activateOptions() { // there are no options to activate }
+
+public String format(LoggingEvent loggingEvent) { return
+loggingEvent.getRenderedMessage(); }
+
+public boolean ignoresThrowable() { return true; } } The logback-classic equivalent
+named TrivialLogbackLayout would be
+
+```java
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.LayoutBase;
+```
+
+```java
+public class TrivialLogbackLayout extends LayoutBase<ILoggingEvent>  {
+```
+
+public String doLayout (ILoggingEvent loggingEvent) { return loggingEvent.getMessage();
+} } As you can see, in a logback-classic layout, the formatting method is named
+doLayout instead of format () in log4j. The ignoresThrowable () method is not needed
+and has no equivalent in logback-classic. Note that a logback-classic layout must
+extend the LayoutBase<ILoggingEvent> class.
+
+The activateOptions () method merits further discussion. In log4j, a layout will have
+its activateOptions () method invoked by log4j configurators, that is
+PropertyConfigurator or DOMConfigurator just after all the options of the layout have
+been set. Thus, the layout will have an opportunity to check that its options are
+coherent and if so, proceed to fully initialize itself.
+
+In logback-classic, layouts must implement the LifeCycle interface which includes a
+method called start (). The start () method is the equivalent of log4j's activateOptions
+() method.
+
+Migrating an appender is quite similar to migrating a layout. Here is a trivially
+simple appender called TrivialLog4jAppender which writes on the console the string
+returned by its layout.
+
+```java
+import org.apache.log4j.AppenderSkeleton;
+import org.apache.log4j.spi.LoggingEvent;
+```
+
+```java
+public class TrivialLog4jAppender extends AppenderSkeleton  {
+```
+
+protected void append(LoggingEvent loggingevent) { String s =
+this.layout.format(loggingevent); System.out.println(s); }
+
+public boolean requiresLayout() { return true; } } The logback-classic equivalent
+named TrivialLogbackAppender would be written as
+
+```java
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.AppenderBase;
+```
+
+```java
+public class TrivialLogbackAppender extends AppenderBase<ILoggingEvent>  {
+```
+
+@Override public void start() { if (this.layout == null) { addError("No layout set
+for the appender named [" + name + "]."); return; } super.start(); }
+
+@Override protected void append(ILoggingEvent loggingevent) { // note that
+AppenderBase.doAppend will invoke this method only if // this appender was successfully
+started.
+
+String s = this.layout.doLayout(loggingevent); System.out.println(s); } } Comparing
+the two classes, you should notice that the contents of the append () method remains
+unchanged. The requiresLayout method is not used in logback and can be removed. In
+logback, the stop () method is the equivalent of log4j's close () method. However,
+AppenderBase in logback-classic, contains a nop implementation for stop which is
+sufficient for the purposes of this trivial appender.
 
 ---
 
