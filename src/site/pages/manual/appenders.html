@@ -348,18 +348,28 @@ public interface Appender&lt;E> extends LifeCycle, ContextAware, FilterAttachabl
 	    <td><span class="prop" container="conApp">withJansi</span></td>
 	    <td><code>boolean</code></td>
 	    <td>
-              <p>By the default <span class="prop">withJansi</span>
-              property is set to <code>false</code>.  Setting <span
-              class="prop">withJansi</span> to <code>true</code> 
-              activates the <a
-              href="http://fusesource.github.io/jansi/">Jansi</a> library
-              which provides support for ANSI color codes on Windows
-              machines.  On a Windows host, if this property is set to
-              true, then you should put
-              "org.fusesource.jansi:jansi:${jansi.version}" on the
-              class path. Note that Unix-based operating systems such
-              as Linux and Mac OS X support ANSI color codes by
-              default.
+              <p><span class="label notice">since 1.6.3</span>
+              <strong>Deprecated.</strong> Prefer
+              <a href="#JansiConsoleAppender"><code>JansiConsoleAppender</code></a>
+              instead of setting <span
+              class="prop">withJansi</span> on a plain
+              <code>ConsoleAppender</code>. When set to
+              <code>true</code>, logback emits a deprecation warning
+              and this option will be removed in a future release.
+              </p>
+              <p>By default <span class="prop">withJansi</span>
+              is <code>false</code>. Setting it to <code>true</code>
+              still activates Jansi via reflection so that ANSI color
+              codes work on platforms that need it (notably Windows).
+              The implementation probes JLine's
+              <code>org.jline.jansi.AnsiConsole</code> first and falls
+              back to the legacy FuseSource
+              <code>org.fusesource.jansi.AnsiConsole</code>. Put the
+              matching artifact on the class path
+              (<code>org.jline:jansi-core</code> or
+              <code>org.fusesource.jansi:jansi</code>). Unix-based
+              systems such as Linux and macOS already support ANSI
+              color codes by default.
             </p>
 	    </td>
 	  </tr>
@@ -420,6 +430,60 @@ public interface Appender&lt;E> extends LifeCycle, ContextAware, FilterAttachabl
 
    <p class="source">java <a
    href="../xref/chapters/appenders/ConfigurationTester.html">chapters.appenders.&#8203;ConfigurationTester</a> src/main/java/chapters/&#8203;appenders/conf/&#8203;logback-Console.xml</p>
+
+
+   <h2 class="doAnchor" name="JansiConsoleAppender">JansiConsoleAppender</h2>
+
+   <p><span class="label notice">since 1.6.3</span> The <a
+   href="../xref/ch/qos/logback/core/JansiConsoleAppender.html"><code>JansiConsoleAppender</code></a>
+   is a <code>ConsoleAppender</code> that always writes through
+   JLine's <code>org.jline.jansi.AnsiConsole</code>. It is the
+   recommended way to enable ANSI sequences on platforms that need
+   Jansi (notably Windows). Unlike the deprecated
+   <span class="prop">withJansi</span> path on
+   <code>ConsoleAppender</code>, this class talks to
+   <code>AnsiConsole</code> directly and does not use reflection.
+   </p>
+
+   <p>You must place <code>org.jline:jansi-core</code> on the class
+   path. On start, the appender calls
+   <code>AnsiConsole.systemInstall()</code> and routes output to
+   <code>AnsiConsole.out()</code> or <code>AnsiConsole.err()</code>
+   according to the <span class="prop">target</span> property. On
+   stop, if this appender performed the install, it pairs that call
+   with <code>AnsiConsole.systemUninstall()</code>. As with
+   <code>ConsoleAppender</code>, stop flushes the console stream but
+   does not close process-wide stdout or stderr.
+   </p>
+
+   <p><code>JansiConsoleAppender</code> admits the same
+   <span class="prop">encoder</span> and
+   <span class="prop">target</span> properties as
+   <code>ConsoleAppender</code>. You do not set
+   <span class="prop">withJansi</span>; Jansi wrapping is always
+   applied.
+   </p>
+
+   <p>Here is a sample configuration that uses
+   <code>JansiConsoleAppender</code> instead of a plain
+   <code>ConsoleAppender</code> with
+   <code>&lt;withJansi&gt;true&lt;/withJansi&gt;</code>:
+   </p>
+
+   <p class="red bold">DEPRECATED</p>
+   <pre><code>&lt;appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+  &lt;withJansi>true&lt;/withJansi>
+  &lt;encoder>
+    &lt;pattern>%highlight(%-5level) %logger{35} - %msg%n&lt;/pattern>
+  &lt;/encoder>
+&lt;/appender></code></pre>
+
+   <p class="green bold">RECOMMENDED</p>
+   <pre><code>&lt;appender name="STDOUT" class="ch.qos.logback.core.JansiConsoleAppender">
+  &lt;encoder>
+    &lt;pattern>%highlight(%-5level) %logger{35} - %msg%n&lt;/pattern>
+  &lt;/encoder>
+&lt;/appender></code></pre>
 	
 	
    <h2 class="doAnchor" name="FileAppender">FileAppender</h2>
