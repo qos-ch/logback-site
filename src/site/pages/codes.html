@@ -983,23 +983,24 @@ return false;</code></pre>
   <!-- ============================================================= -->
   <hr width="80%" align="center" />
 
-  <h3 class="doAnchor" name="callerContradiction">appenders named %s
+  <h3 class="doAnchor" name="callerContradiction">appenders named X
   instruct against caller extraction info while other appenders named
-  %s instruct in favor of caller extraction
+  Y instruct in favor of caller extraction
   </h3>
 
   <p><span class="label notice">since 1.6.2</span> Logback may emit a
   warning such as:
   </p>
 
-  <pre>appenders named ASYNC instruct against caller extraction info while other appenders named CONSOLE instruct in favor of caller extraction
-See https://logback.qos.ch/codes.html#callerContradiction for details</pre>
+  <pre>appenders named ASYNC instruct against caller extraction info while other appenders named CONSOLE
+instruct in favor of caller extraction
+  </pre>
 
   <p>or:
   </p>
 
-  <pre>appenders named ASYNC instruct preprocessing of caller extraction info but no appender instructs in favor of caller extraction
-See https://logback.qos.ch/codes.html#callerContradiction for details</pre>
+  <pre>appenders named ASYNC instruct preprocessing of caller extraction info but no appender
+instructs in favor of caller extraction</pre>
 
   <p>These messages point to a <em>contradiction</em> among the
   instructions that your configuration gives about caller data.
@@ -1041,9 +1042,9 @@ See https://logback.qos.ch/codes.html#callerContradiction for details</pre>
   <code>%C</code>), while another part refuses to include it (for
   example an <code>AsyncAppender</code> with
   <span class="prop">includeCallerData</span> left at the default
-  <code>false</code>).  At runtime the pattern will not receive usable
-  caller information, even though it was written as if that
-  information were available.
+  <code>false</code>).  At runtime there is a risk the pattern
+  will not receive usable caller information, even though it was
+  written as if that information were available.
   </p>
 
   <p>The opposite mismatch is also a contradiction: an appender is

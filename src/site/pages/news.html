@@ -140,6 +140,79 @@
     <!-- ============================================================================ -->
     <!-- ============================================================================ -->
     
+     <h3 class="doAnchor" name="1.6.2">2026-08-10 Release of logback
+     version 1.6.2</h3>
+
+     <p>&bull; Configuration analysis now detects <em>contradictory
+     caller-data inclusion instructions</em>. For example, an
+     <code>AsyncAppender</code>, <code>SocketAppender</code> or
+     <code>SMTPAppender</code> with
+     <span class="option">includeCallerData</span> left at the default
+     <code>false</code> is incompatible with a layout or encoder
+     pattern that uses a caller-data converter such as
+     <code>%C</code>, <code>%M</code>, <code>%L</code>,
+     <code>%F</code>, <code>%l</code> or <code>%caller</code>. At
+     runtime those converters would print question marks and still
+     incur extraction cost on a worker thread. Logback now emits a
+     configuration-time warning when such instructions disagree. See
+     <a href="codes.html#callerContradiction">codes.html#callerContradiction</a>
+     for details. This issue was reported in <a
+     href="https://github.com/qos-ch/logback/issues/1059">issues/1059</a>
+     by <a href="https://github.com/leeychee">leeychee</a>. The
+     initial analysis was contributed by <a
+     href="https://github.com/seonwooj0810">seonwoo_jung</a>.
+     </p>
+
+     <p>&bull; Caller-contradiction analysis can be turned off by
+     setting the <code>logback.skipCallerContradictionAnalysis</code>
+     variable to <code>true</code>, either as a system property
+     (<code>-Dlogback.skipCallerContradictionAnalysis=true</code>) or
+     as a property in the configuration file:
+     </p>
+
+     <pre class="prettyprint source">&lt;property name="logback.skipCallerContradictionAnalysis" value="true"/></pre>
+
+     <p>&bull; <code>SimpleSocketServer</code> and
+     <code>SimpleSSLSocketServer</code> now require an explicit client
+     IP whitelist. On the command line, pass one or more allowed
+     addresses (single IPs or CIDR ranges) after the configuration
+     file. An empty whitelist means no clients are accepted. When
+     embedding the server programmatically, register allowed addresses
+     with <code>addAllowedClientAddress(String)</code> or
+     <code>setAllowedClientAddresses(Collection)</code> before
+     clients connect. See the documentation on
+     <a href="manual/appenders.html#simpleSocketServerClientAccess">restricting
+     client access</a>.
+     </p>
+
+     <p>&bull; Added <code>ThrowableProxyVOBuilder</code> for
+     assembling a <code>ThrowableProxyVO</code> field by field, with
+     a corresponding <code>ThrowableProxyVO.builder()</code> entry
+     point.
+     </p>
+
+     <p>&bull; Dependency analysis handlers now run their
+     <code>postHandle</code> method after child models have been
+     processed, so checks that depend on nested appenders (such as
+     caller-contradiction analysis) see a complete picture.
+     </p>
+
+     <p>&bull; Updated several dependencies, including
+     Angus Mail to 2.0.4 and Jetty (test) to 12.1.12.
+     </p>
+
+     <p>&bull; A bit-wise identical binary of this version can be
+     reproduced by building
+     from <a href="https://github.com/qos-ch/logback">source code</a>
+     at commit e3d78330ad1ba024fd987fd00c3ffb9cfcdb07dc associated
+     with the tag <code>v_1.6.2</code>. The release was built using
+     Java "21" 2023-10-17 LTS build 21.0.1.+12-LTS-29 under Linux
+     Debian 11.6.</p>
+
+    <hr width="80%" align="center" />
+
+    <!-- ==================================================================== -->
+    
      <h3 class="doAnchor" name="1.6.1">2026-07-28 Release of logback
      version 1.6.1</h3>
 
