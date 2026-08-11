@@ -502,16 +502,260 @@ secondPhaseTraverse(topModel, phaseTwoFilter); // SECOND</code></pre>
     <p>Highly extensible systems cannot register an explicit rule for
     every possible nested element. Joran keeps a list of
     <em>implicit</em> actions, tried when no explicit pattern
-    matches. Each implicit action is asked whether it applies in the
-    current situation; only then is it invoked.
+    matches. In logback configuration,
+    <a href="../xref/ch/qos/logback/core/joran/action/ImplicitModelAction.html"><code>ImplicitModelAction</code></a>
+    is registered as the implicit action: it builds an
+    <code>ImplicitModel</code> for any nested element that is not
+    already covered by an explicit rule.
     </p>
 
-    <p>In modern logback configuration, nested properties and
-    components are represented with <code>ImplicitModel</code> nodes
-    and applied by <code>ImplicitModelHandler</code>, using JavaBeans
-    introspection and the default nested-component registry (for
-    example, defaulting an <code>&lt;encoder&gt;</code> to
-    <code>PatternLayoutEncoder</code> when the class is omitted).
+    <p>Later, during model processing,
+    <a href="../xref/ch/qos/logback/core/model/processor/ImplicitModelHandler.html"><code>ImplicitModelHandler</code></a>
+    applies that model to the object currently on the interpretation
+    stack. Using JavaBeans introspection (via
+    <code>PropertySetter</code> /
+    <code>AggregationAssessor</code>), it decides whether the nested
+    element is a <em>basic</em> property, a <em>complex</em>
+    property, or a collection of either, and then converts and
+    attaches the value accordingly.
+    </p>
+
+    <p>The decision hinges on the parameter type of the matching
+    setter (<code>set<em>Foo</em></code>) or adder
+    (<code>add<em>Foo</em></code>) method on the parent object. That
+    type is classified with
+    <a href="../xref/ch/qos/logback/core/joran/util/StringToObjectConverter.html"><code>StringToObjectConverter.canBeBuiltFromSimpleString(Class)</code></a>:
+    </p>
+
+    <ul>
+      <li>
+        <p>If the parameter type <em>can</em> be built from a simple
+        string, the property is <b>basic</b>
+        (<code>AggregationType.AS_BASIC_PROPERTY</code>, or
+        <code>AS_BASIC_PROPERTY_COLLECTION</code> when an adder is
+        used).</p>
+      </li>
+      <li>
+        <p>Otherwise the property is <b>complex</b>
+        (<code>AS_COMPLEX_PROPERTY</code> or
+        <code>AS_COMPLEX_PROPERTY_COLLECTION</code>).</p>
+      </li>
+      <li>
+        <p>If no matching setter or adder exists, the nested element
+        is unknown: a warning is issued
+        (“Ignoring unknown property …”) and further processing of that
+        branch is skipped.</p>
+      </li>
+    </ul>
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+    <h4 class="doAnchor" name="basicProperty">Basic properties</h4>
+
+    <p>A property is <em>basic</em> (also called <em>simple</em>) when
+    its value can be obtained by converting element body text (or an
+    attribute-style string) into a Java value without instantiating a
+    nested configuration component. Conversion is performed by
+    <code>StringToObjectConverter</code>.
+    </p>
+
+    <p><code>canBeBuiltFromSimpleString</code> returns
+    <code>true</code> when the parameter class is any of the
+    following:
+    </p>
+
+    <ul>
+      <li>
+        <p>a <b>primitive</b> type (<code>int</code>,
+        <code>boolean</code>, <code>double</code>, and so on);</p>
+      </li>
+      <li>
+        <p>a type in the <b><code>java.lang</code></b> package (for
+        example <code>String</code>, <code>Integer</code>,
+        <code>Boolean</code>, <code>Long</code>);</p>
+      </li>
+      <li>
+        <p>an <b>enum</b> type (converted with
+        <code>Enum.valueOf</code>);</p>
+      </li>
+      <li>
+        <p>a type that follows the <b><code>valueOf</code>
+        convention</b>: a public static method
+        <code>valueOf(String)</code> that returns an instance of that
+        type;</p>
+      </li>
+      <li>
+        <p><b><code>java.nio.charset.Charset</code></b> (via
+        <code>Charset.forName</code>; the special string
+        <code>"null"</code> means
+        <code>Charset.defaultCharset()</code>).</p>
+      </li>
+    </ul>
+
+    <p>Among logback’s own types, several follow the
+    <code>valueOf</code> convention and are therefore basic
+    properties, including
+    <a href="../xref/ch/qos/logback/classic/Level.html"><code>Level</code></a>,
+    <a href="../xref/ch/qos/logback/core/util/Duration.html"><code>Duration</code></a>
+    and
+    <a href="../xref/ch/qos/logback/core/util/FileSize.html"><code>FileSize</code></a>.
+    Application types can use the same convention so that configuration
+    files may set them with plain text.
+    </p>
+
+    <p>In XML, a basic property looks like a nested element whose body
+    is the string to convert:
+    </p>
+
+    <pre><code>&lt;appender name="FILE" class="ch.qos.logback.core.FileAppender">
+  &lt;file>myApp.log&lt;/file>              &lt;!-- String -->
+  &lt;append>true&lt;/append>               &lt;!-- boolean -->
+  &lt;prudent>false&lt;/prudent>
+  ...
+&lt;/appender>
+
+&lt;root level="DEBUG">                  &lt;!-- Level via valueOf -->
+  ...
+&lt;/root></code></pre>
+
+    <p>At processing time,
+    <code>ImplicitModelHandler</code> substitutes variables in the
+    body text, then either calls
+    <code>PropertySetter.setProperty</code> (single basic property) or
+    <code>addBasicProperty</code> (collection of basic values). Those
+    methods invoke
+    <code>StringToObjectConverter.convertArg</code> and pass the
+    resulting object to the parent’s setter or adder.
+    </p>
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+    <h4 class="doAnchor" name="complexProperty">Complex properties</h4>
+
+    <p>A property is <em>complex</em> when its type cannot be built
+    from a simple string according to
+    <code>canBeBuiltFromSimpleString</code>. Typical examples are
+    encoders, layouts, filters, policies, and other user-defined
+    objects nested under an appender or similar parent. Complex
+    properties can themselves contain further nested basic or complex
+    properties.
+    </p>
+
+    <p>When <code>ImplicitModelHandler</code> sees a complex property
+    it:
+    </p>
+
+    <ol>
+      <li>
+        <p>Determines the class to instantiate: the
+        <span class="attr">class</span> attribute on the nested
+        element if present (after variable substitution and
+        <code>&lt;import&gt;</code> resolution); otherwise a class
+        deduced by <em>implicit rules</em> (see below).</p>
+      </li>
+      <li>
+        <p>Instantiates that class (checking that it is compatible with
+        the setter/adder parameter type).</p>
+      </li>
+      <li>
+        <p>Sets the logback <code>Context</code> if the object is
+        <code>ContextAware</code>, and pushes the object on the
+        interpretation stack so nested elements apply to it.</p>
+      </li>
+      <li>
+        <p>After children are processed (<code>postHandle</code>),
+        optionally injects the parent via a <code>parent</code>
+        property, starts the object if it implements
+        <code>LifeCycle</code> and is not marked
+        <code>@NoAutoStart</code>, then attaches it to the parent with
+        <code>set<em>Property</em></code> or
+        <code>add<em>Property</em></code>.</p>
+      </li>
+    </ol>
+
+    <p>Example—an encoder is a complex property of an appender; its
+    nested <code>pattern</code> is a basic property of the encoder:
+    </p>
+
+    <pre><code>&lt;appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+  &lt;encoder>   &lt;!-- complex: default PatternLayoutEncoder -->
+    &lt;pattern>%d %-5level %logger - %msg%n&lt;/pattern>  &lt;!-- basic: String -->
+  &lt;/encoder>
+&lt;/appender></code></pre>
+
+    <p>If the <span class="attr">class</span> attribute is omitted, the
+    class of the nested component is deduced when any of the following
+    succeeds (in order):
+    </p>
+
+    <ol>
+      <li>
+        <p>an entry in the <b>default nested-component registry</b>
+        maps the parent class and property name to a default
+        implementation (for example, <code>encoder</code> under
+        <code>AppenderBase</code> →
+        <code>PatternLayoutEncoder</code> in logback-classic);</p>
+      </li>
+      <li>
+        <p>the setter or adder method carries a
+        <code>@DefaultClass</code> annotation naming an
+        implementation;</p>
+      </li>
+      <li>
+        <p>the parameter type of the setter/adder is a concrete class
+        with a public constructor, which is then used directly.</p>
+      </li>
+    </ol>
+
+    <h4 class="doAnchor" name="defaultClassMapping">Default class
+    mapping</h4>
+
+    <p>In logback-classic, a small set of internal rules map parent
+    class / property name pairs to a default nested class. Common
+    entries include:
+    </p>
+
+    <div class="bodyTable">
+    <table class="bodyTable striped">
+      <tr>
+        <th>Parent class</th>
+        <th>property name</th>
+        <th>default nested class</th>
+      </tr>
+      <tr>
+        <td><code>ch.qos.logback.core.AppenderBase</code><br/>
+            <code>ch.qos.logback.core.UnsynchronizedAppenderBase</code></td>
+        <td><code>encoder</code></td>
+        <td><code>ch.qos.logback.classic.encoder.PatternLayoutEncoder</code></td>
+      </tr>
+      <tr>
+        <td><code>AppenderBase</code> / <code>UnsynchronizedAppenderBase</code></td>
+        <td><code>layout</code></td>
+        <td><code>ch.qos.logback.classic.PatternLayout</code></td>
+      </tr>
+    </table>
+    </div>
+
+    <p>This list may change between releases. See the
+    <code>addDefaultNestedComponentRegistryRules</code> method of
+    logback-classic’s
+    <a href="../xref/ch/qos/logback/classic/joran/JoranConfigurator.html"><code>JoranConfigurator</code></a>
+    (and the corresponding method in logback-access) for the rules in
+    effect in your version.
+    </p>
+
+    <h4 class="doAnchor" name="propertyCollections">Collections of
+    properties</h4>
+
+    <p>In addition to a single basic or complex property, implicit
+    handling supports <em>collections</em>. If the parent defines an
+    <b>adder</b> method (<code>add<em>Foo</em>(…)</code>) rather than
+    only a setter, the aggregation type becomes
+    <code>AS_BASIC_PROPERTY_COLLECTION</code> or
+    <code>AS_COMPLEX_PROPERTY_COLLECTION</code>. Each nested element
+    with that tag name contributes one element to the collection (for
+    example multiple <code>&lt;filter&gt;</code> elements under an
+    appender, if the appender exposes <code>addFilter</code>).
     </p>
 
     <!-- ============================================================ -->
