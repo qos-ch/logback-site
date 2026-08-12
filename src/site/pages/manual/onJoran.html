@@ -55,6 +55,19 @@
     logback-classic.
     </p>
 
+    <p>For developers interested in writing logback components
+    (appenders, encoders, filters, and similar), the most relevant
+    material is the section on
+    <a href="#implicit">implicit actions and property handling</a>,
+    including
+    <a href="#basicProperty">basic</a> and
+    <a href="#complexProperty">complex</a> property conversion. That
+    is what determines how nested elements in a configuration file map
+    onto JavaBeans properties of your components. Developers who want
+    to understand the inner workings of Joran may elect to read this
+    chapter in full.
+    </p>
+
     <p>To install Joran, simply <a
     href="../download.html">download</a> logback and add
     <em>logback-core-${project.version}.jar</em> (and, for logging

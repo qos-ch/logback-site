@@ -16,3 +16,6 @@ https://github.com/qos-ch/logback/commits/master/
 
 Follow these rules at all times.
 
+Assuming the html pages in the forlder src/site/pages/ are served
+under the url https://logback.qos.ch/
+
