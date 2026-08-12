@@ -13,7 +13,6 @@ document.write('<p class="menu"><a href="mdc.html"><b>&bull; Mapped Diagnostic C
 //document.write('<p class="menu"><a href="jmxConfig.html"><b>&bull; JMX Configurator</b></a></p>');
 document.write('<p class="menu"><a href="onJoran.html"><b>&bull; Joran</b></a></p>');
 document.write('<p class="menu"><a href="migrationFromLog4j.html"><b>&bull; Migration from log4j 1.x</b></a></p>');
-//document.write('<p class="menu"><a href="receivers.html"><b>Ch12: Receivers</b></a></p>');
 document.write('<p class="menu"><a href="usingSSL.html"><b>&bull; Using SSL</b></a></p>');
 
 document.write('<p style="border: 1px solid #cccccc;"></p>');
