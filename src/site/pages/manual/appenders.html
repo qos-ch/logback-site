@@ -4770,33 +4770,7 @@ public class CountingConsoleAppender extends AppenderBase&lt;ILoggingEvent> {
       <code>SocketAppender</code>.
       </p>
 
-      <h3 class="doAnchor" name="AccessServerSocketAppender">ServerSocketAppender and
-      SSLServerSocketAppender</h3>
-    
-      <p>Like <code>SocketAppender</code>, the <a
-      href="../xref-access/ch/qos/logback/access/common/net/server/ServerSocketAppender.html">
-      <code>ServerSocketAppender</code></a> is designed to log to a
-      remote entity by transmitting serialized
-      <code>AccessEvent</code> objects over the wire.  However, when
-      using <code>ServerSocketAppender</code> the appender acts as a
-      server, passively listening on a TCP socket awaiting inbound
-      connections from interested clients.  Logging events delivered
-      to the appender are distributed to all connected clients.
-    </p>
-    
-    <p>The <a
-    href="../xref-access/ch/qos/logback/access/common/net/server/SSLServerSocketAppender.html">
-    <code>SSLSocketAppender</code></a> extends the basic
-    <code>ServerSocketAppender</code> allowing logging to a remote
-    entity over the Secure Sockets Layer (SSL).
-    </p>
-    
-    <p>The properties of access' <code>ServerSocketAppender</code> are
-    the same as those available for classic's
-    <code>ServerSocketAppender</code>.
-    </p>
-    
-	 	
+      	 	
     <h3 class="doAnchor" name="AccessSMTPAppender">SMTPAppender</h3>
     
     <p>Access <a
