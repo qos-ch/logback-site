@@ -2923,6 +2923,13 @@ fileName=myApp.log
   context.
   </p>
 
+  <p><span class="label notice">Note</span> The
+  <code>ch.qos.logback.classic.jmx</code> package, which previously
+  provided <code>JMXConfigurator</code> (a
+  <code>LoggerContextListener</code> exposing logback over JMX) and
+  the <code>&lt;jmxConfigurator&gt;</code> configuration element, was
+  removed in logback 1.3.0 for security reasons and for lack of use.
+  </p>
 
   <h3 class="doAnchor"
   name="LevelChangePropagator">LevelChangePropagator</h3>
