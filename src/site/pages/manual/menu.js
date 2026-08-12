@@ -10,7 +10,6 @@ document.write('<p class="menu"><a href="layouts.html"><b>&bull; Layouts</b></a>
 document.write('<p class="menu"><a href="filters.html"><b>&bull; Filters</b></a></p>');
 document.write('<p class="menu"><a href="mdc.html"><b>&bull; Mapped Diagnostic Contexts</b></a></p>');
 //document.write('<p class="menu"><a href="loggingSeparation.html"><b>Ch9: Logging Separation</b></a></p>');
-//document.write('<p class="menu"><a href="jmxConfig.html"><b>&bull; JMX Configurator</b></a></p>');
 document.write('<p class="menu"><a href="onJoran.html"><b>&bull; Joran</b></a></p>');
 document.write('<p class="menu"><a href="migrationFromLog4j.html"><b>&bull; Migration from log4j 1.x</b></a></p>');
 document.write('<p class="menu"><a href="usingSSL.html"><b>&bull; Using SSL</b></a></p>');

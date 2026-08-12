@@ -3829,7 +3829,9 @@
     <p><code>JMXConfigurator.&#8203;reloadDefaultConfiguration(&#8203;)</code>
     method now tolerates programmatic configuration without a
     URL. This change was provided by Vedran Pavic in <a
-    href="https://github.com/qos-ch/logback/pull/302">PR 302</a>.
+    href="https://github.com/qos-ch/logback/pull/302">PR
+    302</a>. Note: JMXConfigurator was later removed in logback
+    version 1.3.0.
     </p>
 
     <p><code>RollingFileAppender</code> will output an error message
@@ -6511,12 +6513,10 @@ ALTER TABLE logging_event ADD arg3 VARCHAR(254);</pre>
   
   <p>Several new components have been added to logback. A JMX
   Configurator now allows users to see and modify loggers or reload
-  configuration among other possibilities.  A <a
-  href="jmxConfig.html">document</a> about this configurator is
-  available in the <a href="documentation.html">corresponding
-  section</a> of the site. We'd like to thank Sebastian Davids for his
-  ideas and contributions to this component.
-  </p>
+  configuration among other possibilities. We'd like to thank
+  Sebastian Davids for his ideas and contributions to this
+  component. Note: JMXConfigurator was later removed in logback
+  version 1.3.0.</p>.
 		
   <p>A JMSTopicAppender and JMSQueueAppender are now available, as
   well as two new filters: LevelFilter and ThresholdFilter. A
