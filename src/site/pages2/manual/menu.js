@@ -14,7 +14,7 @@ document.write('  <div class="manual-acc-panel" hidden>');
 document.write('    <p class="menu"><a href="introduction.html"><b>&bull; Introduction</b></a></p>');
 document.write('    <p class="menu"><a href="architecture.html"><b>&bull; Architecture</b></a></p>');
 document.write('  </div>');
-document.write('</div>');
+document.write('</div>'); 
 
 /* ---- Configuration ---- */
 document.write('<div class="manual-acc-item" data-section="configuration">');
