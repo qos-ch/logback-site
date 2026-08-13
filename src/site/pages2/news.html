@@ -140,6 +140,74 @@
     <!-- ============================================================================ -->
     <!-- ============================================================================ -->
     
+     <h3 class="doAnchor" name="1.6.3">2026-08-14 Release of logback
+     version 1.6.3</h3>
+
+     <p>&bull; Colour console support is split out into a dedicated
+     <a href="manual/appenders.html#JansiConsoleAppender"><code>JansiConsoleAppender</code></a>
+     (<code>ch.qos.logback.core.JansiConsoleAppender</code>). It wraps
+     stdout or stderr with Jansi so ANSI escape sequences (for example
+     coloured patterns) render correctly on terminals that need it,
+     notably Windows. Prefer this class over the older path described
+     next. See the
+     <a href="manual/appenders.html#JansiConsoleAppender">appenders
+     documentation</a>.
+     </p>
+
+     <p>&bull; The
+     <span class="option">withJansi</span> property on
+     <code>ConsoleAppender</code> is <strong>deprecated</strong>.
+     Existing configurations that still set
+     <code>&lt;withJansi&gt;true&lt;/withJansi&gt;</code> continue to
+     work for compatibility, but new setups should use
+     <code>JansiConsoleAppender</code> instead.
+     </p>
+
+     <p>&bull; <code>ConsoleAppender</code> no longer treats the
+     process console as an exclusive resource: stopping it does not
+     close <code>System.out</code> / <code>System.err</code>.
+     <code>JansiConsoleAppender</code> pairs each
+     <code>AnsiConsole.systemInstall()</code> with
+     <code>systemUninstall()</code> on stop, so repeated start/stop
+     cycles do not leave Jansi installed or tear down streams shared
+     with the rest of the JVM. Related behaviour is covered by tests
+     for <a
+     href="https://github.com/qos-ch/logback/issues/1063">issues/1063</a>.
+     </p>
+
+     <p>&bull; <code>MDCBasedDiscriminator</code> (used by
+     <code>SiftingAppender</code>) strips forward and backward slashes
+     (<code>/</code>, <code>\</code>) from MDC values before they are
+     used as discriminating keys. That prevents path segments from
+     escaping into nested file names or similar destinations. When
+     sanitisation actually changes a value, a warning is emitted; the
+     warning is rate-limited (a small batch, then a lull of about ten
+     minutes) so the hot path is not flooded.
+     </p>
+
+     <p>&bull; Invocation throttling helpers were reworked:
+     <code>SimpleInvocationGate</code> is renamed
+     <code>FixedIntervalInvocationGate</code>, and
+     <code>BatchedFixedIntervalInvocationGate</code> allows a short
+     burst of invocations before applying a fixed lull. The
+     sanitisation warning above uses the batched gate.
+     </p>
+
+     <p>&bull; The JPMS <code>module-info</code> for logback-core now
+     exports the <code>ch.qos.logback.core.property</code> package,
+     which had been missing from the module descriptor.
+     </p>
+
+     <p>&bull; A bit-wise identical binary of this version can be
+     reproduced by building
+     from <a href="https://github.com/qos-ch/logback">source code</a>
+     at commit 761821bfaacac3a0ad44fa546cfc814429bf9312 associated
+     with the tag <code>v_1.6.3</code>. The release was built using
+     Java "21" 2023-10-17 LTS build 21.0.1.+12-LTS-29 under Linux
+     Debian 11.6.</p>
+
+    <hr width="80%" align="center" />
+
      <h3 class="doAnchor" name="1.6.2">2026-08-10 Release of logback
      version 1.6.2</h3>
 
