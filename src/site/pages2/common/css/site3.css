@@ -208,11 +208,13 @@ img.exoscale {
 div#top-content {
     display: grid;
     gap: 1rem;
+    align-items: start;
 
-    grid-template-columns: auto auto;
+    /* Manual pages: chapter menu on the left, copyright + quote on the right */
+    grid-template-columns: minmax(var(--min-menu-width), var(--max-menu-width)) 1fr;
     grid-template-areas:
-        'top-content-creative-commons top-content-right'
-        'top-content-quote            top-content-quote';
+        'top-content-menu top-content-creative-commons'
+        'top-content-menu top-content-quote';
 }
 
 #manualIndex {
@@ -221,22 +223,110 @@ div#top-content {
 }
 
 div#top-content > #manualIndex {
-    grid-area: top-content-right;
+    grid-area: top-content-menu;
     color: #564b47;
-    margin: 1rem;
-    padding: 0px;
+    margin: 0;
+    padding: 0;
     background-color: #ffffff;
     Xfont-size: smaller;
+}
+
+/* Collapsible manual chapter index (accordion) */
+.manual-accordion {
+    border: 1px solid #cccccc;
+    border-top: none;
+    background-color: #fff;
+}
+
+.manual-acc-item {
+    border-bottom: 1px solid #cccccc;
+}
+
+.manual-acc-item:last-child {
+    border-bottom: none;
+}
+
+.manual-acc-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin: 0;
+    padding: 0.35rem 0.45rem;
+    border: none;
+    background-color: #fff8e8;
+    color: #564b47;
+    font: inherit;
+    font-size: 0.92em;
+    text-align: left;
+    cursor: pointer;
+}
+
+.manual-acc-toggle:hover {
+    background-color: #ffd0a0;
+}
+
+.manual-acc-toggle:focus-visible {
+    outline: 2px solid #4183c4;
+    outline-offset: -2px;
+}
+
+.manual-acc-label {
+    flex: 1 1 auto;
+    font-weight: 600;
+}
+
+.manual-acc-arrow {
+    flex: 0 0 auto;
+    margin-left: 0.4rem;
+    font-size: 0.75em;
+    color: #666;
+    transition: transform 0.2s ease;
+}
+
+.manual-acc-item.is-open > .manual-acc-toggle .manual-acc-arrow {
+    transform: rotate(-180deg); /* chevron points up when open */
+}
+
+.manual-acc-item.is-open > .manual-acc-toggle {
+    background-color: #ffd0a0;
+    border-bottom: 1px solid #cccccc;
+}
+
+.manual-acc-panel {
+    padding: 0.25rem 0.35rem 0.4rem 0.5rem;
+    background-color: #ffffff;
+}
+
+.manual-acc-panel .menu {
+    padding-top: 0.1rem;
+    padding-bottom: 0.1rem;
+}
+
+.manual-acc-panel .menu-indent {
+    margin-left: 0.75em;
+}
+
+.manual-acc-panel a.manual-current {
+    font-weight: bold;
+    text-decoration: underline;
 }
 
 
 #quote {
     grid-area: top-content-quote;
     text-align: right;
+    margin: 0;
 }
 
 div#creative-commons {
     grid-area: top-content-creative-commons;
+    text-align: right;
+}
+
+div#creative-commons img {
+    float: right;
+    margin: 1ex 0 1ex 1ex;
 }
 
 .footer {

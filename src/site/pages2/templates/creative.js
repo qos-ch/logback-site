@@ -4,7 +4,7 @@ document.write('       <p>');
 
 document.write('            <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">');
 document.write('               <img alt="Creative Commons License"');
-document.write('                 style="border-width: 0;  margin: 1ex;   float: left;"');
+document.write('                 style="border-width: 0;  margin: 1ex 0 1ex 1ex; float: right;"');
 document.write('                 src="https://creativecommons.org/images/public/somerights20.png" />');
 document.write('            </a>');
 document.write('        </p>');
