@@ -24,8 +24,8 @@ function scpLogback() {
     for FILE in $cleanArgs
     do
         echo "FILE=$FILE"
-        echo "scp $FILE fran1.qos.ch:/var/www/logback.qos.ch/htdocs/$FILE";
-              scp $FILE fran1.qos.ch:/var/www/logback.qos.ch/htdocs/$FILE;
+        echo "scp $FILE fran1.qos.ch:/var/www/logback.qos.ch/htdocs2/$FILE";
+              scp $FILE fran1.qos.ch:/var/www/logback.qos.ch/htdocs2/$FILE;
         #i=$((i + 1));
     done
     popd
