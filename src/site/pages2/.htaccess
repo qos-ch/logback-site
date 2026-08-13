@@ -1,0 +1,7 @@
+Redirect permanent /consolePlugin.html http://logback.qos.ch/beagle/
+
+# Reorganised manual (pages2): send old chapter bookmarks to split pages where known
+Redirect permanent /manual/loggingSeparation.html https://logback.qos.ch/manual/index.html
+Redirect permanent /manual/jmxConfig.html https://logback.qos.ch/manual/configuration.html#contextListener
+Redirect permanent /manual/groovy.html https://logback.qos.ch/manual/index.html
+Redirect permanent /manual/receivers.html https://logback.qos.ch/manual/appenders-network.html

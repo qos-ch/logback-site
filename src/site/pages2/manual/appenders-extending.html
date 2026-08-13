@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Writing your own Appender</title>
+
+    <script type="text/javascript">prefix='../';</script>
+
+</head> 
+<body onload="enableMenuEventListeners(); hljs.highlightAll(); decorate(); addClipboardListener(); enableLegacy(); loopOn();">
+
+    <script type="text/javascript" src="../templates/header3.js"></script>
+
+    <div id="content">
+        <div id="top-content">
+
+            <script type="text/javascript" src="../templates/creative.js" ></script>
+            <script type="text/javascript" src="menu.js"></script>
+
+
+    <div id="quote">
+
+      <p><em>There is so much to tell about the Western country in
+      that day that it is hard to know where to start. One thing sets
+      off a hundred others. The problem is to decide which one to tell
+      first.</em></p>
+  
+      <p>&mdash;JOHN STEINBECK, <em>East of Eden</em></p>
+    </div>
+    </div>
+
+        
+
+    <p class="doc-nav"><a href="index.html">Manual</a> · <a href="appenders.html">Appenders</a> · Writing your own Appender</p>
+
+    <h1>Writing your own Appender</h1>
+
+    <h3 class="doAnchor" name="WriteYourOwnAppender">Writing your own
+    Appender</h3>
+    
+
+    <p>You can easily write your appender by subclassing
+    <code>AppenderBase</code>.  It handles support for filters, status
+    messages and other functionality shared by most appenders.  The
+    derived class only needs to implement one method, namely
+    <code>append(Object eventObject)</code>.
+    </p>
+
+    <p>The <code>CountingConsoleAppender</code>, which we list next,
+    appends a limited number of incoming events on the console. It
+    shuts down after the limit is reached.  It uses a
+    <code>PatternLayoutEncoder</code> to format the events and accepts
+    a parameter named <code>limit</code>. Therefore, a few more
+    methods beyond <code>append(Object eventObject)</code> are
+    needed. As shown below, these parameters are handles
+    auto-magically by logback's various configuration mechanisms.
+    </p>
+    
+    <em>Example 4.<span class="autoExec"/>:
+    <code>CountingConsoleAppender</code>
+    (logback-examples/&#8203;src/main/java/chapters/&#8203;appenders/CountingConsoleAppender.&#8203;java)</em>
+    <pre><code>package chapters.appenders;
+
+import java.io.IOException;
+
+import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.AppenderBase;
+
+
+public class CountingConsoleAppender extends AppenderBase&lt;ILoggingEvent> {
+  static int DEFAULT_LIMIT = 10;
+  int counter = 0;
+  int limit = DEFAULT_LIMIT;
+  
+  PatternLayoutEncoder encoder;
+  
+  public void setLimit(int limit) {
+    this.limit = limit;
+  }
+
+  public int getLimit() {
+    return limit;
+  }
+  
+  @Override
+  public void start() {
+    if (this.encoder == null) {
+      addError("No encoder set for the appender named ["+ name +"].");
+      return;
+    }
+    
+    try {
+      encoder.init(System.out);
+    } catch (IOException e) {
+    }
+    super.start();
+  }
+
+  public void append(ILoggingEvent event) {
+    if (counter >= limit) {
+      return;
+    }
+    // output the events as formatted by our layout
+    try {
+      this.encoder.doEncode(event);
+    } catch (IOException e) {
+    }
+
+    // prepare for next event
+    counter++;
+  }
+
+  public PatternLayoutEncoder getEncoder() {
+    return encoder;
+  }
+
+  public void setEncoder(PatternLayoutEncoder encoder) {
+    this.encoder = encoder;
+  }
+}</code></pre>
+
+      <p>The <code>start()</code> method checks for the presence of a
+      <code>PatternLayoutEncoder</code>.  In case the encoder is not
+      set, the appender fails to start and emits an error message.
+      </p>
+		
+      <p>This custom appender illustrates two points:</p>
+      
+      
+      <ul>
+
+      <li>All properties that follow the setter/getter JavaBeans
+      conventions are handled transparently by logback
+      configurators. The <code>start()</code> method, which is called
+      automatically during logback configuration, has the
+      responsibility of verifying that the various properties of the
+      appender are set and are coherent.
+      </li>
+
+      <li>The <code>AppenderBase.doAppend()</code> method invokes the
+      append() method of its derived classes.  Actual output
+      operations occur in the <code>append</code>() method.  In
+      particular, it is in this method that appenders format events by
+      invoking their layouts.
+      </li>
+
+      </ul>
+		
+      <p>The <a
+      href="../xref/chapters/appenders/CountingConsoleAppender.html"><code>CountingConsoleAppender</code></a>
+      can be configured like any other appender.  See sample
+      configuration file
+      <em>logback-examples/&#8203;src/main/resources/&#8203;chapters/appenders/&#8203;countingConsole.&#8203;xml</em>
+      for an example.
+      </p>
+  
+
+    <script src="../templates/footer.js" type="text/javascript"></script>
+
+
+  </div>
+</div>  
+</body>
+</html>

@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Chapter 7: Filters</title>
+
+    <script type="text/javascript">prefix='../';</script>
+
+</head>
+<body onLoad="enableMenuEventListeners(); hljs.highlightAll();  decorate(); enableLegacy();">
+
+    <script type="text/javascript" src="../templates/header3.js"></script>
+
+    <div id="content">
+
+        <div id="top-content">
+          <script type="text/javascript" src="../templates/creative.js" ></script>
+
+          <script type="text/javascript" src="menu.js"></script>
+
+
+          <div id="quote">
+                <p><em>Have lots of ideas and throw away the bad ones. You aren not
+                going to have good ideas unless you have lots of ideas and some
+                sort of principle of selection.</em></p>
+                
+                <p>&mdash;LINUS PAULING</p>
+            </div>
+        </div>
+ 
+     <h1>Filters</h1>
+
+		
+     <p>In the preceding chapters, the <a
+     href="architecture.html#basic_selection">basic selection
+     rule</a>, which lies at the heart of logback-classic, has been
+     presented. In this chapter, additional filtering methods will be
+     introduced.
+     </p>
+	
+
+    <p>Logback filters are based on ternary logic allowing them to be
+    assembled or chained together to compose an arbitrarily complex
+    filtering policy.  They are largely inspired by Linux&rsquo;s iptables.
+    </p>
+
+    <script src="../templates/setup.js" type="text/javascript"></script>
+
+    <h2>In logback-classic</h2>
+
+    
+	<p>Logback-classic offers two types of filters, regular filters
+	  and turbo filters.
+	</p>
+		
+    <h3 class="doAnchor" name="filter">Regular filters</h3>
+
+    <p>Regular logback-classic filters extend
+    the <a href="../xref/ch/qos/logback/core/filter/Filter.html"><code>Filter</code></a>
+    abstract class which essentially consists of a single
+    <code>decide()</code> method taking an <code>ILoggingEvent</code>
+    instance as its parameter.
+    </p>
+		
+
+		<p>Filters are organized as an ordered list and are based on
+		ternary logic. The <code>decide(ILoggingEvent event)</code> method
+		of each filter is called in sequence.  This method returns one of
+		the <a
+		href="../xref/ch/qos/logback/core/spi/FilterReply.html"><code>FilterReply</code></a>
+		enumeration values, i.e. one of <code>DENY</code>,
+		<code>NEUTRAL</code> or <code>ACCEPT</code>.  If the value
+		returned by <code>decide</code>() is <code>DENY</code>, then the
+		log event is dropped immediately without consulting the remaining
+		filters. If the value returned is <code>NEUTRAL</code>, then the
+		next filter in the list is consulted. If there are no further
+		filters to consult, then the logging event is processed normally.
+		If the returned value is <code>ACCEPT</code>, then the logging
+		event is processed immediately skipping the invocation of the
+		remaining filters.
+    </p>
+    
+    <p>In logback-classic, filters can be added to
+    <code>Appender</code> instances. By adding one or more filters to
+    an appender, you can filter events by arbitrary criteria, such as
+    the contents of the log message, the contents of the MDC, the time
+    of day or any other part of the logging event.
+    </p>
+    
+		<h3 class="doAnchor" name="yourOwnFilter">Implementing your own
+		Filter</h3>
+		
+		<p>Creating your own filter is easy. All you have to do is extend
+		the <code>Filter</code> abstract class and implement the
+		<code>decide()</code> method.
+		</p>
+		
+		<p>The SampleFilter class shown below provides an example. Its
+		<code>decide</code> method returns ACCEPT for logging events
+		containing the string "sample" in its message field. For other
+		events, the value NEUTRAL is returned.
+		</p>
+		
+    <em>Example: Basic custom filter (<a
+    href="../xref/chapters/filters/SampleFilter.html">logback-examples/src/main/java/chapters/filters/SampleFilter.java</a>)</em>
+    <pre><code>package chapters.filters;
+
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.filter.Filter;
+import ch.qos.logback.core.spi.FilterReply;
+
+public class SampleFilter extends Filter&lt;ILoggingEvent> {
+
+  @Override
+  public FilterReply decide(ILoggingEvent event) {    
+    if (event.getMessage().contains("sample")) {
+      return FilterReply.ACCEPT;
+    } else {
+      return FilterReply.NEUTRAL;
+    }
+  }
+}</code></pre>
+
+		<p>The configuration files shown next attaches a
+		<code>SampleFilter</code> to a <code>ConsoleAppender</code>.
+		</p>
+
+    <em>Example: SampleFilter configuration
+    (logback-examples/src/main/resources/chapters/filters/SampleFilterConfig.xml)</em>
+
+<div class="tab">
+    <button class="tablinks" id="button_sampleFilterConfig_legacy"
+            onclick="openTab(event, 'sampleFilterConfig', 'legacy')">Legacy</button>
+    <button class="tablinks" id="button_sampleFilterConfig_canonical"
+            onclick="openTab(event, 'sampleFilterConfig', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_sampleFilterConfig_tyler"
+             onclick="openTab(event, 'sampleFilterConfig', 'tyler')">Tyler</button>
+</div>
+
+<div id="sampleFilterConfig_legacy" class="tabcontent">
+    <pre><code>&lt;configuration>
+  &lt;appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+
+    <b>&lt;filter class="chapters.filters.SampleFilter" /></b>
+
+    &lt;encoder>
+      &lt;pattern>
+        %-4relative [%thread] %-5level %logger -%kvp -%msg%n
+      &lt;/pattern>
+    &lt;/encoder>
+  &lt;/appender>
+	
+  &lt;root>
+    &lt;appender-ref ref="STDOUT" />
+  &lt;/root>
+&lt;/configuration></code></pre>
+</div>
+
+   <div id="sampleFilterConfig_canonical" class="tabcontent">
+    <p>Requires a server call.</p>
+   </div>
+   <div id="sampleFilterConfig_tyler" class="tabcontent"><p>Requires a server call.</p></div>
+
+
+		<p>With the help of Joran, logback's configuration framework,
+		specifying properties or subcomponents to filters is also
+		easy. After adding the corresponding setter method in the filter
+		class, specify the value of the property in an XML element named
+		after the property, nesting it within a <code>&lt;filter></code>
+		element. 
+		</p>
+		
+		<p>Often, the desired filter logic consists of two
+		orthogonal parts, a match/mismatch test and a response depending
+		on the match/mismatch. For example, for a given test, e.g. message
+		equals "foobar", one filter might respond ACCEPT on match and
+		NEUTRAL on mismatch, and another filter might respond NEUTRAL on
+		match and DENY on mismatch. 
+    </p>
+
+    <p>Taking notice of this orthogonality, logback ships with the <a
+    href="../xref/ch/qos/logback/core/filter/AbstractMatcherFilter.html">
+    <code>AbstractMatcherFilter</code></a> class which provides a
+    useful skeleton for specifying the appropriate response on match
+    and on mismatch, with the help of two properties, named
+    <em>OnMatch</em> and <em>OnMismatch</em>. Most of the regular
+    filters included in logback are derived from
+    <code>AbstractMatcherFilter</code>.
+    </p>
+		
+		<h3 class="doAnchor" name="levelFilter">LevelFilter</h3>
+		
+		<p><a href="../xref/ch/qos/logback/classic/filter/LevelFilter.html">
+		<code>LevelFilter</code></a> filters events based on exact level
+		matching. If the event's level is equal to the configured level,
+		the filter accepts or denies the event, depending on the
+		configuration of the <span class="option">onMatch</span> and <span
+		class="option">onMismatch</span> properties. Here is a sample
+		configuration file.
+		</p>
+		
+    <em>Example: Sample LevelFilter configuration
+    (logback-examples/src/main/resources/chapters/filters/levelFilterConfig.xml)</em>
+
+<div class="tab">
+    <button class="tablinks" id="button_levelFilterConfig_legacy"
+            onclick="openTab(event, 'levelFilterConfig', 'legacy')">Legacy</button>
+    <button class="tablinks" id="button_levelFilterConfig_canonical"
+            onclick="openTab(event, 'levelFilterConfig', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_levelFilterConfig_tyler"
+             onclick="openTab(event, 'levelFilterConfig', 'tyler')">Tyler</button>
+</div>
+
+<div id="levelFilterConfig_legacy" class="tabcontent">
+
+  <pre><code>&lt;configuration>
+  &lt;appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+    <b>&lt;filter class="ch.qos.logback.classic.filter.LevelFilter">
+      &lt;level>INFO&lt;/level>
+      &lt;onMatch>ACCEPT&lt;/onMatch>
+      &lt;onMismatch>DENY&lt;/onMismatch>
+    &lt;/filter></b>
+    &lt;encoder>
+      &lt;pattern>
+        %-4relative [%thread] %-5level %logger{30} -%kvp -%msg%n
+      &lt;/pattern>
+    &lt;/encoder>
+  &lt;/appender>
+  &lt;root level="DEBUG">
+    &lt;appender-ref ref="CONSOLE" />
+  &lt;/root>
+&lt;/configuration></code></pre>
+</div>
+
+    <div id="levelFilterConfig_canonical" class="tabcontent">
+     <p>Requires a server call.</p>
+   </div>
+   <div id="levelFilterConfig_tyler" class="tabcontent"><p>Requires a server call.</p></div>
+
+
+    <h3 class="doAnchor" name="thresholdFilter">ThresholdFilter</h3>
+
+		<p>The <a
+		href="../xref/ch/qos/logback/classic/filter/ThresholdFilter.html">
+		<code>ThresholdFilter</code></a> filters events below the
+		specified threshold. For events of level equal or above the
+		threshold, <code>ThresholdFilter</code> will respond NEUTRAL when
+		its <code>decide</code>() method is invoked. However, events with
+		a level below the threshold will be denied. Here is a sample
+		configuration file. 
+		</p>
+
+    <em>Example: Sample ThresholdFilter configuration
+    (logback-examples/src/main/resources/chapters/filters/thresholdFilterConfig.xml)</em>
+
+<div class="tab">
+    <button class="tablinks" id="button_thresholdFilterConfig_legacy"
+            onclick="openTab(event, 'thresholdFilterConfig', 'legacy')">Legacy</button>
+    <button class="tablinks" id="button_thresholdFilterConfig_canonical"
+            onclick="openTab(event, 'thresholdFilterConfig', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_thresholdFilterConfig_tyler"
+             onclick="openTab(event, 'thresholdFilterConfig', 'tyler')">Tyler</button>
+</div>
+
+<div id="thresholdFilterConfig_legacy" class="tabcontent">
+
+    <pre><code>&lt;configuration>
+  &lt;appender name="CONSOLE"
+    class="ch.qos.logback.core.ConsoleAppender">
+    &lt;!-- deny all events with a level below INFO, that is TRACE and DEBUG -->
+    <b>&lt;filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+      &lt;level>INFO&lt;/level>
+    &lt;/filter></b>
+    &lt;encoder>
+      &lt;pattern>
+        %-4relative [%thread] %-5level %logger{30} -%kvp -%msg%n
+      &lt;/pattern>
+    &lt;/encoder>
+  &lt;/appender>
+  &lt;root level="DEBUG">
+    &lt;appender-ref ref="CONSOLE" />
+  &lt;/root>
+&lt;/configuration></code></pre>
+
+</div>
+
+<div id="thresholdFilterConfig_canonical" class="tabcontent">
+  <p>Requires a server call. Please wait a few seconds.</p>
+</div>
+   <div id="thresholdFilterConfig_tyler" class="tabcontent"><p>Requires a server call.</p></div>
+
+
+    <h2 class="doAnchor" name="evaluatorFilter">EvaluatorFilter</h2>
+
+    <p><a
+    href="../xref/ch/qos/logback/core/filter/EvaluatorFilter.html"><code>EvaluatorFilter</code></a>
+    is a generic filter encapsulating an
+    <code>EventEvaluator</code>. As the name suggests, an
+    <a
+    href="../xref/ch/qos/logback/core/boolex/EventEvaluator.html">
+    <code>EventEvaluator</code></a> evaluates whether a given criteria
+    is met for a given event. On match and on mismatch,
+    the hosting <code>EvaluatorFilter</code> will returl the vaue
+    specified by the <span class="option">onMatch</span>
+    or <span class="option">onMismatch</span> properties respectively.
+   </p>
+
+    <p>Note that <code>EventEvaluator</code> is an abstract class. You
+    can implement your own event evaluation logic by subclassing
+    <code>EventEvaluator</code>.
+    </p>
+    
+    <!-- ==================== JaninoEventEvaluator ======================== -->
+    
+    <h3 class="doAnchor"
+    name="JaninoEventEvaluator">JaninoEventEvaluator</h3>
+      
+    <p><span class="label notice">since 1.5.13</span> For security
+    reasons, <code>JaninoEvaluator</code> has been removed with no
+    replacement. However, it is a rather easy exercise to migrate the
+    logic within an existing evaluator expression (which is just Java)
+    into a custom <code>EventEvaluator</code>.</p>
+ 
+    <p>To migrate evaluation logic, we suggest to subclass
+    <code>EventEvaluatorBase</code> and copy the logic previously in
+    the evaluation expression into the
+    <code>evaluate(ILoggingEvent)</code> method.
+    </p>
+
+    <p>You might also want to
+    try the <a href="https://logback.qos.ch/translator/services/janinoExpressionMigrator.html">Janino Expression Migrator
+    </a> available online.</p>
+
+    <p>For example, let us  migrate the following basic evaluator configuration.</p>
+    
+    <div class="tab">
+    <button class="tablinks" id="button_basicEventEvaluator_legacy"
+            onclick="openTab(event, 'basicEventEvaluator', 'legacy')">Legacy</button>
+    <button class="tablinks" id="button_basicEventEvaluator_canonical"
+            onclick="openTab(event, 'basicEventEvaluator', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_basicEventEvaluator_tyler"
+             onclick="openTab(event, 'basicEventEvaluator', 'tyler')">Tyler</button>
+</div>
+
+<div id="basicEventEvaluator_legacy" class="tabcontent">
+    <pre><code>&lt;configuration>
+  &lt;appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <b>&lt;filter class="ch.qos.logback.core.filter.EvaluatorFilter">      
+      &lt;evaluator> &lt;!-- defaults to type ch.qos.logback.classic.boolex.JaninoEventEvaluator -->
+        &lt;expression><span class="green">return message.contains("billing");</span>&lt;/expression>
+      &lt;/evaluator>
+      &lt;OnMismatch>NEUTRAL&lt;/OnMismatch>
+      &lt;OnMatch>DENY&lt;/OnMatch>
+    &lt;/filter></b>
+    &lt;encoder>
+      &lt;pattern>
+        %-4relative [%thread] %-5level %logger -%kvp -%msg%n
+      &lt;/pattern>
+    &lt;/encoder>
+  &lt;/appender>
+
+  &lt;root level="INFO">
+    &lt;appender-ref ref="STDOUT" />
+  &lt;/root>
+&lt;/configuration></code></pre>
+
+</div> 
+
+    <p>Supplying the expression
+    <pre><code>return message.contains("billing");</code></pre>
+    to the <a hrref="https://logback.qos.ch/translator/services/janinoExpressionMigrator.html">online
+    mogrator</a> will result in the generation of following custom evaluator code.</p>
+
+    <pre><code>package PACKAGE_NAME_OF_YOUR_CHOICE;
+
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.boolex.MarkerList;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.classic.spi.IThrowableProxy;
+import ch.qos.logback.classic.spi.LoggerContextVO;
+import ch.qos.logback.classic.spi.ThrowableProxy;
+import ch.qos.logback.core.boolex.EvaluationException;
+import ch.qos.logback.core.boolex.EventEvaluatorBase;
+import ch.qos.logback.core.boolex.Matcher;
+import org.slf4j.Marker;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * &lt;p>This class was generated when migrating a logback-classic configuration
+ * using JaninoEventEvaluator.</p>
+ *
+ * &lt;p>JaninoEventEvaluator has been removed due to identified vulnerabilities.</p>which
+ *
+ * &lt;p>Note that the generated code in the {@link #evaluate(ILoggingEvent)} method will
+ * depend on the boolean expression, more specifically on the variables referenced
+ * in the original boolean  expression.</p>
+ */
+public class GeneratedExpressionEvaluator extends EventEvaluatorBase<ILoggingEvent> {
+
+    public boolean evaluate(ILoggingEvent event) throws NullPointerException, EvaluationException {
+        String message = event.getMessage();
+        return message.contains("billing");
+    }
+}</code></pre>
+
+   <p>Below is an example integrating this custom evaluator.</p>
+
+<pre><code>&lt;configuration>
+
+  &lt;appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    &lt;filter class="ch.qos.logback.core.filter.EvaluatorFilter">
+      &lt;evaluator class="PACKAGE_NAME_OF_YOUR_CHOICE.GeneratedExpressionEvaluator">
+         &lt;!‐‐ Note that like all logback components, this custom evaluator can also
+         be parameterized ‐‐>
+      &lt;/evaluator>
+      &lt;OnMismatch>NEUTRAL&lt;/OnMismatch>
+      &lt;OnMatch>DENY&lt;/OnMatch>
+    &lt;/filter>
+    &lt;layout>
+      &lt;pattern>%d [%thread] %-5level %logger{36} -%kvp- %msg%n&lt;/pattern>
+    &lt;/layout>
+  &lt;/appender>
+
+  &lt;root level="DEBUG">
+    &lt;appender-ref ref="STDOUT" />
+  &lt;/root>
+&lt;/configuration></code></pre>
+
+
+    <!-- ================================================================ -->
+    <!-- ===================== TURBO FILTER ============================= -->
+    <!-- ================================================================ -->
+
+    <h2 class="doAnchor" name="TurboFilter">TurboFilters</h2>
+    
+    <p><code>TurboFilter</code> objects all extend the
+    <a href="../xref/ch/qos/logback/classic/turbo/TurboFilter.html">
+    <code>TurboFilter</code></a> abstract class. Like the regular
+    filters, they use ternary logic to return their evaluation of the
+    logging event.
+    </p>
+    
+    <p>Overall, they work much like the previously mentioned
+    filters. However, there are two main differences between
+    <code>Filter</code> and <code>TurboFilter</code> objects.
+    </p>
+    
+    <p><code>TurboFilter</code> objects are tied to the whole logging
+    context not just a single appender. Thus, their scope is wider
+    than appender-attached filters. Moreover, they are called each and
+    every time a logging request is issued.
+    </p>
+   	
+    <p>In principle, they are called <b>before</b> the
+    <code>LoggingEvent</code> object creation.
+    <code>TurboFilter</code> objects do not require the instantiation
+    of a logging event to filter a logging request. As such, turbo
+    filters are intended for high performance filtering of logging
+    events, even before the events are created.
+    </p>
+
+    <p>With the advent of <a
+    href="https://www.slf4j.org/manual.html#fluent">fluent API</a> in
+    SLF4J 2.0, turbo filters are called twice, once when the
+    atDebug(), atInfo(), etc methods are invoked, and a second time
+    from the <code>log()</code> method of an <a
+    href="architecture.html#basic_selection">enabled log
+    statement</a>. </p>
+
+    <p>Please note that the call to turbo filters in
+    <code>log()</code> method for an enabled log statement is new in
+    logback-classic version 1.5.21 and later, prior versions did not
+    call turbo filters form the <code>log()</code> methods.</p>
+   	
+    <h3 class="doAnchor" name="yourOwnTurboFilter">Implementing your
+   	own TurboFilter</h3>
+    
+    <p>To create your own <code>TurboFilter</code> component, just
+    extend the <code>TurboFilter</code> abstract class. As previously,
+    when implementing a customized filter object, developing a custom
+    <code>TurboFilter</code> only asks that one implement the
+    <code>decide()</code> method. In the next example, we create a
+    slightly more complex filter:
+    </p>
+    
+<em>Example: Basic custom <code>TurboFilter</code> (<a href="../xref/chapters/filters/SampleTurboFilter.html">logback-examples/src/main/java/chapters/filters/SampleTurboFilter.java</a>)</em>		
+<pre><code>package chapters.filters;
+
+import org.slf4j.Marker;
+import org.slf4j.MarkerFactory;
+
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.turbo.TurboFilter;
+import ch.qos.logback.core.spi.FilterReply;
+
+public class SampleTurboFilter extends TurboFilter {
+
+  String marker;
+  Marker markerToAccept;
+
+  @Override
+  public FilterReply decide(Marker marker, Logger logger, Level level,
+      String format, Object[] params, Throwable t) {
+
+    if (!isStarted()) {
+      return FilterReply.NEUTRAL;
+    }
+
+    if ((markerToAccept.equals(marker))) {
+      return FilterReply.ACCEPT;
+    } else {
+      return FilterReply.NEUTRAL;
+    }
+  }
+
+  public String getMarker() {
+    return marker;
+  }
+
+  public void setMarker(String markerStr) {
+    this.marker = markerStr;
+  }
+
+  @Override
+  public void start() {
+    if (marker != null &amp;&amp; marker.trim().length() > 0) {
+      markerToAccept = MarkerFactory.getMarker(marker);
+      super.start(); 
+    }
+  }
+}
+</code></pre>
+
+		<p>The <code>TurboFilter</code> above accepts events that contain
+		a specific marker.  If said marker is not found, then the filter
+		passes the responsibility to the next filter in the chain.
+		</p>
+		
+		<p>To allow more flexibility, the marker that will be tested can
+		be specified in the configuration file, hence the getter and
+		setter methods. We also implemented the <code>start()</code>
+		method, to check that the option has been specified during the
+		configuration process.
+		</p>
+		
+		<p>Here is a sample configuration that makes use of our newly
+		created <code>TurboFilter</code>.
+		</p>
+		
+    <em>Example: Basic custom <code>TurboFilter</code> configuration
+    (logback-examples/src/main/resources/chapters/filters/sampleTurboFilterConfig.xml)</em>
+
+
+<div class="tab">
+    <button class="tablinks" id="button_sampleTurboFilterConfig_legacy"
+            onclick="openTab(event, 'sampleTurboFilterConfig', 'legacy')">Legacy</button>
+    <button class="tablinks" id="button_sampleTurboFilterConfig_canonical"
+            onclick="openTab(event, 'sampleTurboFilterConfig', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_sampleTurboFilterConfig_tyler"
+             onclick="openTab(event, 'sampleTurboFilterConfig', 'tyler')">Tyler</button>
+</div>
+
+<div id="sampleTurboFilterConfig_legacy" class="tabcontent">
+
+    <pre><code>&lt;configuration>
+  <b>&lt;turboFilter class="chapters.filters.SampleTurboFilter">
+    &lt;Marker>sample&lt;/Marker>
+  &lt;/turboFilter></b>
+
+  &lt;appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    &lt;encoder>
+      &lt;pattern>
+        %-4relative [%thread] %-5level %logger -%kvp -%msg%n
+      &lt;/pattern>
+    &lt;/encoder>
+  &lt;/appender>
+
+  &lt;root>
+    &lt;appender-ref ref="STDOUT" />
+  &lt;/root>
+&lt;/configuration></code></pre>
+
+</div>
+
+<div id="sampleTurboFilterConfig_canonical" class="tabcontent">
+  <p>Requires a server call. Please wait a few seconds.</p>
+</div>
+   <div id="sampleTurboFilterConfig_tyler" class="tabcontent"><p>Requires a server call.</p></div>
+
+
+   	<p>Logback classic ships with several <code>TurboFilter</code>
+   	classes ready for use.  The <a
+   	href="../xref/ch/qos/logback/classic/turbo/MDCFilter.html"><code>MDCFilter</code></a>
+   	checks the presence of a given value in the MDC whereas <a
+   	href="../apidocs/ch.qos.logback.classic/ch/qos/logback/classic/turbo/DynamicThresholdFilter.html"><code>DynamicThresholdFilter</code></a>
+   	allows filtering based on MDC key/level threshold associations. On
+   	the other hand, <a
+   	href="../xref/ch/qos/logback/classic/turbo/MarkerFilter.html"><code>MarkerFilter</code></a>
+   	checks for the presence of a specific marker associated with the
+   	logging request.
+   	</p>
+   	
+   	<p>Here is a sample configuration, using both
+   	<code>MDCFilter</code> and <code>MarkerFilter</code>.
+   	</p>
+   	
+    <em>Example: <code>MDCFilter</code> and <code>MarkerFilter</code>
+    configuration
+    (logback-examples/src/main/resources/chapters/filters/turboFilters.xml)</em>
+
+
+<div class="tab">
+    <button class="tablinks" id="button_turboFilters_legacy"
+            onclick="openTab(event, 'turboFilters', 'legacy')">Legacy</button>
+    <button class="tablinks" id="button_turboFilters_canonical"
+            onclick="openTab(event, 'turboFilters', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_turboFilters_tyler"
+             onclick="openTab(event, 'turboFilters', 'tyler')">Tyler</button>
+</div>
+
+<div id="turboFilters_legacy" class="tabcontent">
+    <pre><code>&lt;configuration>
+
+  &lt;turboFilter class="ch.qos.logback.classic.turbo.MDCFilter">
+    &lt;MDCKey>username&lt;/MDCKey>
+    &lt;Value>sebastien&lt;/Value>
+    &lt;OnMatch>ACCEPT&lt;/OnMatch>
+  &lt;/turboFilter>
+	
+  &lt;turboFilter class="ch.qos.logback.classic.turbo.MarkerFilter">
+    &lt;Marker>billing&lt;/Marker>
+    &lt;OnMatch>DENY&lt;/OnMatch>
+  &lt;/turboFilter>
+
+  &lt;appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+    &lt;encoder>
+      &lt;pattern>%date [%thread] %-5level %logger -%kvp -%msg%n&lt;/pattern>
+    &lt;/encoder>
+  &lt;/appender>
+
+  &lt;root level="INFO">
+    &lt;appender-ref ref="console" />
+  &lt;/root>  
+&lt;/configuration></code></pre>
+
+</div>
+
+<div id="turboFilters_canonical" class="tabcontent">
+  <p>Requires a server call. Please wait a few seconds.</p>
+</div>
+   <div id="turboFilters_tyler" class="tabcontent"><p>Requires a server call.</p></div>
+
+        
+		<p>You can see this configuration in action by issuing the
+		following command:
+		</p>
+    
+    <p class="source">java chapters.filters.FilterEvents src/main/java/chapters/filters/turboFilters.xml</p>
+
+		<p>As we've seen previously, the <a
+		href="../xref/chapters/filters/FilterEvents.html"><code>FilterEvents</code></a>
+		application issues 10 logging requests, numbered 0 to 9. Except
+		for requests 3 and 6, all of the requests are of level
+		<em>INFO</em>, the same level as the one assigned to the root
+		logger. The 3rd request, is issued at the the <em>DEBUG</em>
+		level, which is below the effective level. However, since the MDC
+		key "username" is set to "sebastien" just before the 3rd request
+		and removed just afterwards, the <code>MDCFilter</code>
+		specifically accepts the request (and only that request). The 6th
+		request, issued at the <em>ERROR</em> level, is marked as
+		"billing". As such, it is denied by the MarkerFilter (the second
+		turbo filter in the configuration).
+		</p>
+		
+		<p>Thus, the output of <code>FilterEvents</code> application
+		configured with <em>turboFilters.xml</em> file shown above is:
+		</p>
+
+    <p class="source">2006-12-04 15:17:22,859 [main] INFO  chapters.filters.FilterEvents - logging statement 0
+2006-12-04 15:17:22,875 [main] INFO  chapters.filters.FilterEvents - logging statement 1
+2006-12-04 15:17:22,875 [main] INFO  chapters.filters.FilterEvents - logging statement 2
+2006-12-04 15:17:22,875 [main] DEBUG chapters.filters.FilterEvents - logging statement 3
+2006-12-04 15:17:22,875 [main] INFO  chapters.filters.FilterEvents - logging statement 4
+2006-12-04 15:17:22,875 [main] INFO  chapters.filters.FilterEvents - logging statement 5
+2006-12-04 15:17:22,875 [main] INFO  chapters.filters.FilterEvents - logging statement 7
+2006-12-04 15:17:22,875 [main] INFO  chapters.filters.FilterEvents - logging statement 8
+2006-12-04 15:17:22,875 [main] INFO  chapters.filters.FilterEvents - logging statement 9</p>
+			
+			
+		<p>One can see that the 3rd request, which should not be displayed
+		if we only followed the overall <em>INFO</em> level, appears
+		anyway, because it matched the first <code>TurboFilter</code>
+		requirements and was accepted.
+		</p>    
+		
+		<p>On the other hand, the 6th request, that is an <em>ERROR</em>
+		level request should have been displayed. But it satisfied the
+		second <code>TurboFilter</code> whose <span
+		class="option">OnMatch</span> option is set to <em>DENY</em>.
+		Thus, the 6th request was not displayed.
+		</p>
+		
+
+
+		  
+    <h3 class="doAnchor"
+    name="DuplicateMessageFilter">DuplicateMessageFilter</h3>
+
+    <p>The <code>DuplicateMessageFilter</code> merits a separate
+    presentation.  This filter detects duplicate messages, and beyond
+    a certain number of repetitions, drops repeated messages.
+    </p>
+
+    <p>To detect repetition, this filter uses simple String equality
+    between messages. It does not detect messages which are very
+    similar, varying only by few characters. For example, if you
+    write:
+    </p>
+
+    <pre><code>logger.debug("Hello "+name0);
+logger.debug("Hello "+name1);</code></pre>
+  
+    <p>Assuming <code>name0</code> and <code>name1</code> have
+    different values, the two "Hello" messages will be considered as
+    unrelated. Depending on user demand, future releases may check for
+    string similarity, eliminating repetitions of similar but not
+    identical messages.
+    </p>
+
+    <p>Note that in case of parameterized logging, only the raw
+    message is taken into consideration. For example, in the next two
+    requests, the raw messages, i.e. "Hello {}.", are identical, and
+    thus considered as repetitions.
+    </p>
+
+    <pre><code>logger.debug("Hello {}.", name0);
+logger.debug("Hello {}.", name1);</code></pre>
+  
+    <p>The number of allowed repetitions can be specified by the <span
+    class="option">AllowedRepetitions</span> property. For example, if
+    the property is set to 1, then the 2nd and subsequent
+    occurrences of the same message will be dropped. Similarly, if the
+    property is set to 2, then the 3rd and subsequent occurrences
+    of the same message will be dropped. By default, the <span
+    class="option">AllowedRepetitions</span> property is set to 5.
+    </p>
+
+    <p>In order to detect repetitions, this filter needs to keep
+    references to old messages in an internal cache. The size of this
+    cache is determined by the <span class="option">CacheSize</span>
+    property. By the default, this is set to 100.
+    </p>
+
+    
+    <em>Example: <code>DuplicateMessageFilter</code> 
+    configuration (logback-examples/src/main/resources/chapters/filters/duplicateMessage.xml)</em>
+
+
+<div class="tab">
+    <button class="tablinks" id="button_duplicateMessage_legacy"
+            onclick="openTab(event, 'duplicateMessage', 'legacy')">Legacy</button>
+    <button class="tablinks" id="button_duplicateMessage_canonical"
+            onclick="openTab(event, 'duplicateMessage', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_duplicateMessage_tyler"
+             onclick="openTab(event, 'duplicateMessage', 'tyler')">Tyler</button>
+</div>
+
+<div id="duplicateMessage_legacy" class="tabcontent">
+
+    <pre><code>&lt;configuration>
+
+  <b>&lt;turboFilter class="ch.qos.logback.classic.turbo.DuplicateMessageFilter"/></b>
+
+  &lt;appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+    &lt;encoder>
+      &lt;pattern>%date [%thread] %-5level %logger -%kvp -%msg%n&lt;/pattern>
+    &lt;/encoder>
+  &lt;/appender>
+
+  &lt;root level="INFO">
+    &lt;appender-ref ref="console" />
+  &lt;/root>  
+&lt;/configuration></code></pre>
+
+</div>
+
+<div id="duplicateMessage_canonical" class="tabcontent">
+  <p>Requires a server call. Please wait a few seconds.</p>
+</div>
+   <div id="duplicateMessage_tyler" class="tabcontent"><p>Requires a server call.</p></div>
+
+
+  <p>Thus, the output for <code>FilterEvents</code> application
+  configured with <em>duplicateMessage.xml</em> is:
+  </p>
+
+    <p class="source">2008-12-19 15:04:26,156 [main] INFO  chapters.filters.FilterEvents - logging statement 0
+2008-12-19 15:04:26,156 [main] INFO  chapters.filters.FilterEvents - logging statement 1
+2008-12-19 15:04:26,156 [main] INFO  chapters.filters.FilterEvents - logging statement 2
+2008-12-19 15:04:26,156 [main] INFO  chapters.filters.FilterEvents - logging statement 4
+2008-12-19 15:04:26,156 [main] INFO  chapters.filters.FilterEvents - logging statement 5
+2008-12-19 15:04:26,171 [main] ERROR chapters.filters.FilterEvents - billing statement 6</p>
+
+    <p>"logging statement 0" is the first <em>occurrence</em> of the
+    message "logging statement {}". "logging statement 1" is the first
+    <em>repetition</em>, "logging statement 2" is the second
+    repetition. Interestingly enough, "logging statement 3" of level
+    DEBUG, is the <em>third</em> repetition, even though it is later
+    dropped by virtue of the <a
+    href="architecture.html#basic_selection">basic selection
+    rule</a>. This can be explained by the fact that turbo filters are
+    invoked before other types of filters, including the basic
+    selection rule. Thus, <code>DuplicateMessageFilter</code>
+    considers "logging statement 3" as a repetition, oblivious to the
+    fact that it will be dropped further down in the processing
+    chain. "logging statement 4" is the fourth repetition and "logging
+    statement 5" the fifth. Statements 6 and beyond are dropped
+    because only 5 repetitions are allowed by default.
+    </p>
+
+    <h1 class="doAnchor" name="logback-access">In logback-access</h1>
+    
+    <p>Logback-access offers many of the features available with
+    logback-classic. In particular, <code>Filter</code> objects are
+    available and work in the same way as their logback-classic
+    counterparts, with one notable difference. Instead of
+    <code>ILoggingEvent</code> instances logback-access filters act
+    upon <a
+    href="../xref-access/ch/qos/logback/access/common/spi/AccessEvent.html"><code>AccessEvent</code></a>
+    instances. At present time, logback-access ships with a limited
+    number of filters described below.    </p>
+
+    <h2 class="doAnchor" name="countingFilter"><code>CountingFilter</code></h2>
+		 
+     <p>With the help
+        of <a href="../xref-access/ch/qos/logback/access/common/filter/CountingFilter.html"><code>CountingFilter</code></a>
+        class, logback-access can provide statistical data about
+        access to the web-server. Upon
+        initialization, <code>CountingFilter</code> registers itself
+        as an MBean onto the platform's JMX server. You can then
+        interrogate that MBean for statistical data, e.g. averages by
+        minute, hour, day, week, or month. Other statistics such the
+        count for the preceding week, day, hour or month as well as
+        the total count are also available.
+     </p>
+		
+     <p>The following <em>logback-access.xml</em> configuration file
+     declares a <code>CountingFilter</code>.  </p>
+
+<div class="tab">
+    <button class="tablinks" id="button_countingFilter_legacy"
+            onclick="openTab(event, 'countingFilter', 'legacy')">Legacy</button>
+    <button class="tablinks" id="button_countingFilter_canonical"
+            onclick="openTab(event, 'countingFilter', 'canonical')">Canonical (1.3)</button>
+</div>
+
+<div id="countingFilter_legacy" class="tabcontent">
+    <pre><code>&lt;configuration>
+  &lt;statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener" />
+
+  <b>&lt;filter class="ch.qos.logback.access.filter.CountingFilter">
+    &lt;name>countingFilter&lt;/name>
+  &lt;/filter></b>
+
+  &lt;appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    &lt;encoder>
+      &lt;pattern>%h %l %u %t \"%r\" %s %b&lt;/pattern>
+    &lt;/encoder>
+  &lt;/appender>
+
+  &lt;appender-ref ref="STDOUT" />
+&lt;/configuration></code></pre>
+
+</div>
+
+  <div id="countingFilter_canonical" class="tabcontent">
+    <p>Requires a server call. Please wait a few seconds.</p>
+  </div>
+
+
+    <p>You can examine the various statistics maintained by
+    <code>CountingFilter</code> on your platform's JMX server via the
+    <code>jconsole</code> application. </p>
+
+
+    <img alt="CountingFilter via jconsole" src="images/chapters/filters/countingFilter.png" />
+	
+
+    <h3 class="doAnchor" name="access_EvaluatorFilter">EvaluatorFilter</h3>
+
+    
+    <p><a
+    href="../xref/ch/qos/logback/core/filter/EvaluatorFilter.html"><code>EvaluatorFilter</code></a>
+    is a generic filter encapsulating an
+    <code>EventEvaluator</code>. As the name suggests, an
+    <a
+    href="../xref/ch/qos/logback/core/boolex/EventEvaluator.html">
+    <code>EventEvaluator</code></a> evaluates whether a given criteria
+    is met for a given event. On match and on mismatch,
+    the hosting <code>EvaluatorFilter</code> will return the value
+    specified by the <span class="option">onMatch</span> or
+    <span class="option">onMismatch</span> properties respectively. Note that
+    <code>EvaluatorFilter</code> has been previously discussed in the
+    context of logback-classic (<a href="#evaluatorFilter">see
+    above</a>). The present text is mostly a repetition of the
+    previous discussion.</p>
+
+
+    <p>Note that <code>EventEvaluator</code> is an abstract class. You
+    can implement your own event evaluation logic by subclassing
+    <code>EventEvaluator</code>.
+    </p>
+
+    <h3 class="doAnchor" name="accessFilteringByStatusCode">Filtering on HTTPResponse status code</h3>
+
+    <p><a href="../xref-access/ch/qos/logback/access/common/boolex/StatusCodeEventEvaluator.html"><code>StatusCodeEventEvaluator</code></a> (since 2.0.6) is a trivial event
+    evaluator. Its <code>evaluate(IAccessEvent)</code> method returns
+    true if the status code of access event passed as parameter
+    matches the status code specified in the configuration file.</p>
+    
+    <p>The next logback-access configuration file illustrates
+    filtering on <a
+    href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.5">404
+    (Not Found)</a> HTTP response code. Every request resulting in a
+    404 will be printed on the console.</p>
+
+<em>Example: Access Evaluator (logback-examples/src/main/resources/chapters/filters/accessEventEvaluator.xml)</em>
+
+<pre><code>&lt;configuration&gt;
+    &lt;import class="ch.qos.logback.core.status.OnConsoleStatusListener"/&gt;
+    &lt;import class="ch.qos.logback.core.ConsoleAppender"/&gt;
+    &lt;import class="ch.qos.logback.core.filter.EvaluatorFilter"/&gt;
+    &lt;import class="ch.qos.logback.access.common.boolex.StatusCodeEventEvaluator"/&gt;
+
+    &lt;statusListener class="OnConsoleStatusListener"/&gt;
+
+    &lt;appender name="STDOUT"  class="ConsoleAppender"&gt;
+
+         &lt;filter class="EvaluatorFilter"&gt;
+            &lt;evaluator class="StatusCodeEventEvaluator"&gt;
+                &lt;statusCode&gt;404&lt;/statusCode&gt;
+            &lt;/evaluator&gt;
+            &lt;onMatch&gt;NEUTRAL&lt;/onMatch&gt;
+            &lt;onMismatch&gt;DENY&lt;/onMismatch&gt;
+        &lt;/filter&gt;
+
+        &lt;encoder&gt;
+           &lt;pattern&gt;%h %l %u %t %r %s %b&lt;/pattern&gt;
+        &lt;/encoder&gt;
+    &lt;/appender&gt;
+
+    &lt;appender-ref ref="STDOUT" /&gt;
+
+&lt;/configuration&gt;</code></pre>
+
+
+  <h3>Filtering on both the HTTP request URI and the response status code</h3>
+
+  <p><a href="../xref-access/ch/qos/logback/access/common/boolex/RequestURIEventEvaluator.html"><code>RequestURIEventEvaluator</code></a> (since 2.0.6) evaluates whether the
+  requestURI of an access event matches a regular expression. The next
+  example combines StatusCodeEventEvaluator and
+  <code>RequestURIEventEvaluator</code>, to still log requests
+  resulting in 404 errors, except those requests asking for CSS files.
+  </p>	
+
+
+    <em>Example 6.10: Access Evaluator (logback-examples/src/main/resources/chapters/filters/accessEventEvaluator2.xml)</em>
+    <pre><code>&lt;configuration&gt;
+    &lt;import class="ch.qos.logback.core.status.OnConsoleStatusListener"/&gt;
+    &lt;import class="ch.qos.logback.core.ConsoleAppender"/&gt;
+    &lt;import class="ch.qos.logback.core.filter.EvaluatorFilter"/&gt;
+    &lt;import class="ch.qos.logback.access.common.boolex.StatusCodeEventEvaluator"/&gt;
+    &lt;import class="ch.qos.logback.access.common.boolex.RequestURIEventEvaluator"/&gt;
+
+    &lt;statusListener class="OnConsoleStatusListener"/&gt;
+
+    &lt;appender name="STDOUT"  class="ConsoleAppender"&gt;
+
+         &lt;filter class="EvaluatorFilter"&gt;
+            &lt;evaluator class="StatusCodeEventEvaluator"&gt;
+                &lt;statusCode&gt;404&lt;/statusCode&gt;
+            &lt;/evaluator&gt;
+            &lt;onMatch&gt;NEUTRAL&lt;/onMatch&gt;
+            &lt;onMismatch&gt;DENY&lt;/onMismatch&gt;
+        &lt;/filter&gt;
+        &lt;filter class="EvaluatorFilter"&gt;
+            &lt;evaluator class="RequestURIEventEvaluator"&gt;
+                &lt;regex&gt;\.css$&lt;/regex&gt;
+            &lt;/evaluator&gt;
+            &lt;onMatch&gt;DENY&lt;/onMatch&gt;
+            &lt;onMismatch&gt;NEUTRAL&lt;/onMismatch&gt;
+        &lt;/filter&gt;
+
+        &lt;encoder&gt;
+           &lt;pattern&gt;%h %l %u %t %r %s %b&lt;/pattern&gt;
+        &lt;/encoder&gt;
+    &lt;/appender&gt;
+
+    &lt;appender-ref ref="STDOUT" /&gt;
+
+&lt;/configuration&gt;</code></pre>
+
+
+    
+
+<!--
+      &lt;configuration>
+  &lt;statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener" />
+  &lt;appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    &lt;filter class="ch.qos.logback.core.filter.EvaluatorFilter">
+      &lt;evaluator name="Eval404">
+        &lt;expression>
+         <b>(event.getStatusCode() == 404)</b>
+           <b>&amp;amp;&amp;amp;</b>  &lt;!-- ampersand characters need to be escaped ==>
+         <b>!(event.getRequestURI().contains(".css"))</b>
+        &lt;/expression>
+      &lt;/evaluator>
+      &lt;onMismatch>DENY&lt;/onMismatch>
+    &lt;/filter>
+
+   &lt;encoder>&lt;pattern>%h %l %u %t %r %s %b&lt;/pattern>&lt;/encoder>
+  &lt;/appender>
+
+  &lt;appender-ref ref="STDOUT" />
+&lt;/configuration>
+    </code></pre>
+
+   -->
+
+    <script src="../templates/footer.js" type="text/javascript"></script>
+</div>
+  </div>
+</body>
+</html>

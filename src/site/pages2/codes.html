@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Logback Error Codes</title>
+  <script type="text/javascript">prefix='';</script>
+</head>
+
+<body onload="enableMenuEventListeners(); hljs.highlightAll(); decorate();  addClipboardListener();">
+
+      <script type="text/javascript" src="templates/header3.js"></script>
+
+      <script type="text/javascript" src="common/templates/sponsoredBy.js"></script>
+
+  <div id="content">
+
+
+
+    <h2 class="doAnchor" name="top">Logback error messages and their meanings</h2>
+
+  <h3 class="doAnchor" name="null_CS">The contextSelector cannot be
+  null in <code>StaticLoggerBinder</code>.  
+  </h3>
+
+  <p>An <code>IllegalStateException</code> is thrown when no
+  ContextSelector could be set for logback's
+  <code>StaticLoggerBinder</code>. In principle, this error can only
+  occur when the context selector is expressly specified by the user,
+  and when that context selector cannot not be instantiated correctly.
+  </p>
+
+  <p>It should not happen when you are using the default or JNDI
+  context selectors.
+  </p>
+
+  <hr width="80%" align="center" />
+
+  <!-- ================&#8203;=========================================== -->
+  <h3 class="doAnchor" name="layoutInsteadOfEncoder">This appender no
+  longer admits a layout as a subcomponent, set an encoder instead.
+  </h3>
+
+  <p>As of logback version 0.9.19, the <code>WriterAppender</code>
+  class has been renamed as <code>OutputStreamAppender</code>, with
+  <code>FileAppender</code> now subclassing the
+  latter. <code>OutputStreamAppender</code> and subclasses now take
+  an <code>Encoder</code> as a subcomponent instead of a
+  <code>Layout</code>.
+  </p>
+
+  <p>In practical terms, this means that configuration files need to
+  be changed</p>
+  
+  <p class="red bold">from (DEPRECATED)</p>
+  
+  <pre><code>&lt;appender name="FILE" class="ch.qos.logback.&#8203;core.FileAppender">
+  &lt;file>testFile.log&lt;/file>
+  ...
+  &lt;layout class="ch.qos.logback.&#8203;classic.PatternLayout">
+    &lt;pattern>%msg%n&lt;/pattern>
+  &lt;/layout>
+&lt;/appender>   </code></pre>
+
+  <p class="red bold">or the shorter equivalent (DEPRECATED)</p>
+
+  <pre><code>&lt;appender name="FILE" class="ch.qos.logback.&#8203;core.FileAppender">
+  &lt;file>testFile.log&lt;/file>
+  ...
+  &lt;!-- layout are assigned the type ch.qos.logback.classic.&#8203;PatternLayout by default -->
+  &lt;layout>
+    &lt;pattern>%msg%n&lt;/pattern>
+  &lt;/layout>
+&lt;/appender>   </code></pre>
+
+
+  <p class="green bold">to (GOOD)</p>
+    <pre><code>&lt;appender name="FILE" class="ch.qos.logback.&#8203;core.FileAppender">
+  &lt;file>testFile.log&lt;/file>
+  ...
+  &lt;encoder class="ch.qos.logback.&#8203;classic.encoder.&#8203;PatternLayoutEncoder">
+    &lt;pattern>%msg%n&lt;/pattern>
+  &lt;/encoder>
+&lt;/appender>   </code></pre>
+ 
+  <p class="green bold">or the shorter equivalent (GOOD)</p>
+
+   <pre><code>&lt;appender name="FILE" class="ch.qos.logback.&#8203;core.FileAppender">
+  &lt;file>testFile.log&lt;/file>
+  ...
+  &lt;!-- encoders are assigned the type 
+       ch.qos.logback.classic.&#8203;encoder.PatternLayoutEncoder by default -->
+  &lt;encoder>
+    &lt;pattern>%msg%n&lt;/pattern>
+  &lt;/encoder>
+&lt;/appender>   </code></pre>
+
+
+  <p>For layout type other than <code>PatternLayout</code>, for
+  example <code>HTMLLayout</code>, your configuration files need to be
+  changed
+  </p>
+
+  <p class="red bold">from (DEPRECATED)</p>
+
+  <pre><code>&lt;appender name="FILE" class="ch.qos.logback.&#8203;core.FileAppender">
+  &lt;file>testFile.log&lt;/file>
+  ...
+  &lt;layout class="ch.qos.logback.&#8203;classic.html.HTMLLayout">
+    &lt;pattern>%msg%n&lt;/pattern>
+  &lt;/layout>
+&lt;/appender> </code></pre>
+
+
+  <p class="green bold">to (GOOD)</p>
+    <pre><code>&lt;appender name="FILE" class="ch.qos.logback.&#8203;core.FileAppender">
+  &lt;file>testFile.log&lt;/file>
+  ...
+  &lt;encoder class="ch.qos.logback.&#8203;core.encoder.LayoutWrappingEncoder">
+    &lt;layout class="ch.qos.logback.&#8203;classic.html.HTMLLayout">
+      &lt;pattern>%msg%n&lt;/pattern>
+    &lt;/layout>
+  &lt;/encoder>
+&lt;/appender> </code></pre>
+   
+  <p>We hope to make up for this inconvenience with cool new features
+  which are only possible using encoders. <b>During a transition
+  period, layouts passed as parameter will be automatically wrapped by
+  an encoder so that configuration files in the old format (using a
+  layout instead of encoder) will continue to work unmodified.</b>
+  </p>
+
+  <!-- ========================================================== -->
+
+  <hr width="80%" align="center" />
+  
+  <h3 class="doAnchor" name="slowConsole">Logging to the console can be slow</h3>
+
+  <p>Writing to the console can be significantly slower than writing
+    to a file. Therefore, console logging should be avoided in
+    production environments, especially in high-volume systems where
+    performance is critical.
+  </p> 
+
+  <p>Additionally, some application servers or frameworks
+  <b>automatically capture</b> console's output and redirect it to a
+  logging backend such as logback-classic. If this captured data is
+  written to the console (again) using <code>ConsoleAppender</code>,
+  then race conditions can occur, potentially leading to application
+  deadlocks.
+  </p>
+
+  <!-- ========================================================== -->
+
+  <hr width="80%" align="center" />
+
+  <!-- "Depender %s was expecting version %s for %s but found version %s" -->
+  
+  <h3 class="doAnchor" name="versionMismatch">Depender [A] was expecting
+  version Vx for dependency [B] but found version Vy</h3>
+
+  <p>This warning indicates that the depender A module was built using
+  version Vx of dependency B but version Vu was found on the class
+  path.
+  </p> 
+
+  <p>This is a warning and not necessarily indicative of an
+  error. However, unless know what you are doing, it is usually better
+  to align with the expected version.
+  </p>
+ 
+  <!-- =========================================================== -->
+
+  <hr width="80%" align="center" />
+  
+  <h3 class="doAnchor" name="socket_no_host">No remote host or address
+  is set for <code>SocketAppender</code>
+    
+  </h3>
+
+  <p>A remote host or address is mandatory for SocketAppender. </p>
+  <p>You can specify the remote host in the configuration file
+  as follows.
+  </p>
+  
+  <pre><code>&lt;appender name="SOCKET"
+  class="ch.qos.logback.&#8203;classic.net.SocketAppender">
+  ...
+  &lt;remoteHost>127.0.0.1&lt;/remoteHost>
+  ...
+&lt;/appender&gt;</code></pre>
+
+  <!-- ============================================================= -->
+  <hr width="80%" align="center" />
+  
+  <h3 class="doAnchor" name="socket_no_port">No remote port is set for
+  <code>SocketAppender</code>    
+  </h3>
+    
+  <p>A remote port is mandatory for SocketAppender.</p>
+      
+  <p>You can specify the remote port in the configuration file
+  like this:
+  </p>
+      
+  <pre><code>&lt;appender name="SOCKET" class=&quot;ch.qos.&#8203;logback.classic.&#8203;net.SocketAppender&quot;&gt;
+  ...
+  &lt;port>4560&lt;/port>
+  ...
+&lt;/appender&gt;</code></pre>
+				  
+  <!-- ============================================================= -->
+  <hr width="80%" align="center" />
+  <h3 class="doAnchor" name="smtp_no_layout">No <code>Layout</code> is
+  set for SMTPAppender
+  </h3>
+
+  <p>A <code>Layout</code> is mandatory for
+  <code>SMTPAppender</code>. It allows SMTPAppender to format logging
+  events before sending an email.
+  </p>
+      
+  <p>You can specify the <code>Layout</code> in a configuration file
+  as follows:
+  </p>
+      
+  <pre><code>&lt;appender name=&quot;SMTP&quot; class=&quot;ch.qos.&#8203;logback.classic.&#8203;net.SMTPAppender&quot;&gt;
+  ...
+  &lt;layout class=&quot;ch.qos.&#8203;logback.classic.&#8203;PatternLayout&quot;&gt;
+    &lt;pattern>%date [%thread] %-5level %logger - %msg%n&quot;&gt;&lt;/&#8203;pattern>
+  &lt;/layout&gt;
+  ...
+&lt;/appender&gt;</code></pre>
+      
+  <p>SMTPAppender is known to work well with <a
+  href="manual/layouts.html#ClassicPatternLayout">PatternLayout</a>
+  and <a
+  href="manual/layouts.html#ClassicHTMLLayout">HTMLLayout</a>.
+  </p>
+
+
+  
+      
+  <!-- ============================================================= -->
+  <hr width="80%" align="center" />
+  <h3 class="doAnchor" name="sbtp_size_format">Specified number is not
+  in proper int form, or not expected format.    
+  </h3>
+    
+  <p>When you specify the MaxFileSize to be used by the
+  SizeBasedRollingPolicy, logback expects a rather precise
+  format:
+  </p>
+  
+  <ul>
+    <li>The number has to be an integer</li>
+    <li>You can add 'KB', 'MB' or 'GB' after the number.
+    </li>
+  </ul>
+      
+  <p>Here are some correctly formatted values: 500KB, 15MB, 2GB.</p> 
+      
+  <!-- ============================================================= -->
+  <hr width="80%" align="center" />
+  <h3 class="doAnchor" name="rfa_no_tp">No
+  <code>TriggeringPolicy</code> was set for the
+  <code>RollingFileAppender</code>.
+    
+  </h3>
+    
+  <p>The <code>RollingFileAppender</code> must be set up with a
+  <code>TriggeringPolicy</code>. It permits the Appender to know when
+  the rollover must be activated.
+  </p>
+  
+  <p>To find more information about <code>TriggeringPolicy</code>
+  objects, please read the following javadocs:
+  </p>
+  
+  <ul>
+    <li>
+      <a
+       href="manual/appenders.html#SizeBasedTriggeringPolicy"><code>SizeBasedTriggeringPolicy</code>
+      </a>
+    </li>
+    <li>
+      <a
+      href="manual/appenders.html#TimeBasedRollingPolicy"><code>TimeBasedRollingPolicy</code>
+      </a>
+    </li>
+  </ul>
+  
+  <p>Please note that the <code>TimeBasedRollingPolicy</code>
+  is a TriggeringPolicy <em>and</em> and
+  <code>RollingPolicy</code> at the same time.
+  </p>
+
+  <!-- ============================================================= -->
+  <hr width="80%" align="center" />
+  <h3 class="doAnchor" name="rfa_reset_rp_or_tp">A TriggeringPolicy 
+  <code>TriggeringPolicy</code> is set a second time, or a RollingPolicy is set for the second time.    
+  </h3>
+    
+  <p>It is easy for forget that some rolling policies such as
+  <code>c.q.l.core.rolling.TimeBasedRollingPolicy</code> and
+  <code>c.q.l.core.rolling.SizeAndTimeBasedRollingPolicy</code> act as
+  <b>both</b> a rolling policy and a trigering policy.
+  </p>
+
+  <p>Recognizing this, the
+  <code>RollingFileAppender.setRollingPolicy()</code> method will
+  automatically set the triggering policy with the same policy
+  parameter. Similarly,
+  <code>RollingFileAppender.setTriggeringPolicy()</code> method will
+  automatically set the rolling policy with the same policy parameter.
+  </p>
+  
+  <p>Once <code>TimeBasedRollingPolicy</code> is set, setting a second
+  triggering policy is usually an oversight and will cause errors.
+  Thus, the relevant setter will emit a warning about setting a
+  policy a second time.
+  </p>
+  
+  <!-- ============================================================= -->
+  <hr width="80%" align="center" />
+  <h3 class="doAnchor" name="#sat_missing_integer_token">Missing
+  integer token, that is %i, in FileNamePattern [...].
+    
+  </h3>
+  
+  <p>The %i conversion token is mandatory for <a
+  href="manual/appenders.html#SizeAndTimeBasedFNATP">size and time
+  based archiving</a>. In case the %i token is missing,
+  <code>SizeAndTimeBasedFNATP</code> attached to
+  <code>RollingFileAppender</code> will detect the omission and will
+  not start.
+  </p>
+
+      
+  <!-- ============================================================= -->
+  <hr width="80%" align="center" />
+  <h3 class="doAnchor" name="rfa_no_rp">No <code>RollingPolicy</code>
+  was set for the <code>RollingFileAppender</code>.    
+  </h3>
+  
+  <p>The <code>RollingFileAppender</code> must be set up with
+  a <code>RollingPolicy</code>. It permits the Appender to
+  know what to do when a rollover is requested.
+  </p>
+    
+  <p>To find more information about <code>RollingPolicy</code>
+  objects, please read the following javadocs:
+  </p>
+    
+  <ul>
+    <li>
+      <a href="apidocs/ch.qos.logback.core/ch/qos/logback/core/rolling/FixedWindowRollingPolicy.html">
+        <code>FixedWindowRollingPolicy</code>
+      </a>
+    </li>
+    <li>
+      <a href="apidocs/ch.qos.logback.core/ch/qos/logback/core/rolling/TimeBasedRollingPolicy.html">
+        <code>TimeBasedRollingPolicy</code>
+      </a>
+    </li>
+  </ul>
+  
+  <p>Please note that the <code>TimeBasedRollingPolicy</code> is a
+  <code>TriggeringPolicy</code> <em>and</em> and RollingPolicy at
+  the same time.
+  </p>
+  
+  
+  
+
+  <!-- ============================================================= -->
+  <hr width="80%" align="center" />
+  <h3 class="doAnchor" name="tbr_fnp_not_set">The <span
+  class="option">FileNamePattern</span> property is mandatory for both
+  <code>TimeBasedRollingPolicy</code> and
+  <code>FixedWindowRollingPolicy</code>.    
+  </h3>
+
+  
+  <p>The <span class="option">FileNamePattern</span> property for both
+  <code>TimeBasedRollingPolicy</code> and
+  <code>FixedWindowRollingPolicy</code> is mandatory.
+  </p>
+  
+  <p>Please refer to the documentation of <a
+  href="manual/appenders.html#TimeBasedRollingPolicy">TimeBasedRollingPolicy</a>
+  and <a
+  href="manual/appenders.html#FixedWindowRollingPolicy">FixedWindowRollingPolicy</a> for
+  examples.
+  </p>
+
+
+  
+
+  <!-- ============================================================= -->
+  <hr width="80%" align="center" />
+  <h3 class="doAnchor" name="rfa_file_after">The <span
+  class="option">File</span> property must be set before any rolling
+  policy or triggering policy.
+    
+  </h3>
+
+  <p>The <span class="option">File</span> property, if present, must
+  be placed before any rolling policy or triggering policy. Thus, in a
+  configuration file, the <span class="option">File</span> property,
+  if present, must be declared before any rolling policy or triggering
+  policy declarations.
+  </p>
+
+  <!-- ============================================================= -->  
+  <hr width="80%" align="center" />
+  <h3 class="doAnchor" name="rfa_collision"><span
+  class="option">File</span> property collides with <span
+  class="option">fileNamePattern</span>. Aborting.
+  </h3>
+
+  <p>When the <span class="option">file</span> property matches the
+  regular expression defined by <span
+  class="option">fileNamePattern</span>, there is a risk of
+  collision. A collision occurs when the active log file as defined by
+  the <span class="option">file</span> property has the same path as
+  an existing log archive. Such a collision will result in the log
+  archive being overwritten.
+  </p>
+
+  <p>As such, in case <span class="option">file</span> property
+  matches the regular expression defined by <span
+  class="option">fileNamePattern</span>, in order to avoid data loss,
+  <code>RollingFileAppender</code> will emit an error message and
+  refuse to start.</p>
+
+  <!-- ============================================================= -->  
+  <hr width="80%" align="center" />
+  <h3 class="doAnchor" name="rfa_collision_in_dateFormat">The date
+  format in <span class="option">fileNamePattern</span> will result in
+  collisions in the names of archived log files.
+  </h3>
+
+  <p>This error message is output when the date time pattern in the %d
+  token within the <span class="option">fileNamePattern</span> is not
+  collision free. For example, the following
+  code>fileNamePattern</code> will result in the same log archive
+  every day of the week after the first week of the month.
+  </p>
+
+  <pre class="source">myapp-%d{yyyy-MM-<span class="bold red">uu</span>}.log.zip</pre>
+
+  <p>As such collisions will result in log data loss,
+  <code>RollingFileAppender</code> will check for a variety of such
+  possible collisions and will not start if any collisions are
+  detected.</p>
+
+  <!-- ============================================================= -->  
+  <hr width="80%" align="center" />
+  <h3 class="doAnchor" name="earlier_fa_collision"><span
+  class="option">File</span>/<span
+  class="option">FileNamePattern</span> option has the same value "..." as
+  that given for appender [...] defined earlier.
+  </h3>
+
+
+  <p>If a <code>FileAppender</code>/<code>RollingFileAppender</code>
+  defined earlier has the same <span class="option">File</span> option
+  as the current appender, then those two appenders are in collision
+  as <code>FileAppender</code> instances cannot share the same output
+  target. To prevent loss of data, the current appender will not
+  start. Make sure that each appender has a unique <span
+  class="option">File</span> option.
+  </p>
+
+  <p>By analogy the same restriction applies to the <span
+  class="option">FileNamePattern</span> option of
+  RollingFileAppender. Make sure that each RollingFileAppender has a
+  unique <span class="option">FileNamePattern</span> option</p>
+  
+  <!-- =======================================================     -->
+  <hr width="80%" align="center" />
+  <h3 class="doAnchor" name="renamingError">Failed to rename file [x]
+  as [y].</h3>
+
+  <b>On Windows</b>
+
+  <p>On the Windows platform a log file cannot be renamed if there are
+  handles referencing it. For example, when the file is read by
+  another process such as <code>less</code>, <code>tail</code>,
+  etc. During application hot-redeployment, the old instance of the
+  application will have open references to log files until the old
+  instance is completely shutdown or until the <code>stop()</code>
+  method on its <a
+  href="apidocs/ch.qos.logback.classic/ch/qos/logback/classic/LoggerContext.html"><code>LoggerContext</code></a>
+  is invoked.
+  </p>
+
+  <p><a
+  href="http://technet.microsoft.com/en-us/sysinternals/bb896653">Process
+  Explorer</a> can help you locate the processes which reference a
+  given file (Find -&gt; Find Handle or DLL). On Linux, you can use
+  the <code><a href="http://www.manpagez.com/man/8/lsof/">lsof </a>
+  <em>pathToFile</em></code> command to find which process has the
+  file given by <em>pathToFile</em> open. </p>
+
+  <p>Rolling might also fail due to incorrect file permission
+  settings. On Windows, renaming a file requires the "modify"
+  permission which is different than the permission to "write" to the
+  file.</p>
+
+  <p class="highlight">File rename operations during rollover can be
+  avoided altogether by omitting the <span class="option">file</span>
+  property in RollingFileAppender.</p>
+
+  <p>In practice, it can be hard to set the right permissions or to
+  ensure that there are no file handle references to log files.</p>
+
+  <p>Under many circumstances, it can be more robust to avoid file
+  renaming during rollover altogether. This is as easy as omitting the
+  <span class="option">file</span> property in
+  <code>RollingFileAppender</code>, as shown in the next configuration
+  snippet.
+  </p>
+
+  <pre><code>&lt;appender name="FILE" class="ch.qos.logback.&#8203;core.rolling.RollingFileAppender">
+  <b>&lt;!-- <span class="option">file</span> property left unset/blank --></b>
+  &lt;rollingPolicy class="ch.qos.logback.&#8203;core.rolling.TimeBasedRollingPolicy">
+    &lt;fileNamePattern>mylog.%d{yyyy-MM-dd}.log&lt;/fileNamePattern>
+  &lt;/rollingPolicy>
+
+  &lt;encoder>
+    &lt;pattern>%relative [%thread] %level %logger - %msg%n&lt;/pattern>
+  &lt;/encoder>
+&lt;/appender></code></pre>
+
+   <p>Note that for <code>FixedWindowRollingPolicy</code>, the <span
+   class="option">file</span> property is mandatory.
+   </p>
+ 
+   <h4 class="doAnchor" name="renamingErrorOnUnix">On Unix-*</h4>
+  
+   <p>On the Unix platform, the basic/quick rename method supplied by
+   the JDK does not work if the source and target files are located on
+   different file systems. In order to deal with this contingency,
+   logback will resort to renaming by copying if all of the following
+   three conditions are met:</p>
+
+   <ol>
+     <li>quick renaming fails, </li>
+     <li>source and destination files for the rename are on different
+     file systems,
+     </li>
+
+     <li>the host JVM platform runs Java 7 or later.</li>
+   </ol>
+
+   <p>The code for determining the file system of a file requires Java
+   7. No rename by copying will be performed on Java 6 or earlier.</p>
+   
+   <p>As explained in the Windows section above, renaming can be
+   avoided altogether by omitting the <span class="option">file</span>
+   property.
+   </p>
+
+  <!-- ============================================================= -->
+  <hr width="80%" align="center" />
+  <h3 class="doAnchor" name="fwrp_parentFileName_not_set">The <span
+  class="option">File</span> property must be set before
+  <code>FixedWindowRollingPolicy</code>    
+  </h3>
+
+  <p>The <span class="option">File</span> property is mandatory with
+  <code>FixedWindowRollingPolicy</code>. Moreover, the <span
+  class="option">File</span> option must be set before the
+  <code>FixedWindowRollingPolicy</code> element.
+  </p>
+      
+  <p>Refer to the logback manual on
+  <a href="manual/appenders.html#FixedWindowRollingPolicy">
+    FixedWindowRollingPolicy </a> for more information.
+  </p>
+			
+  <!-- ============================================================= -->
+  <hr width="80%" align="center" />
+  <h3 class="doAnchor" name="nested_if_element">Nested &lt;if&gt;
+  element within &lt;appender&gt;, &lt;logger&gt; or &lt;root&gt;
+  elements is disallowed
+  </h3>
+
+  <p>Ad of logback version 1.3, an &lt;if&gt; element nested within
+  &lt;appender&gt;, &lt;logger&gt; or &lt;root&gt; elements is
+  disallowed and will yield unexpected results.</p>
+
+  <p>For example, the following is considered incorrect.</p>
+
+  <pre><code>
+&lt;root level="INFO"&gt;
+    &lt;appender-ref ref="CONSOLE" /&gt;
+    &lt;appender-ref ref="FILE" /&gt;
+    <b>&lt;!-- &lt;if&gt; nested within &lt;root&gt; disallowed --&gt;</b>
+    &lt;if condition='isDefined(&#8203;"A_VARIABLE")'&gt;
+      &lt;then&gt;
+        &lt;appender-ref ref="SOME_APPENDER" /&gt;
+      &lt;/then&gt;
+    &lt;/if&gt;
+&lt;/root&gt;    
+ </code></pre>
+
+   <p>However, it can be written with the desired effect as follows.</p>
+
+<pre><code>
+&lt;root level="INFO"&gt;
+    &lt;appender-ref ref="CONSOLE" /&gt;
+    &lt;appender-ref ref="FILE" /&gt;
+&lt;/root&gt;        
+<b>&lt;!-- &lt;if&gt; surronding &lt;root&gt; is fine --&gt;</b>
+&lt;if condition='isDefined(&#8203;"A_VARIABLE")'&gt;
+    &lt;then&gt;
+        &lt;root&gt;    
+            &lt;appender-ref ref="SOME_APPENDER" /&gt;
+      &lt;/root&gt;    
+    &lt;/then&gt;
+&lt;/if&gt;
+</code></pre>
+
+  <p>We are of the opinion that nested-if form can always be
+  transfomed into the surrounding-if form.
+  </p>
+
+
+  <!-- ============================================================= -->
+  <hr width="80%" align="center" />
+  <h3 class="doAnchor" name="tbr_fnp_prudent_unsupported">Prudent mode
+  is not supported with <code>FixedWindowRollingPolicy</code>.
+  </h3>
+
+  <p>Given that <code>FixedWindowRollingPolicy</code> performs
+  multiple file rename operations during roll over, and that these
+  operations cannot be guaranteed to be safe in a multi-JVM context,
+  prudent mode is not allowed in conjunction with a
+  <code>FixedWindowRollingPolicy</code>.
+  </p>
+    
+  <!-- ============================================================= -->
+  <hr width="80%" align="center" />
+  <h3 class="doAnchor" name="syslog_layout">SyslogAppender does not
+  admit a layout.
+  </h3>
+
+
+  <p>Given that the format of a syslog request follows strict rules,
+  you cannot freely specify the layout to be used with
+  SyslogAppender. However, you can use <span
+  class="option">SuffixPattern</span> option instead to influence the
+  contents of the message sent to the syslog daemon.
+  </p>
+  
+  <p>For more information on SyslogAppender please refer to the <a
+  href="manual/appenders.html#SyslogAppender">its documentation.</a>
+  </p>
+
+  
+  <!-- ============================================================= -->
+
+  <hr width="80%" align="center" />  
+  <h3 class="doAnchor" name="1andOnly1">Only and only one appender can
+  be nested the &lt;sift> element in
+  <code>SiftingAppender</code>.</h3>
+  
+  <p>SiftingAppender admits one and only one nested appender. 
+  </p>
+  
+
+  <!-- ============================================================= -->
+  <hr width="80%" align="center" />
+  <h3 class="doAnchor" name="ifJanino">Could not find Janino library
+  on the class path. Skipping conditional processing.
+  </h3>
+   
+  <p><a href="manual/configuration.html#conditional">Conditional
+  processing</a> in configuration files requires
+  the <a href="http://janino.unkrig.de">Janino library</a>.  See
+  the <a href="setup.html#janino">setup instructions</a> for adding
+  Janino to your class path.
+  </p>
+
+  <p><span class="label">NOTE</span> As of logback 1.5.20, the
+  <code>&lt;condition&gt;</code> element with a custom
+  <code>PropertyEvaluator</code> offers a recommended alternative. See
+  also <a href="manual/configuration.html#conditional">conditional
+  processing of config files</a> as well as the <a
+  href="https://logback.qos.ch/translator/services/conditionalConfigMigrator.html">conditional
+  configuration migrator</a>. Due to potential vulnerabilities
+  associated with dynamic, i.e. runtime, java code compilation and
+  execution (using Janino), the <code>condition</code> attribute
+  within the <code>&lt;if&gt;</code> element is deprecated and will be
+  removed in 2027.
+  </p>
+
+  <!-- ============================================================= -->
+  <hr width="80%" align="center" />
+  <h3 class="doAnchor" name="conditionBlacklisted">The 'condition' attribute
+  in <em>&lt;if&gt;</em> element may not contain blacklisted references.
+  </h3>  
+
+  <p>Certain references in the condition attribute of <if> elements
+  are disallowed. This prevents an ACE vulnerability recorded as
+  <a href="https://www.cve.org/cverecord?id=CVE-2025-11226">CVE-2026-xxx</a>.
+  </p>
+
+  <p><span class="label">NOTE</span> As of logback 1.5.20, the
+  <code>&lt;condition&gt;</code> element with a custom
+  <code>PropertyEvaluator</code> offers a recommended alternative. See
+  also <a href="manual/configuration.html#conditional">conditional
+  processing of config files</a> as well as the <a
+  href="https://logback.qos.ch/translator/services/conditionalConfigMigrator.html">conditional
+  configuration migrator</a>. Due to potential vulnerabilities
+  associated with dynamic, i.e. runtime, java code compilation and
+  execution (using Janino), the <code>condition</code> attribute
+  within the <code>&lt;if&gt;</code> element is deprecated and will be
+  removed soon.
+  </p>
+
+  
+  <!-- ============================================================= -->
+  <hr width="80%" align="center" />
+  <h3 class="doAnchor" name="conditionNew">The 'condition' attribute
+  in <em>&lt;if&gt;</em> element may not contain the 'new' operator.
+  </h3>  
+
+  <p>The "new" operator in the condition attribute of <if> elements is
+  disallowed. This prevents an ACE vulnerability recorded as
+  <a href="https://www.cve.org/cverecord?id=CVE-2025-11226">CVE-2025-11226</a>.
+  </p>
+
+  <p><span class="label">NOTE</span> As of logback 1.5.20, the
+  <code>&lt;condition&gt;</code> element with a custom
+  <code>PropertyEvaluator</code> offers a recommended alternative. See
+  also <a href="manual/configuration.html#conditional">conditional
+  processing of config files</a> as well as the <a
+  href="https://logback.qos.ch/translator/services/conditionalConfigMigrator.html">conditional
+  configuration migrator</a>. Due to potential vulnerabilities
+  associated with dynamic, i.e. runtime, java code compilation and
+  execution (using Janino), the <code>condition</code> attribute
+  within the <code>&lt;if&gt;</code> element is deprecated and will be
+  removed soon.
+  </p>
+
+   <!-- ============================================================= -->
+   <hr width="80%" align="center" />
+   <h3 class="doAnchor" name="conditionUnicode">The 'condition'
+   attribute in <em>&lt;if&gt;</em> element may not contain unicode
+   escape characters. Use &lt;condition> element instead (requires version
+   1.5.20 or later).
+   </h3>  
+
+   <p>&bull; The 'condition' attribute in &lt;if&gt; elements now
+   reject unicode escape sequences (<code>\u</code>
+   and <code>\U</code>). This closes a bypass of the existing
+   prohibition on the <code>new</code> operator in Janino-evaluated
+   conditions. </p>
+
+   <p><span class="label">NOTE</span> As of logback 1.5.20, the
+   <code>&lt;condition&gt;</code> element with a custom
+   <code>PropertyEvaluator</code> offers a recommended
+   alternative. See also <a
+   href="manual/configuration.html#conditional">conditional processing
+   of config files</a> as well as the <a
+   href="https://logback.qos.ch/translator/services/conditionalConfigMigrator.html">conditional
+   configuration migrator</a>. Due to potential vulnerabilities
+   associated with dynamic, i.e. runtime, java code compilation and
+   execution (using Janino), the <code>condition</code> attribute
+   within the <code>&lt;if&gt;</code> element is deprecated and will
+   be removed soon.
+   </p>
+  
+   <!-- ============================================================ -->
+   <hr width="80%" align="center" />
+
+   <h3 class="doAnchor" name="conditionAttributeDeprecation">The
+   'condition' attribute in &lt;if> element is deprecated and slated
+   for removal. Use &lt;condition> element instead (requires version
+   1.5.20 or later).
+   </h3>  
+
+   <p>Due to potential vulnerabilities associated with dynamic,
+   i.e. runtime, java code compilation and execution (using Janino),
+   the 'condition' attribute within the &lt;if> element is deprecated
+   and will be removed in January 2027.</p>
+
+  <p><span class="label">NOTE</span> As of logback 1.5.20, the
+  <code>&lt;condition&gt;</code> element with a custom
+  <code>PropertyEvaluator</code> offers a recommended alternative. See
+  also <a href="manual/configuration.html#conditional">conditional
+  processing of config files</a> as well as the <a
+  href="https://logback.qos.ch/translator/services/conditionalConfigMigrator.html">conditional
+  configuration migrator</a>. Due to potential vulnerabilities
+  associated with dynamic, i.e. runtime, java code compilation and
+  execution (using Janino), the <code>condition</code> attribute
+  within the <code>&lt;if&gt;</code> element is deprecated and will be
+  removed in January 2027.
+  </p>
+
+  <!-- ============================================================= -->
+  <hr width="80%" align="center" />
+  <h3 class="doAnchor" name="block">As of logback version 0.9.28,
+  JaninoEventEvaluator expects Java blocks.
+  </h3>
+
+  <p><b><code>JaninoEventEvaluator</code> which was removed in logback
+  version 1.5.13. You can migrate existing configuration code with <a
+  href="https://logback.qos.ch/translator/services/janinoExpressionMigrator.html">Janino
+  expression migrator</a>.</b>
+  </p>
+  
+  <p>As of logback version 0.9.28, JaninoEvaluator expects Java
+  "block", i.e. the body of a method. In previous versions only
+  boolean expressions were allowed. For backward compatibility
+  reasons, whenever logback sees a boolean expression it will attempt
+  to convert it to a block by prefixing the expression with "return"
+  and suffixing it with a semicolon.
+  </p>
+
+  <p>Boolean expressions can quickly become hairy. For example, the
+  following boolean expression is rather difficult to grok.
+</p>
+
+  <pre><code> !logger.startsWith("org.apache.http")
+  ||
+  ( logger.equals("org.apache.http.wire")  &amp;&amp;
+       (mdc != null &amp;&amp; mdc.get("entity") != null
+         &amp;&amp;
+       ((String) mdc.get("entity")).&#8203;contains("someSpecialValue"))
+       &amp;&amp;
+     !message.contains(&#8203;"someSecret")
+  )</code></pre>
+
+  <p>whereas as its Java block equivalent is considerably easier to
+  follow.</p>
+
+<pre><code>if(logger.startsWith("org.apache.http"))
+  return true;
+
+if(mdc == null || mdc.get("entity") == null)
+  return false;
+
+String payee = (String) mdc.get("entity");
+
+if(logger.equals("org.apache.http.wire") &amp;&amp;
+  payee.contains("someSpecialValue") &amp;&amp;
+  !message.contains(&#8203;"someSecret")) {
+  return true;
+}
+
+return false;</code></pre>
+
+   <p><!-- this is JaninoEvaluator and not conditional config processing -->
+   </p>
+ 
+   
+   <!-- ============================================================= -->
+   <hr width="80%" align="center" />   
+   <h3 class="doAnchor" name="param">The &lt;param&gt; element is
+   deprecated in favor of a more direct syntax.
+   </h3>
+
+
+   <p class="red bold">Instead of writing (DEPRECATED)</p>  
+   
+   <pre><code>
+    &lt;appender name="STDOUT" class="ch.qos.logback.&#8203;core.ConsoleAppender"&gt;
+      &lt;encoder>
+        &lt;<b>param name="pattern" value="%logger- %msg %n"/&gt;</b>
+      &lt;/encoder>
+    &lt;/appender>
+   </code></pre>
+
+   <p class="green bold">prefer the direct form (GOOD)</p>
+
+   <pre><code>
+    &lt;appender name="STDOUT" class="ch.qos.logback.&#8203;core.ConsoleAppender">
+      &lt;encoder>
+        <b>&lt;pattern>%logger - %msg %n&lt;/pattern></b>
+      &lt;/encoder>
+    &lt;/appender>
+   </code></pre>
+
+   <!-- ============================================================= -->
+   <hr width="80%" align="center" />
+   <h3 class="doAnchor" name="missingRightParenthesis">In a conversion
+   pattern, opened parenthesis must be closed.
+   </h3>
+   
+   <p>In conversion patterns, <a
+   href="manual/layouts.html#Parentheses">parentheses are special</a>
+   because they are treated as grouping tokens. If a parenthesis
+   character needs to be viewed as a literal, it needs to be escaped
+   by preceding each parenthesis with a backslash. As in,
+   <b>\(</b>%d{HH:mm:ss.SSS} [%thread]<b>\) </b>.
+   </p>
+  
+   <!-- ============================================================= -->
+   <hr width="80%" align="center" />
+   <h3 class="doAnchor" name="saxParserConfiguration">Error during SAX parser configuration</h3>
+
+   
+   <p>If you see the following error is thrown during logback configuration
+   </p>
+
+   <pre>Caused by: javax.xml.parsers.ParserConfigurationException: SAX feature 'http://xml.org/sax/features/external-general-entities' not supported.
+ at oracle.xml.jaxp.&#8203;JXSAXParserFactory.&#8203;setFeature(JXSAXParserFactory.&#8203;java:272)
+ at ch.qos.logback.core.&#8203;joran.event.SaxEventRecorder.&#8203;buildSaxParser(&#8203;SaxEventRecorder.&#8203;java:82)
+   </pre>
+
+   <p>then we suggest that you specify a SAX parser that supports
+   selective feature enabling/disabling. Try setting the following
+   system property.</p>
+
+   <pre>-Djavax.xml.parsers.&#8203;SAXParserFactory=&#8203;com.sun.org.apache.&#8203;xerces.internal.&#8203;jaxp.SAXParserFactoryImpl</pre>
+
+   <p>See also <a href="https://jira.qos.ch/browse/LOGBACK-1577">LOGBACK-1577</a>.</p>
+   
+   <!-- ============================================================= -->
+   <hr width="80%" align="center" />   
+   <h3 class="doAnchor" name="appender_order">Appenders must be
+   defined before they are referenced.
+   </h3>
+
+   <p class="bold">The restriction described below has been lifted in
+   logback version 1.3. The description is kept for users of logback
+   1.2 and earlier.</p>
+
+   <p>In a configuration file, at the point where an appender is
+   referenced by name, it must be defined earlier in the configuration
+   file. Referencing an appender defined later in the file is not
+   allowed. Below are examples of correct and incorrect order of
+   definition and reference.
+   </p>
+
+
+  <p>Below is an example of a correct ordering, where appender
+  definition precedes references made to it.
+  </p>
+
+  <p class="green bold">CORRECT ORDER</p>
+  <pre><code>&lt;configuration>
+  <b>&lt;!-- definition of appender STDOUT --></b>
+  &lt;appender name="STDOUT" class="ch.qos.logback.&#8203;core.ConsoleAppender">
+    &lt;encoder>
+      &lt;pattern>%-4relative [%thread] %-5level %logger{35} - %msg %n&lt;/pattern>
+    &lt;/encoder>
+  &lt;/appender>
+
+  &lt;root level="DEBUG">
+    &lt;!-- appender referenced after it is defined -->
+    <b class="big">&lt;appender-ref ref="STDOUT"/></b>
+  &lt;/root> 
+&lt;/configuration></code></pre>
+
+  <p>Below is an example of an incorrect ordering, where appender
+  definition follows references made to it.
+  </p>
+
+   <p class="red bold">INCORRECT ORDER</p>
+   <pre><code>&lt;configuration>
+  &lt;root level="DEBUG">
+    &lt;!-- appender INCORRECTLY referenced before it is defined -->
+    <b class="big">&lt;appender-ref ref="STDOUT"/></b>
+  &lt;/root>
+
+  <b>&lt;!-- definition of appender STDOUT --></b>
+  &lt;appender name="STDOUT" class="ch.qos.logback.&#8203;core.ConsoleAppender">
+    &lt;encoder>
+      &lt;pattern>%-4relative [%thread] %-5level %logger{35} - %msg %n&lt;/pattern>
+    &lt;/encoder>
+  &lt;/appender>
+&lt;/configuration>
+   </code></pre>
+
+
+  <!-- ============================================================= -->
+  <hr width="80%" align="center" />
+
+  <h3 class="doAnchor" name="callerContradiction">appenders named X
+  instruct against caller extraction info while other appenders named
+  Y instruct in favor of caller extraction
+  </h3>
+
+  <p><span class="label notice">since 1.6.2</span> Logback may emit a
+  warning such as:
+  </p>
+
+  <pre>appenders named ASYNC instruct against caller extraction info while other appenders named CONSOLE
+instruct in favor of caller extraction
+  </pre>
+
+  <p>or:
+  </p>
+
+  <pre>appenders named ASYNC instruct preprocessing of caller extraction info but no appender
+instructs in favor of caller extraction</pre>
+
+  <p>These messages point to a <em>contradiction</em> among the
+  instructions that your configuration gives about caller data.
+  </p>
+
+  <h4>Caller data inclusion instructions</h4>
+
+  <p>Caller data is the class, method, file and line of the logging
+  call site.  Extracting it is relatively expensive, so logback does
+  not always capture it.  Different parts of a configuration can
+  express different wishes about that capture:
+  </p>
+
+  <ul>
+    <li><p>A layout or encoder pattern that uses a caller-data
+    converter (<code>%C</code>, <code>%M</code>, <code>%L</code>,
+    <code>%F</code>, <code>%l</code>, <code>%class</code>,
+    <code>%method</code>, <code>%line</code>, <code>%file</code> or
+    <code>%caller</code>) <em>instructs in favor</em> of caller data:
+    without that information the converter cannot print a useful
+    value.</p></li>
+
+    <li><p>Certain appenders&mdash;notably
+    <code>AsyncAppender</code>, <code>SocketAppender</code> and
+    <code>SMTPAppender</code>&mdash;decide whether to capture caller
+    data via the <span class="prop">includeCallerData</span> property
+    (default <code>false</code>).  Setting it to <code>true</code>
+    <em>instructs in favor</em> of extraction so that a nested
+    appender, a remote host or an SMTP layout can use the data later.
+    Leaving it at <code>false</code> <em>instructs against</em>
+    extraction, which is the usual choice for performance.</p></li>
+  </ul>
+
+  <h4>What is a contradiction?</h4>
+
+  <p>A contradiction arises when those instructions cannot be
+  satisfied together.  The most common case is that one part of the
+  configuration asks for caller data (for example a pattern with
+  <code>%C</code>), while another part refuses to include it (for
+  example an <code>AsyncAppender</code> with
+  <span class="prop">includeCallerData</span> left at the default
+  <code>false</code>).  At runtime there is a risk the pattern
+  will not receive usable caller information, even though it was
+  written as if that information were available.
+  </p>
+
+  <p>The opposite mismatch is also a contradiction: an appender is
+  told to pay the cost of capturing caller data
+  (<span class="prop">includeCallerData</span> set to
+  <code>true</code>), yet nothing in the configuration actually uses
+  that data.
+  </p>
+
+  <p>In short, the instructions for and against caller-data inclusion
+  must agree.  If they pull in opposite directions, logback warns so
+  that you can align them.
+  </p>
+
+  <h4>How to resolve the warning</h4>
+
+  <p>Make the configuration consistent.  If you want caller data in
+  the output, set <span class="prop">includeCallerData</span> to
+  <code>true</code> on the relevant
+  <code>AsyncAppender</code>, <code>SocketAppender</code> or
+  <code>SMTPAppender</code>.  If you do not need caller data, remove
+  the caller-data converters from the pattern (or leave
+  <span class="prop">includeCallerData</span> at
+  <code>false</code> and stop requesting extraction elsewhere).
+  </p>
+
+  <p class="red bold">CONTRADICTORY</p>
+  <pre><code>&lt;configuration>
+  &lt;appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+    &lt;encoder>
+      &lt;pattern>%d [%thread] %-5level %C.%M:%L - %msg%n&lt;/pattern>
+    &lt;/encoder>
+  &lt;/appender>
+
+  &lt;appender name="ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+    &lt;!-- includeCallerData defaults to false: instructs against extraction -->
+    &lt;appender-ref ref="CONSOLE"/>
+  &lt;/appender>
+
+  &lt;root level="DEBUG">
+    &lt;appender-ref ref="ASYNC"/>
+  &lt;/root>
+&lt;/configuration></code></pre>
+
+  <p class="green bold">CONSISTENT</p>
+  <pre><code>&lt;configuration>
+  &lt;appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+    &lt;encoder>
+      &lt;pattern>%d [%thread] %-5level %C.%M:%L - %msg%n&lt;/pattern>
+    &lt;/encoder>
+  &lt;/appender>
+
+  &lt;appender name="ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+    <b>&lt;includeCallerData>true&lt;/includeCallerData></b>
+    &lt;appender-ref ref="CONSOLE"/>
+  &lt;/appender>
+
+  &lt;root level="DEBUG">
+    &lt;appender-ref ref="ASYNC"/>
+  &lt;/root>
+&lt;/configuration></code></pre>
+
+  <h4>Turning off contradiction analysis</h4>
+
+  <p>If you prefer not to run this check, set the
+  <code>logback.skipCallerContradictionAnalysis</code> variable to
+  <code>true</code>.  You can do so as a system property:
+  </p>
+
+  <pre>-Dlogback.skipCallerContradictionAnalysis=true</pre>
+
+  <p>or as a property in the configuration file:
+  </p>
+
+  <pre><code>&lt;property name="logback.skipCallerContradictionAnalysis" value="true"/></code></pre>
+
+  <p>When that variable is true, logback skips caller-contradiction
+  analysis and does not emit the warnings described above.  Prefer
+  fixing the configuration when you can; skip only when the warning is
+  intentional or otherwise unhelpful in your environment.
+  </p>
+
+ 
+  <script src="templates/footer.js" type="text/javascript"></script>
+   </div>
+</body>
+</html>

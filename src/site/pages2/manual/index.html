@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Logback Manual</title>
+  <script type="text/javascript">prefix='../';</script>
+</head>
+<body onload="enableMenuEventListeners(); hljs.highlightAll(); decorate(); enableLegacy();">
+  <script type="text/javascript" src="../templates/header3.js"></script>
+  <div id="content">
+    <div id="top-content">
+      <script type="text/javascript" src="../templates/creative.js"></script>
+      <script type="text/javascript" src="menu.js"></script>
+    </div>
+
+    <h2>The logback manual</h2>
+
+    <p>This is a reorganised edition of the logback manual (content rooted
+    at <code>src/site/pages2/</code>). It covers the latest logback
+    features with a clearer path from first steps to production and
+    extension.</p>
+
+    <h3>Start here</h3>
+    <ul>
+      <li><p><a href="../setup.html">Setup</a> and
+        <a href="../dependencies.html">dependencies</a></p></li>
+      <li><p><a href="introduction.html"><b>Introduction</b></a> — first logging statements</p></li>
+      <li><p><a href="architecture.html"><b>Architecture</b></a> — loggers, levels, additivity, context</p></li>
+      <li><p><a href="../reasonsToSwitch.html">Reasons to switch from log4j</a> (optional)</p></li>
+    </ul>
+
+    <h3>Configuration</h3>
+    <ul>
+      <li><p><a href="configuration.html"><b>Overview &amp; auto-configuration</b></a></p></li>
+      <li><p><a href="configuration-xml.html"><b>XML syntax</b></a> — appenders, loggers, root</p></li>
+      <li><p><a href="configuration-variables.html"><b>Variables and properties</b></a></p></li>
+      <li><p><a href="configuration-conditional.html"><b>Conditionals, includes, and advanced</b></a></p></li>
+    </ul>
+
+    <h3>Output</h3>
+    <ul>
+      <li><p><a href="appenders.html"><b>Appenders</b></a> (overview; split into focused pages)</p>
+        <ul>
+          <li><p><a href="appenders-console-file.html">Console and file</a></p></li>
+          <li><p><a href="appenders-rolling.html">Rolling file</a></p></li>
+          <li><p><a href="appenders-network.html">Network and mail</a></p></li>
+          <li><p><a href="appenders-async-sift.html">Async and sifting</a></p></li>
+          <li><p><a href="appenders-extending.html">Writing your own appender</a></p></li>
+          <li><p><a href="appenders-access.html">logback-access appenders</a></p></li>
+        </ul>
+      </li>
+      <li><p><a href="encoders.html"><b>Encoders</b></a></p></li>
+      <li><p><a href="layouts.html"><b>Layouts</b></a> — especially PatternLayout</p></li>
+      <li><p><a href="usingSSL.html"><b>Using SSL</b></a></p></li>
+    </ul>
+
+    <h3>Selection &amp; context</h3>
+    <ul>
+      <li><p><a href="filters.html"><b>Filters</b></a> and turbo filters</p></li>
+      <li><p><a href="mdc.html"><b>Mapped Diagnostic Contexts (MDC)</b></a></p></li>
+    </ul>
+
+    <h3>Extending logback</h3>
+    <ul>
+      <li><p><a href="onJoran.html"><b>Joran</b></a> — models, handlers, phases;
+        start with <a href="onJoran.html#implicit">implicit properties</a>
+        if you write components</p></li>
+      <li><p><a href="migrationFromLog4j.html"><b>Migration from log4j 1.x</b></a>
+        (custom components)</p></li>
+    </ul>
+
+    <h3>Reference (on this site)</h3>
+    <ul>
+      <li><p><a href="../codes.html"><b>Error codes</b></a> — meanings of status messages</p></li>
+      <li><p><a href="../faq.html">FAQ</a></p></li>
+      <li><p><a href="../recipes/index.html">Recipes</a></p></li>
+      <li><p><a href="../access.html">logback-access</a> for Jetty/Tomcat</p></li>
+      <li><p><a href="../performance.html">Performance</a> notes</p></li>
+      <li><p><a href="../dependencies.html">Dependencies</a></p></li>
+      <li><p><a href="../news.html">Release notes</a></p></li>
+      <li><p><a href="http://logback.qos.ch/apidocs/index.html">Javadocs</a> ·
+        <a href="http://logback.qos.ch/xref/index.html">Source (xref)</a></p></li>
+    </ul>
+
+    <h3>Removed features</h3>
+    <p>These topics had dedicated chapters or packages in older releases
+    and are not documented as current features:</p>
+    <ul>
+      <li><p>Groovy configuration (community support:
+        <a href="https://github.com/virtualdogbert/logback-groovy-config">logback-groovy-config</a>)</p></li>
+      <li><p><code>ch.qos.logback.classic.jmx</code> / JMXConfigurator (removed
+        for security reasons and lack of use)</p></li>
+      <li><p>Receivers chapter (use socket appenders / servers in the network appenders pages)</p></li>
+      <li><p>Logging separation chapter</p></li>
+    </ul>
+
+    <script src="../templates/footer.js" type="text/javascript"></script>
+  </div>
+</body>
+</html>

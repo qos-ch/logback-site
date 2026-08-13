@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Appenders: logback-access</title>
+
+    <script type="text/javascript">prefix='../';</script>
+
+</head> 
+<body onload="enableMenuEventListeners(); hljs.highlightAll(); decorate(); addClipboardListener(); enableLegacy(); loopOn();">
+
+    <script type="text/javascript" src="../templates/header3.js"></script>
+
+    <div id="content">
+        <div id="top-content">
+
+            <script type="text/javascript" src="../templates/creative.js" ></script>
+            <script type="text/javascript" src="menu.js"></script>
+
+
+    <div id="quote">
+
+      <p><em>There is so much to tell about the Western country in
+      that day that it is hard to know where to start. One thing sets
+      off a hundred others. The problem is to decide which one to tell
+      first.</em></p>
+  
+      <p>&mdash;JOHN STEINBECK, <em>East of Eden</em></p>
+    </div>
+    </div>
+
+        
+
+    <p class="doc-nav"><a href="index.html">Manual</a> · <a href="appenders.html">Appenders</a> · Appenders: logback-access</p>
+
+    <h1>Appenders: logback-access</h1>
+
+      <h2 class="doAnchor" name="logback_access">Logback Access</h2>
+		
+      <p>Most of the appenders found in logback-classic have their
+      equivalent in logback-access. These work essentially in the same
+      way as their logback-classic counterparts. In the next section, we
+      will cover their use.
+      </p>
+		
+      <h3 class="doAnchor" name="AccessSocketAppender">SocketAppender
+      and SSLSocketAppender</h3>
+      
+      <p>The <a
+      href="../xref-access/ch/qos/logback/access/common/net/SocketAppender.html">
+      <code>SocketAppender</code></a> is designed to log to a remote
+      entity by transmitting serialized <code>AccessEvent</code>
+      objects over the wire.  Remote logging is non-intrusive as far
+      as the access event is concerned.  On the receiving end after
+      deserialization, the event can be logged as if it were generated
+      locally.
+      </p>
+		
+      <p>The <a
+      href="../xref-access/ch/qos/logback/access/common/net/SSLSocketAppender.html">
+      <code>SSLSocketAppender</code></a> extends the basic
+      <code>SocketAppender</code> allowing logging to a remote entity
+      over the Secure Sockets Layer (SSL).
+      </p>
+    
+      <p>
+      The properties of access' <code>SocketAppender</code> are the
+      same as those available for classic's
+      <code>SocketAppender</code>.
+      </p>
+
+      	 	
+    <h3 class="doAnchor" name="AccessSMTPAppender">SMTPAppender</h3>
+    
+    <p>Access <a
+    href="../xref-access/ch/qos/logback/access/common/net/SMTPAppender.html">
+    <code>SMTPAppender</code></a> works in the same way as its Classic
+    counterpart.  However, the <span class="prop">evaluator</span>
+    option is rather different.  By default, a
+    <code>URLEvaluator</code> object is used by
+    <code>SMTPAppender</code>. This evaluator contains a list of URLs
+    that are checked against the current request's URL. When one of
+    the pages given to the <code>URLEvaluator</code> is requested,
+    <code>SMTPAppender</code> sends an email.
+    </p>
+		
+		<p>
+		  Here is a sample configuration of a <code>SMTPAppender</code> in the access environment.
+		</p>
+    <p class="example">Example: <code>SMTPAppender</code>
+    configuration
+    (logback-examples/&#8203;src/main/resources/&#8203;chapters/appenders/&#8203;conf/access/logback-smtp.&#8203;xml)</p>
+
+<pre><code>&lt;appender name="SMTP"
+  class="ch.qos.logback.access.common.net.SMTPAppender">
+  &lt;layout class="ch.qos.logback.access.html.HTMLLayout">
+    &lt;pattern>%h%l%u%t%r%s%b&lt;/pattern>
+  &lt;/layout>
+    
+  <b>&lt;Evaluator class="ch.qos.logback.access.common.net.URLEvaluator">
+    &lt;URL>url1.jsp&lt;/URL>
+    &lt;URL>directory/url2.html&lt;/URL>
+  &lt;/Evaluator></b>
+  &lt;from>sender_email@host.com&lt;/from>
+  &lt;smtpHost>mail.domain.com&lt;/smtpHost>
+  &lt;to>recipient_email@host.com&lt;/to>
+&lt;/appender></code></pre>
+
+		<p>This way of triggering the email lets users select pages that
+		are important steps in a specific process, for example.  When such
+		a page is accessed, the email is sent with the pages that were
+		accessed previously, and any information the user wants to be
+		included in the email.
+		</p>
+
+		<h3 class="doAnchor" name="AccessDBAppender">DBAppender</h3>
+		
+		<p><code>DBAppender</code> is used to insert the
+		access events into a database.
+		</p>
+
+                <p>As of logback version 1.2.8 <code>DBAppender</code> no longer
+                ships with logback-access. However,
+                <code>DBAppender</code> for logback-access is
+                available under the following Maven coordinates:</p>
+
+                <p><code>ch.qos.logback.db:logback-access-db:1.&#8203;2.11.1</code></p>
+
+                
+		<p>Two tables are used by <code>DBAppender</code>:
+		<em>access_event</em> and <em>access_event_header</em>. They both
+		must exist before <code>DBAppender</code> can be used. Logback
+		ships with SQL scripts that will create the tables.  They can be
+		found in the
+		<em>logback-access/src/&#8203;main/java/ch/qos/&#8203;logback/access/&#8203;db/script</em>
+		directory. There is a specific script for each of the most popular
+		database systems.  If the script for your particular type of
+		database system is missing, it should be quite easy to write one,
+		taking as example one of the existing scripts. You are encouraged
+		to contribute such missing scripts back to the project.
+		</p>
+		
+		<p>The <em>access_event</em> table's fields are described below:</p>
+
+		<table class="bodyTable striped">
+			<tr>
+				<th>Field</th>
+				<th>Type</th>
+				<th>Description</th>
+			</tr>
+			<tr>
+				<td><b>timestamp</b></td>
+				<td><code>big int</code></td>
+				<td>The timestamp that was valid at the access event's creation.</td>
+			</tr>
+			<tr>
+				<td><b>requestURI</b></td>
+				<td><code>varchar</code></td>
+				<td>The URI that was requested.</td>
+			</tr>
+			<tr>
+				<td><b>requestURL</b></td>
+				<td><code>varchar</code></td>
+				<td>The URL that was requested. This is a string composed of the request method,
+				the request URI and the request protocol.
+				</td>
+			</tr>
+			<tr>
+				<td><b>remoteHost</b></td>
+				<td><code>varchar</code></td>
+				<td>The name of the remote host.</td>
+			</tr>
+			<tr>
+				<td><b>remoteUser</b></td>
+				<td><code>varchar</code></td>
+				<td>
+					The name of the remote user.
+				</td>
+			</tr>
+			<tr>
+				<td><b>remoteAddr</b></td>
+				<td><code>varchar</code></td>
+				<td>The remote IP address.</td>
+			</tr>
+			<tr>
+				<td><b>protocol</b></td>
+				<td><code>varchar</code></td>
+				<td>The request protocol, like <em>HTTP</em> or <em>HTTPS</em>.</td>
+			</tr>
+			<tr>
+				<td><b>method</b></td>
+				<td><code>varchar</code></td>
+				<td>The request method, usually <em>GET</em> or <em>POST</em>.</td>
+			</tr>
+			<tr>
+				<td><b>serverName</b></td>
+				<td><code>varchar</code></td>
+				<td>The name of the server that issued the request.</td>
+			</tr>
+			<tr>
+				<td><b>event_id</b></td>
+				<td><code>int</code></td>
+				<td>The database id of the access event.</td>
+			</tr>
+		</table>
+		
+		<p>
+			The <em>access_event_header</em> table contains the header of each
+			request. The information is organised as shown below:
+		</p>
+
+		<table class="bodyTable striped">
+			<tr>
+				<th>Field</th>
+				<th>Type</th>
+				<th>Description</th>
+			</tr>
+			<tr>
+				<td><b>event_id</b></td>
+				<td><code>int</code></td>
+				<td>The database id of the corresponding access event.</td>
+			</tr>
+			<tr>
+				<td><b>header_key</b></td>
+				<td><code>varchar</code></td>
+				<td>The header name, for example <em>User-Agent</em>.</td>
+			</tr>
+			<tr>
+				<td><b>header_value</b></td>
+				<td><code>varchar</code></td>
+				<td>The header value, for example <em>Mozilla/5.0 (Windows; U; Windows NT 5.1; fr; rv:1.8.1) Gecko/20061010 Firefox/2.0</em></td>
+			</tr>
+			</table>
+
+		<p>All properties of classic's <code>DBAppender</code> are available
+			in access's <code>DBAppender</code>. The latter offers one more option,
+			described below.
+		</p>
+		
+		<table class="bodyTable striped">
+			<tr>
+				<th>Property Name</th>
+				<th>Type</th>
+				<th>Description</th>
+			</tr>
+			<tr>
+				<td>
+					<b>
+						<span class="prop">insertHeaders</span>
+					</b>
+				</td>
+				<td>
+					<code>boolean</code>
+				</td>
+				<td>
+					Tells the <code>DBAppender</code> to populate the database with the header
+					information of all incoming requests.
+				</td>
+			</tr>
+		</table>
+
+		<p>Here is a sample configuration that uses <code>DBAppender</code>.</p>
+
+    <p class="example">Example: DBAppender configuration <em>(logback-examples/&#8203;src/main/resources/&#8203;chapters/appenders/&#8203;conf/access/logback-DB.xml)</em></p>
+    
+    <pre><code>&lt;configuration>
+
+  &lt;appender name="DB" class="ch.qos.logback.access.db.DBAppender">
+    &lt;connectionSource class="ch.qos.logback.core.db.DriverManagerConnectionSource">
+      &lt;driverClass>com.mysql.jdbc.Driver&lt;/driverClass>
+      &lt;url>jdbc:mysql://localhost:3306/logbackdb&lt;/url>
+      &lt;user>logback&lt;/user>
+      &lt;password>logback&lt;/password>
+    &lt;/connectionSource>
+    &lt;insertHeaders>true&lt;/insertHeaders>
+  &lt;/appender>
+
+  &lt;appender-ref ref="DB" />
+&lt;/configuration></code></pre>
+
+
+    <h3 class="doAnchor"
+    name="AccessSiftingAppender">SiftingAppender</h3>
+   
+    <p>The SiftingAppender in logback-access is quite similar to its
+    logback-classic counterpart. The main difference is that in
+    logback-access the default discriminator, namely <a
+    href="../xref-access/ch/qos/logback/access/common/sift/AccessEventDiscriminator.html">AccessEventDiscriminator</a>,
+    is not MDC based. As its name suggests, AccessEventDiscriminator,
+    uses a designated field in AccessEvent as the basis for selecting a
+    nested appender. If the value of the designated field is null,
+    then the value specified in the <span
+    class="prop">defaultValue</span> property is used.
+    </p>
+
+    <p>The designated AccessEvent field can be one of COOKIE,
+    REQUEST_ATTRIBUTE, SESSION_ATTRIBUTE, REMOTE_ADDRESS, LOCAL_PORT,
+    REQUEST_URI. Note that the first three fields require that the
+    <span class="prop">AdditionalKey</span> property also be
+    specified.</p>
+    
+    <p>Below is an example configuration file.</p>
+
+    <p class="example">Example: SiftingAppender configuration (logback-examples/&#8203;src/main/resources/&#8203;chapters/appenders/&#8203;conf/sift/access-siftingFile.&#8203;xml)</p>
+
+    <pre><code>&lt;configuration>
+  &lt;appender name="SIFTING" class="ch.qos.logback.access.sift.SiftingAppender">
+    &lt;Discriminator class="ch.qos.logback.access.sift.AccessEventDiscriminator">
+      &lt;Key>id&lt;/Key>
+      &lt;FieldName>SESSION_ATTRIBUTE&lt;/FieldName>
+      &lt;AdditionalKey>username&lt;/AdditionalKey>
+      &lt;defaultValue>NA&lt;/defaultValue>
+    &lt;/Discriminator>
+    &lt;sift>
+       &lt;appender name="\${id}" class="ch.qos.logback.core.FileAppender">
+        &lt;file>byUser/\${id}.log&lt;/file>
+        &lt;layout class="ch.qos.logback.access.PatternLayout">
+          &lt;pattern>%h %l %u %t \"%r\" %s %b&lt;/pattern>
+        &lt;/layout>
+      &lt;/appender>
+    &lt;/sift>
+  &lt;/appender>
+  &lt;appender-ref ref="SIFTING" />
+&lt;/configuration></code></pre>
+
+    <!-- In the above, DOLLAR{id} is substituted by the resource plugin. We escape
+         to avoid substitution -->
+
+    <p>In the above configuration file, a <code>SiftingAppender</code>
+    nests <code>FileAppender</code> instances. The key "id" is
+    designated as a variable which will be available to the nested
+    <code>FileAppender</code> instances. The default discriminator,
+    namely <code>AccessEventDiscriminator</code>, will search for a
+    "username" session attribute in each <code>AccessEvent</code>. If
+    no such attribute is available, then the default value "NA" will
+    be used.  Thus, assuming the session attribute named "username"
+    contains the username of each logged on user, there will be a log
+    file under the <em>byUser/</em> folder (of the current folder)
+    named after each user containing the access logs for that user.
+    </p>
+
+
+    <script src="../templates/footer.js" type="text/javascript"></script>
+
+
+  </div>
+</div>  
+</body>
+</html>

@@ -1,0 +1,2363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Appenders: Network and Mail</title>
+
+    <script type="text/javascript">prefix='../';</script>
+
+</head> 
+<body onload="enableMenuEventListeners(); hljs.highlightAll(); decorate(); addClipboardListener(); enableLegacy(); loopOn();">
+
+    <script type="text/javascript" src="../templates/header3.js"></script>
+
+    <div id="content">
+        <div id="top-content">
+
+            <script type="text/javascript" src="../templates/creative.js" ></script>
+            <script type="text/javascript" src="menu.js"></script>
+
+
+    <div id="quote">
+
+      <p><em>There is so much to tell about the Western country in
+      that day that it is hard to know where to start. One thing sets
+      off a hundred others. The problem is to decide which one to tell
+      first.</em></p>
+  
+      <p>&mdash;JOHN STEINBECK, <em>East of Eden</em></p>
+    </div>
+    </div>
+
+        
+
+    <p class="doc-nav"><a href="index.html">Manual</a> · <a href="appenders.html">Appenders</a> · Appenders: Network and Mail</p>
+
+    <h1>Appenders: Network and Mail</h1>
+
+    <a name="Classic"></a>
+    <h2>Logback Classic</h2>
+    
+    
+    <p>While logging events are generic in logback-core, within
+    logback-classic they are always instances of
+    <code>ILoggingEvent</code>. Logback-classic is nothing more than a
+    specialized processing pipeline handling instances of
+    <code>ILoggingEvent</code>.
+    
+    </p>
+    
+    <h3 class="doAnchor" name="SocketAppender">SocketAppender and
+    SSLSocketAppender
+    </h3>
+    
+    <p>The appenders covered thus far are only able to log to local
+    resources.  In contrast, the <a
+    href="../xref/ch/qos/logback/classic/net/SocketAppender.html">
+    <code>SocketAppender</code></a> is designed to log to a remote
+    entity by transmitting serialized <code>ILoggingEvent</code>
+    instances over the wire.  When using <code>SocketAppender</code>
+    logging events on the wire are sent in the clear.  However, when
+    using <a
+    href="../xref/ch/qos/logback/classic/net/SSLSocketAppender.html">
+    <code>SSLSocketAppender</code></a>, logging events are delivered
+    over a secure channel.</p>
+
+    <p>The actual type of the serialized event is <a
+    href="../xref/ch/qos/logback/classic/spi/LoggingEventVO.html"><code>LoggingEventVO</code></a>
+    which implements the <code>ILoggingEvent</code>
+    interface. Nevertheless, remote logging is non-intrusive as far as
+    the logging event is concerned.  On the receiving end after
+    deserialization, the event can be logged as if it were generated
+    locally. Multiple <code>SocketAppender</code> instances running on
+    different machines can direct their logging output to a central
+    log server whose format is fixed.  <code>SocketAppender</code>
+    does not take an associated layout because it sends serialized
+    events to a remote server.  <code>SocketAppender</code> operates
+    above the <em>Transmission Control Protocol (TCP)</em> layer which
+    provides a reliable, sequenced, flow-controlled end-to-end octet
+    stream.  Consequently, if the remote server is reachable, then log
+    events will eventually arrive there. Otherwise, if the remote
+    server is down or unreachable, the logging events will simply be
+    dropped. If and when the server comes back up, then event
+    transmission will be resumed transparently.  This transparent
+    reconnection is performed by a connector thread which periodically
+    attempts to connect to the server.
+    </p>
+
+    <p>Logging events are automatically buffered by the native TCP
+    implementation.  This means that if the link to server is slow but
+    still faster than the rate of event production by the client, the
+    client will not be affected by the slow network
+    connection. However, if the network connection is slower than the
+    rate of event production, then the client can only progress at the
+    network rate. In particular, in the extreme case where the network
+    link to the server is down, the client will be eventually blocked.
+    Alternatively, if the network link is up, but the server is down,
+    the client will not be blocked, although the log events will be
+    lost due to server unavailability.
+    </p>
+		
+    <p>Even if a <code>SocketAppender</code> is no longer attached to
+    any logger, it will not be garbage collected in the presence of a
+    connector thread.  A connector thread exists only if the
+    connection to the server is down.  To avoid this garbage
+    collection problem, you should close the
+    <code>SocketAppender</code> explicitly. Long-lived applications
+    which create/destroy many <code>SocketAppender</code> instances
+    should be aware of this garbage collection problem. Most other
+    applications can safely ignore it.  If the JVM hosting the
+    <code>SocketAppender</code> exits before the
+    <code>SocketAppender</code> is closed, either explicitly or
+    subsequent to garbage collection, then there might be
+    untransmitted data in the pipe which may be lost. This is a common
+    problem on Windows based systems.  To avoid lost data, it is
+    usually sufficient to <code>close()</code> the
+    <code>SocketAppender</code> either explicitly or by calling the
+    <code>LoggerContext</code>'s <code>stop()</code> method before
+    exiting the application.
+    </p>
+		
+    <p>The remote server is identified by the <span
+    class="prop">remoteHost</span> and <span class="prop">port</span>
+    properties.  <code>SocketAppender</code> properties are listed in
+    the following table.  <code>SSLSocketAppender</code> supports many
+    additional configuration properties, which are detailed in the
+    section entitled <a href="usingSSL.html">Using SSL</a>.
+		</p>
+
+    <table class="bodyTable striped">
+      <tr>
+	<th>Property Name</th>
+	<th>Type</th>
+	<th>Description</th>
+      </tr>
+      <tr>
+        <td><span class="prop" container="socket">includeCallerData</span></td>
+        <td><code>boolean</code></td>
+        <td>
+          <p>
+            The <span class="prop" container="socket">includeCallerData</span> option takes a boolean value. 
+            If true, the caller data will be available to the remote host. 
+            By default no caller data is sent to the server.
+          </p>
+        </td>
+      </tr>
+      <tr>
+        <td><span class="prop" container="socket">port</span></td>
+        <td><code>int</code></td>
+        <td>
+          <p>
+            The port number of the remote server.
+          </p>
+        </td>
+      </tr>	
+      <tr>
+        <td><span class="prop" container="socket">reconnectionDelay</span></td>
+        <td><code><a
+        href="../apidocs/ch.qos.logback.core/ch/qos/logback/core/util/Duration.html"/ch.qos.logback.classic/c>Duration</a></code></td>
+        <td>
+          The <span class="prop">reconnectionDelay</span> option takes
+          a duration string, such "10 seconds" representing the time
+          to wait between each failed connection attempt to the
+          server.  The default value of this option is 30 seconds.
+          Setting this option to zero turns off reconnection
+          capability.  Note that in case of successful connection to
+          the server, there will be no connector thread present.
+        </td>
+      </tr>
+      <tr>
+        <td><span class="prop" container="socket">queueSize</span></td>
+        <td><code>int</code></td>
+        <td>
+          <p>The <span class="prop">queueSize</span> property takes an
+          integer (greater than zero) representing the number of logging
+          events to retain for delivery to the remote receiver.  When
+          the queue size is one, event delivery to the remote
+          receiver is synchronous.  When the queue size is greater
+          than one, new events are enqueued, assuming that there is
+          space available in the queue. Using a queue length greater
+          than one can improve performance by eliminating delays caused
+          by transient network delays.
+          </p>
+
+          <p>See also the <span class="prop">eventDelayLimit</span>
+          property.</p>
+
+        </td>
+      </tr>	
+
+      <tr>
+        <td><span class="prop" container="socket">eventDelayLimit</span></td>
+        <td><code><a
+        href="../apidocs/ch.qos.logback.core/ch/qos/logback/core/util/Duration.html">Duration</a></code></td>
+        <td>
+          The <span class="prop">eventDelayLimit</span> option takes a
+          duration string, such "10 seconds". It represents the time
+          to wait before dropping events in case the local queue is
+          full, i.e. already contains <span
+          class="prop">queueSize</span> events.  This may occur if the
+          remote host is persistently slow accepting events. The
+          default value of this option is 100 milliseconds.
+        </td>
+      </tr>
+      <tr>
+        <td><span class="prop" container="socket">remoteHost</span></td>
+        <td><code>String</code></td>
+        <td>
+          The host name of the server.
+        </td>
+      </tr>		
+      <tr>
+        <td><span class="prop" container="socket">ssl</span></td>
+        <td><code>SSLConfiguration</code></td>
+        <td>Supported only for <code>SSLSocketAppender</code>, this
+            property provides the SSL configuration that will be used by
+            the appender, as described in <a href="usingSSL.html">Using SSL</a>.
+        </td>
+      </tr>
+    </table>
+    
+    <h4>Logging Server Options</h4>
+    
+    <p>The logback classic distribution includes servers that can be
+    used to receive logging events from <code>SocketAppender</code> or
+    <code>SSLSocketAppender</code>.</p>
+
+    <p><code>SimpleSocketServer</code> and its SSL-enabled counterpart
+    <code>SimpleSSLSocketServer</code> both offer an easy-to-use
+    standalone Java application that is designed to be configured and
+    run from your shell's command line interface.  These applications
+    simply wait for logging events from <code>SocketAppender</code> or
+    <code>SSLSocketAppender</code> clients.  Each received event is
+    logged according to local server policy.  Usage examples are given
+    below.
+    </p>
+    
+    <h4><a name="simpleSocketServer"></a>Using SimpleSocketServer</h4>
+    <p>
+    The <code>SimpleSocketServer</code> application takes the following
+    command-line arguments: <em>port</em>, <em>configFile</em>, and one
+    or more <em>allowedAddress</em> values.  Here <em>port</em> is the
+    port to listen on, <em>configFile</em> is a configuration script in
+    XML format, and each <em>allowedAddress</em> is a client IP address
+    or CIDR range that is permitted to connect (for example
+    <code>192.168.1.10</code> or <code>192.168.1.0/24</code>).
+    <span class="label notice">since 1.6.2</span> At least one allowed
+    address must be specified on the command line.
+    </p>
+	
+    <p>
+      Assuming you are in the <em>logback-examples/</em> directory, 
+      start <code>SimpleSocketServer</code> with the following command:
+    </p>
+    
+    <p class="source">java ch.qos.logback.classic.&#8203;net.SimpleSocketServer 6000 \
+  src/main/java/chapters/&#8203;appenders/socket/&#8203;server1.xml \
+  127.0.0.1 ::1</p>
+
+    <p>where 6000 is the port number to listen on,
+    <em>server1.xml</em> is a configuration script that adds a
+    <code>ConsoleAppender</code> and a
+    <code>RollingFileAppender</code> to the root logger, and
+    <code>127.0.0.1</code> together with <code>::1</code> are the
+    client addresses allowed to connect (IPv4 and IPv6 loopback).
+    After you have started <code>SimpleSocketServer</code>, you can
+    send it log events from multiple clients using
+    <code>SocketAppender</code>, provided each client's remote address
+    matches an entry on the whitelist.  The examples associated with
+    this manual include two such clients:
+    <code>chapters.appenders.&#8203;SocketClient1</code> and
+    <code>chapters.appenders.&#8203;SocketClient2</code> Both clients wait for the user
+    to type a line of text on the console.  The text is encapsulated
+    in a logging event of level debug and then sent to the remote
+    server. The two clients differ in the configuration of the
+    <code>SocketAppender</code>. <code>SocketClient1</code> configures
+    the appender programmatically while <code>SocketClient2</code>
+    requires a configuration file.
+    </p>
+	
+    <p>Assuming <code>SimpleSocketServer</code> is running on the
+    local host, you connect to it with the following command:
+    </p>
+	
+    <p class="source">java chapters.appenders.socket.SocketClient1 localhost 6000</p>
+
+		<p>Each line that you type should appear on the console of the
+		<code>SimpleSocketServer</code> launched in the previous step. If
+		you stop and restart the <code>SimpleSocketServer</code> the
+		client will transparently reconnect to the new server instance,
+		although the events generated while disconnected will be simply
+		(and irrevocably) lost.
+		</p>
+
+    <p>Unlike <code>SocketClient1</code>, the sample application
+    <code>SocketClient2</code> does not configure logback by itself.
+    It requires a configuration file in XML format.  The configuration
+    file <em>client1.xml</em> shown below creates a
+    <code>SocketAppender</code> and attaches it to the root logger.
+    </p>
+
+    <p class="example">Example: SocketAppender configuration
+    (logback-examples/&#8203;src/main/resources/&#8203;chapters/appenders/&#8203;socket/client1.&#8203;xml)</p>
+
+    
+    <div class="tab">
+      <button class="tablinks" id="button_client1_legacy"
+              onclick="return openTab(event, 'client1', 'legacy');">Legacy</button>
+      <button class="tablinks" id="button_client1_canonical"
+              onclick="return openTab(event, 'client1', 'canonical');">Canonical (1.3)</button>
+      <button class="tablinks" id="button_client1_tyler"
+              onclick="openTab(event, 'client1', 'tyler')">Tyler</button>
+    </div>
+
+    <div id="client1_legacy" class="tabcontent">       
+      <pre><code>&lt;configuration>
+	  
+  &lt;appender name="SOCKET" class="ch.qos.logback.classic.net.SocketAppender">
+    &lt;remoteHost>${host}&lt;/remoteHost>
+    &lt;port>${port}&lt;/port>
+    &lt;reconnectionDelay>10000&lt;/reconnectionDelay>
+    &lt;includeCallerData>${includeCallerData}&lt;/includeCallerData>
+  &lt;/appender>
+
+  &lt;root level="DEBUG">
+    &lt;appender-ref ref="SOCKET" />
+  &lt;/root>  
+
+&lt;/configuration></code></pre>
+    </div>
+
+    <div id="client1_canonical" class="tabcontent"><p>Requires a server call.</p></div>
+    <div id="client1_tyler" class="tabcontent"><p>Requires a server call.</p></div>
+ 
+    
+    <p>Note that in the above configuration scripts the values for the
+    <span class="prop">remoteHost</span>, <span
+    class="prop">port</span> and <span
+    class="prop">includeCallerData</span> properties are not given
+    directly but as substituted variable keys. The values for the
+    variables can be specified as system properties:
+    </p>
+	
+    <p class="source">java -Dhost=localhost -Dport=6000 -DincludeCallerData=false \
+  chapters.appenders.socket.SocketClient2 src/main/java/chapters/&#8203;appenders/socket/&#8203;client1.xml</p>
+
+    <p>This command should give similar results to the previous
+    <code>SocketClient1</code> example.
+    </p>
+		
+    <p>Allow us to repeat for emphasis that serialization of logging
+    events is not intrusive. A deserialized event carries the same
+    information as any other logging event. It can be manipulated as
+    if it were generated locally; except that serialized logging
+    events by default do not include caller data. Here is an example
+    to illustrate the point. First, start
+    <code>SimpleSocketServer</code> with the following command:
+    </p>
+
+    <p class="source"> java ch.qos.logback.classic.&#8203;net.SimpleSocketServer 6000 \
+  src/main/java/chapters/&#8203;appenders/socket/&#8203;server2.xml \
+  127.0.0.1 ::1</p>
+
+   <p>The configuration file <em>server2.xml</em> creates a
+   <code>ConsoleAppender</code> whose layout outputs the caller's file
+   name and line number along with other information. If you run
+   <code>SocketClient2</code> with the configuration file
+   <em>client1.xml</em> as previously, you will notice that the output
+   on the server side will contain two question marks between
+   parentheses instead of the file name and the line number of the
+   caller:
+		</p>
+
+    <p class="source">2006-11-06 17:37:30,968 DEBUG [Thread-0] [?:?] chapters.appenders.&#8203;socket.SocketClient2 - Hi</p>
+
+		<p>The outcome can be easily changed by instructing the
+		<code>SocketAppender</code> to include caller data by setting the
+		<span class="prop">includeCallerData</span> option to
+		true. Using the following command will do the trick:
+		</p>
+
+   <pre class="source">java -Dhost=localhost -Dport=6000 -DincludeCallerData=true \
+  chapters.appenders.socket.SocketClient2 src/main/java/chapters/&#8203;appenders/socket/&#8203;client1.xml</pre>
+
+		<p>As deserialized events can be handled in the same way as
+		locally generated events, they even can be sent to a second server
+		for further treatment.  As an exercise, you may wish to set up two
+		servers where the first server tunnels the events it receives from
+		its clients to a second server.
+		</p>
+
+    <h4><a name="simpleSocketServerClientAccess"></a>Restricting
+    client access</h4>
+
+    <p><span class="label notice">since 1.6.2</span>
+    <code>SimpleSocketServer</code> accepts connections only from
+    clients whose remote address matches a configured whitelist.  On
+    the command line, pass one or more allowed addresses after the
+    configuration file.  Each entry may be a single IP address or a
+    CIDR network range.  For example, the following command allows
+    connections from a single host and from an entire subnet:
+    </p>
+
+    <p class="source">java ch.qos.logback.classic.&#8203;net.SimpleSocketServer 6000 \
+  src/main/java/chapters/&#8203;appenders/socket/&#8203;server1.xml \
+  10.0.0.5 192.168.1.0/24</p>
+
+    <p>At least one allowed address is required on the command line.
+    If none is provided, the server prints a usage message and exits.
+    Connections from hosts that are not on the whitelist are closed
+    immediately after <code>accept()</code>, and a warning is logged.
+    </p>
+
+    <p>When you embed <code>SimpleSocketServer</code> in your own
+    application, register allowed addresses before clients connect by
+    calling <code>addAllowedClientAddress(String)</code> for each
+    entry, or
+    <code>setAllowedClientAddresses(Collection&lt;String&gt;)</code>
+    to replace the full set.  An empty whitelist means that no clients
+    are accepted.  Passing an empty collection or <code>null</code> to
+    <code>setAllowedClientAddresses</code> clears the whitelist and
+    therefore denies all clients.  Invalid specifications throw
+    <code>IllegalArgumentException</code>.
+    </p>
+
+    <p class="source">LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
+SimpleSocketServer server = new SimpleSocketServer(lc, 6000);
+server.addAllowedClientAddress("10.0.0.5");
+server.addAllowedClientAddress("192.168.1.0/24");
+server.start();</p>
+
+    <p>The same whitelist rules apply to
+    <code>SimpleSSLSocketServer</code>, which inherits this behavior.
+    </p>
+		
+		<h4><a name="simpleSSLSocketServer"></a>Using SimpleSSLSocketServer</h4>
+
+    <p>The <code>SimpleSSLSocketServer</code> requires the same
+    <em>port</em>, <em>configFile</em>, and one or more
+    <em>allowedAddress</em> command-line arguments used by
+    <code>SimpleSocketServer</code>.  Additionally, you must provide
+    the location and password for your logging server's X.509 credential
+    using system properties specified on the command line.
+    </p>
+    
+    <p>Assuming you are in the <em>logback-examples/</em> directory, 
+    start <code>SimpleSSLSocketServer</code> with the following command:
+    </p>
+
+    <p class="source">java -Djavax.net.ssl.&#8203;keyStore=src/main/&#8203;java/chapters/appenders/&#8203;socket/ssl/keystore.&#8203;jks \
+    -Djavax.net.ssl.&#8203;keyStorePassword=&#8203;changeit \
+    ch.qos.logback.classic.&#8203;net.SimpleSSLSocketServer 6000 \
+    src/main/java/chapters/&#8203;appenders/socket/&#8203;ssl/server.xml \
+    127.0.0.1 ::1
+    </p>
+	
+    <p>This example runs <code>SimpleSSLSocketServer</code> using an
+    X.509 credential that is suitable for testing and experimentation, 
+    only.  <strong>Before using <code>SimpleSSLSocketServer</code> in a
+    production setting you should obtain an appropriate X.509 credential
+    to identify your logging server</strong>.  See 
+    <a href="usingSSL.html">Using SSL</a> for more details.
+    </p>
+    
+    <p>Because the server configuration has <code>debug="true"</code>
+    specified on the root element, you will see in the server's
+    startup logging the SSL configuration that will be used.  This is
+    useful in validating that local security policies are properly
+    implemented.
+    </p>
+
+    <p>With <code>SimpleSSLSocketServer</code> running, you can connect
+    to the server using an <code>SSLSocketAppender</code>.  The following
+    example shows the appender configuration needed:
+    </p>
+      
+    <p class="example">Example: SSLSocketAppender configuration
+    (logback-examples/&#8203;src/main/resources/&#8203;chapters/appenders/&#8203;socket/ssl/client.&#8203;xml)</p>
+
+    <div class="tab">
+      <button class="tablinks" id="button_sslclient_legacy"
+              onclick="openTab(event, 'sslclient', 'legacy')">Legacy</button>
+      <button class="tablinks" id="button_sslclient_canonical"
+              onclick="openTab(event, 'sslclient', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_sslclient_tyler"
+             onclick="openTab(event, 'sslclient', 'tyler')">Tyler</button>
+    </div>
+
+    <div id="sslclient_legacy" class="tabcontent">
+      <pre><code>&lt;configuration debug="true">
+	  
+  &lt;appender name="SOCKET" class="ch.qos.logback.classic.net.SSLSocketAppender">
+    &lt;remoteHost>${host}&lt;/remoteHost>
+    &lt;port>${port}&lt;/port>
+    &lt;reconnectionDelay>10000&lt;/reconnectionDelay>
+    &lt;ssl>
+      &lt;trustStore>
+        &lt;location>${truststore}&lt;/location>
+        &lt;password>${password}&lt;/password>
+      &lt;/trustStore>
+    &lt;/ssl>
+  &lt;/appender>
+
+  &lt;root level="DEBUG">
+    &lt;appender-ref ref="SOCKET" />
+  &lt;/root>  
+
+&lt;/configuration></code></pre>
+    </div>
+
+    
+    <div id="sslclient_canonical" class="tabcontent">
+      <p>Requires a server call. Please wait a few seconds.</p>
+    </div>
+     <div id="sslclient_tyler" class="tabcontent"><p>Requires a server call.</p></div>
+
+    
+    <p>Note that, just as in the previous example, the values for
+    <span class="prop">remoteHost</span>, <span
+    class="prop">port</span> are specified using substituted variable
+    keys.  Additionally, note the presence of the <span
+    class="prop">ssl</span> property and its nested <span
+    class="prop">trustStore</span> property, which specifies the
+    location and password of a trust store using substituted
+    variables.  This configuration is necessary because our example
+    server is using a self-signed certificate.  See <a
+    href="usingSSL.html">Using SSL</a> for more information on SSL
+    configuration properties for <code>SSLSocketAppender</code>.
+    </p>
+
+    <p>We can run a client application using this configuration by
+    specifying the substitution variable values on the command line as
+    system properties:
+    </p>
+    	  	
+    <p class="source">java -Dhost=localhost -Dport=6000 \
+    -Dtruststore=file:src/&#8203;main/java/chapters/&#8203;appenders/socket/&#8203;ssl/truststore.&#8203;jks \
+    -Dpassword=changeit \
+    chapters.appenders.&#8203;socket.SocketClient2 src/main/java/chapters/&#8203;appenders/socket/&#8203;ssl/client.xml
+ 	  </p>
+ 	  
+     <p>As in the previous examples, you can type in a message when
+     prompted by the client application, and the message will be
+     delivered to the logging server (now over a secure channel) where
+     it will be displayed on the console.
+     </p>
+ 	  
+     <p>Note that the <em>truststore</em> property given on the
+     command line specifies a file URL that identifies the location of
+     the trust store.  You may also use a classpath URL as described
+     in <a href="usingSSL.html">Using SSL</a>.
+     </p>
+ 
+    <p>As we saw previously at server startup, because the client
+    configuration has <code>debug="true"</code> specified on the root
+    element, the client's startup logging includes the details of the
+    SSL configuration as aid to auditing local policy conformance.
+    </p>
+ 	   	   
+    
+   <h3 class="doAnchor">SMTPAppender</h3>
+   
+   <p>The <a
+   href="../xref/ch/qos/logback/classic/net/SMTPAppender.html"><code>SMTPAppender</code></a>
+   accumulates logging events in one or more fixed-size buffers and
+   sends the contents of the appropriate buffer in an email after a
+   user-specified event occurs.  SMTP email transmission (sending) is
+   performed asynchronously. By default, the email transmission is
+   triggered by a logging event of level ERROR. Moreover, by default,
+   a single buffer is used for all events.
+   </p>
+		
+   <p>The various properties for <code>SMTPAppender</code> are
+   summarized in the following table.
+   </p>
+		
+   <table class="bodyTable striped">
+      <tr>
+        <th>Property Name</th>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+
+      <tr>
+        <td><span class="prop" container="smtp">smtpHost</span></td>
+        <td><code>String</code></td>
+        <td>The host name of the SMTP server. Defaults to "localhost"
+        in <code>com.sun.mail.smtp.SMTPTransport</code> if not set.</td>
+      </tr>
+      
+      <tr>
+        <td><span class="prop" container="smtp">smtpPort</span></td>
+        <td><code>int</code></td>
+        <td>The port where the SMTP server is listening. Defaults to
+        25.</td>
+      </tr>
+      
+      <tr>
+        <td><span class="prop" name="smtpTo">to</span></td>
+        <td><code>String</code></td>
+        <td>The email address of the recipient as a
+        <em>pattern</em>. The pattern is evaluated anew with the
+        triggering event as input for each outgoing email. Multiple
+        recipients can be specified by separating the destination
+        addresses with commas.  Alternatively, multiple recipients can
+        also be specified by using multiple <code>&lt;to></code>
+        elements. 
+        </td>
+      </tr>
+
+      <tr>
+        <td><span class="prop" container="smtp">from</span></td>
+        <td><code>String</code></td>
+        <td>The originator of the email messages sent by
+        <code>SMTPAppender</code> in the <a
+        href="http://en.wikipedia.org/wiki/Email_address">usual email
+        address format</a>. If you wish to include the sender's name,
+        then use the format
+        "Adam&nbsp;Smith&nbsp;&amp;lt;smith@moral.&#8203;org&amp;gt;" so that
+        the message appears as originating from
+        "Adam&nbsp;Smith&nbsp;&lt;smith@moral.&#8203;org&gt;".
+        </td>
+      </tr>
+      <tr>
+        <td><span class="prop">subject</span></td>
+        <td><code>String</code></td>
+        <td> 
+          <p>The subject of the email. It can be any value accepted as
+          a valid conversion pattern by <a
+          href="layouts.html#ClassicPatternLayout">PatternLayout</a>. Layouts
+          will be discussed in the next chapter.
+          </p>
+          
+          <p>The outgoing email message will have a subject line
+          corresponding to applying the pattern on the logging event
+          that triggered the email message.
+          </p>
+
+          <p>Assuming the <span class="prop">subject</span> option
+          is set to "Log: %logger - %msg" and the triggering event's
+          logger is named "com.foo.Bar", and contains the message
+          "Hello world", then the outgoing email will have the subject
+          line "Log: com.foo.Bar - Hello World".
+          </p>
+
+          <p>By default, this option is set to "%logger{20} - %m".</p>
+        </td>
+        
+      </tr>
+      <tr>
+        <td><span class="prop" container="smtp">discriminator</span></td>
+        <td><code><a href="../xref/ch/qos/logback/core/sift/Discriminator.html">Discriminator</a></code></td>
+        <td>
+          <p>With the help of a <span
+          class="prop">Discriminator</span>,
+          <code>SMTPAppender</code> can scatter incoming events into
+          different buffers according to the value returned by the
+          discriminator. The default discriminator always returns the
+          same value so that the same buffer is used for all events.
+          </p>
+
+          <p>By specifying a discriminator other than the default
+          one, it is possible to receive email messages
+          containing an events pertaining to a particular user, user
+          session or client IP address.
+          </p>
+        </td>
+      </tr>
+      <tr>
+        <td><span class="prop" name="smtpAppender_Evaluator">evaluator</span></td>
+        <td><code><a
+        href="../xref/ch/qos/logback/classic/boolex/IEvaluator.html">IEvaluator</a></code></td>
+        <td>
+          <p>This option is declared by creating a new
+          <code>&lt;EventEvaluator/></code> element. The name of the
+          class that the user wishes to use as the
+          <code>SMTPAppender</code>'s <code>Evaluator</code> needs
+          to be specified via the <span class="attr">class</span>
+          attribute.
+          </p>
+          
+          
+          <p>In the absence of this option, <code>SMTPAppender</code>
+          is assigned an instance of <a
+          href="../xref/ch/qos/logback/classic/boolex/OnErrorEvaluator.html">OnErrorEvaluator</a>
+          which triggers email transmission when it encounters an
+          event of level <em>ERROR</em> or higher.
+          </p>
+
+          <!--
+          <p><code>EventEvaluator</code> objects are subclasses of the
+          <code>JaninoEventEvaluatorBase</code> which depends on
+          Janino. See the <a href="../dependencies.html">dependencies
+          page</a> for more information.
+          </p>
+          -->
+
+          <p>Logback ships with several other evaluators, namely <a
+          href="../xref/ch/qos/logback/classic/boolex/OnMarkerEvaluator.html"><code>OnMarkerEvaluator</code></a>
+          (discussed below) and <a
+          href="../xref/ch/qos/logback/classic/boolex/ExceptionMatchEvaluator.html">ExceptionMatchEvaluator</a>. It
+          is rather easy to create yor own custom evaluator.
+          </p>
+
+        </td>
+      </tr>
+
+      <tr>
+        <td  valign="top"><span class="prop" container="smtp">cyclicBufferTracker</span></td>
+        <td><a href="../xref/ch/qos/logback/core/spi/CyclicBufferTracker.html"><code>CyclicBufferTracker</code></a>
+        </td>
+        <td>
+          <p>As the name indicates, an instance of the
+          <code>CyclicBufferTracker</code> class tracks cyclic
+          buffers. It does so based on the keys returned by the <span
+          class="prop">discriminator</span> (see above).
+          </p>
+          <p>If you don't specify a <span
+          class="prop">cyclicBufferTracker</span>, an instance of <a
+          href="../xref/ch/qos/logback/core/spi/CyclicBufferTracker.html">CyclicBufferTracker</a>
+          will be automatically created. By default, this instance
+          will keep events in a cyclic buffer of size 256. You may
+          change the size with the help of the <span
+          class="prop">bufferSize</span> option (see below).</p>
+        </td>        
+      </tr>
+      <tr>
+        <td><span class="prop" container="smtp">username</span></td>
+        <td><code>String</code></td> <td>The username value to use
+        during plain user/password authentication. By default, this
+        parameter is null.  </td> 
+      </tr> 
+      <tr class="alt">
+        <td><span class="prop" container="smtp">password</span></td>
+        <td><code>String</code></td>
+        <td>The password value to use for plain user/password
+        authentication. By default, this parameter is null.  
+        </td>
+      </tr>
+      <tr> 
+        <td><span class="prop" container="smtp">STARTTLS</span> </td>
+        <td><code>boolean</code></td> 
+        <td>If this parameter is set to true, then this appender
+        will issue the STARTTLS command (if the server supports it)
+        causing the connection to switch to SSL. Note that the
+        connection is initially non-encrypted. By default, this
+        parameter is set to false.
+        </td> 
+      </tr>
+      <tr>
+        <td><span class="prop" container="smtp">SSL</span></td>
+        <td><code>boolean</code></td> <td>If this parameter is set to
+        true, then this appender will open an SSL connection to the
+        server. By default, this parameter is set to false.  </td>
+      </tr>
+
+      <tr>
+        <td><span class="prop" container="smtp">charsetEncoding</span></td>
+        <td><code>String</code></td>
+        <td>The outgoing email message will be encoded in the
+        designated <a
+        href="https://docs.oracle.com/javase/8/docs/api/java/nio/charset/Charset.html">charset</a>. The
+        default charset encoding is "UTF-8" which works well for most
+        purposes.
+        </td>
+      </tr>
+
+
+      <tr>
+        <td><span class="prop" container="smtp">localhost</span></td>
+        <td><code>String</code></td>
+        <td>In case the hostname of the SMTP client is not properly
+        configured, e.g. if the client hostname is not fully
+        qualified, certain SMTP servers may reject the HELO/EHLO
+        commands sent by the client. To overcome this issue, you may
+        set the value of the <span class="prop">localhost</span>
+        property to the fully qualified name of the client host. See
+        also the "mail.smtp.localhost" property in the documentation
+        for the <a
+        href="https://jakarta.ee/specifications/mail/1.6/apidocs/com/sun/mail/smtp/package-summary">com.sun.mail.smtp</a>
+        package.</td>
+      </tr>
+
+      <tr>
+        <td><span class="prop" container="smtp">asynchronousSending</span></td>
+        <td><code>boolean</code></td>
+        <td>This property determines whether email transmission is
+        done asynchronously or not. By default, the <span
+        class="prop">asynchronousSending</span> property is
+        'true'. However, under certain circumstances asynchronous
+        sending may be inappropriate. For example if your application
+        uses <code>SMTPAppender</code> to send alerts in response to a
+        fatal error, and then exits, the relevant thread may not have
+        the time to send the alert email. In this case, set <span
+        class="prop">asynchronousSending</span> property to 'false'
+        for synchronous email transmission.
+        </td>
+      </tr>
+
+      <tr>
+        <td><span class="prop" container="smtp">includeCallerData</span></td>
+        <td><code>boolean</code></td>
+        <td>By default, <span class="prop">includeCallerData</span> is
+        set to <code>false</code>. You should set <span
+        class="prop">includeCallerData</span> to <code>true</code> if
+        <span class="prop">asynchronousSending</span> is enabled and
+        you wish to include caller data in the logs. </td>
+      </tr>
+
+      <tr>
+        <td><span class="prop" container="smtp">sessionViaJNDI</span></td>
+        <td><code>boolean</code></td>
+        <td><code>SMTPAppender</code> relies on
+        <code>javax.mail.Session</code> to send out email messages. By
+        default, <span class="prop">sessionViaJNDI</span> is set to
+        <code>false</code> so the <code>javax.mail.Session</code>
+        instance is built by <code>SMTPAppender</code> itself with the
+        properties specified by the user. If the <span
+        class="prop">sessionViaJNDI</span> property is set to
+        <code>true</code>, the <code>javax.mail.Session</code> object
+        will be retrieved via JNDI. See also the <span
+        class="prop">jndiLocation</span> property.
+
+        <p>Retrieving the <code>Session</code> via JNDI can reduce the
+        number of places you need to configure/reconfigure the same
+        information, making your application <a
+        href="http://en.wikipedia.org/wiki/Don't_repeat_yourself">dryer</a>. For
+        more information on configuring resources in Tomcat see <a
+        href="http://tomcat.apache.org/tomcat-6.0-doc/jndi-resources-howto.html#JavaMail_Sessions">JNDI
+        Resources How-to</a>. <span class="label">beware</span> As
+        noted in that document, make sure to remove <em>mail.jar</em>
+        and <em>activation.jar</em> from your web-applications
+        <em>WEB-INF/lib</em> folder when retrieving the
+        <code>Session</code> from JNDI.
+        </p>
+        </td>
+      </tr>
+
+      <tr>
+        <td><span class="prop" container="smtp">jndiLocation</span></td>
+        <td><code>String</code></td>
+        <td>The location where the javax.mail.Session is placed in
+        JNDI. By default, <span class="prop">jndiLocation</span> is
+        set to <span style="white-space:nowrap">"java:comp/env/mail/&#8203;Session"</span>.
+        </td>
+      </tr>
+
+		</table>		
+		
+		<p>The <code>SMTPAppender</code> keeps only the last 256 logging
+		events in its cyclic buffer, throwing away older events when its
+		buffer becomes full.  Thus, the number of logging events delivered
+		in any e-mail sent by <code>SMTPAppender</code> is upper-bounded
+		by 256. This keeps memory requirements bounded while still
+		delivering a reasonable amount of application context.
+		</p>
+		
+		<p>The <code>SMTPAppender</code> relies on the JavaMail API.  It
+		has been tested with JavaMail API version 1.4.  The JavaMail API
+		requires the JavaBeans Activation Framework package.  You can
+		download the <a
+		href="http://java.sun.com/products/javamail/">JavaMail API</a> and
+		the <a
+		href="http://java.sun.com/beans/glasgow/jaf.html">JavaBeans
+		Activation Framework</a> from their respective websites.  Make
+		sure to place these two jar files in the classpath before trying
+		the following examples.
+		</p>
+		
+		<p>A sample application, <a
+		href="../xref/chapters/appenders/mail/EMail.html"><code>chapters.appenders.mail.EMail</code></a>
+		generates a number of log messages followed by a single
+		error message. It takes two parameters. The first parameter is an
+		integer corresponding to the number of logging events to
+		generate. The second parameter is the logback configuration
+		file. The last logging event generated by <em>EMail</em>
+		application, an ERROR, will trigger the transmission of an email
+		message.
+		</p>
+
+		<p>Here is a sample configuration file intended for the
+		<code>Email</code> application:
+		</p>	
+		
+    <p class="example">Example: A sample <code>SMTPAppender</code>
+    configuration
+    (logback-examples/&#8203;src/main/resources/&#8203;chapters/appenders/&#8203;mail/mail1.xml)</p>
+
+    
+    <div class="tab">
+      <button class="tablinks" id="button_mail1_legacy"
+              onclick="openTab(event, 'mail1', 'legacy')">Legacy</button>
+      <button class="tablinks" id="button_mail1_canonical"
+              onclick="openTab(event, 'mail1', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_mail1_tyler"
+             onclick="openTab(event, 'mail1', 'tyler')">Tyler</button>
+    </div>
+    
+    <div id="mail1_legacy" class="tabcontent">
+
+    <pre><code>&lt;configuration>	  
+  &lt;appender name="EMAIL" class="ch.qos.logback.classic.net.SMTPAppender">
+    &lt;smtpHost>ADDRESS-OF-YOUR-SMTP-HOST&lt;/smtpHost>
+    &lt;to>EMAIL-DESTINATION&lt;/to>
+    &lt;to>ANOTHER_EMAIL_DESTINATION&lt;/to> &lt;!-- additional destinations are possible --&gt;
+    &lt;from>SENDER-EMAIL&lt;/from>
+    &lt;subject>TESTING: %logger{20} - %m&lt;/subject>
+    &lt;layout class="ch.qos.logback.classic.PatternLayout">
+      &lt;pattern>%date %-5level %logger{35} - %message%n&lt;/pattern>
+    &lt;/layout>	    
+  &lt;/appender>
+
+  &lt;root level="DEBUG">
+    &lt;appender-ref ref="EMAIL" />
+  &lt;/root>  
+&lt;/configuration></code></pre>
+    </div>
+
+    
+    <div id="mail1_canonical" class="tabcontent">
+      <p>Requires a server call. Please wait a few seconds.</p>
+    </div>
+     <div id="mail1_tyler" class="tabcontent"><p>Requires a server call.</p></div>
+
+    
+    <p>Before trying out <code>chapters.appenders.&#8203;mail.Email</code>
+    application with the above configuration file, you must set the
+    <span class="prop">smtpHost</span>, <span class="prop">to</span>
+    and <span class="prop">from</span> properties to values
+    appropriate for your environment. Once you have set the correct
+    values in the configuration file, execute the following command:
+    </p>
+		
+    <div class="source">java chapters.appenders.&#8203;mail.EMail 100 src/main/java/chapters/&#8203;appenders/mail/&#8203;mail1.xml</div>
+
+    <p>The recipient you specified should receive an email message
+    containing 100 logging events formatted by
+    <code>PatternLayout</code> The figure below is the resulting email
+    message as shown by Mozilla Thunderbird.
+		</p>
+    
+    <p><img src="images/chapters/appenders/smtpAppender1.jpg" alt="resulting email"/></p>
+		
+    <p>In the next example configuration file <em>mail2.xml</em>, the
+    values for the <span class="prop">smtpHost</span>, <span
+    class="prop">to</span> and <span class="prop">from</span>
+    properties are determined by variable substitution. Here is the
+    relevant part of <em>mail2.xml</em>.
+		</p>		
+
+                
+    <pre><code>&lt;appender name="EMAIL" class="ch.qos.logback.classic.net.SMTPAppender">
+  &lt;smtpHost>${smtpHost}&lt;/smtpHost>
+  &lt;to>${to}&lt;/to>
+  &lt;from>${from}&lt;/from>
+  &lt;layout class="ch.qos.logback.classic.html.HTMLLayout"/>
+&lt;/appender></code></pre>
+		
+    <p>You can pass the required parameters on the command line:</p>
+		
+    <div class="source"><pre>java -Dfrom=source@xyz.com -Dto=recipient@xyz.com -DsmtpHost=some_smtp_host \
+  chapters.appenders.&#8203;mail.EMail 10000 src/main/java/chapters/&#8203;appenders/mail/&#8203;mail2.xml
+</pre></div>
+
+    <p>Be sure to replace with values as appropriate for your
+    environment.
+    </p>
+		
+    <p>Note that in this latest example, <code>PatternLayout</code>
+    was replaced by <code>HTMLLayout</code> which formats logs as an
+    HTML table. You can change the list and order of columns as well
+    as the CSS of the table. Please refer to <a
+    href="layouts.html#ClassicHTMLLayout">HTMLLayout</a> documentation
+    for further details.
+    </p>
+    
+    <p>Given that the size of the cyclic buffer is 256, the recipient
+    should see an email message containing 256 events conveniently
+    formatted in an HTML table. Note that this run of the
+    <code>chapters.appenders.&#8203;mail.Email</code> application generated
+    10'000 events of which only the last 256 were included in the
+    outgoing email.
+		</p>
+		
+    <p><a href="images/chapters/appenders/smtpAppender2.jpg"><img class="reduced" src="images/chapters/appenders/smtpAppender2.jpg" alt="2nd email"/></a></p>
+
+    <p>Email clients such as Mozilla Thunderbird, Eudora or MS
+    Outlook, offer reasonably good CSS support for HTML email.
+    However, they sometimes automatically downgrade HTML to
+    plaintext. For example, to view HTML email in Thunderbird, the
+    "View&rarr;Message&nbsp;Body&nbsp;As&rarr;Original HTML" option
+    must be set. Yahoo! Mail's support for HTML email, in particular
+    its CSS support is very good. Gmail on the other hand, while it
+    honors the basic HTML table structure, ignores the internal CSS
+    formatting. Gmail supports inline CSS formatting but since inline
+    CSS would make the resulting output too voluminous,
+    <code>HTMLLayout</code> does not use inline CSS.
+    </p>
+
+    <h3 class="doAnchor" name="cyclicBufferSize">Custom buffer
+    size</h3>
+
+    <p>By default, the outgoing message will contain the last 256
+    messages seen by <code>SMTPAppender</code>. If your heart so
+    desires, you may set a different buffer size as shown in the next example.
+    </p>
+
+   <p class="example">Example:  <code>SMTPAppender</code> configuration with a custom buffer size (logback-examples/&#8203;src/main/resources/&#8203;chapters/appenders/&#8203;mail/customBufferSize.&#8203;xml)</p>
+
+   
+   <div class="tab">
+     <button class="tablinks" id="button_mail_customBufferSize_legacy"
+             onclick="openTab(event, 'mail_customBufferSize', 'legacy')">Legacy</button>
+     <button class="tablinks" id="button_mail_customBufferSize_canonical"
+             onclick="openTab(event, 'mail_customBufferSize', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_mail_customBufferSize_tyler"
+             onclick="openTab(event, 'mail_customBufferSize', 'tyler')">Tyler</button>
+   </div>
+
+   <div id="mail_customBufferSize_legacy" class="tabcontent">
+   
+   <pre><code>&lt;configuration>   
+  &lt;appender name="EMAIL" class="ch.qos.logback.classic.net.SMTPAppender">
+    &lt;smtpHost>${smtpHost}&lt;/smtpHost>
+    &lt;to>${to}&lt;/to>
+    &lt;from>${from}&lt;/from>
+    &lt;subject>%logger{20} - %m&lt;/subject>
+    &lt;layout class="ch.qos.logback.classic.html.HTMLLayout"/>
+
+    <b>&lt;cyclicBufferTracker class="ch.qos.logback.core.spi.CyclicBufferTracker"></b>
+      <b>&lt;!-- send just one log entry per email --></b>
+      <b>&lt;bufferSize>1&lt;/bufferSize></b>
+    <b>&lt;/cyclicBufferTracker></b>
+  &lt;/appender>
+
+  &lt;root level="DEBUG">
+    &lt;appender-ref ref="EMAIL" />
+  &lt;/root>  
+&lt;/configuration>    </code></pre>
+   </div>
+
+   <div id="mail_customBufferSize_canonical" class="tabcontent">
+     <p>Requires a server call. Please wait a few seconds.</p>
+   </div>
+     <div id="mail_customBufferSize_tyler" class="tabcontent"><p>Requires a server call.</p></div>
+
+   
+    <h3 class="doAnchor">Triggering event</h3>
+
+    <p>If the Evaluator property is not set, the
+    <code>SMTPAppender</code> defaults to an <a
+    href="../xref/ch/qos/logback/classic/boolex/OnErrorEvaluator.html">OnErrorEvaluator</a>
+    instance which triggers email transmission when it encounters an
+    event of level ERROR. While triggering an outgoing email in
+    response to an error is relatively reasonable, it is possible to
+    override this default behavior by providing a different
+    implementation of the <code>EventEvaluator</code> interface.
+    </p>
+		
+    <p>The <code>SMTPAppender</code> submits each incoming event to
+    its evaluator by calling <code>evaluate()</code> method in order
+    to check whether the event should trigger an email or just be
+    placed in the cyclic buffer.  When the evaluator gives a positive
+    answer to its evaluation, an email is sent out.  The
+    <code>SMTPAppender</code> contains one and only one evaluator
+    object.  This object may manage its own internal state. For
+    illustrative purposes, the <code>CounterBasedEvaluator</code>
+    class listed next implements an event evaluator whereby every
+    1024th event triggers an email message.
+    </p>
+
+    <p class="example">Example: A <code>EventEvaluator</code>
+    implementation that evaluates to <code>true</code> every 1024th
+    event (<a
+    href="../xref/chapters/appenders/mail/CounterBasedEvaluator.html">logback-examples/src/main/java/chapters/appenders/mail/CounterBasedEvaluator.java</a>)</p>
+
+      <pre><code>package chapters.appenders.mail;
+
+import ch.qos.logback.core.boolex.EvaluationException;
+import ch.qos.logback.core.boolex.EventEvaluator;
+import ch.qos.logback.core.spi.ContextAwareBase;
+
+public class CounterBasedEvaluator extends ContextAwareBase implements EventEvaluator {
+
+  static int LIMIT = 1024;
+  int counter = 0;
+  String name;
+
+  <b>public boolean evaluate(Object event) throws NullPointerException,
+      EvaluationException {
+    counter++;
+
+    if (counter == LIMIT) {
+      counter = 0;
+
+      return true;
+    } else {
+      return false;
+    }
+  }</b>
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+}</code></pre>
+
+       <p>Note that this class extends <code>ContextAwareBase</code>
+       and implements <code>EventEvaluator</code>. This allows the
+       user to concentrate on the core functions of her
+       <code>EventEvaluator</code> and let the base class provide the
+       common functionality.
+       </p>
+
+       <p>Setting the <span class="prop">Evaluator</span> option of
+       <code>SMTPAppender</code> instructs it to use a custom evaluator.
+       The next configuration file attaches a <code>SMTPAppender</code>
+       to the root logger.  This appender uses a
+       <code>CounterBasedEvaluator</code> instance as its event
+       evaluator.
+       </p>
+
+    <p class="example">Example: <code>SMTPAppender</code> with custom 
+    <code>Evaluator</code> and buffer size (logback-examples/&#8203;src/main/resources/&#8203;chapters/appenders/&#8203;mail/mail3.xml)</p>
+
+    <div class="tab">
+    <button class="tablinks" id="button_mail3_legacy"
+            onclick="openTab(event, 'mail3', 'legacy')">Legacy</button>
+    <button class="tablinks" id="button_mail3_canonical"
+            onclick="openTab(event, 'mail3', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_mail3_tyler"
+             onclick="openTab(event, 'mail3', 'tyler')">Tyler</button>
+    </div>
+
+    <div id="mail3_legacy" class="tabcontent">
+    
+    <pre><code>&lt;configuration>
+  &lt;appender name="EMAIL" class="ch.qos.logback.classic.net.SMTPAppender">
+    <b>&lt;evaluator class="chapters.appenders.mail.CounterBasedEvaluator" /></b>
+    &lt;smtpHost>${smtpHost}&lt;/smtpHost>
+    &lt;to>${to}&lt;/to>
+    &lt;from>${from}&lt;/from>
+    &lt;subject>%logger{20} - %m&lt;/subject>
+
+    &lt;layout class="ch.qos.logback.classic.html.HTMLLayout"/>
+  &lt;/appender>
+
+  &lt;root level="DEBUG">
+    &lt;appender-ref ref="EMAIL" />
+  &lt;/root>  
+&lt;/configuration></code></pre>
+    </div>
+
+    
+    <div id="mail3_canonical" class="tabcontent">
+      <p>Requires a server call. Please wait a few seconds.</p>
+    </div>
+     <div id="mail3_tyler" class="tabcontent"><p>Requires a server call.</p></div>
+
+
+    <h3 class="doAnchor" name="OnMarkerEvaluator">Marker based
+    triggering </h3>
+
+    <p>Although reasonable, the default triggering policy whereby every
+    event of level ERROR triggers an outgoing email may result in too
+    many emails, cluttering the targeted user's mailbox. Logback ships
+    with another triggering policy, called <a
+    href="../xref/ch/qos/logback/classic/boolex/OnMarkerEvaluator.html">OnMarkerEvaluator</a>. It
+    is based on markers. In essence, emails are triggered only if the
+    event is marked with a user-specified marker. The next example
+    should make the point clearer.
+    </p>
+
+    <p>The <a
+    href="../xref/chapters/appenders/mail/Marked_EMail.html">Marked_EMail</a>
+    application contains several logging statements some of which are
+    of level ERROR. One noteworthy statement contains a marker. Here
+    is the relevant code.
+    </p>
+
+    <pre><code>Marker notifyAdmin = MarkerFactory.getMarker("NOTIFY_ADMIN");
+logger.error(<b>notifyAdmin</b>,
+  "This is a serious error requiring the admin's attention",
+   new Exception("Just testing"));</code></pre>
+
+   <p>The next configuration file will trigger outgoing emails only in
+   presence of events bearing the NOTIFY_ADMIN or the
+   TRANSACTION_FAILURE markers.
+   </p>
+
+   <p class="example">Example: <code>SMTPAppender</code> with 
+   <code>OnMarkerEvaluator</code> (logback-examples/&#8203;src/main/resources/&#8203;chapters/appenders/&#8203;mail/mailWithMarker.&#8203;xml)</p>
+
+   <div class="tab">
+     <button class="tablinks" id="button_mailWithMarker_legacy"
+             onclick="openTab(event, 'mailWithMarker', 'legacy')">Legacy</button>
+     <button class="tablinks" id="button_mailWithMarker_canonical"
+             onclick="openTab(event, 'mailWithMarker', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_mailWithMarker_tyler"
+             onclick="openTab(event, 'mailWithMarker', 'tyler')">Tyler</button>
+   </div>
+
+   <div id="mailWithMarker_legacy" class="tabcontent">   
+
+   <pre><code>&lt;configuration>
+  &lt;appender name="EMAIL" class="ch.qos.logback.classic.net.SMTPAppender">
+    <b>&lt;evaluator class="ch.qos.logback.classic.boolex.OnMarkerEvaluator">
+      &lt;marker>NOTIFY_ADMIN&lt;/marker>
+      &lt;!-- you specify add as many markers as you want -->
+      &lt;marker>TRANSACTION_FAILURE&lt;/marker>
+    &lt;/evaluator></b>
+    &lt;smtpHost>${smtpHost}&lt;/smtpHost>
+    &lt;to>${to}&lt;/to>
+    &lt;from>${from}&lt;/from>
+    &lt;layout class="ch.qos.logback.classic.html.HTMLLayout"/>
+  &lt;/appender>
+
+  &lt;root>
+    &lt;level value ="debug"/>
+    &lt;appender-ref ref="EMAIL" />
+  &lt;/root>  
+&lt;/configuration></code></pre>
+   </div>
+   
+    <div id="mailWithMarker_canonical" class="tabcontent">
+      <p>Requires a server call. Please wait a few seconds.</p>
+    </div>
+     <div id="mailWithMarker_tyler" class="tabcontent"><p>Requires a server call.</p></div>
+    
+    <p>Give it a whirl with the following command:</p>
+
+    <pre class="source">java -Dfrom=source@xyz.com -Dto=recipient@xyz.com -DsmtpHost=some_smtp_host \
+  chapters.appenders.&#8203;mail.Marked_EMail src/main/java/chapters/&#8203;appenders/mail/&#8203;mailWithMarker.&#8203;xml</pre>
+
+
+    <h4 class="doAnchor"
+    name="marker_JaninoEventEvaluator">Marker-based triggering with
+    JaninoEventEvaluator</h4>
+
+    <p>Note that instead of using the marker-centric
+    <code>OnMarkerEvaluator</code>, we could use the much more generic
+    <a
+    href="filters.html#JaninoEventEvaluator"><code>JaninoEventEvaluator</code></a>.
+    For example, the following configuration file uses
+    <code>JaninoEventEvaluator</code> instead of
+    <code>OnMarkerEvaluator</code> but is otherwise equivalent to the
+    previous configuration file.
+    </p>
+
+    <p class="example">Example: <code>SMTPAppender</code> with 
+   <code>JaninoEventEvaluator</code> (logback-examples/&#8203;src/main/resources/&#8203;chapters/appenders/&#8203;mail/mailWithMarker_Janino.&#8203;xml)</p>
+
+   <div class="tab">
+     <button class="tablinks" id="button_mailWithMarker_Janino_legacy"
+             onclick="openTab(event, 'mailWithMarker_Janino', 'legacy')">Legacy</button>
+     <button class="tablinks" id="button_mailWithMarker_Janino_canonical"
+             onclick="openTab(event, 'mailWithMarker_Janino', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_mailWithMarker_Janino_tyler"
+             onclick="openTab(event, 'mailWithMarker_Janino', 'tyler')">Tyler</button>
+   </div>
+
+   <div id="mailWithMarker_Janino_legacy" class="tabcontent">
+       
+    <pre><code>&lt;configuration>
+  &lt;appender name="EMAIL" class="ch.qos.logback.&#8203;classic.net.SMTPAppender">
+    &lt;evaluator class="ch.qos.logback.&#8203;classic.boolex.&#8203;JaninoEventEvaluator">
+      &lt;expression>
+        (markerList.contains(&#8203;"NOTIFY_ADMIN") || marker.contains(&#8203;"TRANSACTION_FAILURE"))
+      &lt;/expression>
+    &lt;/evaluator>
+    &lt;smtpHost>${smtpHost}&lt;/smtpHost>
+    &lt;to>${to}&lt;/to>
+    &lt;from>${from}&lt;/from>
+    &lt;layout class="ch.qos.logback.&#8203;classic.html.HTMLLayout"/>
+  &lt;/appender>
+&lt;/configuration></code></pre> 
+   </div>
+ 
+   <div id="mailWithMarker_Janino_canonical" class="tabcontent">
+     <p>Requires a server call. Please wait a few seconds.</p>
+   </div>
+     <div id="mailWithMarker_Janino_tyler" class="tabcontent"><p>Requires a server call.</p></div>
+   
+
+    <h3 class="doAnchor" name="smtpAuthentication">Authentication/STARTTLS/SSL</h3>
+
+    <p><code>SMTPAppender</code> supports authentication via plain
+    user passwords as well as both the STARTTLS and SSL
+    protocols. Note that STARTTLS differs from SSL in that, in
+    STARTTLS, the connection is initially non-encrypted and only after
+    the STARTTLS command is issued by the client (if the server
+    supports it) does the connection switch to SSL. In SSL mode, the
+    connection is encrypted right from the start.
+    </p>
+
+    <h3 class="doAnchor" name="gmailSSL">SMTPAppender configuration
+    for Gmail (SSL)</h3>
+
+    <p>The next example shows you how to configure
+    <code>SMTPAppender</code> for Gmail with the SSL protocol. </p>
+    
+    <p class="example">Example:: <code>SMTPAppender</code> to Gmail
+    using SSL
+    (logback-examples/&#8203;src/main/resources/&#8203;chapters/appenders/&#8203;mail/gmailSSL.xml)</p>
+    
+    <div class="tab">
+      <button class="tablinks" id="button_gmailSSL_legacy"
+              onclick="openTab(event, 'gmailSSL', 'legacy')">Legacy</button>
+      <button class="tablinks" id="button_gmailSSL_canonical"
+              onclick="openTab(event, 'gmailSSL', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_gmailSSL_tyler"
+             onclick="openTab(event, 'gmailSSL', 'tyler')">Tyler</button>
+    </div>
+    
+    <div id="gmailSSL_legacy" class="tabcontent">
+
+    <pre><code>&lt;configuration>
+  &lt;appender name="EMAIL" class="ch.qos.logback.classic.net.SMTPAppender">
+    <b>&lt;smtpHost>smtp.gmail.com&lt;/smtpHost></b>
+    <b>&lt;smtpPort>465&lt;/smtpPort></b>
+    <b>&lt;SSL>true&lt;/SSL></b>
+    <b>&lt;username>YOUR_USERNAME@gmail.com&lt;/username></b>
+    <b>&lt;password>YOUR_GMAIL_PASSWORD&lt;/password></b>
+
+    &lt;to>EMAIL-DESTINATION&lt;/to>
+    &lt;to>ANOTHER_EMAIL_DESTINATION&lt;/to> &lt;!-- additional destinations are possible -->
+    &lt;from>YOUR_USERNAME@gmail.com&lt;/from>
+    &lt;subject>TESTING: %logger{20} - %m&lt;/subject>
+    &lt;layout class="ch.qos.logback.classic.PatternLayout">
+      &lt;pattern>%date %-5level %logger{35} - %message%n&lt;/pattern>
+    &lt;/layout>	    
+  &lt;/appender>
+
+  &lt;root level="DEBUG">
+    &lt;appender-ref ref="EMAIL" />
+  &lt;/root>  
+&lt;/configuration></code></pre>
+    </div>
+
+    <div id="gmailSSL_canonical" class="tabcontent">
+      <p>Requires a server call. Please wait a few seconds.</p>
+    </div>
+     <div id="gmailSSL_tyler" class="tabcontent"><p>Requires a server call.</p></div>
+    
+    <h3 class="doAnchor" name="gmailSTARTTLS">SMTPAppender for Gmail
+    (STARTTLS)</h3>
+
+    <p>The next example shows you how to configure
+    <code>SMTPAppender</code> for Gmail for the STARTTLS protocol. </p>
+
+    <p class="example">Example: <code>SMTPAppender</code> to GMAIL using STARTTLS (logback-examples/&#8203;src/main/resources/&#8203;chapters/appenders/&#8203;mail/gmailSTARTTLS.&#8203;xml)</p>
+
+
+    <div class="tab">
+      <button class="tablinks" id="button_gmailSTARTTLSExample_legacy"
+              onclick="openTab(event, 'gmailSTARTTLSExample', 'legacy')">Legacy</button>
+      <button class="tablinks" id="button_gmailSTARTTLSExample_canonical"
+              onclick="openTab(event, 'gmailSTARTTLSExample', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_gmailSTARTTLSExample_tyler"
+             onclick="openTab(event, 'gmailSTARTTLSExample', 'tyler')">Tyler</button>
+    </div>
+
+    <div id="gmailSTARTTLSExample_legacy" class="tabcontent">    
+    
+    <pre><code>&lt;configuration>
+  &lt;appender name="EMAIL" class="ch.qos.logback.classic.net.SMTPAppender">
+    &lt;smtpHost>smtp.gmail.com&lt;/smtpHost>
+    &lt;smtpPort>587&lt;/smtpPort>
+    &lt;STARTTLS>true&lt;/STARTTLS>
+    &lt;username>YOUR_USERNAME@gmail.com&lt;/username>
+    &lt;password>YOUR_GMAIL_xPASSWORD&lt;/password>
+    
+    &lt;to>EMAIL-DESTINATION&lt;/to>
+    &lt;to>ANOTHER_EMAIL_DESTINATION&lt;/to> &lt;!-- additional destinations are possible -->
+    &lt;from>YOUR_USERNAME@gmail.com&lt;/from>
+    &lt;subject>TESTING: %logger{20} - %m&lt;/subject>
+    &lt;layout class="ch.qos.logback.classic.PatternLayout">
+      &lt;pattern>%date %-5level %logger - %message%n&lt;/pattern>
+    &lt;/layout>	    
+  &lt;/appender>
+
+  &lt;root level="DEBUG">
+    &lt;appender-ref ref="EMAIL" />
+  &lt;/root>  
+&lt;/configuration></code></pre>
+    </div>
+
+    
+    <div id="gmailSTARTTLSExample_canonical" class="tabcontent">
+      <p>Requires a server call. Please wait a few seconds.</p>
+    </div>
+     <div id="gmailSTARTTLSExample_tyler" class="tabcontent"><p>Requires a server call.</p></div>
+
+    <h3 class="doAnchor" name="smtpDiscriminator">SMTPAppender with MDCDiscriminator</h3>
+
+
+    <p>As mentioned earlier, by specifying a discriminator other than
+    the default one, <code>SMTPAppender</code> will generate email
+    messages containing events pertaining to a particular user, user
+    session or client IP address, depending on the specified discriminator.
+    </p>
+
+    <p>The next example illustrates the use of <a
+    href="../xref/ch/qos/logback/classic/sift/MDCBasedDiscriminator.html">MDCBasedDiscriminator</a>
+    in conjunction with the MDC key named "req.remoteHost", assumed to
+    contain the IP address of the remote host accessing a fictitious
+    application. In a web-application, you could use <a
+    href="mdc.html#mis">MDCInsertingServletFilter</a> to populate MDC
+    values.
+    </p>
+
+    <p class="example">Example: <code>SMTPAppender</code> with
+    MDCBasedDiscriminator
+    (logback-examples/&#8203;src/main/resources/&#8203;chapters/appenders/&#8203;mail/mailWithMDCBasedDiscriminator.&#8203;xml)</p>
+
+    <div class="tab">
+      <button class="tablinks" id="button_mailWithMDCBasedDiscriminator_legacy"
+              onclick="openTab(event, 'mailWithMDCBasedDiscriminator', 'legacy')">Legacy</button>
+      <button class="tablinks" id="button_mailWithMDCBasedDiscriminator_canonical"
+              onclick="openTab(event, 'mailWithMDCBasedDiscriminator', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_mailWithMDCBasedDiscriminator_tyler"
+             onclick="openTab(event, 'mailWithMDCBasedDiscriminator', 'tyler')">Tyler</button>
+    </div>
+
+    <div id="mailWithMDCBasedDiscriminator_legacy" class="tabcontent">
+    
+    <pre><code>&lt;configuration>	  
+  &lt;appender name="EMAIL" class="ch.qos.logback.classic.net.SMTPAppender">
+    &lt;smtpHost>ADDRESS-OF-YOUR-SMTP-HOST&lt;/smtpHost>
+    &lt;to>EMAIL-DESTINATION&lt;/to>
+    &lt;from>SENDER-EMAIL&lt;/from>
+
+    <b>&lt;discriminator class="ch.qos.logback.classic.sift.MDCBasedDiscriminator"></b>
+      <b>&lt;key>req.remoteHost&lt;/key></b>
+      <b>&lt;defaultValue>default&lt;/defaultValue></b>
+    <b>&lt;/discriminator></b>
+
+    &lt;subject>${HOSTNAME} -- %X{req.remoteHost} %msg"&lt;/subject>
+    &lt;layout class="ch.qos.logback.classic.html.HTMLLayout">
+      &lt;pattern>%date%level%thread%X{req.remoteHost}%X{req.requestURL}%logger%msg&lt;/pattern>
+    &lt;/layout>
+  &lt;/appender>
+
+  &lt;root>
+    &lt;level level="DEBUG"/>
+    &lt;appender-ref ref="EMAIL" />
+  &lt;/root>  
+&lt;/configuration></code></pre>
+    </div>
+
+    <div id="mailWithMDCBasedDiscriminator_canonical" class="tabcontent">
+      <p>Requires a server call. Please wait a few seconds.</p>
+    </div>
+     <div id="mailWithMDCBasedDiscriminator_tyler" class="tabcontent"><p>Requires a server call.</p></div>
+
+
+    <p>Thus, each outgoing email generated by
+    <code>SMTPAppender</code> will belong to a <em>unique</em> remote
+    host, greatly facilitating problem diagnosis.
+    </p>
+    
+    <h4 class="doAnchor" name= "bufferManagement">Buffer management in
+    very busy systems</h4>
+
+    <p>Internally, each distinct value returned by the discriminator
+    will cause the creation of a new cyclic buffer. However, at most
+    <span class="prop">maxNumberOfBuffers</span> (by default 64)
+    will be maintained.  Whenever the number of buffers rises above
+    <span class="prop">maxNumberOfBuffers</span>, the least recently
+    updated buffer is automatically discarded. As a second safety
+    measure, any buffer which has not been updated in the last 30
+    minutes will be automatically discarded as well.</p>
+
+    <p>On systems serving a large number of transactions per minute,
+    allowing only a small number for <span
+    class="prop">maxNumberOfBuffers</span> (by default 64) will
+    often cause the number of events in the outgoing email to be
+    unnecessarily small. Indeed, in the presence of a large number of
+    transactions, there will be more than one buffer associated with
+    the same transaction as buffers will be killed and re-born in
+    succession for the same discriminator value (or transaction). Note
+    that in even such very busy systems, the maximum number of cyclic
+    buffers is capped by <span
+    class="prop">maxNumberOfBuffers</span>.
+    </p>
+
+    <p>To avoid such yo-yo effects, <code>SMTPAppender</code> will
+    release the buffer associated with a given discriminator key as
+    soon as it sees an event marked as "FINALIZE_SESSION". This will
+    cause the appropriate buffer to be discarded at the end of each
+    transaction. You can then safely increase the value of <span
+    class="prop">maxNumberOfBuffers</span> to a larger value such as
+    512 or 1024 without risking running out of memory.
+    </p>
+
+    <p>There are three distinct but complementary mechanisms working
+    together to manage cyclic buffers. They ensure that only relevant
+    buffers are kept alive at any given moment, even in very busy
+    systems.</p>
+
+    <!-- ================&#8203;===============&#8203;===============&#8203;============= -->
+    <!-- ================&#8203;=========================================== -->
+
+
+    <h3 class="doAnchor" name="DBAppender">DBAppender</h3>
+		
+    <p>The <code>DBAppender</code> inserts logging events into three
+    database tables in a format independent of the Java programming
+    language.
+    </p>
+
+    <p>As of logback version 1.2.8 DBAppender no longer
+    ships with logback-classic. However,
+    <code>DBAppender</code> for logback-classic is
+    available under the following Maven coordinates:</p>
+    
+    <p><code>ch.qos.logback.db:logback-classic-db:1.&#8203;2.11.1</code></p>
+
+    <p>These three tables are <em>logging_event</em>,
+    <em>logging_event_property</em> and
+    <em>logging_event_exception</em>. They must exist before
+    <code>DBAppender</code> can be used. Logback ships with SQL
+    scripts that will create the tables.  They can be found under the
+    <em>logback-classic/&#8203;src/main/java/ch/&#8203;qos/logback/classic/&#8203;db/script</em>
+    folder. There is a specific script for each of the most popular
+    database systems.  If the script for your particular type of
+    database system is missing, it should be quite easy to write one,
+    taking example on the already existing scripts. If you send them
+    to us, we will gladly include missing scripts in future releases.
+    </p>
+
+    <p>If your JDBC driver supports the <code>getGeneratedKeys</code>
+    method introduced in JDBC 3.0 specification, assuming you have
+    created the appropriate database tables as mentioned above, then
+    no additional steps are required. Otherwise, there must be an
+    <code>SQLDialect</code> appropriate for your database
+    system. Currently, logback has dialects for H2, HSQL, MS SQL
+    Server, MySQL, Oracle, PostgreSQL, SQLLite and Sybase. </p>
+
+    <p>The table below summarizes the database types and their support
+    of the <code>getGeneratedKeys()</code> method.
+    </p>
+
+    <table class="bodyTable striped" border="0" cellpadding="4">
+			<tr>
+				<th>RDBMS</th>
+        <th>tested version(s)
+        </th>
+        <th>tested JDBC driver version(s)
+				</th>
+        <th>
+					supports
+					<br />
+					<code>getGeneratedKeys()</code>
+					method
+				</th>		
+
+        <th>is a dialect <br/>provided by logback</th>
+			</tr>
+
+      <tr>
+				<td>DB2</td>
+        <td>untested</td>
+				<td>untested</td>
+				<td>unknown</td>
+        <td>NO</td>
+			</tr>
+
+      <tr>
+        <td>H2</td>
+        <td>1.2.132</td>
+        <td>-</td>
+				<td>unknown</td>
+        <td>YES</td>
+			</tr>
+
+      <tr>
+        <td>HSQL</td>
+        <td>1.8.0.7</td>
+        <td>-</td>
+				<td>NO </td>
+        <td>YES</td>
+			</tr>
+
+      <tr>
+        <td>Microsoft SQL Server</td>
+        <td>2005</td>
+        <td>2.0.1008.2 (sqljdbc.jar)</td>
+				<td>YES</td>
+        <td>YES</td>
+			</tr>
+
+      <tr>
+				<td>MySQL</td>
+        <td>5.0.22</td>
+        <td>5.0.8 (mysql-connector.jar)</td>        
+				<td>YES</td>
+        <td>YES</td>
+			</tr>
+
+			<tr>
+				<td>PostgreSQL</td>
+        <td>8.x</td>
+        <td>8.4-701.jdbc4</td>
+				<td>NO</td>
+        <td>YES</td>
+
+			</tr>
+		
+			<tr>
+				<td>Oracle</td>
+        <td>10g</td>
+        <td>10.2.0.1 (ojdbc14.jar)</td>
+				<td>YES</td>
+        <td>YES</td>
+			</tr>
+	
+      <tr>
+        <td>SQLLite</td>
+        <td>3.7.4</td>
+        <td>-</td>
+        <td>unknown</td>
+        <td>YES</td>
+      </tr>
+	
+			
+      <tr>
+        <td>Sybase SQLAnywhere</td>
+        <td>10.0.1</td>
+        <td>-</td>
+        <td>unknown</td>
+        <td>YES</td>
+      </tr>
+
+		</table>
+		
+		<p>Experiments show that writing a single event into the database
+		takes approximately 10 milliseconds, on a "standard" PC. If pooled
+		connections are used, this figure drops to around 1
+		millisecond. Note that most JDBC drivers already ship with
+		connection pooling support.
+		</p>
+		
+		<p>Configuring logback to use <code>DBAppender</code> can be done
+		in several different ways, depending on the tools one has to
+		connect to the database, and the database itself. The key issue in
+		configuring <code>DBAppender</code> is about setting its
+		<code>ConnectionSource</code> object, as we shall discover
+		shortly.
+		</p>
+		
+		<p>Once <code>DBAppender</code> is configured for your database,
+		logging events are sent to the specified database. As stated
+		previously, there are three tables used by logback to store
+		logging event data.
+		</p>
+		
+		<p>
+			The <em>logging_event</em> table contains the following fields:
+		</p>
+		<table class="bodyTable striped">
+			<tr>
+				<th>Field</th>
+				<th>Type</th>
+				<th>Description</th>
+			</tr>
+			<tr>
+				<td><b>timestamp</b></td>
+				<td><code>big int</code></td>
+				<td>The timestamp that was valid at the logging event's creation.</td>
+			</tr>
+			<tr>
+				<td><b>formatted_message</b></td>
+				<td><code>text</code></td>
+
+				<td>The message that has been added to the logging event,
+				after formatting with
+				<code>org.slf4j.impl.MessageFormatter</code>, in case objects
+				were passed along with the message.</td>
+			</tr>
+			<tr>
+				<td><b>logger_name</b></td>
+				<td><code>varchar</code></td>
+				<td>The name of the logger used to issue the logging request.</td>
+			</tr>
+			<tr>
+				<td><b>level_string</b></td>
+				<td><code>varchar</code></td>
+				<td>The level of the logging event.</td>
+			</tr>
+			<tr>
+				<td><b>reference_flag</b></td>
+				<td><code>smallint</code></td>
+				<td>
+					<p>This field is used by logback to identify logging events
+					that have an exception or <code>MDC</code>property values
+					associated.
+					</p>
+
+					<p>Its value is computed by
+					<code>ch.qos.logback.classic.&#8203;db.DBHelper</code>. A logging
+					event that contains <code>MDC</code> or <code>Context</code>
+					properties has a flag number of <em>1</em>. One that
+					contains an exception has a flag number of <em>2</em>. A
+					logging event that contains both elements has a flag number
+					of <em>3</em>.
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td><b>caller_filename</b></td>
+				<td><code>varchar</code></td>
+				<td>The name of the file where the logging request was issued.</td>
+			</tr>
+			<tr>
+				<td><b>caller_class</b></td>
+				<td><code>varchar</code></td>
+				<td>The class where the logging request was issued.</td>
+			</tr>
+			<tr>
+				<td><b>caller_method</b></td>
+				<td><code>varchar</code></td>
+				<td>The name of the method where the logging request was issued.</td>
+			</tr>
+			<tr>
+				<td><b>caller_line</b></td>
+				<td><code>char</code></td>
+				<td>The line number where the logging request was issued.</td>
+			</tr>
+			<tr>
+				<td><b>event_id</b></td>
+				<td><code>int</code></td>
+				<td>The database id of the logging event.</td>
+			</tr>
+		</table>
+		
+		<p>
+			The <em>logging_event_property</em> is used to store the keys and values
+			contained in the <code>MDC</code> or the <code>Context</code>. 
+			It contains these fields:
+		</p>
+
+		<table class="bodyTable striped">
+			<tr>
+				<th>Field</th>
+				<th>Type</th>
+				<th>Description</th>
+			</tr>
+			<tr>
+				<td><b>event_id</b></td>
+				<td><code>int</code></td>
+				<td>The database id of the logging event.</td>
+			</tr>
+			<tr>
+				<td><b>mapped_key</b></td>
+				<td><code>varchar</code></td>
+				<td>The key of the <code>MDC</code> property</td>
+			</tr>		
+			<tr>
+				<td><b>mapped_value</b></td>
+				<td><code>text</code></td>
+				<td>The value of the <code>MDC</code> property</td>
+			</tr>				
+		</table>
+		
+		<p>
+			The <em>logging_event_exception</em> table contains the following fields:
+		</p>
+		
+		<table class="bodyTable striped">
+			<tr>
+				<th>Field</th>
+				<th>Type</th>
+				<th>Description</th>
+			</tr>
+			<tr>
+				<td><b>event_id</b></td>
+				<td><code>int</code></td>
+				<td>The database id of the logging event.</td>
+			</tr>
+			<tr>
+				<td><b>i</b></td>
+				<td><code>smallint</code></td>
+				<td>The index of the line in the full stack trace.</td>
+			</tr>		
+			<tr>
+				<td><b>trace_line</b></td>
+				<td><code>varchar</code></td>
+				<td>The corresponding line</td>
+			</tr>				
+		</table>
+		
+		<p>
+			To give a more visual example of the work done by <code>DBAppender</code>, here
+			is a screenshot of a MySQL database with content provided by <code>DBAppender</code>.
+		</p>
+		
+		<p>The <em>logging_event</em> table:</p>
+
+		<a href="images/chapters/appenders/dbAppenderLE.gif">
+            <img class="reduced" src="images/chapters/appenders/dbAppenderLE.gif"
+                 alt="Logging Event table" />
+        </a>
+
+		<p>The <em>logging_event_exception</em> table:</p>
+		
+		<img src="images/chapters/appenders/dbAppenderLEException.gif" alt="Logging Event Exception table" />
+
+		<p>The <em>logging_event_property</em> table:</p>
+		
+		<img src="images/chapters/appenders/dbAppenderLEProperty.gif" alt="Logging Event Property table" />
+
+		
+		<h4>ConnectionSource</h4>
+		
+		<p>The <code>ConnectionSource</code> interface provides a
+		pluggable means of transparently obtaining JDBC connections for
+		logback classes that require the use of a
+		<code>java.sql.Connection</code>. There are currently three
+		implementations of <code>ConnectionSource</code>, namely
+		<code>DataSourceConnectionSource</code>,
+		<code>DriverManagerConnectionSource</code> and
+		<code>JNDIConnectionSource</code>.
+		</p>
+		
+		<p>
+			The first example that we will review is a configuration using
+			<code>DriverManagerConnectionSource</code> and a MySQL database.
+			The following configuration file is what one would need.
+		</p>
+		
+    <p class="example">Example: <code>DBAppender</code> configuration (logback-examples/&#8203;src/main/resources/&#8203;chapters/appenders/&#8203;db/append-toMySQL-with-driverManager.&#8203;xml)</p>
+
+    <div class="tab">
+      <button class="tablinks" id="button_append_toMySQL_with_driverManager_legacy"
+            onclick="openTab(event, 'append_toMySQL_with_driverManager', 'legacy')">Legacy</button>
+      <button class="tablinks" id="button_append_toMySQL_with_driverManager_canonical"
+              onclick="openTab(event, 'append_toMySQL_with_driverManager', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_append_toMySQL_with_driverManager_tyler"
+             onclick="openTab(event, 'append_toMySQL_with_driverManager', 'tyler')">Tyler</button>
+    </div>
+
+    <div id="append_toMySQL_with_driverManager_legacy" class="tabcontent">
+
+    <pre><code>&lt;configuration>
+
+  <b>&lt;appender name="DB" class="ch.qos.logback.classic.db.DBAppender">
+    &lt;connectionSource class="ch.qos.logback.core.db.DriverManagerConnectionSource">
+      &lt;driverClass>com.mysql.jdbc.Driver&lt;/driverClass>
+      &lt;url>jdbc:mysql://host_name:3306/database_name&lt;/url>
+      &lt;user>username&lt;/user>
+      &lt;password>password&lt;/password>
+    &lt;/connectionSource>
+  &lt;/appender></b>
+  
+  &lt;root level="DEBUG" >
+    &lt;appender-ref ref="DB" />
+  &lt;/root>
+&lt;/configuration></code></pre>
+    </div>
+
+    <div id="append_toMySQL_with_driverManager_canonical" class="tabcontent">
+      <p>Requires a server call. Please wait a few seconds.</p>
+    </div>
+     <div id="append_toMySQL_with_driverManager_tyler" class="tabcontent"><p>Requires a server call.</p></div>
+
+    <p>The correct driver must be declared. Here, the
+    <code>com.mysql.jdbc.Driver</code> class is used. The <span
+    class="prop">url</span> must begin with <em>jdbc:mysql://</em>.
+    </p>
+    
+    <p>The <code>DriverManagerConnectionSource</code> is an
+    implementation of <code>ConnectionSource</code> that obtains the
+    connection in the traditional JDBC manner based on the connection
+    URL.</p>
+
+    <p>Note that this class will establish a new
+    <code>Connection</code> for each call to
+    <code>getConnection()</code>. It is recommended that you either
+    use a JDBC driver that natively supports connection pooling or
+    that you create your own implementation of
+    <code>ConnectionSource</code> that taps into whatever pooling
+    mechanism you are already using. If you have access to a JNDI
+    implementation that supports <code>javax.sql.DataSource</code>,
+    e.g. within a J2EE application server, see <a
+    href="#JNDIConnectionSource"><code>JNDIConnectionSource</code></a>
+    below.</p>
+<!-- 
+		
+		HAS TO BE TESTED
+
+		<p>
+			If you do not have another connection pooling mechanism built
+			into your application, you can use the
+			<a href="http://jakarta.apache.org/commons/dbcp/index.html">
+		  commons-dbcp </a> package from Apache:
+		</p>
+
+<pre><code>
+  &lt;connectionSource
+    class=&quot;ch.qos.&#8203;logback.core.db.&#8203;DriverManagerConnectionSource&quot;&gt;
+    &lt;param name=&quot;driver&quot; value=&quot;org.&#8203;apache.commons.&#8203;dbcp.PoolingDriver&quot;/&#8203;&gt; 
+    &lt;param name=&quot;url&quot; value=&quot;jdbc:apache:commons:dbcp:/&#8203;myPoolingDriver&quot;/&#8203;&gt; 
+  &lt;/connectionSource&gt;
+</code></pre>
+		
+		<p>
+			Then the configuration information for the commons-dbcp
+			package goes into the file <em>myPoolingDriver.jocl</em> and is
+			placed in the classpath. See the
+			<a href="http://jakarta.apache.org/commons/dbcp/index.html"> commons-dbcp </a>
+			documentation for details.
+		</p>
+ -->
+ 
+		<p>Connecting to a database using a
+		<code>DataSource</code> is rather similar.  The
+		configuration now uses
+		<code>DataSourceConnectionSource</code>, which is an
+		implementation of <code>ConnectionSource</code> that
+		obtains the <code>Connection</code> in the recommended
+		JDBC manner based on a
+		<code>javax.sql.DataSource</code>.
+		</p>
+	
+    <p class="example">Example: <code>DBAppender</code> configuration (logback-examples/&#8203;src/main/resources/&#8203;chapters/appenders/&#8203;db/append-with-datasource.&#8203;xml)</p>	
+
+
+
+    <div class="tab">
+      <button class="tablinks" id="button_append_with_datasource_legacy"
+              onclick="openTab(event, 'append_with_datasource', 'legacy')">Legacy</button>
+      <button class="tablinks" id="button_append_with_datasource_canonical"
+              onclick="openTab(event, 'append_with_datasource', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_append_with_datasource_tyler"
+             onclick="openTab(event, 'append_with_datasource', 'tyler')">Tyler</button>
+    </div>
+
+    <div id="append_with_datasource_legacy" class="tabcontent">
+
+    <pre><code>&lt;configuration  debug="true">
+
+  &lt;appender name="DB" class="ch.qos.logback.classic.db.DBAppender">
+     <b>&lt;connectionSource class="ch.qos.logback.core.db.DataSourceConnectionSource">
+       
+       &lt;dataSource class="${dataSourceClass}">
+       	 </b>&lt;!-- Joran cannot substitute variables
+       	 that are not attribute values. Therefore, we cannot
+       	 declare the next parameter like the others. 
+       	 -->
+         <b>&lt;param name="${url-key:-url}" value="${url_value}"/>
+         &lt;serverName>${serverName}&lt;/serverName>
+         &lt;databaseName>${databaseName}&lt;/databaseName>
+       &lt;/dataSource></b>
+       
+       &lt;user>${user}&lt;/user>
+       &lt;password>${password}&lt;/password>
+     &lt;/connectionSource>
+  &lt;/appender>
+
+  &lt;root level="INFO">
+    &lt;appender-ref ref="DB" />
+  &lt;/root>  
+&lt;/configuration></code></pre>
+    </div>
+
+    <div id="append_with_datasource_canonical" class="tabcontent">
+      <p>Requires a server call. Please wait a few seconds.</p>
+    </div>
+     <div id="append_with_datasource_tyler" class="tabcontent"><p>Requires a server call.</p></div>
+    
+    <p>Note that in this configuration sample, we make heavy use of
+    substitution variables.  They are sometimes handy when connection
+    details have to be centralized in a single configuration file and
+    shared by logback and other frameworks.
+    </p>	
+		
+<!-- TO BE TESTED 
+
+     <p>The connection created by
+     <code>DataSourceConnectionSource</code> can be placed in a JNDI
+     context by using <code>BindDataSourceToJNDIAction</code>. In that
+     case, one has to specify the use of this class by adding a new
+     rule to Joran, logback's configuration framework. Here is an
+     excerpt of such a configuration file.  </p>
+		
+<div class="source"><pre>&lt;configuration>
+  ..
+  <b>&lt;newRule pattern="configuration/&#8203;bindDataSourceToJNDI" 
+           actionClass="ch.&#8203;qos.logback.core.&#8203;db.BindDataSourceToJNDIAction"/>
+  	    
+  &lt;bindDataSourceToJNDI /></b>
+  ..
+&lt;/configuration></pre></div>
+
+		<p> The <em>newRule</em> element teaches Joran to use specified
+		action class with the given pattern.  Then, we simply declare the
+		given element. The action class will be called and our connection
+		source will be bound to a JNDI context.  </p>
+
+		<p>This is a very powerful capability of Joran. If you'd like to
+		read more about Joran, please see the <a
+		href="onJoran.html">chapter to Joran</a>.  </p>
+		
+		-->
+
+    <h4 class="doAnchor"
+    name="JNDIConnectionSource">JNDIConnectionSource</h4>
+
+		<p><code>JNDIConnectionSource</code> is another
+		<code>ConnectionSource</code> implementation shipping in logback.
+		As its name indicates, it retrieves a
+		<code>javax.sql.DataSource</code> from a JNDI and then leverages
+		it to obtain a <code>java.sql.Connection</code>
+		instance. <code>JNDIConnectionSource</code> is primarily designed
+		to be used inside J2EE application servers or by application
+		server clients, assuming the application server supports remote
+		access of <code>javax.sql.DataSource</code>.  Thus, one can take
+		advantage of connection pooling and whatever other goodies the
+		application server provides. More importantly, your application
+		will be <a
+		href="http://en.wikipedia.org/wiki/Don't_repeat_yourself">dryer</a>
+		as it will be no longer necessary to define a
+		<code>DataSource</code> in <em>logback.xml</em>.</p>
+
+    <p>For example, here is a configuration snippet for Tomcat. It
+    assumes PostgreSQL as the database although any of the supported
+    database systems (listed above) would work.</p>
+
+<pre><code>&lt;Context docBase="/path/to/app.war" path="/myapp">
+  ...
+  &lt;Resource <b>name="jdbc/logging"</b>
+               auth="Container"
+               type="javax.sql.DataSource"
+               username="..."
+               password="..."
+               driverClassName="org.postgresql.Driver"
+               url="jdbc:postgresql://localhost/..."
+               maxActive="8"
+               maxIdle="4"/>
+  ...
+&lt;/Context></code></pre>
+		
+   <p>Once a <code>DataSource</code> is defined in the J2EE server, it
+   can be easily referenced by your logback configuration file, as
+   shown in the next example.</p>
+   
+   <p class="example">Example: <code>DBAppender</code> configuration
+   by <code>JNDIConnectionSource</code>
+   (logback-examples/&#8203;src/main/resources/&#8203;chapters/appenders/&#8203;db/append-via-jndi.&#8203;xml)</p>
+
+   
+   <div class="tab">
+     <button class="tablinks" id="button_append_via_jndi_legacy"
+             onclick="openTab(event, 'append_via_jndi', 'legacy')">Legacy</button>
+     <button class="tablinks" id="button_append_via_jndi_canonical"
+             onclick="openTab(event, 'append_via_jndi', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_append_via_jndi_tyler"
+             onclick="openTab(event, 'append_via_jndi', 'tyler')">Tyler</button>
+   </div>
+
+   <div id="append_via_jndi_legacy" class="tabcontent">
+
+<pre><code>&lt;configuration debug="true">
+  &lt;appender name="DB" class="ch.qos.logback.classic.db.DBAppender">
+    &lt;connectionSource class=&quot;ch.qos.logback.core.db.JNDIConnectionSource&quot;&gt;
+      <b>&lt;!-- please note the "java:comp/env/" prefix --&gt;</b>
+      <b>&lt;jndiLocation>java:comp/env/jdbc/logging&lt;/jndiLocation></b>
+    &lt;/connectionSource&gt;
+  &lt;/appender>
+  &lt;root level="INFO">
+    &lt;appender-ref ref="DB" />
+  &lt;/root>  
+&lt;/configuration></code></pre>
+   </div>
+
+   
+   <div id="append_via_jndi_canonical" class="tabcontent">
+     <p>Requires a server call. Please wait a few seconds.</p>
+   </div>
+     <div id="append_via_jndi_tyler" class="tabcontent"><p>Requires a server call.</p></div>
+
+		<p>
+			Note that this class will obtain an
+			<code>javax.naming.InitialContext</code>
+			using the no-argument constructor. This will usually work
+			when executing within a J2EE environment. When outside the
+			J2EE environment, make sure that you provide a
+			<em>jndi.properties</em>
+			file as described by your JNDI provider's documentation.
+		</p>
+		
+		<h4 class="doAnchor">Connection pooling</h4>
+		
+		<p>Logging events can be created at a rather fast pace. To keep up
+		with the flow of events that must be inserted into a database, it
+		is recommended to use connection pooling with
+		<code>DBAppender</code>.
+		</p>
+		
+		<p>
+			Experiment shows that using connection pooling with <code>DBAppender</code>
+			gives a big performance boost. With the following
+			configuration file, logging events are sent to a MySQL database,
+			without any pooling.
+		</p>
+    
+    <p class="example">Example: <code>DBAppender</code> configuration
+    without pooling
+    (logback-examples/&#8203;src/main/resources/&#8203;chapters/appenders/&#8203;db/append-toMySQL-with-datasource.&#8203;xml)</p>
+
+
+
+    <div class="tab">
+      <button class="tablinks" id="button_toMySQL_with_datasource_legacy"
+              onclick="openTab(event, 'toMySQL_with_datasource', 'legacy')">Legacy</button>
+      <button class="tablinks" id="button_toMySQL_with_datasource_canonical"
+              onclick="openTab(event, 'toMySQL_with_datasource', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_toMySQL_with_datasource_tyler"
+             onclick="openTab(event, 'toMySQL_with_datasource', 'tyler')">Tyler</button>
+    </div>
+
+    <div id="toMySQL_with_datasource_legacy" class="tabcontent">        
+    <pre><code>&lt;configuration>
+
+  &lt;appender name="DB" class="ch.qos.logback.classic.db.DBAppender">
+    &lt;connectionSource class="ch.qos.logback.core.db.DataSourceConnectionSource">
+      &lt;dataSource class="com.mysql.jdbc.jdbc2.optional.MysqlDataSource">
+        &lt;serverName>${serverName}&lt;/serverName>
+        &lt;port>${port$&lt;/port>
+        &lt;databaseName>${dbName}&lt;/databaseName>
+        &lt;user>${user}&lt;/user>
+        &lt;password>${pass}&lt;/password>
+      &lt;/dataSource>
+    &lt;/connectionSource>
+  &lt;/appender>
+    
+  &lt;root level="DEBUG">
+    &lt;appender-ref ref="DB" />
+  &lt;/root>
+&lt;/configuration></code></pre>
+    </div>
+
+    <div id="toMySQL_with_datasource_canonical" class="tabcontent">
+      <p>Requires a server call. Please wait a few seconds.</p>
+    </div>
+     <div id="toMySQL_with_datasource_tyler" class="tabcontent"><p>Requires a server call.</p></div>
+
+    
+    <p>With this configuration file, sending 500 logging events to a
+    MySQL database takes a whopping 5 seconds, that is 10 milliseconds
+    per request. This figure is unacceptable when dealing with large
+    applications.
+    </p>
+
+    <p>A dedicated external library is necessary to use connection
+    pooling with <code>DBAppender</code>. The next example uses <a
+    href="http://sourceforge.net/projects/c3p0">c3p0</a>. To be able
+    to use c3p0, one must download it and place
+    <em>c3p0-VERSION.jar</em> in the classpath.
+    </p>
+                
+    <p class="example">Example: <code>DBAppender</code> configuration
+    with pooling
+    (logback-examples/&#8203;src/main/resources/&#8203;chapters/appenders/&#8203;db/append-toMySQL-with-datasource-and-pooling.&#8203;xml)</p>
+
+
+    <div class="tab">
+      <button class="tablinks" id="button_toMySQL_ds_pooling_legacy"
+              onclick="openTab(event, 'toMySQL_ds_pooling', 'legacy')">Legacy</button>
+      <button class="tablinks" id="button_toMySQL_ds_pooling_canonical"
+              onclick="openTab(event, 'toMySQL_ds_pooling', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_toMySQL_ds_pooling_tyler"
+             onclick="openTab(event, 'toMySQL_ds_pooling', 'tyler')">Tyler</button>
+    </div>
+
+    <div id="toMySQL_ds_pooling_legacy" class="tabcontent">
+    <pre><code>&lt;configuration>
+
+  &lt;appender name="DB" class="ch.qos.logback.classic.db.DBAppender">
+    &lt;connectionSource
+      class="ch.qos.logback.core.db.DataSourceConnectionSource">
+      <b>&lt;dataSource
+        class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        &lt;driverClass>com.mysql.jdbc.Driver&lt;/driverClass>
+        &lt;jdbcUrl>jdbc:mysql://${serverName}:${port}/${dbName}&lt;/jdbcUrl>
+        &lt;user>${user}&lt;/user>
+        &lt;password>${password}&lt;/password>
+      &lt;/dataSource></b>
+    &lt;/connectionSource>
+  &lt;/appender>
+
+  &lt;root level="DEBUG">
+    &lt;appender-ref ref="DB" />
+  &lt;/root>
+&lt;/configuration></code></pre>
+    </div>
+   
+    <div id="toMySQL_ds_pooling_canonical" class="tabcontent">
+      <p>Requires a server call. Please wait a few seconds.</p>
+    </div>
+     <div id="toMySQL_ds_pooling_tyler" class="tabcontent"><p>Requires a server call.</p></div>
+
+
+
+     <p>With this new configuration, sending 500 logging requests to
+     the aforementioned MySQL database takes around 0.5 seconds, for
+     an average of 1 millisecond per request, that is a tenfold
+     improvement in performance.
+     </p>
+
+     <h3 class="doAnchor" name="SyslogAppender">SyslogAppender</h3>
+
+     <p>The syslog protocol is a very simple protocol: a syslog sender
+     sends a small message to a syslog receiver.  The receiver is
+     commonly called <em>syslog daemon</em> or <em>syslog server</em>.
+     Logback can send messages to a remote syslog daemon. This is
+     achieved by using <a
+     href="../xref/ch/qos/logback/classic/net/SyslogAppender.html"><code>SyslogAppender</code></a>.
+     </p>
+		
+     <p>Here are the properties you can pass to a SyslogAppender.</p>
+
+     <table class="bodyTable striped">
+       <tr>
+	 <th>Property Name</th>
+	 <th>Type</th>
+	 <th>Description</th>
+       </tr>
+       <tr>
+	 <td><span class="prop" container="syslog">syslogHost</span></td>
+	 <td><code>String</code></td>
+	 <td>The host name of the syslog server.</td>
+       </tr>
+       <tr>
+	 <td><span class="prop" container="syslog">port</span></td>
+	 <td><code>String</code></td>
+	 <td>The port number on the syslog server to connect
+	 to. Normally, one would not want to change the default value
+	 of <em>514</em>.
+	 </td>
+       </tr>
+       <tr>
+	 <td><span class="prop" container="syslog">facility</span></td>
+	 <td><code>String</code></td>
+	 <td>
+	   <p>The <span class="prop">facility</span> is meant to identify 
+	   the source of a message.</p>
+	   <p>The <span class="prop">facility</span> option must be set
+	   to one of the strings <em>KERN, USER, MAIL, DAEMON, AUTH,
+	   SYSLOG, LPR, NEWS, UUCP, CRON, AUTHPRIV, FTP, NTP, AUDIT,
+	   ALERT, CLOCK, LOCAL0, LOCAL1, LOCAL2, LOCAL3, LOCAL4,
+	   LOCAL5, LOCAL6, LOCAL7</em>. Case is not important.</p>
+	 </td>
+       </tr>
+       <tr>
+        <td><span class="prop" container="syslog">suffixPattern</span></td>
+	<td><code>String</code></td>
+	<td><p>The <span class="prop">suffixPattern</span> option
+	specifies the format of the non-standardized part of the
+	message sent to the syslog server. By default, its value is
+	<em>[%thread] %logger %msg</em>. Any value that a
+	<code>PatternLayout</code> could use is a correct <span
+	class="prop">suffixPattern</span> value.
+      </p>
+	</td>
+       </tr>
+       
+       <tr>
+        <td><span class="prop"        container="syslog">stackTracePattern</span></td> 
+	<td><code>String</code></td>
+	<td><p>The <span class="prop">stackTracePattern</span>
+	property allows the customization of the string appearing just
+	before each stack trace line. The default value for this
+	property is "\t", i.e. the tab character. Any value accepted
+	by <code>PatternLayout</code> is a valid value for <span
+	class="prop">stackTracePattern</span>.</p>
+	</td>
+       </tr>
+       
+       <tr>
+	 <td><span class="prop" container="syslog">throwableExcluded</span></td>
+	 <td><code>boolean</code></td>
+	 <td>Setting <span class="prop">throwableExcluded</span> to
+	 <code>true</code> will cause stack trace data associated with
+	 a Throwable to be omitted. By default, <span
+	 class="prop">throwableExcluded</span> is set to
+	 <code>false</code> so that stack trace data is sent to the
+	 syslog server. </td>
+       </tr>
+       
+       
+     </table>
+     
+     <p>The syslog severity of a logging event is converted from the
+     level of the logging event.  The <em>DEBUG</em> level is
+     converted to <em>7</em>, <em>INFO</em> is converted to
+     <em>6</em>, <em>WARN</em> is converted to <em>4</em> and
+     <em>ERROR</em> is converted to <em>3</em>.
+     </p>
+		
+     <p>Since the format of a syslog request follows rather strict
+     rules, there is no layout to be used with
+     <code>SyslogAppender</code>. However, using the <span
+     class="prop">suffixPattern</span> option lets the user display
+     whatever information she wishes.
+     </p>
+		
+     <p>Here is a sample configuration using a
+     <code>SyslogAppender</code>.</p>
+		
+    <p class="example">Example: <code>SyslogAppender</code>
+    configuration
+    (logback-examples/&#8203;src/main/resources/&#8203;chapters/appenders/&#8203;conf/logback-syslog.&#8203;xml)</p>
+
+    <div class="tab">
+      <button class="tablinks" id="button_syslog_legacy"
+              onclick="openTab(event, 'syslog', 'legacy')">Legacy</button>
+      <button class="tablinks" id="button_syslog_canonical"
+              onclick="openTab(event, 'syslog', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_syslog_tyler"
+             onclick="openTab(event, 'syslog', 'tyler')">Tyler</button>
+    </div>
+
+    <div id="syslog_legacy" class="tabcontent">
+    <pre><code>&lt;configuration>
+
+  &lt;appender name="SYSLOG" class="ch.qos.logback.classic.net.SyslogAppender">
+    &lt;syslogHost>remote_home&lt;/syslogHost>
+    &lt;facility>AUTH&lt;/facility>
+    &lt;suffixPattern>[%thread] %logger %msg&lt;/suffixPattern>
+  &lt;/appender>
+
+  &lt;root level="DEBUG">
+    &lt;appender-ref ref="SYSLOG" />
+  &lt;/root>
+&lt;/configuration></code></pre>
+    </div>
+
+    
+    <div id="syslog_canonical" class="tabcontent">
+      <p>Requires a server call. Please wait a few seconds.</p>
+    </div>
+     <div id="syslog_tyler" class="tabcontent"><p>Requires a server call.</p></div>
+    
+
+    <p>When testing this configuration, you should verify that the
+    remote syslog daemon accepts requests from an external
+    source. Experience shows that, by default, syslog daemons usually
+    deny requests coming via a network connection.
+    </p>
+		
+
+    <script src="../templates/footer.js" type="text/javascript"></script>
+
+
+  </div>
+</div>  
+</body>
+</html>

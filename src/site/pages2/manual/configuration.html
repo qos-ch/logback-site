@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Configuration</title>
+
+    <script type="text/javascript">prefix='../';</script>
+
+<script>
+/* Redirect old single-page configuration.html#Section bookmarks to split pages. */
+(function () {
+  var map = {
+    'LevelChangePropagator': 'configuration-conditional.html',
+    'caseSensitivity': 'configuration-xml.html',
+    'conditional': 'configuration-conditional.html',
+    'conditionalExp': 'configuration-conditional.html',
+    'confidential': 'configuration-variables.html',
+    'configuringAppenders': 'configuration-xml.html',
+    'contextListener': 'configuration-conditional.html',
+    'contextName': 'configuration-xml.html',
+    'context_name': 'configuration-variables.html',
+    'cumulative': 'configuration-xml.html',
+    'defaultValuesForVariables': 'configuration-variables.html',
+    'definingProps': 'configuration-variables.html',
+    'definingPropsOnTheFly': 'configuration-variables.html',
+    'fileInclusion': 'configuration-conditional.html',
+    'hostname': 'configuration-variables.html',
+    'insertFromJNDI': 'configuration-conditional.html',
+    'loggerElement': 'configuration-xml.html',
+    'lookupOrder': 'configuration-variables.html',
+    'nestedSubst': 'configuration-variables.html',
+    'overridingCumulativity': 'configuration-xml.html',
+    'propertiesConfigurator': 'configuration-conditional.html',
+    'rootElement': 'configuration-xml.html',
+    'scopes': 'configuration-variables.html',
+    'sequenceNumberGenerator': 'configuration-conditional.html',
+    'serializeModel': 'configuration-conditional.html',
+    'syntax': 'configuration-xml.html',
+    'timestamp': 'configuration-variables.html',
+    'variableSubstitution': 'configuration-variables.html'
+  };
+  var h = (location.hash || '').replace(/^#/, '');
+  if (h && map[h]) {
+    location.replace(map[h] + '#' + h);
+  }
+})();
+</script>
+
+</head>
+  <body onload="loopOn(); enableMenuEventListeners(); hljs.highlightAll(); decorate(); addClipboardListener(); enableLegacy();">
+
+  <script type="text/javascript" src="../templates/header3.js"></script>
+
+
+  <div id="content">
+
+    
+      <div id="top-content">
+
+        <script type="text/javascript" src="../templates/creative.js" ></script>
+        <script type="text/javascript" src="menu.js"></script>
+
+          <div id="quote">
+              <p><em>In symbols one observes an advantage in discovery which
+                  is greatest when they express the exact nature of a thing
+                  briefly and, as it were, picture it; then indeed the labor of
+                  thought is wonderfully diminished.</em>
+              </p>
+              <p>&mdash;GOTTFRIED WILHELM LEIBNIZ</p>
+          </div>
+
+      </div>
+
+
+
+    <p class="doc-nav"><a href="index.html">Manual</a> · <a href="configuration.html">Configuration</a></p>
+
+    <h1>Configuration of logback</h1>
+
+    <script type="text/javascript" src="../common/templates/sponsoredBy.js"></script>
+
+
+    <p>We start by presenting ways for configuring logback, with many
+    example configuration scripts.  Joran, the configuration framework
+    upon which logback relies will be presented in <a
+    href="onJoran.html">a later chapter</a>.
+    </p>
+
+
+    <h2 class="doAnchor" name="auto_configuration">Configuration at
+    initialization</h2>
+
+    <p>Inserting log requests into the application code requires a
+    fair amount of planning and effort. Observation shows that
+    approximately four percent of code is dedicated to
+    logging. Consequently, even a moderately sized application will
+    contain thousands of logging statements embedded within its
+    code. Given their number, we need tools to manage these log
+    statements.
+    </p>
+
+    <p>Logback can be configured programmatically or via a configuration
+script written in XML, Groovy, or as a serialized model. Existing
+log4j users can convert their <em>log4j.properties</em> files to
+<em>logback.xml</em> using the <a
+href="https://logback.qos.ch/translator/services/propertiesTranslator.html">properties translator</a>
+web application.</p>
+
+    <p>Let us begin by discussing the initialization steps that
+    logback follows to try to configure itself:
+    </p>
+
+    <ol>
+
+      <li><p>Logback will search for any custom <a
+      href="../xref/ch/qos/logback/classic/spi/Configurator.html"><code>Configurator</code></a>
+      providers using
+        <a
+      href="http://docs.oracle.com/javase/6/docs/api/java/util/ServiceLoader.html">
+          service-provider loading facility</a>. If any such custom
+          provider is found, it takes precedence over logback's own
+          configurators, e.g. <code>DefaultJoranConfigurator</code>
+          (see below).
+        </p>
+
+        <p>A custom <code>Configurator</code> is an implementation of
+        <a
+        href="../xref/ch/qos/logback/classic/spi/Configurator.html">
+        <code>ch.qos.logback.&#8203;classic.spi.&#8203;Configurator</code></a>
+        interface. Custom configurators are searched by looking up
+        file resources located under
+        <em>META-INF/services/&#8203;ch.qos.logback.&#8203;classic.spi.&#8203;Configurator</em>. The
+        contents of this file should specify the fully qualified class
+        name of the desired <code>Configurator</code> implementation.
+        </p>
+      </li>
+
+
+      <!--<li><p><span class="label notice">Since 1.3.9/1.4.9</span> If no
+      user-supplied custom <code>Configurator</code> was found in the
+      previous step, logback will instantiate a <a
+      href="https://github.com/qos-ch/logback/blob/master/logback-classic/src/main/java/ch/qos/logback/classic/joran/SerializedModelConfigurator.java">SerializedModelConfigurator</a>.</p>
+
+      <p class="highlight">Given the lack of user interest,
+      <code>SerializedModelConfigurator</code> will be removed from
+      the initialization sequence on July 1st 2025.</p>
+      
+       <p>Given that <code>SerializedModelConfigurator</code> has not
+       met with user interest, and given the advent of the <a
+       href="https://github.com/qos-ch/logback-tyler">logback-tyler
+       project</a>, <code>SerializedModelConfigurator</code> will be
+       removed from logback's initialization sequence in the near
+       future. You are hereby discouraged from relying on
+       <code>SerializedModelConfigurator</code>.</p>
+        
+
+       <p>&bull; If the system property "logback.scmoFile"
+       is set, then <code>SerializedModelConfigurator</code> will try
+       to locate the file specified the aforementioned system
+       property. If the designated file could be located, it will be
+       read and interpreted for configuration.
+       </p> 
+
+ 
+       <p>&bull; If the aforementioned system property was not set or
+       if the designated file could not be found,
+       <code>SerializedModelConfigurator</code> will search for the
+       serialized configuration model file <em>logback-test.scmo</em>
+       in the classpath. If this file can be located, it will be read
+       and interpreted for configuration.</p>
+
+
+       <p>&bull; If the aforementioned file cannot be found,
+       <code>SerializedModelConfigurator</code> will search for the
+       serialized configuration model file <em>logback.scmo</em> in
+       the classpath.</p>
+        
+
+       <p>&bull; If no serialized configuration model file could be
+       located, <code>SerializedModelConfigurator</code> will return
+       with an execution status asking for the next available
+       configurator, i.e. <code>DefaultJoranConfigurator</code></a>,
+       to be invoked.      </p>
+
+       <p>Configuration from a serialized model file executes faster
+       and does not require any XML libraries. In conjunction with
+       GraalVM, this may yield smaller executables that start faster.
+       </p>
+      </li>
+      -->
+      <li>
+
+        <p><span class="label notice">Nominal step</span> If the
+        previous configurators could not locate their required
+        resources, then an instance of <a
+        href="https://github.com/qos-ch/logback/blob/master/logback-classic/src/main/java/ch/qos/logback/classic/util/DefaultJoranConfigurator.java"><code>DefaultJoranConfigurator</code></a>
+        will be created and invoked.
+      </p>
+
+       <p>&bull; If the system property "logback.configurationFile" is
+       set, then <code>DefaultJoranConfigurator</code> will try to
+       locate the file specified by the aforementioned system
+       property. If this file can be located, it will be read and
+       interpreted for configuration.
+       </p>
+      
+      
+      <p>&bull; If the previous step fails,
+      <code>DefaultJoranConfigurator</code> will try to locate the
+      configuration file "<em>logback-test.xml</em>" <a
+      href="../faq.html#configFileLocation">on the classpath</a>. If
+      this file can be located, it will be read and interpreted for
+      configuration.</p>
+
+
+      <p>&bull; If no such file is found, it will try to locate the
+      configuration file "<em>logback.xml</em>" <a
+      href="../faq.html#configFileLocation">in the classpath</a>. If
+      this file can be located, it will be read and interpreted for
+      configuration. Note that this is the <b>nominal</b>
+      configuration step.</p>
+ 
+      
+      <p><span class="label">since
+      1.5.8</span> <a href="#propertiesConfigurator"><code>PropertiesConfigurator</code></a>,
+      introduced in version 1.5.8, allows for setting logger levels
+      via a properties file. The location of properties files can be
+      specified as a file path as well as a URL via HTTP or HTTPS
+      protocols. Watching files and reconfiguration upon change is
+      also supported. Note that configuration files in properties
+      format are intended to be part of a main configuration file in
+      XML format or a configurator produced by
+      <a href="https://logback.qos.ch/translator/services/xml2Java.html">logback-tyler</a>. </p>
+
+    
+      <p>&bull; If  no   configuration   file   could  be   located,
+      <code>DefaultJoranConfigurator</code>   will   return  with   an
+      execution  status asking  for the  next available  configurator,
+      i.e. <code>BasicConfigurator</code></a>, to be invoked.
+    </p>    
+      </li>
+
+      
+      <li><p>If none of the above succeeds, logback-classic will
+      configure itself using the <a
+      href="../xref/ch/qos/logback/classic/BasicConfigurator.html"><code>BasicConfigurator</code></a>
+      which will cause logging output to be directed to the console.
+      </p>
+      </li>
+
+    </ol>
+
+    <p>The last step is meant as a last-ditch effort to provide a
+    default (but very basic) logging functionality in the absence of a
+    configuration file.
+    </p>
+
+    <p>If you are using a build tool according to Maven's folder
+    structure, then if you place the <em>logback-test.xml</em> under
+    the <em>src/test/resources</em> folder, Maven will ensure that it
+    won't be included in the artifact produced. Thus, you can use a
+    different configuration file, namely <em>logback-test.xml</em>
+    during testing, and another file, namely, <em>logback.xml</em>, in
+    production.
+    </p>
+
+    <p><span class="label">Fast start-up</span> It takes about 100
+    milliseconds for Joran to parse a given logback configuration
+    file. To shave off those milliseconds at application start up, you
+    can use the service-provider loading facility (item 1 above) to
+    load your own custom <code>Configurator</code> class with <a
+    href="../xref/ch/qos/logback/classic/BasicConfigurator.html">BasicConfigurator</a>
+    serving as a good starting point. Better yet, converting an XML
+    file to Java using <a
+    href="https://logback.qos.ch/translator/services/xml2Java.html"><code>TylerConfigurator</code></a>
+    is a quick and quite convenient way of improving configuration times.
+    </p>
+
+    <p><span class="label notice">Groovy</span> Given that Groovy is a
+    full-fledged language, we have dropped support for
+    <em>logback.groovy</em> in order to protect against potential attacks. Fortunately,
+    groovy support was picked up at <a
+    href="https://github.com/virtualdogbert/logback-groovy-config">virtualdogbert/logback-groovy-config</a>
+    by Tucker Pelletier.
+    </p>
+
+    
+    <h3 class="doAnchor" name="automaticConf">Automatically
+    configuring logback</h3>
+
+    <p>The simplest way to configure logback is by letting logback
+    fall back to its default configuration. Let us give a taste of how
+    this is done in an imaginary application called
+    <code>MyApp1</code>.
+    </p>
+
+    <p class="example">Example: Simple example of
+    <code>BasicConfigurator</code> usage <a
+    href="../xref/chapters/configuration/MyApp1.html">(logback-examples/&#8203;src/main/&#8203;java/chapters/&#8203;configuration/MyApp1.java)</a></p>
+
+    <pre><code>package chapters.configuration;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class MyApp1 {
+  final static Logger logger = LoggerFactory.getLogger(&#8203;MyApp1.class);
+
+  public static void main(String[] args) {
+    logger.info("Entering application.");
+
+    Foo foo = new Foo();
+    foo.doIt();
+    logger.info("Exiting application.");
+  }
+}</code></pre>
+
+  <p>This class defines a static logger variable. It then instantiates
+  a <code>Foo</code> object. The <code>Foo</code> class is listed
+  below:
+  </p>
+
+  <p class="example">Example: Small class doing logging
+  <a href="../xref/chapters/configuration/Foo.html">(logback-examples/src/&#8203;main/java/&#8203;chapters/&#8203;configuration/Foo.java)</a>
+  </p>
+
+  <pre><code>package chapters.configuration;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class Foo {
+  static final Logger logger = LoggerFactory.getLogger(&#8203;Foo.class);
+
+  public void doIt() {
+    logger.debug("Did it again!");
+  }
+}</code></pre>
+
+
+    <p>In order to run the examples in this chapter, you need to make
+    sure that certain jar files are present on the class path.  Please
+    refer to the <a href="../setup.html">setup page</a> for further
+    details.
+    </p>
+
+    <p>Assuming the configuration files <em>logback-test.xml</em> or
+    <em>logback.xml</em> are not present, logback will default to
+    invoking <a
+    href="../xref/ch/qos/logback/classic/BasicConfigurator.html"><code>BasicConfigurator</code></a>
+    which will set up a minimal configuration. This minimal
+    configuration consists of a <code>ConsoleAppender</code> attached
+    to the root logger.  The output is formatted using a
+    <code>PatternLayoutEncoder</code> set to the pattern
+    <em>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} -%kvp- %msg%n</em>. Moreover,
+    by default the root logger is assigned the <code>DEBUG</code>
+    level.
+    </p>
+
+    <p>Thus, the output of the command <em>java chapters.configuration.&#8203;MyApp1</em>
+    should be similar to:
+    </p>
+
+    <p class="source">16:06:09.031 [main] INFO  chapters.configuration.&#8203;MyApp1 -- Entering application.
+16:06:09.046 [main] DEBUG chapters.configuration.Foo -- Did it again!
+16:06:09.046 [main] INFO  chapters.configuration.&#8203;MyApp1 -- Exiting application.</p>
+
+
+   <p class="highlight">Except for code that configures logback (if such
+   code exists) client code does not need to depend on
+   logback. Applications that use logback as their logging framework
+   will have a compile-time dependency on SLF4J but not logback.
+   </p>
+
+   <p>The <code>MyApp1</code> application links to logback via calls
+   to <code>org.slf4j.LoggerFactory</code> and
+   <code>org.slf4j.Logger</code> classes, retrieve the loggers it
+   wishes to use, and chugs on.  Note that the only dependencies of
+   the <code>Foo</code> class on logback are through
+   <code>org.slf4j.LoggerFactory</code> and
+   <code>org.slf4j.Logger</code> imports.  Except code that configures
+   logback (if such code exists) client code does not need to depend
+   on logback. Since SLF4J permits the use of any logging
+   framework under its abstraction layer, it is easy to migrate
+   large bodies of code from one logging framework to another.
+   </p>
+
+   <h3>Configuration with <em>logback-test.xml</em> or
+   <em>logback.xml</em></h3>
+
+   <p>As mentioned earlier, logback will try to configure itself using
+   the files <em>logback-test.xml</em> or <em>logback.xml</em> if
+   found on the class path. Here is a configuration file equivalent to
+   the one established by <code>BasicConfigurator</code> we've just
+   seen.
+   </p>
+
+   <p class="example">Example: Basic configuration file
+   (logback-examples/&#8203;src/main/resources/&#8203;chapters/configuration/&#8203;sample0.xml)</p>
+
+   <div class="tab">
+     <button class="tablinks" id="button_sample0_legacy"
+             onclick="openTab(event, 'sample0', 'legacy')">Legacy</button>
+     <button class="tablinks" id="button_sample0_canonical"
+             onclick="openTab(event, 'sample0', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_sample0_tyler"
+             onclick="openTab(event, 'sample0', 'tyler')">Tyler</button>
+   </div>
+
+   <div id="sample0_legacy" class="tabcontent">   
+   <pre><code>&lt;configuration>
+
+  &lt;appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    &lt;!-- encoders are assigned the type
+         ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+    &lt;encoder>
+      &lt;pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} -%kvp- %msg%n&lt;/pattern>
+    &lt;/encoder>
+  &lt;/appender>
+
+  &lt;root level="debug">
+    &lt;appender-ref ref="STDOUT" />
+  &lt;/root>
+&lt;/configuration></code></pre>
+   </div>
+
+   <div id="sample0_canonical" class="tabcontent">
+    <p>Requires a server call.</p>
+   </div>
+   <div id="sample0_tyler" class="tabcontent"><p>Requires a server call.</p></div>
+
+
+
+
+      <p>After you have renamed <em>sample0.xml</em> as
+   <em>logback.xml</em> (or <em>logback-test.xml</em>) place it into a
+   directory accessible from the class path. Running the <em>MyApp1</em>
+   application should give identical results to its previous run.</p>
+
+
+   <h4 class="doAnchor" name="automaticStatusPrinting">Automatic
+   printing of status messages in case of warnings or errors</h4>
+
+   <p class="highlight">When warnings or errors occur while parsing the
+   configuration file, Logback prints its internal status messages to the
+   console to aid diagnosis.</p>
+
+   <p>If warnings or errors occur during the parsing of the
+   configuration file, logback will automatically print its internal
+   status data on the console. Note that to avoid duplication,
+   automatic status printing is disabled if the user explicitly
+   registers a status listener (<a href="#logback.statusLC">discussed
+   below</a>).</p>
+
+   <p>In the absence of warnings or errors, if you still wish to
+   inspect logback's internal status, then you can instruct logback to
+   print status data by invoking the <code>print()</code> of the
+   <code>StatusPrinter</code> class. The <em>MyApp2</em> application
+   shown below is identical to <em>MyApp1</em> except for the addition
+   of two lines of code for printing internal status data.</p>
+
+   <p class="example" id="MyApp2">Example: Print logback's internal status
+    information <a
+    href="../xref/chapters/configuration/MyApp2.html">(logback-examples/src/&#8203;main/java/&#8203;chapters/&#8203;configuration/MyApp2.java)</a></p>
+
+
+<pre class="source">
+public static void main(String[] args) {
+  // assume SLF4J is bound to logback in the current environment
+  <b>LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory(&#8203;);</b>
+  // print logback's internal status
+  <b>StatusPrinter.print(lc);</b>
+  ...
+}</pre>
+
+  <p>If everything goes well, you should see the following output on the console</p>
+
+  <div class="source longline">17:44:58,578 |-INFO in ch.qos.logback.classic.&#8203;LoggerContext[default] - Found resource [logback-test.xml]
+17:44:58,671 |-INFO in ch.qos.logback.classic.&#8203;joran.action.ConfigurationAction - debug attribute not set
+17:44:58,671 |-INFO in ch.qos.logback.core.&#8203;joran.action.AppenderAction - About to instantiate appender of type [ch.qos.logback.&#8203;core.ConsoleAppender]
+17:44:58,687 |-INFO in ch.qos.logback.core.&#8203;joran.action.AppenderAction - Naming appender as [STDOUT]
+17:44:58,812 |-INFO in ch.qos.logback.core.&#8203;joran.action.AppenderAction - Popping appender named [STDOUT] from the object stack
+17:44:58,812 |-INFO in ch.qos.logback.classic.&#8203;joran.action.LevelAction - root level set to DEBUG
+17:44:58,812 |-INFO in ch.qos.logback.core.&#8203;joran.action.AppenderRefAction - Attaching appender named [STDOUT] to Logger[root]
+
+17:44:58.828 [main] INFO  chapters.configuration.&#8203;MyApp2 -- Entering application.
+17:44:58.828 [main] DEBUG chapters.configuration.Foo -- Did it again!
+17:44:58.828 [main] INFO  chapters.configuration.&#8203;MyApp2 -- Exiting application.
+</div>
+
+  <p>At the end of this output, you can recognize the lines that were
+  printed in the previous example. You should also notice
+  logback's internal messages, a.k.a. <code>Status</code> objects,
+  which allow convenient access to logback's internal state.
+  </p>
+
+   <h4 class="doAnchor" name="dumpingStatusData">Status data</h4>
+
+   <p class="highlight">Enabling status output is often helpful when
+   diagnosing issues with Logback.</p>
+
+   <p>Errors can also occur after configuration, for example when a disk
+is full or log files cannot be archived due to wrong permissions. Registering
+a <code>StatusListener</code> is recommended; it receives status events
+as they occur and facilitates troubleshooting.</p>
+
+   <p>The next example illustrates the installation of
+   <code>OnConsoleStatusListener</code>. </p>
+
+   <p class="example">Example: Registering a status listener
+   (logback-examples/&#8203;src/main/resources/&#8203;chapters/configuration/&#8203;onConsoleStatusListener.&#8203;xml)</p>
+
+    <div class="tab">
+    <button class="tablinks" id="button_onConsoleStatusListener_legacy"
+            onclick="openTab(event, 'onConsoleStatusListener', 'legacy')">Legacy</button>
+    <button class="tablinks" id="button_onConsoleStatusListener_canonical"
+            onclick="openTab(event, 'onConsoleStatusListener', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_onConsoleStatusListener_tyler"
+             onclick="openTab(event, 'onConsoleStatusListener', 'tyler')">Tyler</button>
+    </div>
+    
+    <div id="onConsoleStatusListener_legacy" class="tabcontent">
+   <pre><code>&lt;configuration>
+   &lt;!-- Recommendation: place status listeners towards the the top of the configuration file --&gt;
+   <b>&lt;statusListener class="ch.qos.logback.&#8203;core.status.OnConsoleStatusListener" /></b>
+
+   &lt;!-- ... the rest of the configuration file --&gt;
+
+&lt;/configuration></code></pre>
+   </div>
+
+    <div id="onConsoleStatusListener_canonical" class="tabcontent">
+    <p>Requires a server call.</p>
+    </div>     
+   <div id="onConsoleStatusListener_tyler" class="tabcontent"><p>Requires a server call.</p></div>
+
+   <p>A <code>StatusListener</code> can be installed using a
+   configuration file assuming that:
+   </p>
+   <ol>
+     <li>the configuration file is found</li>
+     <li>the configuration file is well-formed XML.</li>
+   </ol>
+
+
+   <p>If any of these two conditions is not fulfilled, Joran cannot
+   interpret the configuration file and in particular the <span
+   class="elem">&lt;statusListener&gt;</span> element. If the configuration
+   file is found but is malformed, then logback will detect the error
+   condition and automatically print its internal status on the
+   console. However, if the configuration file cannot be found,
+   logback will not automatically print its status data, since this is
+   not necessarily an error condition. Programmatically invoking
+   <code>StatusPrinter.print()</code> as shown in the <a
+   href="#MyApp2"><em>MyApp2</em></a> application above ensures that
+   status information is printed in every case.</p>
+
+   <p><span class="label">Forcing status output</span> In the absence
+   of status messages, tracking down a rogue <em>logback.xml</em>
+   configuration file can be difficult, especially in production where
+   the application source cannot be easily modified. To help identify
+   the location of a rogue configuration file, you can set a
+   <code>StatusListener</code> via the "logback.statusListenerClass"
+   system property (<a href="#logback.statusLC">discussed below</a>) to
+   force output of status messages. The "logback.statusListenerClass"
+   system property can also be used to silence output automatically
+   generated in case of errors.
+   </p>
+ 
+
+   <h4 class="doAnchor" name="configDebug">Shorthand</h4>
+
+   <p>As a shorthand, it is possible to register an
+   <code>OnConsoleStatusListener</code> by setting the <span
+   class="attr">debug</span> attribute to <code>true</code> within the
+   <span class="elem">&lt;configuration&gt;</span> element, as shown below.</p>
+
+  <p class="example">Example: Basic configuration file using debug
+   mode
+   (logback-examples/&#8203;src/main/resources/&#8203;chapters/configuration/&#8203;sample1.xml)</p>
+
+  
+  <div class="tab">
+    <button class="tablinks" id="button_sample1_legacy"
+            onclick="openTab(event, 'sample1', 'legacy')">Legacy</button>
+    <button class="tablinks" id="button_sample1_canonical"
+            onclick="openTab(event, 'sample1', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_sample1_tyler"
+             onclick="openTab(event, 'sample1', 'tyler')">Tyler</button>
+  </div>
+    
+  <div id="sample1_legacy" class="tabcontent">
+   <pre><code>&lt;configuration <b>debug="true"</b>>
+
+  &lt;appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    &lt;!-- encoders are  by default assigned the type
+         ch.qos.logback.classic.encoder.PatternLayoutEncoder --&gt;
+    &lt;encoder>
+      &lt;pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} -%kvp- %msg%n&lt;/pattern>
+    &lt;/encoder>
+  &lt;/appender>
+
+  &lt;root level="debug">
+    &lt;appender-ref ref="STDOUT" />
+  &lt;/root>
+&lt;/configuration></code></pre>
+  </div>
+    
+  <div id="sample1_canonical" class="tabcontent">
+    <p>Requires a server call.</p>
+  </div>
+   <div id="sample1_tyler" class="tabcontent"><p>Requires a server call.</p></div>
+
+   <p>By the way, setting <code>debug="true"</code> is strictly
+   equivalent to installing an <code>OnConsoleStatusListener</code> as
+   shown previously. </p>
+
+
+   <h3 class="doAnchor"
+   name="logback.statusLC">"logback.statusListenerClass" system
+   property</h3>
+
+   <p>One may also register a status listener by setting the
+   "logback.statusListenerClass" Java system property to the name of
+   the listener class you wish to register. For example,
+   </p>
+
+   <p class="source">java <b>-Dlogback.statusListenerClass</b>=ch.qos.logback.&#8203;core.status.OnConsoleStatusListener&nbsp;.&#8203;...</p>
+
+   <!--
+   <p>As a shorthand, the string
+   "ch.qos.logback.&#8203;core.status.OnConsoleStatusListener" can be
+   replaced by the case insensitive strings "SYSOUT". For
+   example:
+   
+   <p class="source">java -Dlogback.statusListenerClass=<b>sysout</b>&nbsp;...</p>
+
+   -->
+   <p>As a shorthand, the string
+   "ch.qos.logback.&#8203;core.status.OnConsoleStatusListener" can be
+   replaced by the case insensitive strings "STDOUT" or "SYSOUT". For
+   example:
+   
+   <p class="source">java -Dlogback.statusListenerClass=<b>stdout</b>&nbsp;...</p>
+
+   <p>or equivalently:</p>
+
+   <p class="source">java -Dlogback.statusListenerClass=<b>sysout</b>&nbsp;...</p>
+
+   <h3>Other <code>StatusListener</code> implementations</h3>
+
+   <p>Logback ships with several status listener implementations. <a
+   href="../xref/ch/qos/logback/core/status/OnConsoleStatusListener.html">OnConsoleStatusListener</a>
+   prints incoming status messages on the console, i.e. on
+   System.out. <a
+   href="../xref/ch/qos/logback/core/status/OnErrorConsoleStatusListener.html">OnErrorConsoleStatusListener</a>
+   prints incoming status messages on System.err. <a
+   href="../xref/ch/qos/logback/core/status/NopStatusListener.html">NopStatusListener</a>
+   drops incoming status messages.</p>
+
+
+   <p>Note that <a href="#automaticStatusPrinting">automatic status
+   printing</a> (in case of errors) is disabled if any status listener
+   is registered during configuration and in particular if the user
+   specifies a status listener via the "logback.statusListenerClass"
+   system property. Thus, by setting <code>NopStatusListener</code> as a status
+   listener, you can silence internal status printing altogether. </p>
+
+   <p class="source">java -Dlogback.statusListenerClass=ch.qos.logback.&#8203;core.status.<b>NopStatusListener</b>&nbsp;.&#8203;..</p>
+
+   <h3 class="doAnchor" name="viewingStatusMessages">Viewing status
+   messages </h3>
+
+   <p>Logback collects its internal status data in a <code><a
+   href="../xref/ch/qos/logback/core/status/StatusManager.html">StatusManager</a></code>
+   object, accessible via the <code>LoggerContext</code>.
+   </p>
+
+   <p>Given a <code>StatusManager</code> you can access all the status
+   data associated with a logback context. To keep memory usage at
+   reasonable levels, the default <code>StatusManager</code>
+   implementation stores the status messages in two separate parts:
+   the header part and the tail part. The header part stores the first
+   <em>H</em> status messages whereas the tail part stores the last
+   <em>T</em> messages. At present time <em>H</em>=<em>T</em>=150,
+   although these values may change in future releases.</p>
+
+   <p>Logback-classic ships with a servlet called
+   ViewStatusMessagesServlet. This servlet prints the contents of the
+   <code>StatusManager</code> associated with the current
+   <code>LoggerContext</code> as an HTML table. Here is sample output.
+   </p>
+
+   <a href="images/chapters/configuration/lbClassicStatus.jpg">
+     <img src="images/chapters/configuration/lbClassicStatus.jpg" alt="click to enlarge" width="90%"/>
+   </a>
+
+   <p>To add this servlet to your web-application, add the following
+   lines to its <em>WEB-INF/web.xml</em> file.</p>
+
+   <pre><code>  &lt;servlet>
+    &lt;servlet-name>ViewStatusMessages&lt;/servlet-name>
+    &lt;servlet-class>ch.qos.logback.classic.ViewStatusMessagesServlet&lt;/servlet-class>
+  &lt;/servlet>
+
+  &lt;servlet-mapping>
+    &lt;servlet-name>ViewStatusMessages&lt;/servlet-name>
+    &lt;url-pattern>/lbClassicStatus&lt;/url-pattern>
+  &lt;/servlet-mapping></code></pre>
+
+   <p>The <code>ViewStatusMessages</code> servlet will be viewable at
+   the URL <code>http://host/yourWebapp/lbClassicStatus</code>
+   </p>
+
+
+   <h3 class="doAnchor" name="statusListenerViaCode">Listening to status messages via code</h3>
+
+   <p>You may also register a <code>StatusListener</code> via Java
+   code. Here is <a
+   href="../xref/chapters/configuration/AddStatusListenerApp.html">sample
+   code</a>. </p>
+
+   <pre><code>   LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory(&#8203;);
+   StatusManager statusManager = lc.getStatusManager();
+   OnConsoleStatusListener onConsoleListener = new OnConsoleStatusListener();
+   statusManager.add(&#8203;onConsoleListener);</code></pre>
+
+   <p>Note that the registered status listener will only receive status
+   events subsequent to its registration. It will not receive prior
+   messages. Thus, it is usually a good idea to place status listener
+   registration directives at the top of the configuration file before
+   other directives.</p>
+
+
+
+   <!-- ================&#8203;===============&#8203;===============&#8203;============= -->
+
+   <h2 class="doAnchor" name="configFileProperty">Setting the location
+   of the configuration file via a system property</h2>
+
+   <p>You may specify the location of the default configuration file
+   with a system property named
+   <code>"logback.configurationFile"</code>. The value of this
+   property can be a URL, a resource on the class path or a path to a
+   file external to the application.
+   </p>
+
+   <p class="source">java <b>-Dlogback.configurationFile=&#8203;/path/to/config.&#8203;xml</b> chapters.configuration.&#8203;MyApp1</p>
+
+   <p>Note that the file extension must be ".xml" or ".groovy". Other
+   extensions are ignored. <a href="#logback.statusLC">Explicitly
+   registering a status listener</a> may help debugging issues with
+   locating the configuration file.</p>
+
+   <p>Given that <code>"logback.configurationFile"</code> is a Java
+   system property, it may be set within your application as
+   well. However, the system property must be set before any logger
+   instance is created.</p>
+
+   <pre><code>import ch.qos.logback.classic.util.ContextInitializer;
+
+public class ServerMain {
+    public static void main(String args[]) throws IOException, InterruptedException {
+       // must be set before the first call to  LoggerFactory.getLogger();
+       // ContextInitializer.CONFIG_FILE_PROPERTY is set to "logback.configurationFile"
+       System.setProperty(ContextInitializer.CONFIG_FILE_PROPERTY, "/path/to/config.xml");
+       ...
+    }
+}</code></pre>
+
+   <h3 class="doAnchor" name="autoScan">Automatically reloading
+   configuration file upon modification</h3>
+
+   <p class="highlight">Logback-classic can scan for changes in its
+   configuration file and automatically reconfigure itself when the
+   configuration file changes.</p>
+
+   <p>If instructed to do so, logback-classic will scan for changes in
+   its configuration file and automatically reconfigure itself when
+   the configuration file changes. In order to instruct
+   logback-classic to scan for changes in its configuration file and
+   to automatically re-configure itself set the <span
+   class="attr">scan</span> attribute of the
+   <code>&lt;configuration></code> element to true, as shown next.
+
+   </p>
+
+   <p class="example">Example: Scanning for changes in configuration
+   file and automatic re-configuration
+   (logback-examples/&#8203;src/main/resources/&#8203;chapters/configuration/&#8203;scan1.xml)</p>
+
+<pre id="scan1"><code>&lt;configuration <b>scan="true"</b>>
+  ...
+&lt;/configuration></code></pre>
+
+
+   <p>By default, the configuration file will be scanned for changes
+   once every minute. You can specify a different scanning period by
+   setting the <span class="attr">scanPeriod</span> attribute of the
+   <code>&lt;configuration></code> element. Values can be specified in
+   units of milliseconds, seconds, minutes or hours. Here is an
+   example:</p>
+
+  <p class="example">Example: Specifying a different scanning period
+  (logback-examples/&#8203;src/main/resources/&#8203;chapters/configuration/&#8203;scan2.xml)</p>
+
+  <pre id="scan2"><code>&lt;configuration scan="true" <b>scanPeriod="30 seconds"</b> >
+  ...
+&lt;/configuration> </code></pre>
+
+   <p><span class="label">Note</span> If no unit of time is specified,
+   then the unit of time is assumed to be milliseconds, which is
+   usually inappropriate. If you change the default scanning period,
+   do not forget to specify a time unit.
+   </p>
+
+   <p>Behind the scenes, when you set the <span
+   class="attr">scan</span> attribute to <code>true</code>, a <a
+   href="../xref/ch/qos/logback/classic/joran/ReconfigureOnChangeTask.html"><code>ReconfigureOnChangeTask</code></a>
+   will be installed. This task run in a separate thread and will
+   check whether your configuration file has
+   changed. <code>ReconfigureOnChangeTask</code> will automatically
+   watch for any <a href="#fileInclusion">included</a> files as
+   well.</p>
+
+   <p>As it is easy to make errors while editing a configuration file,
+   in case the latest version of the configuration file has XML syntax
+   errors, it will fall back to a previous configuration file free of
+   XML syntax errors.</p>
+
+   <p><span class="label">Since 1.5.9</span> It is possible to watch
+   for modifications in configuration files in properties format. See
+   <a
+   href="#propertiesConfigurator"><code>PropertiesConfigurator</code></a>
+   for further details.</p>
+ 
+
+   
+   <h4 class="doAnchor" name="packagingData">Enabling packaging data
+   in stack traces</h4>
+
+   <p class="highlight">While useful, packaging data is expensive to
+   compute, especially in applications that frequently throw exceptions.
+   </p>
+
+   <p><span class="label notice">NOTE</span> As of version 1.1.4,
+   packaging data is disabled by default. </p>
+
+   <p>If instructed to do so, logback can include packaging data for
+   each stack trace line it outputs. Packaging data
+   consists of the name and version of the jar file whence the class
+   of the stack trace line originated. Packaging data can be very
+   useful in identifying software versioning issues. However, it is
+   rather expensive to compute, especially in applications where
+   exceptions are thrown frequently. Here is a sample output:</p>
+
+   <pre>14:28:48.835 [btpool0-7] INFO  c.q.l.demo.prime.PrimeAction - 99 is not a valid value
+java.lang.Exception: 99 is invalid
+  at ch.qos.logback.demo.prime.PrimeAction.execute(PrimeAction.java:28) [classes/:na]
+  at org.apache.struts.action.RequestProcessor.processActionPerform(RequestProcessor.java:431) <b>[struts-1.2.9.jar:1.2.9]</b>
+  at org.apache.struts.action.RequestProcessor.process(RequestProcessor.java:236) [struts-1.2.9.jar:1.2.9]
+  at org.apache.struts.action.ActionServlet.doPost(ActionServlet.java:432) [struts-1.2.9.jar:1.2.9]
+  at javax.servlet.http.HttpServlet.service(HttpServlet.java:820) <b>[servlet-api-2.5-6.1.12.jar:6.1.12]</b>
+  at org.mortbay.jetty.servlet.ServletHolder.handle(ServletHolder.java:502) [jetty-6.1.12.jar:6.1.12]
+  at ch.qos.logback.demo.UserServletFilter.doFilter(UserServletFilter.java:44) [classes/:na]
+  at org.mortbay.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1115) <b>[jetty-6.1.12.jar:6.1.12]</b>
+  at org.mortbay.jetty.servlet.ServletHandler.handle(ServletHandler.java:361) [jetty-6.1.12.jar:6.1.12]
+  at org.mortbay.jetty.webapp.WebAppContext.handle(WebAppContext.java:417) [jetty-6.1.12.jar:6.1.12]
+  at org.mortbay.jetty.handler.ContextHandlerCollection.handle(ContextHandlerCollection.java:230) [jetty-6.1.12.jar:6.1.12]</pre>
+
+
+  <p>Packaging data is disabled by default but can be enabled by
+  configuration:</p>
+
+<pre><code>&lt;configuration <span class="big bold">packagingData="true"</span>>
+  ...
+&lt;/configuration></code></pre>
+
+   <p>Alternatively, packaging data can be enabled/disabled
+   programmatically by invoking the <a
+   href="../apidocs/ch.qos.logback.classic/ch/qos/logback/classic/LoggerContext.html#setPackagingDataEnabled(boolean)">setPackagingDataEnabled(boolean)</a>
+   method in <code>LoggerContext</code>, as shown next:</p>
+
+
+<pre><code>  LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
+  <b>lc.setPackagingDataEnabled(true);</b>
+</code></pre>
+
+   <h3 class="doAnchor" name="joranDirectly">Invoking
+   <code>JoranConfigurator</code> directly</h3>
+
+   <p>Logback relies on a configuration library called Joran, part of
+   logback-core. Logback's default configuration mechanism invokes
+   <code>JoranConfigurator</code> on the default configuration file it
+   finds on the class path. If you wish to override logback's default
+   configuration mechanism for whatever reason, you can do so by
+   invoking <code>JoranConfigurator</code> directly. The next
+   application, <em>MyApp3</em>, invokes JoranConfigurator on a
+   configuration file passed as a parameter.</p>
+
+   <p class="example">Example: Invoking <code>JoranConfigurator</code>
+   directly <a
+   href="../xref/chapters/configuration/MyApp3.html">(logback-examples/src/&#8203;main/java/chapters/&#8203;configuration/MyApp3.java)</a></p>
+
+<pre><code>package chapters.configuration;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.joran.JoranConfigurator;
+import ch.qos.logback.core.joran.spi.JoranException;
+import ch.qos.logback.core.util.StatusPrinter;
+
+public class MyApp3 {
+  final static Logger logger = LoggerFactory.getLogger(MyApp3.class);
+
+  public static void main(String[] args) {
+    // assume SLF4J is bound to logback in the current environment
+    <b>LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();</b>
+
+    <b>try {
+      JoranConfigurator configurator = new JoranConfigurator();
+      configurator.setContext(context);
+      // Call context.reset() to clear any previous configuration, e.g. default
+      // configuration. For multi-step configuration, omit calling context.reset().
+      context.reset();
+      configurator.doConfigure(args[0]);
+    } catch (JoranException je) {
+      // StatusPrinter will handle this
+    }
+    StatusPrinter.printInCaseOfErrorsOrWarnings(context);</b>
+
+    logger.info("Entering application.");
+
+    Foo foo = new Foo();
+    foo.doIt();
+    logger.info("Exiting application.");
+  }
+}</code></pre>
+
+   <p>This application fetches the <code>LoggerContext</code>
+   currently in effect, creates a new <code>JoranConfigurator</code>,
+   sets the context on which it will operate, resets the logger
+   context, and then finally asks the configurator to configure the
+   context using the configuration file passed as a parameter to the
+   application. Internal status data is printed in case of warnings or
+   errors. Note that for multi-step configuration,
+   <code>context.reset()</code> invocation should be omitted.</p>
+
+
+   <h2 class="doAnchor" name="stopContext">Stopping
+   logback-classic</h2>
+
+   <p>In order to release the resources used by logback-classic, it is
+   always a good idea to stop the logback context. Stopping the
+   context will close all appenders attached to loggers defined by the
+   context and stop any active threads in an orderly way. Please also
+   read the section on "shutdown hooks" just below.</p>
+
+<pre><code>
+import org.slf4j.LoggerFactory;
+import ch.qos.logback.classic.LoggerContext;
+...
+
+// assume SLF4J is bound to logback-classic in the current environment
+<b>LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();</b>
+<b>loggerContext.stop();</b></code></pre>
+
+   <p>In web-applications the above code could be invoked from within
+   the <a
+   href="http://docs.oracle.com/javaee/6/api/javax/servlet/ServletContextListener.html#contextDestroyed(javax.servlet.ServletContextEvent)">contextDestroyed</a>
+   method of <code>Servlet&#8203;ContextListener</code> in order to stop
+   logback-classic and release resources. Starting with version
+   1.1.10, the appropriate <code>ServletContextListener</code> is
+   installed automatically for you (<a href="#webShutdownHook">see just below</a>).
+   </p>
+
+   <h4 class="doAnchor" name="shutdownHook">Stopping logback-classic
+   via a shutdown hook</h4>
+
+   <p>Installing a JVM shutdown hook is a convenient way for shutting
+   down logback and releasing associated resources.
+   </p>
+
+   <div class="tab">
+    <button class="tablinks" id="button_shutdownHook_legacy"
+            onclick="openTab(event, 'shutdownHook', 'legacy')">Legacy</button>
+    <button class="tablinks" id="button_shutdownHook_canonical"
+            onclick="openTab(event, 'shutdownHook', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_shutdownHook_tyler"
+             onclick="openTab(event, 'shutdownHook', 'tyler')">Tyler</button>
+   </div>
+
+    
+  <div id="shutdownHook_legacy" class="tabcontent">
+
+   <pre><code>&lt;configuration debug="true"> &lt;!-- in the absence
+   of the <span class="attr">class</span> attribute, assume
+   ch.qos.logback.core.hook.DefaultShutdownHook --&gt;
+   <b>&lt;shutdownHook/></b>
+
+   &lt;!-- rest of the config file.. --&gt;
+
+&lt;/configuration></code></pre>
+   </div>
+
+  <div id="shutdownHook_canonical" class="tabcontent">
+    <p>Requires a server call.</p>
+  </div>
+   <div id="shutdownHook_tyler" class="tabcontent"><p>Requires a server call.</p></div>
+  
+   <p>Note that you may install a shutdown hook of your own making by
+   setting the <span class="attr">class</span> attribute to correspond
+   to your shutdown hook's class name.</p>
+
+   <p>The default shutdown hook, namely <a
+   href="../apidocs/ch.qos.logback.core/ch/qos/logback/core/hook/DefaultShutdownHook.html">DefaultShutdownHook</a>,
+   will <b>stop</b> the logback context after a specified delay (0 by
+   default). Stopping the context will allow up to 30 seconds for any
+   log file compression tasks running in the background to finish. In
+   standalone Java applications, adding a
+   <code>&lt;shutdownHook/></code> directive to your configuration
+   file is an easy way to ensure that any ongoing compression tasks
+   are allowed to finish before JVM exit. In applications within a Web
+   server, <a href="#webShutdownHook">webShutdownHook</a> will be
+   installed automatically making <code>&lt;shutdownHook/></code>
+   directive quite redundant and unnecessary. </p>
+
+   <p>As of version 1.5.7, installing a shutdown hook replaces any
+   previously installed hook. Therefore, at most one Logback shutdown
+   hook can be installed via the usual <em>logback.xml</em>
+   configuration.</p>
+
+
+    <h4 class="doAnchor" name="webShutdownHook">WebShutdownHook or
+   stopping logback-classic in web-applications</h4>
+
+   <p><span class="label">since 1.1.10</span> Logback-classic will
+   <b>automatically</b> ask the web-server to install a <code><a
+   href="../apidocs/ch.qos.logback.classic/ch/qos/logback/classic/servlet/LogbackServletContainerInitializer.html">LogbackServlet&#8203;ContainerInitializer</a></code>
+   implementing the <code>ServletContainer&#8203;Initializer</code> interface
+   (available in servlet-api 3.x and later). This initializer will in
+   turn install an instance of <code><a
+   href="../apidocs/ch.qos.logback.classic/ch/qos/logback/classic/servlet/LogbackServletContextListener.html">LogbackServlet&#8203;ContextListener</a></code>.w
+   This listener will stop the current logback-classic context when
+   the web-app is stopped or reloaded.
+   </p>
+
+   <p>You may disable automatic installation of
+   <code>LogbackServletContextListener</code> by setting a
+   <code>&lt;context-param&gt;</code> named
+   <code>logbackDisableServletContainerInitializer</code> in your
+   web application's <em>WEB-INF/web.xml</em>. Here is the relevant
+   snippet.</p>
+
+
+<pre><code>&lt;web-app>
+    &lt;context-param>
+        &lt;param-name>logbackDisableServletContainerInitializer&lt;/param-name>
+        &lt;param-value>true&lt;/param-value>
+    &lt;/context-param>
+    ....
+&lt;/web-app></code></pre>
+
+    <p>Note that
+    <code>logbackDisableServlet&#8203;ContainerInitializer</code> variable
+    can also be set as a Java system property or an OS environment
+    variable. The most local setting has priority, i.e. web-app first,
+    system property second and OS environment last.</p>
+
+   <!-- =================================================================== -->
+    
+   <!-- =================================================================== -->
+   <!-- =================================================================== -->
+
+
+    <h2>Configuration topics</h2>
+    <ul>
+      <li><p><a href="configuration.html"><b>Overview &amp; auto-configuration</b></a> (this page)</p></li>
+      <li><p><a href="configuration-xml.html"><b>XML syntax</b></a> — loggers, appenders, root</p></li>
+      <li><p><a href="configuration-variables.html"><b>Variables and properties</b></a></p></li>
+      <li><p><a href="configuration-conditional.html"><b>Conditionals, includes, and advanced</b></a></p></li>
+      <li><p><a href="../codes.html">Error codes</a> — meanings of status messages</p></li>
+      <li><p><a href="onJoran.html">Joran</a> — configuration engine (for component authors)</p></li>
+    </ul>
+  <script src="../templates/footer.js" type="text/javascript"></script>
+  </div>
+</div>
+</body>
+</html>

@@ -89,7 +89,7 @@
               <escapeString>\</escapeString>
               <resources>
                 <resource>
-                  <directory>src/site/pages</directory>
+                  <directory>src/site/pages2</directory>
                   <!-- We're saving filtered html docs in a temporary folder-->
                   <!-- and telling the site plug-in to get the docs there.-->
                   <filtering>true</filtering>

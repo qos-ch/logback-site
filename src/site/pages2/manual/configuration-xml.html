@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Configuration: XML syntax</title>
+
+    <script type="text/javascript">prefix='../';</script>
+</head>
+  <body onload="loopOn(); enableMenuEventListeners(); hljs.highlightAll(); decorate(); addClipboardListener(); enableLegacy();">
+
+  <script type="text/javascript" src="../templates/header3.js"></script>
+
+
+  <div id="content">
+
+    
+      <div id="top-content">
+
+        <script type="text/javascript" src="../templates/creative.js" ></script>
+        <script type="text/javascript" src="menu.js"></script>
+
+          <div id="quote">
+              <p><em>In symbols one observes an advantage in discovery which
+                  is greatest when they express the exact nature of a thing
+                  briefly and, as it were, picture it; then indeed the labor of
+                  thought is wonderfully diminished.</em>
+              </p>
+              <p>&mdash;GOTTFRIED WILHELM LEIBNIZ</p>
+          </div>
+
+      </div>
+
+
+
+    <p class="doc-nav"><a href="index.html">Manual</a> · <a href="configuration.html">Configuration</a> · Configuration: XML syntax</p>
+
+    <h1>Configuration: XML syntax</h1>
+
+   <h2 class="doAnchor" name="syntax">Configuration file syntax</h2>
+
+   <p>As you have seen thus far in the manual with plenty of examples
+   still to follow, logback allows you to redefine logging behavior
+   without needing to recompile your code.  Indeed, you can easily
+   configure logback so as to disable logging for certain parts of
+   your application, or direct output to a UNIX Syslog daemon, to a
+   database, to a log visualizer, or forward logging events to a
+   remote logback server, which would log according to local server
+   policy, for example by forwarding the log event to a second logback
+   server.
+   </p>
+
+   <p>The remainder of this section presents the syntax of
+   configuration files.
+   </p>
+
+   <p>As will be demonstrated over and over, the syntax of logback
+   configuration files is extremely flexible. As such, it is not
+   possible to specify the allowed syntax with a DTD file or an XML
+   schema. Nevertheless, the very basic structure of the configuration
+   file can be described as, <code>&lt;configuration></code> element,
+   containing zero or more <code>&lt;appender></code> elements,
+   followed by zero or more <code>&lt;logger></code> elements,
+   followed by at most one <code>&lt;root></code> element. The
+   following diagram illustrates this basic structure.</p>
+
+
+   <p align="left">
+     <img src="images/chapters/configuration/basicSyntax.png"
+          alt="basic Syntax" title="Basic configuration file structure"/>
+   </p>
+
+    <p class="highlight">If you are unsure which case to use for a
+    given tag name, just follow the <a
+    href="http://en.wikipedia.org/wiki/CamelCase">camelCase
+    convention</a> which is almost always the correct convention.</p>
+
+    <h4 class="doAnchor" name="caseSensitivity">Case sensitivity of
+    tag names</h4>
+
+    <p>Since logback version 0.9.17, tag names pertaining to explicit
+    rules are case-insensitive.  For example,
+    <code>&lt;logger></code>, <code>&lt;Logger></code> and
+    <code>&lt;LOGGER></code> are valid configuration elements and will
+    be interpreted in the same way. Note that XML well-formedness
+    rules still apply, if you open a tag as <code>&lt;xyz></code> you
+    must close it as <code>&lt;/xyz></code>, <code>&lt;/XyZ></code>
+    will not work. As for <a href="onJoran.html#implicit">implicit
+    rules</a>, tag names are case-sensitive except for the first
+    letter.  Thus, <code>&lt;xyz></code> and <code>&lt;Xyz></code> are
+    equivalent but not <code>&lt;xYz></code>.  Implicit rules usually
+    follow the <a
+    href="http://en.wikipedia.org/wiki/CamelCase">camelCase</a>
+    convention, common in the Java world. Since it is not easy to tell
+    when a tag is associated with an explicit action and when it is
+    associated with an implicit action, it is not trivial to say
+    whether an XML tag is case-sensitive or insensitive with respect
+    to the first letter. If you are unsure which case to use for a
+    given tag name, just follow the camelCase convention which is
+    almost always the correct convention.
+    </p>
+
+    <h4 class="doAnchor" name="loggerElement">Configuring loggers, or
+    the <code>&lt;logger></code> element</h4>
+
+
+    <p>At this point you should have at least some understanding of <a
+    href="architecture.html#effectiveLevel">level inheritance</a> and
+    the <a href="architecture.html#basic_selection">basic selection
+    rule</a>. Otherwise, and unless you are an egyptologist, logback
+    configuration will be no more meaningful to you than are
+    hieroglyphics. 
+    </p>
+
+    <p>A logger is configured using the <span
+    class="elem">logger</span> element. A &lt;logger> element takes
+    exactly one mandatory <span class="attr">name</span> attribute, an
+    optional <span class="attr">level</span> attribute, and an
+    optional <span class="attr">additivity</span> attribute, admitting
+    the values <em>true</em> or <em>false</em>. The value of the <span
+    class="attr">level</span> attribute admitting one of the
+    case-insensitive string values TRACE, DEBUG, INFO, WARN, ERROR,
+    ALL or OFF. The special case-insensitive value <em>INHERITED</em>,
+    or its synonym <em>NULL</em>, will force the level of the logger
+    to be inherited from higher up in the hierarchy. This comes in
+    handy if you set the level of a logger and later decide that it
+    should inherit its level.
+    </p>
+
+    <p class="highlight"> Note that unlike log4j, logback-classic does
+    <em>not</em> close nor remove any previously referenced appenders
+    when configuring a given logger.
+    </p>
+
+    <p>The <span class="elem">logger</span> element may contain zero or more
+    <code>&lt;appender-ref></code> elements; each appender thus
+    referenced is added to the named logger. Note that unlike log4j,
+    logback-classic does <em>not</em> close nor remove any previously
+    referenced appenders when configuring a given logger.
+    </p>
+
+
+
+   <h4 class="doAnchor" name="rootElement">Configuring the root
+   logger, or the <code>&lt;root></code> element</h4>
+
+   <p>The <code>&lt;root></code> element configures the root
+   logger. It supports a single attribute, namely the <span
+   class="attr">level</span> attribute. It does not allow any other
+   attributes because the additivity flag does not apply to the root
+   logger.  Moreover, since the root logger is already named as
+   "ROOT", it does not allow a name attribute either. The value of the
+   level attribute can be one of the case-insensitive strings TRACE,
+   DEBUG, INFO, WARN, ERROR, ALL or OFF. Note that the level of the
+   root logger cannot be set to INHERITED or NULL.
+   </p>
+
+   <p class="highlight">Note that unlike log4j, logback-classic does
+   <em>not</em> close nor remove any previously referenced appenders
+   when configuring the root logger.</p>
+
+   <p> Similarly to the <code>&lt;logger></code> element, the
+   <code>&lt;root></code> element may contain zero or more
+   <code>&lt;appender-ref></code> elements; each appender thus
+   referenced is added to the root logger. Note that unlike log4j,
+   logback-classic does <em>not</em> close nor remove any previously
+   referenced appenders when configuring the root logger.  </p>
+
+   <h4>Example</h4>
+
+   <p>Setting the level of a logger or root logger is as simple as
+   declaring it and setting its level, as the next example
+   illustrates. Suppose we are no longer interested in seeing any
+   DEBUG messages from any component belonging to the
+   "chapters.configuration" package. The following configuration file
+   shows how to achieve that.
+   </p>
+
+   <p class="example">Example: Setting the level of a logger
+   (logback-examples/&#8203;src/main/resources/&#8203;chapters/configuration/&#8203;sample2.xml)</p>
+
+   <div class="tab">
+    <button class="tablinks" id="button_sample2_legacy"
+            onclick="openTab(event, 'sample2', 'legacy')">Legacy</button>
+    <button class="tablinks" id="button_sample2_canonical"
+            onclick="openTab(event, 'sample2', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_sample2_tyler"
+             onclick="openTab(event, 'sample2', 'tyler')">Tyler</button>
+  </div>
+
+    
+  <div id="sample2_legacy" class="tabcontent">
+
+    <pre><code>&lt;configuration>
+
+  &lt;appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    &lt;!-- encoders are assigned the type
+         ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+    &lt;encoder>
+      &lt;pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} -%kvp- %msg%n&lt;/pattern>
+    &lt;/encoder>
+  &lt;/appender>
+
+  <b>&lt;logger name="chapters.configuration" level="INFO"/></b>
+
+  &lt;!-- Strictly speaking, the level attribute is not necessary since --&gt;
+  &lt;!-- the level of the root level is set to DEBUG by default.       --&gt;
+  &lt;root level="DEBUG">
+    &lt;appender-ref ref="STDOUT" />
+  &lt;/root>
+
+&lt;/configuration></code></pre>
+  </div>
+  
+  <div id="sample2_canonical" class="tabcontent">
+    <p>Requires a server call.</p>
+  </div>
+   <div id="sample2_tyler" class="tabcontent"><p>Requires a server call.</p></div>
+
+
+  <p>When the above configuration file is given as argument to the
+  <em>MyApp3</em> application, it will yield the following output:
+  </p>
+
+<pre class="source">17:34:07.578 [main] INFO  chapters.configuration.MyApp3 -- Entering application.
+17:34:07.578 [main] INFO  chapters.configuration.MyApp3 -- Exiting application.</pre>
+
+  <p>Note that the message of level DEBUG generated by the <a
+  href="../xref/chapters/configuration/Foo.html">"chapters.configuration.Foo"</a>
+  logger has been suppressed. See also the Foo class.</p>
+
+  <p>You can configure the levels of as many loggers as you wish.  In
+  the next configuration file, we set the level of the
+  <em>chapters.configuration</em> logger to INFO but at the same time set the level
+  of the <em>chapters.configuration.Foo</em> logger to <code>DEBUG</code>.
+  </p>
+
+  <p class="example">Example: Setting the level of multiple loggers
+  (logback-examples/&#8203;src/main/resources/&#8203;chapters/configuration/&#8203;sample3.xml)</p>
+
+  <div class="tab">
+    <button class="tablinks" id="button_sample3_legacy"
+            onclick="openTab(event, 'sample3', 'legacy')">Legacy</button>
+    <button class="tablinks" id="button_sample3_canonical"
+            onclick="openTab(event, 'sample3', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_sample3_tyler"
+             onclick="openTab(event, 'sample3', 'tyler')">Tyler</button>
+  </div>
+
+    
+  <div id="sample3_legacy" class="tabcontent">
+  <pre><code>&lt;configuration>
+
+  &lt;appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender"&gt;
+    &lt;encoder&gt;
+      &lt;pattern&gt;
+        %d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} -%kvp- %msg%n
+     &lt;/pattern&gt;
+    &lt;/encoder&gt;
+  &lt;/appender&gt;
+
+  <b>&lt;logger name="chapters.configuration" level="INFO" /&gt;</b>
+  <b>&lt;logger name="chapters.configuration.Foo" level="DEBUG" /&gt;</b>
+
+  &lt;root level="DEBUG">
+    &lt;appender-ref ref="STDOUT" /&gt;
+  &lt;/root>
+
+&lt;/configuration&gt;</code></pre>
+  </div>
+
+  <div id="sample3_canonical" class="tabcontent">
+    <p>Requires a server call.</p>
+  </div>
+   <div id="sample3_tyler" class="tabcontent"><p>Requires a server call.</p></div>
+
+  <p>Running <code>MyApp3</code> with this configuration file will
+  result in the following output on the console:
+  </p>
+
+<pre><code>17:39:27.593 [main] INFO  chapters.configuration.MyApp3 -- Entering application.
+17:39:27.593 [main] DEBUG chapters.configuration.Foo -- Did it again!
+17:39:27.593 [main] INFO  chapters.configuration.MyApp3 -- Exiting application.</code></pre>
+
+   <p>The table below list the loggers and their levels, after
+   <code>JoranConfigurator</code> has configured logback with the
+   <em>sample3.xml</em> configuration file.
+   </p>
+
+      <div class="bodyTable">
+   <table class="bodyTable striped">
+     <tr>
+       <th>Logger name</th>
+       <th>Assigned Level</th>
+       <th>Effective Level</th>
+     </tr>
+     <tr>
+       <td>root</td>
+       <td><code>DEBUG</code></td>
+       <td><code>DEBUG</code></td>
+     </tr>
+     <tr>
+       <td>chapters.configuration</td>
+       <td><code>INFO</code></td>
+       <td><code>INFO</code></td>
+     </tr>
+     <tr>
+       <td>chapters.configuration.MyApp3</td>
+       <td><code>null</code></td>
+       <td><code>INFO</code></td>
+     </tr>
+     <tr>
+       <td>chapters.configuration.Foo</td>
+       <td><code>DEBUG</code></td>
+       <td><code>DEBUG</code></td>
+     </tr>
+   </table>
+      </div>
+  <p>It follows that the two logging statements of level
+  <code>INFO</code> in the <code>MyApp3</code> class as well as the
+  DEBUG messages in <code>Foo.doIt()</code> are all enabled. Note that
+  the level of the root logger is always set to a non-null value,
+  DEBUG by default.
+  </p>
+
+  <p>Let us note that the <a
+  href="architecture.html#basic_selection">basic-selection rule</a>
+  depends on the effective level of the logger being invoked, not the
+  level of the logger where appenders are attached. Logback will first
+  determine whether a logging statement is enabled or not, and if
+  enabled, it will invoke the appenders found in the logger hierarchy,
+  regardless of their level. The configuration file
+  <em>sample4.xml</em> is a case in point:
+  </p>
+
+  <p class="example">Example: Logger level sample
+  (logback-examples/&#8203;src/main/resources/&#8203;chapters/configuration/&#8203;sample4.xml)</p>
+
+  <div class="tab">
+    <button class="tablinks" id="button_sample4_legacy"
+            onclick="openTab(event, 'sample4', 'legacy')">Legacy</button>
+    <button class="tablinks" id="button_sample4_canonical"
+            onclick="openTab(event, 'sample4', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_sample4_tyler"
+             onclick="openTab(event, 'sample4', 'tyler')">Tyler</button>
+  </div>
+
+  <div id="sample4_legacy" class="tabcontent">
+    
+  <pre><code>&lt;configuration>
+
+  &lt;appender name="STDOUT"
+   class="ch.qos.logback.core.ConsoleAppender">
+   &lt;encoder>
+     &lt;pattern>
+        %d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} -%kvp- %msg%n
+      &lt;/pattern>
+    &lt;/encoder>
+  &lt;/appender>
+
+  <b>&lt;logger name="chapters.configuration" level="INFO" /></b>
+ 
+  &lt;!-- turn OFF all logging (children can override) -->
+  &lt;root <b>level="OFF"</b>>
+    &lt;appender-ref ref="STDOUT" />
+  &lt;/root>
+
+&lt;/configuration></code></pre>
+  </div>
+
+  <div id="sample4_canonical" class="tabcontent">
+    <p>Requires a server call.</p>
+  </div>
+   <div id="sample4_tyler" class="tabcontent"><p>Requires a server call.</p></div>
+
+  <p>The following table lists the loggers and their levels after
+  applying the <em>sample4.xml</em> configuration file.
+  </p>
+
+  <table class="bodyTable">
+    <tr>
+      <th>Logger name</th>
+      <th>Assigned Level</th>
+      <th>Effective Level</th>
+    </tr>
+    <tr>
+      <td>root</td>
+      <td><code>OFF</code></td>
+      <td><code>OFF</code></td>
+    </tr>
+    <tr class="alt">
+      <td>chapters.configuration</td>
+      <td><code>INFO</code></td>
+      <td><code>INFO</code></td>
+    </tr>
+    <tr>
+      <td>chapters.configuration.MyApp3</td>
+      <td><code>null</code></td>
+      <td><code>INFO</code></td>
+    </tr>
+    <tr class="alt">
+      <td>chapters.configuration.Foo</td>
+      <td><code>null</code></td>
+      <td><code>INFO</code></td>
+    </tr>
+  </table>
+
+  <p>The ConsoleAppender named <em>STDOUT</em>, the only configured
+  appender in <em>sample4.xml</em>, is attached to the root logger
+  whose level is set to <code>OFF</code>. However, running
+  <em>MyApp3</em> with configuration script <em>sample4.xml</em> will
+  yield:
+  </p>
+
+  <div class="source"><pre>17:52:23.609 [main] INFO chapters.configuration.MyApp3 - Entering application.
+17:52:23.609 [main] INFO chapters.configuration.MyApp3 - Exiting application.</pre></div>
+
+  <p>Thus, the level of the root logger has no apparent effect because
+  the loggers in <code>chapters.configuration.&#8203;MyApp3</code> and
+  <code>chapters.configuration.Foo</code> classes are all enabled for the
+  <code>INFO</code> level.  As a side note, the <em>chapters.configuration</em>
+  logger exists by virtue of its declaration in the configuration file
+  - even if the Java source code does not directly refer to it.
+  </p>
+
+  <h4 class="doAnchor" name="configuringAppenders">Configuring
+  Appenders</h4>
+
+  <p>An appender is configured with the <code>&lt;appender></code>
+  element, which takes two mandatory attributes <span
+  class="attr">name</span> and <span class="attr">class</span>.  The
+  <span class="attr">name</span> attribute specifies the name of the
+  appender whereas the <span class="attr">class</span> attribute
+  specifies the fully qualified name of the appender class to
+  instantiate. The <code>&lt;appender></code> element may contain zero
+  or one <code>&lt;layout></code> elements, zero or more
+  <code>&lt;encoder></code> elements and zero or more
+  <code>&lt;filter></code> elements. Apart from these three common
+  elements, <code>&lt;appender></code> elements may contain any number
+  of elements corresponding to JavaBean properties of the appender
+  class. Seamlessly supporting any property of a given logback
+  component is one of the major strengths of <a
+  href="onJoran.html">Joran</a> as discussed in a later chapter. The
+  following diagram illustrates the common structure. Note that
+  support for properties is not shown in the diagram below.
+  </p>
+
+  <a href="images/chapters/configuration/appenderSyntax.png">
+    <img class="reduced" src="images/chapters/configuration/appenderSyntax.png"
+         alt="Appender Syntax" title="Appender element syntax"/>
+  </a>
+
+  <p>The <code>&lt;layout></code> element takes a mandatory class
+  attribute specifying the fully qualified name of the layout class to
+  instantiate.  As with the <code>&lt;appender></code> element,
+  <code>&lt;layout></code> may contain other elements corresponding to
+  properties of the layout instance. Since it's such a common case, if
+  the layout class is <code>PatternLayout</code>, then the class
+  attribute can be omitted as specified by <a
+  href="onJoran.html#defaultClassMapping">default class mapping</a>
+  rules.
+  </p>
+
+  <p>The <code>&lt;encoder></code> element takes a mandatory class
+  attribute specifying the fully qualified name of the encoder class
+  to instantiate. Since it's such a common case, if the encoder class
+  is <code>PatternLayoutEncoder</code>, then the class attribute can
+  be omitted as specified by <a
+  href="onJoran.html#defaultClassMapping">default class mapping</a>
+  rules.
+  </p>
+
+  <p>Logging to multiple appenders is as easy as defining the various
+  appenders and referencing them in a logger, as the next
+  configuration file illustrates:
+  </p>
+
+  <p class="example">Example: Multiple loggers
+  (logback-examples/&#8203;src/main/resources/&#8203;chapters/configuration/&#8203;multiple.xml)</p>
+
+  <div class="tab">
+    <button class="tablinks" id="button_multiple_legacy"
+            onclick="openTab(event, 'multiple', 'legacy')">Legacy</button>
+    <button class="tablinks" id="button_multiple_canonical"
+            onclick="openTab(event, 'multiple', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_multiple_tyler"
+             onclick="openTab(event, 'multiple', 'tyler')">Tyler</button>
+  </div>
+
+  <div id="multiple_legacy" class="tabcontent">
+    <pre><code>&lt;configuration>
+
+  &lt;appender name="<b>FILE</b>" class="ch.qos.logback.core.FileAppender">
+    &lt;file>myApp.log&lt;/file>
+
+    &lt;encoder>
+      &lt;pattern>%date %level [%thread] %logger{10} [%file:%line] -%kvp- %msg%n&lt;/pattern>
+    &lt;/encoder>
+  &lt;/appender>
+
+  &lt;appender name="<b>STDOUT</b>" class="ch.qos.logback.core.ConsoleAppender">
+    &lt;encoder>
+      &lt;pattern>%kvp %msg%n&lt;/pattern>
+    &lt;/encoder>
+  &lt;/appender>
+
+  &lt;root level="debug">
+    <b>&lt;appender-ref ref="FILE" /></b>
+    <b>&lt;appender-ref ref="STDOUT" /></b>
+  &lt;/root>
+&lt;/configuration></code></pre>
+  </div>
+  
+  <div id="multiple_canonical" class="tabcontent">
+    <p>Requires a server call.</p>
+  </div>
+   <div id="multiple_tyler" class="tabcontent"><p>Requires a server call.</p></div>
+  
+  <p>These configuration scripts define two appenders called
+  <em>FILE</em> and <em>STDOUT</em>.  The <em>FILE</em> appender logs
+  to a file called <em>myApp.log</em>. The encoder for this appender
+  is a <code>PatternLayoutEncoder</code> that outputs the date, level,
+  thread name, logger name, file name and line number where the log
+  request is located, the message and line separator character(s).
+  The second appender called <code>STDOUT</code> outputs to the
+  console.  The encoder for this appender outputs only the message
+  string followed by a line separator.
+  </p>
+
+  <p>The appenders are attached to the root logger by referencing them
+  by name within an <em>appender-ref</em> element. Note that each
+  appender has its own encoder. Encoders are usually not designed to
+  be shared by multiple appenders. The same is true for layouts. As
+  such, logback configuration files do not provide any syntactical
+  means for sharing encoders or layouts.
+  </p>
+
+  <h4 class="doAnchor" name="cumulative">Appenders accumulate
+  </h4>
+
+  <p>By default, <b>appenders are cumulative</b>: a logger will log to
+  the appenders attached to itself (if any) as well as all the
+  appenders attached to its ancestors.  Thus, attaching the same
+  appender to multiple loggers will cause logging output to be
+  duplicated.
+  </p>
+
+  <p class="example">Example: Duplicate appender
+  (logback-examples/&#8203;src/main/resources/&#8203;chapters/configuration/&#8203;duplicate.xml)</p>
+
+  <div class="tab">
+    <button class="tablinks" id="button_duplicate_legacy"
+            onclick="openTab(event, 'duplicate', 'legacy')">Legacy</button>
+    <button class="tablinks" id="button_duplicate_canonical"
+            onclick="openTab(event, 'duplicate', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_duplicate_tyler"
+             onclick="openTab(event, 'duplicate', 'tyler')">Tyler</button>
+  </div>
+
+  <div id="duplicate_legacy" class="tabcontent">
+    <pre><code>&lt;configuration>
+
+  &lt;appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    &lt;encoder>
+      &lt;pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} -%kvp- %msg%n&lt;/pattern>
+    &lt;/encoder>
+  &lt;/appender>
+
+  &lt;logger name="chapters.configuration">
+    &lt;appender-ref ref="STDOUT" />
+  &lt;/logger>
+
+  &lt;root level="debug">
+    &lt;appender-ref ref="STDOUT" />
+  &lt;/root>
+&lt;/configuration></code></pre>
+  </div>
+
+  <div id="duplicate_canonical" class="tabcontent">
+    <p>Requires a server call.</p>
+  </div>
+   <div id="duplicate_tyler" class="tabcontent"><p>Requires a server call.</p></div>
+  
+  <p>Running <code>MyApp3</code> with <em>duplicate.xml</em> will
+  yield the following output:
+  </p>
+
+<p class="source">14:25:36.343 [main] INFO  chapters.configuration.MyApp3 -- Entering application.
+14:25:36.343 [main] INFO  chapters.configuration.MyApp3 -- Entering application.
+14:25:36.359 [main] DEBUG chapters.configuration.Foo -- Did it again!
+14:25:36.359 [main] DEBUG chapters.configuration.Foo -- Did it again!
+14:25:36.359 [main] INFO  chapters.configuration.MyApp3 -- Exiting application.
+14:25:36.359 [main] INFO  chapters.configuration.MyApp3 -- Exiting application.</p>
+
+  <p>Notice the duplicated output. The appender named <em>STDOUT</em>
+  is attached to two loggers, to root and to
+  <em>chapters.configuration</em>. Since the root logger is the
+  ancestor of all loggers and <em>chapters.configuration</em> is the
+  parent of both <em>chapters.configuration.&#8203;MyApp3</em> and
+  <em>chapters.configuration.Foo</em>, each logging request made with
+  these two loggers will be output twice, once because <em>STDOUT</em>
+  is attached to <em>chapters.configuration</em> and once because it
+  is attached to <em>root</em>.
+  </p>
+
+  <p>Appender additivity is not intended as a trap for new users. It
+  is quite a convenient logback feature. For instance, you can
+  configure logging such that log messages appear on the console (for
+  all loggers in the system) while messages only from some specific
+  set of loggers flow into a specific appender.
+  </p>
+
+  <p class="example">Example: Multiple appender
+  (logback-examples/&#8203;src/main/resources/&#8203;chapters/&#8203;configuration/&#8203;restricted.xml)</p>
+
+  <div class="tab">
+    <button class="tablinks" id="button_restricted_legacy"
+            onclick="openTab(event, 'restricted', 'legacy')">Legacy</button>
+    <button class="tablinks" id="button_restricted_canonical"
+            onclick="openTab(event, 'restricted', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_restricted_tyler"
+             onclick="openTab(event, 'restricted', 'tyler')">Tyler</button>
+  </div>
+
+  <div id="restricted_legacy" class="tabcontent">
+    <pre><code>&lt;configuration>
+
+  &lt;appender name="FILE" class="ch.qos.logback.core.FileAppender">
+    &lt;file>myApp.log&lt;/file>
+    &lt;encoder>
+      &lt;pattern>%date %level [%thread] %logger{10} [%file:%line] -%kvp- %msg%n&lt;/pattern>
+    &lt;/encoder>
+  &lt;/appender>
+
+  &lt;appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    &lt;encoder>
+      &lt;pattern>%kvp %msg%n&lt;/pattern>
+    &lt;/encoder>
+  &lt;/appender>
+
+  &lt;logger name="chapters.configuration">
+    &lt;appender-ref ref="FILE" />
+  &lt;/logger>
+
+  &lt;root level="debug">
+    &lt;appender-ref ref="STDOUT" />
+  &lt;/root>
+&lt;/configuration></code></pre>
+  </div>
+  
+  <div id="restricted_canonical" class="tabcontent">
+    <p>Requires a server call.</p>
+  </div>
+   <div id="restricted_tyler" class="tabcontent"><p>Requires a server call.</p></div>
+
+  <p>In this example, the console appender will log all the messages
+  (for all loggers in the system) whereas only logging requests
+  originating from the <em>chapters.configuration</em> logger and its
+  children will go into the <em>myApp.log</em> file.
+  </p>
+
+  <h4 class="doAnchor" name="overridingCumulativity">Overriding the
+  default cumulative behaviour</h4>
+
+  <p>In case the default cumulative behavior turns out to be
+  unsuitable for your needs, you can override it by setting the
+  additivity flag to false.  Thus, a branch in your logger tree may
+  direct output to a set of appenders different from those of the rest
+  of the tree.
+  </p>
+
+  <p class="example">Example: Additivity flag
+  (logback-examples/&#8203;src/main/resources/&#8203;chapters/configuration/&#8203;additivityFlag.&#8203;xml)</p>
+
+  <div class="tab">
+    <button class="tablinks" id="button_additivityFlag_legacy"
+            onclick="openTab(event, 'additivityFlag', 'legacy')">Legacy</button>
+    <button class="tablinks" id="button_additivityFlag_canonical"
+            onclick="openTab(event, 'additivityFlag', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_additivityFlag_tyler"
+             onclick="openTab(event, 'additivityFlag', 'tyler')">Tyler</button>
+  </div>
+
+  <div id="additivityFlag_legacy" class="tabcontent">    
+  <pre><code>&lt;configuration>
+
+  &lt;appender name="FILE" class="ch.qos.logback.core.FileAppender">
+    &lt;file>foo.log&lt;/file>
+    &lt;encoder>
+      &lt;pattern>%date %level [%thread] %logger{10} [%file : %line] -%kvp- %msg%n&lt;/pattern>
+    &lt;/encoder> 
+  &lt;/appender>
+
+  &lt;appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    &lt;encoder>
+      &lt;pattern>%msg%n&lt;/pattern>
+    &lt;/encoder>
+  &lt;/appender>
+
+  &lt;logger name="chapters.configuration.Foo" <b>additivity="false"</b>>
+    &lt;appender-ref ref="FILE" />
+  &lt;/logger>
+
+  &lt;root level="debug">
+    &lt;appender-ref ref="STDOUT" />
+  &lt;/root>
+&lt;/configuration></code></pre>
+  </div>
+  
+  <div id="additivityFlag_canonical" class="tabcontent">
+    <p>Requires a server call.</p>
+  </div>
+   <div id="additivityFlag_tyler" class="tabcontent"><p>Requires a server call.</p></div>
+  
+  <p>This example, the appender named <em>FILE</em> is attached to the
+  <em>chapters.configuration.Foo</em> logger. Moreover, the <em>chapters.configuration.Foo</em>
+  logger has its additivity flag set to false such that its logging
+  output will be sent to the appender named <em>FILE</em> but not to
+  any appender attached higher in the hierarchy. Other loggers remain
+  oblivious to the additivity setting of the <em>chapters.configuration.Foo</em>
+  logger.  Running the <code>MyApp3</code> application with the
+  <em>additivityFlag.xml</em> configuration file will output results
+  on the console from the <em>chapters.configuration.&#8203;MyApp3</em> logger.  However,
+  output from the <em>chapters.configuration.Foo</em> logger will appear in the
+  <em>foo.log</em> file and only in that file.
+  </p>
+
+  <h3 class="doAnchor" name="contextName">Setting the context
+  name</h3>
+
+  <p>As mentioned <a href="architecture.html#LoggerContext">in an
+  earlier chapter</a>, every logger is attached to a logger
+  context. By default, the logger context is called
+  "default". However, you can set a different name with the help of
+  the <code>&lt;contextName></code> configuration directive. Note that
+  once set, the logger context name <a
+  href="../apidocs/ch.qos.logback.core/ch/qos/logback/core/ContextBase.html#setName(java.lang.String)">cannot
+  be changed</a>. Setting the context name is a simple and
+  straightforward method in order to distinguish between multiple
+  applications logging to the same target.
+  </p>
+
+  <p class="example">Example: Set the context name and display it
+  (logback-examples/&#8203;src/main/resources/&#8203;chapters/configuration/&#8203;contextName.xml)</p>
+
+  <div class="tab">
+    <button class="tablinks" id="button_contextName_legacy"
+            onclick="openTab(event, 'contextName', 'legacy')">Legacy</button>
+    <button class="tablinks" id="button_contextName_canonical"
+            onclick="openTab(event, 'contextName', 'canonical')">Canonical (1.3)</button>
+    <button class="tablinks" id="button_contextName_tyler"
+             onclick="openTab(event, 'contextName', 'tyler')">Tyler</button>
+  </div>  
+  <div id="contextName_legacy" class="tabcontent">
+  <pre><code>&lt;configuration>
+  <b>&lt;contextName>myAppName&lt;/contextName></b>
+  &lt;appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    &lt;encoder>
+      &lt;pattern>%d <b>%contextName</b> [%t] %level %logger{36} -%kvp- %msg%n&lt;/pattern>
+    &lt;/encoder>
+  &lt;/appender>
+
+  &lt;root level="debug">
+    &lt;appender-ref ref="STDOUT" />
+  &lt;/root>
+&lt;/configuration></code></pre>
+  </div>
+
+  <div id="contextName_canonical" class="tabcontent">
+    <p>Requires a server call.</p>
+  </div>
+   <div id="contextName_tyler" class="tabcontent"><p>Requires a server call.</p></div>
+
+  <p>This last example illustrates naming of the logger
+  context. Adding the <a
+  href="layouts.html#conversionWord">contextName conversion word</a>
+  in layout's pattern will output the said name.</p>
+
+  <!-- =============================================================== -->
+
+  <script src="../templates/footer.js" type="text/javascript"></script>
+  </div>
+</div>
+</body>
+</html>

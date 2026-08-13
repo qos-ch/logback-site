@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Chapter 11: Joran</title>
+    <script type="text/javascript">prefix='../';</script>
+
+</head>
+<body onLoad="enableMenuEventListeners(); hljs.highlightAll();  decorate();  addClipboardListener(); enableLegacy();">
+    
+
+    <script type="text/javascript" src="../templates/header3.js"></script>
+    
+
+    <div id="content">
+        <div id="top-content">
+
+            <script type="text/javascript" src="../templates/creative.js" ></script>
+            <script type="text/javascript" src="menu.js"></script>
+
+
+            <div id="quote">
+            <p><em>The answer, my friend, is blowin' in the wind, The answer
+                is blowin' in the wind.</em></p>
+
+            <p>&mdash;BOB DYLAN, <em>The Freewheelin' Bob Dylan</em></p>
+        </div>
+        </div>
+      
+    <h1>Joran</h1>
+
+    <p>Joran stands for a cold north-west wind which, every now and
+    then, blows forcefully on Lake Geneva. Located right in the middle
+    of Western-Europe, the surface of Lake Geneva is smaller than many
+    other European lakes. However, with its average depth of 153
+    meters, it is unusually deep, and happens to be, by volume, the
+    largest sweet water reserve in Western-Europe.
+    </p>
+ 
+
+    <p>As apparent in previous chapters, logback relies on Joran, a
+    mature, flexible and powerful configuration framework. Many of the
+    capabilities offered by logback modules are only possible on
+    account of Joran. This chapter focuses on Joran as it exists
+    since logback 1.3: how an XML (or serialized) configuration is
+    turned into a <em>model</em>, and how that model is applied by
+    <em>model handlers</em> in distinct processing phases.
+    </p>
+
+    <p>Joran is a generic configuration system that can be used
+    independently of logging. The logback-core module has no notion of
+    loggers; classic-specific models and handlers live in
+    logback-classic.
+    </p>
+
+    <p class="highlight">For developers interested in writing logback
+    components, e.g. appenders, the most relevant material is the
+    section on <a href="#implicit">implicit actions and property
+    handling</a>.
+    </p>
+    
+    <p>For developers simply interested in writing logback components
+    (appenders, encoders, filters, and similar), the most relevant
+    material is the section on <a href="#implicit">implicit actions
+    and property handling</a>, including <a
+    href="#basicProperty">basic</a> and <a
+    href="#complexProperty">complex</a> property conversion. That is
+    what determines how nested elements in a configuration file map
+    onto JavaBeans properties of your components. Developers who want
+    to understand the inner workings of Joran may elect to read this
+    chapter in full.
+    </p>
+
+    <h2 class="doAnchor" name="historical">Historical perspective</h2>
+
+    <p>Reflection makes it possible to configure software systems
+    declaratively. Logback's settings are typically expressed in XML.
+    In log4j, the <code>DOMConfigurator</code> class hard-coded how
+    each element was interpreted. That style did not scale when the
+    configuration vocabulary grew. The commons-digester project showed
+    that pattern-matching rules could drive parsing: small rule
+    classes associated with path patterns.
+    </p>
+
+    <p>Joran was inspired by digester but uses slightly different
+    terminology. In Joran, a <em>rule</em> associates a
+    <em>pattern</em> with an <em>action</em>. When a matching SAX
+    element is seen, the action runs. That design still underpins the
+    first stage of configuration. What changed in logback 1.3 is that
+    actions no longer configure appenders and loggers <em>while</em>
+    the XML is being read. Instead, they build a serializable
+    <code>Model</code> tree. A later stage walks that tree with
+    <code>ModelHandler</code> instances and performs the real work.
+    </p>
+
+    <h3 class="doAnchor" name="saxOrDom">SAX, not free-form DOM jumps</h3>
+
+    <p>Joran is built on the SAX API. Elements are presented in
+    sequential, depth-first order. That fits pattern/action
+    interpretation and preserves line/column location information for
+    error messages. Free-form jumps across a DOM tree while matching
+    patterns turned out to be a poor fit; Joran only needs events in
+    document order.
+    </p>
+
+    <h3>Non goals</h3>
+
+    <p>Given its dynamic nature, Joran is not intended to parse very
+    large XML documents with many thousands of elements.
+    </p>
+
+    <!-- ============================================================ -->
+
+    <h2 class="doAnchor" name="pipeline">The configuration pipeline
+    since 1.3</h2>
+
+    <p><span class="label notice">since 1.3</span> Configuring
+    logback-classic with <code>JoranConfigurator</code> (or any
+    <code>GenericXMLConfigurator</code> subclass) proceeds in two
+    major stages:
+    </p>
+
+    <ol>
+      <li>
+        <p><b>Build a model.</b> SAX events are recorded, then replayed
+        through Joran rules. Actions (usually subclasses of
+        <code>BaseModelAction</code>) push and pop
+        <code>Model</code> nodes. The result is a tree whose root is
+        typically a <code>ConfigurationModel</code>.</p>
+      </li>
+      <li>
+        <p><b>Process the model.</b> A
+        <code>DefaultProcessor</code> walks the tree. For each model
+        type it knows about, it invokes a corresponding
+        <code>ModelHandler</code>. Handlers instantiate components,
+        set properties, attach appenders, and so on. Processing is
+        split into phases so that dependencies can be resolved in a
+        sensible order.</p>
+      </li>
+    </ol>
+
+    <p>In code, <code>GenericXMLConfigurator.doConfigure</code>
+    roughly does the following:
+    </p>
+
+    <pre><code>SaxEventRecorder recorder = populateSaxEventRecorder(inputSource);
+Model topModel = buildModelFromSaxEventList(recorder.getSaxEventList());
+sanityCheck(topModel);
+processModel(topModel);  // DefaultProcessor + model handlers</code></pre>
+
+    <p>Because the model is an ordinary object graph, it can be
+    inspected, duplicated, or even serialized and re-applied later
+    (see <code>SerializedModelConfigurator</code> and tools such as
+    logback-tyler). Reconfiguration after a file change reuses the
+    same idea: obtain a model, then process it.
+    </p>
+
+    <!-- ============================================================ -->
+
+    <h2 class="doAnchor" name="model">Model</h2>
+
+    <p>A <a
+    href="../xref/ch/qos/logback/core/model/Model.html"><code>Model</code></a>
+    is an abstract representation of a configuration element. It is
+    not the live logger or appender; it is data describing what should
+    be created.
+    </p>
+
+    <p>Every model has at least:
+    </p>
+
+    <ul>
+      <li><p>a <em>tag</em> (the XML element name),</p></li>
+      <li><p>optional body text,</p></li>
+      <li><p>a line number (for diagnostics),</p></li>
+      <li><p>a list of child models (<code>subModels</code>),</p></li>
+      <li><p>flags such as <em>handled</em> and <em>skipped</em> used
+      during processing.</p></li>
+    </ul>
+
+    <p>Concrete subclasses carry element-specific fields. For example
+    <code>AppenderModel</code> and <code>LoggerModel</code> extend
+    named component models; <code>PropertyModel</code> holds property
+    names and values; conditional configuration uses
+    <code>IfModel</code>, <code>ThenModel</code> and
+    <code>ElseModel</code>. Classic adds
+    <code>ConfigurationModel</code>, <code>RootLoggerModel</code>,
+    <code>LevelModel</code>, and others.
+    </p>
+
+    <p>Models form a tree that mirrors the nesting of the XML
+    document. That tree is the single intermediate form between “what
+    was written in the file” and “what runs in the
+    <code>LoggerContext</code>”.
+    </p>
+
+    <h3 class="doAnchor" name="buildingModels">How models are built
+    from XML</h3>
+
+    <p>During the model-building stage, Joran still matches
+    <em>patterns</em> to <em>actions</em> (see
+    <a href="#pattern">below</a>). For logback configuration, almost
+    every action extends
+    <a href="../xref/ch/qos/logback/core/joran/action/BaseModelAction.html"><code>BaseModelAction</code></a>
+    rather than performing side effects immediately.
+    </p>
+
+    <p><code>BaseModelAction</code> implements the usual
+    <code>begin</code> / <code>body</code> / <code>end</code>
+    callbacks as follows:
+    </p>
+
+    <ul>
+      <li>
+        <p>On <code>begin</code>, it calls
+        <code>buildCurrentModel(...)</code> (implemented by each
+        subclass) to create a typed <code>Model</code>, records the
+        tag and line number, and pushes the model onto a stack held by
+        the SAX interpretation context.</p>
+      </li>
+      <li>
+        <p>On <code>body</code>, it appends character data to the
+        current model.</p>
+      </li>
+      <li>
+        <p>On <code>end</code>, it pops the model and attaches it as a
+        sub-model of its parent.</p>
+      </li>
+    </ul>
+
+    <p>Thus actions are still essential, but their role is narrower
+    than in pre-1.3 logback: they <em>translate XML into models</em>.
+    The heavy lifting—creating appenders, starting life-cycle
+    objects, wiring references—belongs to model handlers.
+    </p>
+
+    <!-- ============================================================ -->
+
+    <h2 class="doAnchor" name="modelHandler">ModelHandler</h2>
+
+    <p>A <a
+    href="../xref/ch/qos/logback/core/model/processor/ModelHandlerBase.html"><code>ModelHandler</code></a>
+    (concrete types extend <code>ModelHandlerBase</code>) consumes one
+    kind of model and applies it to the context. Handlers implement:
+    </p>
+
+    <pre><code>public abstract void handle(ModelInterpretationContext mic, Model model)
+    throws ModelHandlerException;
+
+public void postHandle(ModelInterpretationContext mic, Model model)
+    throws ModelHandlerException {
+  // optional; default is empty
+}</code></pre>
+
+    <p>Typical responsibilities of <code>handle</code>:
+    </p>
+
+    <ul>
+      <li><p>read fields from the typed model,</p></li>
+      <li><p>instantiate the corresponding runtime object (for example
+      an <code>Appender</code>),</p></li>
+      <li><p>set the context and name,</p></li>
+      <li><p>push the object on the interpretation stack so nested
+      handlers (properties, encoders, nested components) can attach to
+      it.</p></li>
+    </ul>
+
+    <p><code>postHandle</code> runs after child models have been
+    processed. Handlers use it to finish wiring: pop the object from
+    the stack, call <code>start()</code> on life-cycle components, or
+    attach a completed appender to a logger. Dependency analysers also
+    use <code>postHandle</code> when they need a global view after the
+    whole subtree has been visited (for example
+    <code>CallerContradictionWarnAnalyser</code>).
+    </p>
+
+    <p>Examples of handlers include
+    <code>AppenderModelHandler</code>,
+    <code>LoggerModelHandler</code>,
+    <code>RootLoggerModelHandler</code>,
+    <code>PropertyModelHandler</code>,
+    <code>ImplicitModelHandler</code> (nested beans and complex
+    properties), and conditional handlers for
+    <code>IfModel</code>/<code>ThenModel</code>/<code>ElseModel</code>.
+    </p>
+
+    <h3 class="doAnchor" name="mic">ModelInterpretationContext</h3>
+
+    <p>Handlers collaborate through a
+    <a href="../xref/ch/qos/logback/core/model/processor/ModelInterpretationContext.html"><code>ModelInterpretationContext</code></a>
+    (MIC). The MIC holds:
+    </p>
+
+    <ul>
+      <li><p>an object stack (components under construction),</p></li>
+      <li><p>a model stack (during related operations),</p></li>
+      <li><p>object and property maps,</p></li>
+      <li><p>import aliases (<code>&lt;import&gt;</code>),</p></li>
+      <li><p>variable substitution helpers,</p></li>
+      <li><p>dependency definitions used in the second phase,</p></li>
+      <li><p>the default nested-component registry (which Java type to
+      instantiate for a nested element when the class is not spelled
+      out).</p></li>
+    </ul>
+
+    <p>This is the model-era counterpart of the older interpretation
+    context that pure actions used for ad hoc collaboration.
+    </p>
+
+    <h3 class="doAnchor" name="linking">Linking models to handlers</h3>
+
+    <p>Before processing, the configurator registers associations from
+    model class to handler factory. In logback-classic,
+    <code>ModelClassToModelHandlerLinker</code> (and its core base
+    class) performs that registration on a
+    <code>DefaultProcessor</code>, for example:
+    </p>
+
+    <pre><code>defaultProcessor.addHandler(AppenderModel.class, AppenderModelHandler::makeInstance);
+defaultProcessor.addHandler(LoggerModel.class, LoggerModelHandler::makeInstance);
+defaultProcessor.addHandler(RootLoggerModel.class, RootLoggerModelHandler::makeInstance);
+// ... and many more</code></pre>
+
+    <p>It also registers <em>analysers</em> for the dependency-analysis
+    phase (see below), such as
+    <code>AppenderRefDependencyAnalyser</code>,
+    <code>AppenderDeclarationAnalyser</code>,
+    <code>FileCollisionAnalyser</code>, and caller-data contradiction
+    analysers.
+    </p>
+
+    <p>If a model type has no registered handler,
+    <code>DefaultProcessor</code> reports an error naming the model
+    class, tag, and line number (“Can't handle model of type …”).
+    </p>
+
+    <!-- ============================================================ -->
+
+    <h2 class="doAnchor" name="phases">Phases of model processing</h2>
+
+    <p>Applying a model is not a single depth-first walk that creates
+    every component immediately. <code>DefaultProcessor.process</code>
+    runs three ordered steps, corresponding to the
+    <a href="../xref/ch/qos/logback/core/model/processor/ProcessingPhase.html"><code>ProcessingPhase</code></a>
+    enumeration:
+    </p>
+
+    <pre><code>public enum ProcessingPhase {
+    FIRST,
+    DEPENDENCY_ANALYSIS,
+    SECOND;
+}</code></pre>
+
+    <p>In outline:
+    </p>
+
+    <pre><code>mainTraverse(topModel, phaseOneFilter);   // FIRST
+analyseDependencies(topModel);            // DEPENDENCY_ANALYSIS
+secondPhaseTraverse(topModel, phaseTwoFilter); // SECOND</code></pre>
+
+    <h3 class="doAnchor" name="phaseFirst">FIRST phase</h3>
+
+    <p>The first phase handles models that should run early and that
+    do not depend on appenders or loggers already existing. By
+    default, a model class without a
+    <a href="../xref/ch/qos/logback/core/model/processor/PhaseIndicator.html"><code>@PhaseIndicator</code></a>
+    annotation is treated as <code>FIRST</code>.
+    </p>
+
+    <p>Typical first-phase work includes imports, properties,
+    timestamps, status listeners, conversion rules, defines, includes,
+    shutdown hooks, and conditional scaffolding—configuration that
+    sets up the environment for later instantiation.
+    </p>
+
+    <p>During this phase <code>DefaultProcessor</code> traverses the
+    tree with a filter that <em>allows</em> first-phase model types
+    and, after registration is sealed, <em>denies</em> everything
+    else. For each allowed, still-unhandled model it creates the
+    handler, calls <code>handle</code>, recurses into children, then
+    calls <code>postHandle</code>.
+    </p>
+
+    <h3 class="doAnchor" name="phaseDependency">DEPENDENCY_ANALYSIS
+    phase</h3>
+
+    <p>Between the two instantiation phases, the processor runs
+    dependency analysis. Analysers are registered with
+    <code>DefaultProcessor.addAnalyser(modelClass, supplier)</code>
+    and are themselves <code>ModelHandlerBase</code> subclasses
+    annotated with
+    <code>@PhaseIndicator(phase = DEPENDENCY_ANALYSIS)</code>.
+    </p>
+
+    <p>Analysis walks the entire model tree. For each node, registered
+    analysers for that type receive <code>handle</code>; after
+    children are visited, they receive <code>postHandle</code>. They
+    do not normally create appenders. Instead they record facts needed
+    later, for example:
+    </p>
+
+    <ul>
+      <li>
+        <p>which appender names are <em>declared</em> and which are
+        <em>referenced</em> (<code>AppenderDeclarationAnalyser</code>,
+        <code>AppenderRefDependencyAnalyser</code>),</p>
+      </li>
+      <li>
+        <p>whether two appenders would collide on the same file
+        (<code>FileCollisionAnalyser</code>),</p>
+      </li>
+      <li>
+        <p>whether caller-data inclusion instructions contradict each
+        other (<code>CallerContradictionAnalyser</code> /
+        <code>CallerContradictionWarnAnalyser</code>).</p>
+      </li>
+    </ul>
+
+    <p>Dependency definitions collected here feed the second phase:
+    an appender that nobody references can be skipped; an appender
+    reference can wait until the named appender has been started.
+    </p>
+
+    <h3 class="doAnchor" name="phaseSecond">SECOND phase</h3>
+
+    <p>The second phase creates and starts the components that form
+    the logging runtime: appenders, loggers, root logger, levels, and
+    appender references. Model classes such as
+    <code>AppenderModel</code>, <code>AppenderRefModel</code>,
+    <code>LoggerModel</code> and <code>RootLoggerModel</code> are
+    annotated with
+    <code>@PhaseIndicator(phase = ProcessingPhase.SECOND)</code>.
+    </p>
+
+    <p>Second-phase traversal is dependency-aware. A model is handled
+    only when it is still unhandled <em>and</em> all of its named
+    dependencies that were declared as appenders have already been
+    started. That is why the order of elements in the XML file is less
+    rigid than in older logback versions: an
+    <code>&lt;appender-ref&gt;</code> may appear before the
+    corresponding <code>&lt;appender&gt;</code> in the document; the
+    second phase postpones attachment until the appender exists.
+    </p>
+
+    <p>After handlers are registered, filter chains are sealed so that
+    first-phase filters deny unknown types and second-phase filters
+    allow remaining unhandled models as a fallback. The second phase
+    may loop a small number of times so that deferred nodes become
+    runnable once their dependencies start.
+    </p>
+
+    <h3 class="doAnchor" name="phaseWhy">Why phases matter</h3>
+
+    <p>Phased processing solves practical ordering problems:
+    </p>
+
+    <ul>
+      <li>
+        <p><b>Properties and imports first.</b> Variable substitution
+        and short class names must be available before components are
+        instantiated.</p>
+      </li>
+      <li>
+        <p><b>Analyse before create.</b> Skipping unreferenced
+        appenders, detecting file collisions, and warning about
+        contradictory caller-data settings require a full picture of
+        the configuration, not a single local element.</p>
+      </li>
+      <li>
+        <p><b>Dependent components last.</b> Loggers and
+        <code>appender-ref</code> entries need appenders that may be
+        defined elsewhere in the file (or only after nested
+        structure is complete).</p>
+      </li>
+    </ul>
+
+    <p>When you write a custom model and handler, choose the phase
+    deliberately: put independent setup in the first phase; use an
+    analyser if you only need to gather information; put components
+    that depend on appenders or similar named objects in the second
+    phase and register the appropriate dependency analysers.
+    </p>
+
+    <!-- ============================================================ -->
+
+    <h2 class="doAnchor" name="pattern">Patterns and rules (model
+    building)</h2>
+
+    <p>The model-building stage still uses Joran patterns and a rule
+    store. A pattern is a string. Exact patterns such as
+    <code>"configuration/appender"</code> match a specific path.
+    Wildcards match suffixes or prefixes: <code>"*/appender"</code>
+    matches any <code>&lt;appender&gt;</code> element;
+    <code>"appender/*"</code> matches elements nested under
+    <code>&lt;appender&gt;</code>.
+    </p>
+
+    <p>Rules associate a pattern with an action. Rules live in a
+    <a href="../xref/ch/qos/logback/core/joran/spi/RuleStore.html"><code>RuleStore</code></a>
+    (commonly <code>SimpleRuleStore</code>). When several rules match,
+    exact matches override suffix matches, and suffix matches override
+    prefix matches.
+    </p>
+
+    <p>As SAX events stream in, Joran maintains the <em>current
+    path</em> and looks up an action. For configuration files that
+    action almost always builds or completes a <code>Model</code>
+    node, as described earlier.
+    </p>
+
+    <h3 class="doAnchor" name="implicit">Implicit actions</h3>
+
+    <p>Highly extensible systems cannot register an explicit rule for
+    every possible nested element. Joran keeps a list of
+    <em>implicit</em> actions, tried when no explicit pattern
+    matches. In logback configuration,
+    <a href="../xref/ch/qos/logback/core/joran/action/ImplicitModelAction.html"><code>ImplicitModelAction</code></a>
+    is registered as the implicit action: it builds an
+    <code>ImplicitModel</code> for any nested element that is not
+    already covered by an explicit rule.
+    </p>
+
+    <p>Later, during model processing,
+    <a href="../xref/ch/qos/logback/core/model/processor/ImplicitModelHandler.html"><code>ImplicitModelHandler</code></a>
+    applies that model to the object currently on the interpretation
+    stack. Using JavaBeans introspection (via
+    <code>PropertySetter</code> /
+    <code>AggregationAssessor</code>), it decides whether the nested
+    element is a <em>basic</em> property, a <em>complex</em>
+    property, or a collection of either, and then converts and
+    attaches the value accordingly.
+    </p>
+
+    <p>The decision hinges on the parameter type of the matching
+    setter (<code>set<em>Foo</em></code>) or adder
+    (<code>add<em>Foo</em></code>) method on the parent object. That
+    type is classified with
+    <a href="../xref/ch/qos/logback/core/joran/util/StringToObjectConverter.html"><code>StringToObjectConverter.canBeBuiltFromSimpleString(Class)</code></a>:
+    </p>
+
+    <ul>
+      <li>
+        <p>If the parameter type <em>can</em> be built from a simple
+        string, the property is <b>basic</b>
+        (<code>AggregationType.AS_BASIC_PROPERTY</code>, or
+        <code>AS_BASIC_PROPERTY_COLLECTION</code> when an adder is
+        used).</p>
+      </li>
+      <li>
+        <p>Otherwise the property is <b>complex</b>
+        (<code>AS_COMPLEX_PROPERTY</code> or
+        <code>AS_COMPLEX_PROPERTY_COLLECTION</code>).</p>
+      </li>
+      <li>
+        <p>If no matching setter or adder exists, the nested element
+        is unknown: a warning is issued
+        (“Ignoring unknown property …”) and further processing of that
+        branch is skipped.</p>
+      </li>
+    </ul>
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+    <h4 class="doAnchor" name="basicProperty">Basic properties</h4>
+
+    <p>A property is <em>basic</em> (also called <em>simple</em>) when
+    its value can be obtained by converting element body text (or an
+    attribute-style string) into a Java value without instantiating a
+    nested configuration component. Conversion is performed by
+    <code>StringToObjectConverter</code>.
+    </p>
+
+    <p><code>canBeBuiltFromSimpleString</code> returns
+    <code>true</code> when the parameter class is any of the
+    following:
+    </p>
+
+    <ul>
+      <li>
+        <p>a <b>primitive</b> type (<code>int</code>,
+        <code>boolean</code>, <code>double</code>, and so on);</p>
+      </li>
+      <li>
+        <p>a type in the <b><code>java.lang</code></b> package (for
+        example <code>String</code>, <code>Integer</code>,
+        <code>Boolean</code>, <code>Long</code>);</p>
+      </li>
+      <li>
+        <p>an <b>enum</b> type (converted with
+        <code>Enum.valueOf</code>);</p>
+      </li>
+      <li>
+        <p>a type that follows the <b><code>valueOf</code>
+        convention</b>: a public static method
+        <code>valueOf(String)</code> that returns an instance of that
+        type;</p>
+      </li>
+      <li>
+        <p><b><code>java.nio.charset.Charset</code></b> (via
+        <code>Charset.forName</code>; the special string
+        <code>"null"</code> means
+        <code>Charset.defaultCharset()</code>).</p>
+      </li>
+    </ul>
+
+    <p>Among logback’s own types, several follow the
+    <code>valueOf</code> convention and are therefore basic
+    properties, including
+    <a href="../xref/ch/qos/logback/classic/Level.html"><code>Level</code></a>,
+    <a href="../xref/ch/qos/logback/core/util/Duration.html"><code>Duration</code></a>
+    and
+    <a href="../xref/ch/qos/logback/core/util/FileSize.html"><code>FileSize</code></a>.
+    Application types can use the same convention so that configuration
+    files may set them with plain text.
+    </p>
+
+    <p>In XML, a basic property looks like a nested element whose body
+    is the string to convert:
+    </p>
+
+    <pre><code>&lt;appender name="FILE" class="ch.qos.logback.core.FileAppender">
+  &lt;file>myApp.log&lt;/file>              &lt;!-- String -->
+  &lt;append>true&lt;/append>               &lt;!-- boolean -->
+  &lt;prudent>false&lt;/prudent>
+  ...
+&lt;/appender>
+
+&lt;root level="DEBUG">                  &lt;!-- Level via valueOf -->
+  ...
+&lt;/root></code></pre>
+
+    <p>At processing time,
+    <code>ImplicitModelHandler</code> substitutes variables in the
+    body text, then either calls
+    <code>PropertySetter.setProperty</code> (single basic property) or
+    <code>addBasicProperty</code> (collection of basic values). Those
+    methods invoke
+    <code>StringToObjectConverter.convertArg</code> and pass the
+    resulting object to the parent’s setter or adder.
+    </p>
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+    <h4 class="doAnchor" name="complexProperty">Complex properties</h4>
+
+    <p>A property is <em>complex</em> when its type cannot be built
+    from a simple string according to
+    <code>canBeBuiltFromSimpleString</code>. Typical examples are
+    encoders, layouts, filters, policies, and other user-defined
+    objects nested under an appender or similar parent. Complex
+    properties can themselves contain further nested basic or complex
+    properties.
+    </p>
+
+    <p>When <code>ImplicitModelHandler</code> sees a complex property
+    it:
+    </p>
+
+    <ol>
+      <li>
+        <p>Determines the class to instantiate: the
+        <span class="attr">class</span> attribute on the nested
+        element if present (after variable substitution and
+        <code>&lt;import&gt;</code> resolution); otherwise a class
+        deduced by <em>implicit rules</em> (see below).</p>
+      </li>
+      <li>
+        <p>Instantiates that class (checking that it is compatible with
+        the setter/adder parameter type).</p>
+      </li>
+      <li>
+        <p>Sets the logback <code>Context</code> if the object is
+        <code>ContextAware</code>, and pushes the object on the
+        interpretation stack so nested elements apply to it.</p>
+      </li>
+      <li>
+        <p>After children are processed (<code>postHandle</code>),
+        optionally injects the parent via a <code>parent</code>
+        property, starts the object if it implements
+        <code>LifeCycle</code> and is not marked
+        <code>@NoAutoStart</code>, then attaches it to the parent with
+        <code>set<em>Property</em></code> or
+        <code>add<em>Property</em></code>.</p>
+      </li>
+    </ol>
+
+    <p>Example—an encoder is a complex property of an appender; its
+    nested <code>pattern</code> is a basic property of the encoder:
+    </p>
+
+    <pre><code>&lt;appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+  &lt;encoder>   &lt;!-- complex: default PatternLayoutEncoder -->
+    &lt;pattern>%d %-5level %logger - %msg%n&lt;/pattern>  &lt;!-- basic: String -->
+  &lt;/encoder>
+&lt;/appender></code></pre>
+
+    <p>If the <span class="attr">class</span> attribute is omitted, the
+    class of the nested component is deduced when any of the following
+    succeeds (in order):
+    </p>
+
+    <ol>
+      <li>
+        <p>an entry in the <b>default nested-component registry</b>
+        maps the parent class and property name to a default
+        implementation (for example, <code>encoder</code> under
+        <code>AppenderBase</code> →
+        <code>PatternLayoutEncoder</code> in logback-classic);</p>
+      </li>
+      <li>
+        <p>the setter or adder method carries a
+        <code>@DefaultClass</code> annotation naming an
+        implementation;</p>
+      </li>
+      <li>
+        <p>the parameter type of the setter/adder is a concrete class
+        with a public constructor, which is then used directly.</p>
+      </li>
+    </ol>
+
+    <h4 class="doAnchor" name="defaultClassMapping">Default class
+    mapping</h4>
+
+    <p>In logback-classic, a small set of internal rules map parent
+    class / property name pairs to a default nested class. Common
+    entries include:
+    </p>
+
+    <div class="bodyTable">
+    <table class="bodyTable striped">
+      <tr>
+        <th>Parent class</th>
+        <th>property name</th>
+        <th>default nested class</th>
+      </tr>
+      <tr>
+        <td><code>ch.qos.logback.core.AppenderBase</code><br/>
+            <code>ch.qos.logback.core.UnsynchronizedAppenderBase</code></td>
+        <td><code>encoder</code></td>
+        <td><code>ch.qos.logback.classic.encoder.PatternLayoutEncoder</code></td>
+      </tr>
+      <tr>
+        <td><code>AppenderBase</code> / <code>UnsynchronizedAppenderBase</code></td>
+        <td><code>layout</code></td>
+        <td><code>ch.qos.logback.classic.PatternLayout</code></td>
+      </tr>
+    </table>
+    </div>
+
+    <p>This list may change between releases. See the
+    <code>addDefaultNestedComponentRegistryRules</code> method of
+    logback-classic’s
+    <a href="../xref/ch/qos/logback/classic/joran/JoranConfigurator.html"><code>JoranConfigurator</code></a>
+    (and the corresponding method in logback-access) for the rules in
+    effect in your version.
+    </p>
+
+    <h4 class="doAnchor" name="propertyCollections">Collections of
+    properties</h4>
+
+    <p>In addition to a single basic or complex property, implicit
+    handling supports <em>collections</em>. If the parent defines an
+    <b>adder</b> method (<code>add<em>Foo</em>(…)</code>) rather than
+    only a setter, the aggregation type becomes
+    <code>AS_BASIC_PROPERTY_COLLECTION</code> or
+    <code>AS_COMPLEX_PROPERTY_COLLECTION</code>. Each nested element
+    with that tag name contributes one element to the collection (for
+    example multiple <code>&lt;filter&gt;</code> elements under an
+    appender, if the appender exposes <code>addFilter</code>).
+    </p>
+
+    <!-- ============================================================ -->
+
+    <h2 class="doAnchor" name="actionsNote">Note on action-only
+    examples</h2>
+
+    <p>Older editions of this chapter spent many pages on collaborative
+    actions that pushed numbers on a stack (the “calculator”
+    examples). Those samples remain under
+    <em>logback-examples/src/main/java/chapters/onJoran/</em> and are
+    still a valid way to learn raw Joran rule dispatch. They are
+    <em>not</em> how logback-classic configuration works today.
+    </p>
+
+    <p>For logging, prefer this mental model:
+    </p>
+
+    <ol>
+      <li><p>XML (or a serialized model) → <code>Model</code> tree</p></li>
+      <li><p><code>Model</code> tree → <code>ModelHandler</code>s in
+      phase order → live <code>LoggerContext</code></p></li>
+    </ol>
+
+    <p>When extending logback, you typically add a
+    <code>Model</code> subclass, a <code>BaseModelAction</code> (or
+    reuse an existing generic action) to parse XML into that model, a
+    <code>ModelHandler</code> to apply it, and a registration line in
+    the appropriate <code>ModelClassToModelHandlerLinker</code>.
+    Annotate the model with <code>@PhaseIndicator</code> if it must
+    run in the second phase.
+    </p>
+
+    <!-- ============================================================ -->
+
+    <h2 class="doAnchor" name="newRule">New rules on the fly</h2>
+
+    <p>Joran can learn additional pattern/action rules while reading a
+    document, via <code>NewRuleAction</code> and a
+    <code>&lt;newRule&gt;</code> element. That facility is useful for
+    specialized dialects and teaching examples. Logback's stock
+    configuration does not require application authors to declare
+    rules in XML; the fixed rule set and model handlers already cover
+    the supported vocabulary.
+    </p>
+
+    <p>Example shape:
+    </p>
+
+    <pre><code>&lt;newRule pattern="*/computation/literal"
+          actionClass="chapters.onJoran.calculator.LiteralAction"/></code></pre>
+
+    <p>See the
+    <em>logback-examples/src/main/java/chapters/onJoran/newRule/</em>
+    directory for a complete illustration.
+    </p>
+
+  <script src="../templates/footer.js" type="text/javascript"></script>
+
+
+</div>
+</body>
+</html>
