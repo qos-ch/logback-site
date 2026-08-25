@@ -1,0 +1,44 @@
+## 2026-08-14 Release of logback version 1.6.3
+
+- In response [CVE-2026-19880](https://www.cve.org/cverecord?id=CVE-2026-19880),
+  `MDCBasedDiscriminator` (used by `SiftingAppender`) now strips forward and
+  backward slashes (`/`, `\`) from MDC values before they are used as
+  discriminating keys. This prevents path segments from escaping into
+  destinations controlled by an attacker. When sanitisation actually changes a
+  value, a warning is emitted; the warning is rate-limited (a small batch, then
+  a lull of about ten minutes).
+
+- Colour console support is split out into a dedicated
+  [`JansiConsoleAppender`](https://logback.qos.ch/manual/appenders.html#JansiConsoleAppender)
+  (`ch.qos.logback.core.JansiConsoleAppender`). It wraps stdout or stderr with
+  Jansi so ANSI escape sequences (for example coloured patterns) render
+  correctly on terminals that need it, notably Windows. Prefer this class over
+  the older path described next. See the
+  [appenders documentation](https://logback.qos.ch/manual/appenders.html#JansiConsoleAppender).
+
+- The `withJansi` property on `ConsoleAppender` is **deprecated**. Existing
+  configurations that still set `<withJansi>true</withJansi>` continue to work
+  for compatibility, but new setups should use `JansiConsoleAppender` instead.
+
+- `ConsoleAppender` no longer treats the process console as an exclusive
+  resource: stopping it does not close `System.out` / `System.err`.
+  `JansiConsoleAppender` pairs each `AnsiConsole.systemInstall()` with
+  `systemUninstall()` on stop, so repeated start/stop cycles do not leave Jansi
+  installed or tear down streams shared with the rest of the JVM. Related
+  behaviour is covered by tests for
+  [issues/1063](https://github.com/qos-ch/logback/issues/1063).
+
+- Invocation throttling helpers were reworked: `SimpleInvocationGate` is renamed
+  `FixedIntervalInvocationGate`, and `BatchedFixedIntervalInvocationGate` allows
+  a short burst of invocations before applying a fixed lull. The sanitisation
+  warning above uses the batched gate.
+
+- The JPMS `module-info` for logback-core now exports the
+  `ch.qos.logback.core.property` package, which had been missing from the module
+  descriptor.
+
+- A bit-wise identical binary of this version can be reproduced by building from
+  [source code](https://github.com/qos-ch/logback) at commit
+  `e8e824dede022a6d7208b36cfa875b0d1b7772f3` associated with the tag `v_1.6.3`.
+  The release was built using Java "21" 2023-10-17 LTS build 21.0.1.+12-LTS-29
+  under Linux Debian 11.6.

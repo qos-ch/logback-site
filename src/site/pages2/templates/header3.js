@@ -43,7 +43,7 @@ function insertLogoAndMenu() {
     document.write('            <div>');
     document.write('                <div class="dropdown-heading">Support</div>');
     document.write('                <div class="dropdown-links">');
-    // document.write('                    <a href="'+ prefix +'mailinglist.html"><i class="fa-regular fa-envelope"></i> Mailing Lists</a>');  //&#9993;
+    document.write('                    <a href="'+ prefix +'mailinglist.html"><i class="fa-regular fa-envelope"></i> Mailing Lists</a>');  //&#9993;
     document.write('                    <a href="'+ prefix +'bugreport.html"><i class="fa-regular fa-bug"></i> Bug Report</a>'); //&#129440; &#128027;
 
     document.write('                    <a href="' + prefix + 'count/github.html">');
@@ -53,7 +53,7 @@ function insertLogoAndMenu() {
     document.write('                    <a href="' + prefix + 'count/tidelift.html">');
     document.write('                           <i class="fa-regular fa-t"></i> Tidelift');
     document.write('                     </a>');
-
+  
 
     document.write('                </div>');
     document.write('            </div>');
