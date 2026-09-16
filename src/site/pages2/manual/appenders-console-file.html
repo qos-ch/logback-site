@@ -206,8 +206,18 @@
    <code>AnsiConsole</code> directly and does not use reflection.
    </p>
 
-   <p>You must place <code>org.jline:jansi-core</code> on the class
-   path. On start, the appender calls
+   <p>If you wish to use <code>JansiConsoleAppender</code>, you must
+   add <code>org.jline:jansi-core</code> on the class path. This is
+   usually done by adding the following dependency to your project:
+  </p>
+
+  <pre><code>&lt;dependency>
+  &lt;groupId>org.jline&lt;/groupId>
+  &lt;artifactId>jansi-core&lt;/artifactId>
+  &lt;version>${jline.jansi.version}&lt;/version>
+&lt;/dependency></code></pre>   
+
+   <p>On start, the <code>JansiConsoleAppender</code> calls
    <code>AnsiConsole.systemInstall()</code> and routes output to
    <code>AnsiConsole.out()</code> or <code>AnsiConsole.err()</code>
    according to the <span class="prop">target</span> property. On
@@ -231,15 +241,6 @@
    <code>&lt;withJansi&gt;true&lt;/withJansi&gt;</code>:
    </p>
 
-   <p class="red bold">DEPRECATED</p>
-   <pre><code>&lt;appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-  &lt;withJansi>true&lt;/withJansi>
-  &lt;encoder>
-    &lt;pattern>%highlight(%-5level) %logger{35} - %msg%n&lt;/pattern>
-  &lt;/encoder>
-&lt;/appender></code></pre>
-
-   <p class="green bold">RECOMMENDED</p>
    <pre><code>&lt;appender name="STDOUT" class="ch.qos.logback.core.JansiConsoleAppender">
   &lt;encoder>
     &lt;pattern>%highlight(%-5level) %logger{35} - %msg%n&lt;/pattern>

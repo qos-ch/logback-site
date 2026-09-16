@@ -1138,23 +1138,27 @@ instructs in favor of caller extraction</pre>
   <a href="manual/appenders.html#JansiConsoleAppender"><code>JansiConsoleAppender</code></a>
   class writes through JLine's
   <code>org.jline.jansi.AnsiConsole</code> so that ANSI sequences
-  render correctly on platforms that need Jansi, notably Windows.
+  render correctly on platforms that need Jansi, notably on the
+  Windows platform.
   </p>
 
   <p>If <code>org.jline.jansi.AnsiConsole</code> cannot be loaded,
   <code>JansiConsoleAppender</code> emits a warning and falls back on
-  the default console stream. Logging continues, but ANSI sequences
-  may not be interpreted.
+  the default console stream. With the default stream logging
+  continues, but ANSI sequences may not render correctly, notably on
+  Windows.
   </p>
 
   <p>The <code>org.jline:jansi-core</code> artifact is an optional
   dependency of logback-core and is therefore not pulled in
-  transitively. Add it as a dependency of your end-user project:
+  transitively. If you wish to use JansiConsoleAppender, you must add
+  <code>org.jline:jansi-core</code> as a dependency of your project:
   </p>
 
   <pre><code>&lt;dependency>
   &lt;groupId>org.jline&lt;/groupId>
   &lt;artifactId>jansi-core&lt;/artifactId>
+  &lt;version>${jline.jansi.version}&lt;/version>
 &lt;/dependency></code></pre>
 
  
