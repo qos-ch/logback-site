@@ -1127,6 +1127,36 @@ instructs in favor of caller extraction</pre>
   intentional or otherwise unhelpful in your environment.
   </p>
 
+  <!-- ============================================================= -->
+  <hr width="80%" align="center" />
+  <h3 class="doAnchor" name="missingJlineJansi">Could not find
+  <code>org.jline.jansi.AnsiConsole</code> on the class path.
+  Falling back on the default stream.
+  </h3>
+
+  <p><span class="label notice">since 1.6.3</span> The
+  <a href="manual/appenders.html#JansiConsoleAppender"><code>JansiConsoleAppender</code></a>
+  class writes through JLine's
+  <code>org.jline.jansi.AnsiConsole</code> so that ANSI sequences
+  render correctly on platforms that need Jansi, notably Windows.
+  </p>
+
+  <p>If <code>org.jline.jansi.AnsiConsole</code> cannot be loaded,
+  <code>JansiConsoleAppender</code> emits a warning and falls back on
+  the default console stream. Logging continues, but ANSI sequences
+  may not be interpreted.
+  </p>
+
+  <p>The <code>org.jline:jansi-core</code> artifact is an optional
+  dependency of logback-core and is therefore not pulled in
+  transitively. Add it as a dependency of your end-user project:
+  </p>
+
+  <pre><code>&lt;dependency>
+  &lt;groupId>org.jline&lt;/groupId>
+  &lt;artifactId>jansi-core&lt;/artifactId>
+&lt;/dependency></code></pre>
+
  
   <script src="templates/footer.js" type="text/javascript"></script>
    </div>
