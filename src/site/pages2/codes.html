@@ -1142,10 +1142,11 @@ instructs in favor of caller extraction</pre>
   Windows platform.
   </p>
 
-  <p>If <code>org.jline.jansi.AnsiConsole</code> cannot be loaded,
+  <p><span class="label notice">since 1.6.4</span> If
+  <code>org.jline.jansi.AnsiConsole</code> cannot be loaded,
   <code>JansiConsoleAppender</code> emits a warning and falls back on
   the default console stream. With the default stream logging
-  continues, but ANSI sequences may not render correctly, notably on
+  continues. ANSI sequences may not render correctly, notably on
   Windows.
   </p>
 

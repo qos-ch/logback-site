@@ -146,6 +146,103 @@
     <!-- ============================================================================ -->
     <!-- ============================================================================ -->
 
+     <h3 class="doAnchor" name="1.6.4">2026-09-24 Release of logback
+     version 1.6.4</h3>
+
+     <p>&bull; Variable substitution is again applied to the <span
+     class="attr">scan</span> attribute of the
+     <code>&lt;configuration&gt;</code> element. The scanning
+     refactoring in version 1.5.27 had dropped substitution, so values
+     such as <code>${logback.scan.enabled:-true}</code> were no longer
+     resolved. As before version 1.5.27, an unrecognized non-empty
+     value turns scanning on. The same substitution now applies to the
+     <span class="attr">scan</span> attribute of
+     <code>&lt;propertiesConfigurator&gt;</code>. This regression was
+     reported in <a
+     href="https://github.com/qos-ch/logback/issues/1065">issues/1065</a>
+     by <a href="https://github.com/vaibhavjain2">vaibhavjain2</a>.
+     See <a href="manual/configuration.html#autoScan">automatic
+     reconfiguration</a>.
+     </p>
+
+     <p>&bull; <code>OutputStreamAppender</code> and
+     <code>FileAppender</code> now handle stateful encoders.
+     The <code>Encoder</code> interface has a new default method
+     called
+     <code>isStateful()</code>, which returns <code>false</code>. An
+     encoder that keeps state between calls to <code>encode()</code>
+     can return <code>true</code>. For such encoders, the appender
+     holds its write lock while encoding and while writing, so the
+     output of concurrent appends cannot interleave. Stateless encoders
+     still encode outside the lock, so their performance does not
+     change. Existing encoders need no changes.
+     </p>
+
+     <p>&bull; Several race conditions in
+     <code>OutputStreamAppender</code> and <code>FileAppender</code>
+     were fixed. The appender is now marked started and the encoder
+     header is written while the same lock is held, so a concurrent
+     append can no longer write an event before the header. After
+     acquiring the lock, the appender checks again whether it has been
+     stopped, so no event is written after the footer. In prudent
+     mode, <code>FileAppender</code> now encodes and writes each event
+     while holding the lock.
+     </p>
+
+     <p>&bull; Fixed a data race on the logger count in
+     <code>LoggerContext</code>. Loggers are created under the lock of
+     their parent logger, so loggers with different parents could be
+     created at the same time and increments of the shared counter
+     could be lost. As a result, <code>LoggerContext.size()</code>
+     could return a value lower than the actual number of loggers. The
+     counter is now an <code>AtomicInteger</code>. This issue was
+     reported in <a
+     href="https://github.com/qos-ch/logback/issues/1038">issues/1038</a>
+     by <a href="https://github.com/hcantunc">hcantunc</a>. The fix
+     was contributed in <a
+     href="https://github.com/qos-ch/logback/pull/1055">PR #1055</a>
+     by <a href="https://github.com/seonwooj0810">seonwoo_jung</a>.
+     </p>
+
+     <p>&bull; <code>TimeBasedRollingPolicy</code> now supports
+     half-day periods. Date patterns with the AM/PM marker, for example
+     <code>%d{yyyy-MM-dd-a}</code>, used to be detected as daily and
+     rolled over only at midnight. They now roll over at both 00:00
+     and 12:00. This issue was reported in <a
+     href="https://github.com/qos-ch/logback/issues/976">issues/976</a>
+     by <a href="https://github.com/shakthifuture">shakthifuture</a>.
+     The fix was contributed in <a
+     href="https://github.com/qos-ch/logback/pull/1051">PR #1051</a>
+     by <a href="https://github.com/seonwooj0810">seonwoo_jung</a>.
+     See <a href="manual/appenders.html#TimeBasedRollingPolicy"><code>TimeBasedRollingPolicy</code></a>.
+     </p>
+
+     <p>&bull; If <code>org.jline.jansi.AnsiConsole</code> cannot be
+     found on the class path, <code>JansiConsoleAppender</code> now
+     emits warnings that explain how to add
+     <code>org.jline:jansi-core</code> and then writes to the plain
+     console stream. See <a
+     href="codes.html#missingJlineJansi">codes.html#missingJlineJansi</a>.
+     </p>
+
+     <p>&bull; The unused
+     <code>ch.qos.logback.classic.util.LogbackMDCAdapterSimple</code>
+     class was removed. <code>LogbackMDCAdapter</code> remains the
+     default MDC adapter.
+     </p>
+
+     <p>&bull; A bit-wise identical binary of this version can be
+     reproduced by building
+     from <a href="https://github.com/qos-ch/logback">source code</a>
+     at commit 07d291ca0d280bc5da934ec9ff5f1da634fd7937 associated
+     with the tag <code>v_1.6.4</code>. The release was built using
+     Java "21" 2023-10-17 LTS build 21.0.1.+12-LTS-29 under Linux
+     Debian 11.6.</p>
+
+     <hr width="80%" align="center" />
+
+    <!-- ============================================================================ -->
+
     <h3 class="doAnchor" name="access_2.0.15">2026-08-14 Release of logback-access
     version 2.0.15</h3>
    
