@@ -9,7 +9,7 @@
     <script type="text/javascript">prefix='../';</script>
 
 </head>
-<body onLoad="enableMenuEventListeners(); hljs.highlightAll();  decorate(); enableLegacy();">
+<body onLoad="enableMenuEventListeners(); hljs.highlightAll();  decorate(); enableLegacy(); loopOn();">
 
     <script type="text/javascript" src="../templates/header3.js"></script>
 
@@ -335,20 +335,11 @@ public class SampleFilter extends Filter&lt;ILoggingEvent> {
 
     <p>For example, let us  migrate the following basic evaluator configuration.</p>
     
-    <div class="tab">
-    <button class="tablinks" id="button_basicEventEvaluator_legacy"
-            onclick="openTab(event, 'basicEventEvaluator', 'legacy')">Legacy</button>
-    <button class="tablinks" id="button_basicEventEvaluator_canonical"
-            onclick="openTab(event, 'basicEventEvaluator', 'canonical')">Canonical (1.3)</button>
-    <button class="tablinks" id="button_basicEventEvaluator_tyler"
-             onclick="openTab(event, 'basicEventEvaluator', 'tyler')">Tyler</button>
-</div>
-
-<div id="basicEventEvaluator_legacy" class="tabcontent">
-    <pre><code>&lt;configuration>
+  <pre><code>&lt;configuration>
   &lt;appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-    <b>&lt;filter class="ch.qos.logback.core.filter.EvaluatorFilter">      
-      &lt;evaluator> &lt;!-- defaults to type ch.qos.logback.classic.boolex.JaninoEventEvaluator -->
+    &lt;filter class="ch.qos.logback.core.filter.EvaluatorFilter">
+      &lt;-- JaninoEventEvaluator hash been removed as of 1.5.13 -->
+      &lt;evaluator class="ch.qos.logback.classic.boolex.JaninoEventEvaluator"> &lt;
         &lt;expression><span class="green">return message.contains("billing");</span>&lt;/expression>
       &lt;/evaluator>
       &lt;OnMismatch>NEUTRAL&lt;/OnMismatch>
@@ -365,8 +356,6 @@ public class SampleFilter extends Filter&lt;ILoggingEvent> {
     &lt;appender-ref ref="STDOUT" />
   &lt;/root>
 &lt;/configuration></code></pre>
-
-</div> 
 
     <p>Supplying the expression
     <pre><code>return message.contains("billing");</code></pre>
