@@ -68,13 +68,16 @@
   value held by the <em>aName</em> property.
   </p>
 
-
   <p>As they often come in handy, the HOSTNAME and CONTEXT_NAME
-  variables are automatically defined and have context scope. Given
-  that in some environments it may take some time to compute the
-  hostname, its value is computed lazily (only when needed). Moreover,
-  HOSTNAME can be set from within the <a
-  href="#definingProps">configuration directly.</a>
+  variables are always defined under the context scope.</p>
+
+  <p>The CONTEXT_NAME variable takes the value <a
+  href="configuration-xml.html#contextName">set explcitly by
+  configuration</a> or if not set, it assumes the value "default".
+
+  <p>As for HOSTNAME, the user can set it explicitly as any other <a
+  href="#definingProps">variable</a>. However, if not set explicitly,
+  its value will be computed lazily but only if actually read.
   </p>
 
    <h4 class="doAnchor" name="definingProps">Defining variables</h4>

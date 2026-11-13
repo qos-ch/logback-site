@@ -146,19 +146,344 @@
     <!-- ============================================================================ -->
     <!-- ============================================================================ -->
 
+
+    <h3 class="doAnchor" name="tyler_1.0.7">2026-10-29 Release of logback-tyler version 1.0.7</h3>
+
+    <p>&bull; The new <code>tyler-maven-plugin</code> translates a
+    logback.xml file into a custom configurator at build time. The
+    generated class is added to the compiled sources of the project
+    and installed as a service provider in
+    <code>META-INF/services/ch.qos.logback.classic.spi.Configurator</code>,
+    so that logback-classic picks it up at runtime without parsing
+    XML. The name of the configuration file and that of the generated
+    class are configurable. Classes and resources of the project,
+    including its dependencies, can be referenced by the configuration
+    file. Please refer to the README file for details.</p>
+
+    <p>&bull; The new Gradle plugin, with
+    id <code>ch.qos.logback.tyler</code>, offers the same
+    functionality for Gradle builds. Its
+    <code>generateTylerConfigurator</code> task is cacheable and
+    compatible with the configuration cache.</p>
+
+    <p>&bull; The classes which may be loaded during translation are
+    now governed by the new <code>allowedPackages</code>
+    and <code>allowAllPackages</code> options
+    of <code>TranslationOptions</code>. Classes in the
+    <code>ch.qos.logback</code> package and its subpackages are always
+    allowed. The restriction now applies to all classes loaded during
+    translation, e.g. appenders, encoders, conditions, conversion
+    rules, status listeners and nested components. Previously, it
+    applied to nested components only, and with a fixed list of
+    package prefixes. Packages are matched with respect to package
+    boundaries. By default, the restriction is the same as in previous
+    versions, while the Maven and Gradle plugins allow all packages
+    unless instructed otherwise.</p>
+
+    <p>&bull; The new <code>classLoader</code> option of
+    <code>TranslationOptions</code> sets the class loader used to load
+    classes mentioned in the configuration file and to resolve
+    resources included with
+    <code>&lt;include resource="..."></code>. Previously, the class
+    loader of logback was used.</p>
+
+    <p>&bull; The new <code>ConfigurationFileTranslator</code> class
+    translates a configuration file and collects the errors and
+    warnings issued during translation.</p>
+
+    <p>&bull; A bit-wise identical binary of this version can be
+    reproduced by building
+    from <a href="https://github.com/qos-ch/logback-tyler">source
+    code</a> at commit 94d0741ccfda6544a84b2690db658c500616f992
+    associated with the tag v_1.0.7. Release built using Java "25.0.2"
+    2026-01-20 LTS build 25.0.2+10-LTS-69 under Linux Debian 13.4.</p>
+
+    <!-- ============================================================================ -->
+  
+    <h3 class="doAnchor" name="tyler_1.0.6">2026-10-28 Release of logback-tyler version 1.0.6</h3>
+
+    <p>&bull; As in <code>JoranConfigurator</code>, configuration now
+    proceeds in two phases. Properties, conditions and other elements
+    are processed first, in document order, followed by appenders,
+    loggers and the root logger.  Consequently, properties may be used
+    before their definition, and appenders may be referenced before
+    their declaration, including from other appenders,
+    e.g. <code>AsyncAppender</code>. Conditions are evaluated once, at
+    their position in the document. A cycle in appender references is
+    reported as a translation error.</p>
+
+    <p>&bull; The <code>condition</code> attribute of
+    the <code>&lt;if></code> element is no longer supported. Use
+    the <code>&lt;condition></code> element instead. Moreover,
+    conditions declared with <code>&lt;condition></code> can now see
+    properties local to the configurator. Previously, they failed with
+    a <code>NullPointerException</code> at runtime.</p>
+
+    <p>&bull; Generated code no longer fails to compile when appenders
+    with the same name are declared in mutually exclusive branches,
+    e.g. in <code>&lt;then></code> and <code>&lt;else></code>
+    blocks. Such appenders share one field, while each appender
+    element gets its own setup method.  Appender fields are now
+    declared as <code>Appender&lt;ILoggingEvent></code>.</p>
+
+    <p>&bull; A reference to an appender that may not have been
+    created, e.g. an appender declared in a branch not taken, is now
+    skipped with a warning, as
+    in <code>JoranConfigurator</code>. Previously, the generated
+    configurator failed with
+    an <code>IllegalArgumentException</code>. A reference to an
+    undeclared appender is also reported at translation time.</p>
+
+    <p>&bull; The <code>packagingData</code> attribute of the
+    <code>&lt;configuration></code> element is now translated. The
+    <code>debug</code> attribute and the <code>logback.debug</code>
+    system property are now evaluated when the generated configurator
+    runs, instead of at translation time. As for the <code>scan</code>
+    attribute, values containing variables,
+    e.g. <code>packagingData="${PD:-false}"</code>, are evaluated when
+    the generated configurator runs.</p>
+
+    <p>&bull; Logger, appender and appender-ref names containing
+    variables, e.g.  <code>&lt;logger name="${loggerName}"></code>,
+    are now substituted when the generated configurator runs. Appender
+    references are matched with appenders by their names as written in
+    the configuration file.</p>
+
+    <p>&bull; <code>ModelToJava.extractModel(String)</code> now passes
+    its input to the XML parser as characters, ignoring any encoding
+    declaration in the document. Previously, the input was encoded
+    with the platform charset, which could garble non-ASCII
+    characters. The new <code>extractModel(InputSource)</code> method
+    accepts byte streams decoded according to the encoding declaration
+    of the document.</p>
+
+    <p>&bull; Custom elements whose children apply only if a condition
+    holds, e.g.  Spring Boot's <code>&lt;springProfile></code>, can
+    now be translated by extending the
+    new <code>GuardModelHandler</code> class.</p>
+
+    <p>&bull; A bit-wise identical binary of this version can be
+    reproduced by building
+    from <a href="https://github.com/qos-ch/logback-tyler">source
+    code</a> at commit ee14819f837c891f24de33c9fa08ba842bb8a00d
+    associated with the tag v_1.0.6. Release built using Java "21"
+    2023-10-17 LTS build 21.0.1.+12-LTS-29 under Linux Debian
+    11.6.</p>
+
+    <!-- ============================================================================ -->
+
+    <h3 class="doAnchor" name="tyler_1.0.5">2026-10-27 Release of logback-tyler
+    version 1.0.5</h3>
+
+    <p>&bull; logback-tyler now requires Java 17 or later, down from
+    Java 21. It still requires logback version 1.6.6 or later.</p>
+
+    <p>&bull; Translation options are now grouped in the new
+    immutable <code>TranslationOptions</code> class, passed to
+    the <code>ModelToJava</code> constructor. They include the fully
+    qualified name of the generated configurator class and its
+    superclass. The superclass must
+    extend <code>TylerConfiguratorBase</code>.</p>
+
+    <p>&bull; When enabled in <code>TranslationOptions</code>, files
+    referenced by <code>&lt;include&gt;</code> elements are read at
+    translation time and their contents inlined in the generated
+    code. Otherwise, or if an included file is unavailable, the
+    element is omitted with a warning. Variables are not supported in
+    the attributes of <code>&lt;include&gt;</code> elements.</p>
+
+    <p>&bull; The <code>&lt;conversionRule&gt;</code> element is now
+    translated.</p>
+
+    <p>&bull; <code>ModelToJava</code> can now be subclassed to
+    translate custom elements, by overriding
+    the <code>addModelHandlerAssociations</code>
+    and <code>createJoranConfigurator</code> methods. The
+    <code>ch.qos.logback.tyler.base.util</code> package is now
+    exported and module dependencies are declared transitive.</p>
+
+    <p>&bull; Non-String properties whose values contain variables,
+    e.g. <code>&lt;maxHistory&gt;${MAX_HISTORY:-7}&lt;/maxHistory&gt;</code>,
+    previously produced code that failed to compile. Such values are
+    now converted when the generated configurator runs, with the same
+    semantics and error messages as
+    in <code>JoranConfigurator</code>. Literal values are converted at
+    translation time. Invalid literal values and unsupported types
+    are reported as translation errors. Moreover, translation of enum,
+    float, long and <code>Charset</code> values has been fixed.</p>
+
+    <p>&bull; Generated code no longer fails to compile when a logger
+    is configured more than once, e.g. at top level and again within
+    an <code>&lt;if&gt;</code> block, or when logger or appender names
+    contain characters not allowed in Java identifiers, such as
+    "-". Logger variables are now unique per declaration, and invalid
+    characters are replaced with underscores.</p>
+
+    <p>&bull; A bit-wise identical binary of this version can be
+    reproduced by building
+    from <a href="https://github.com/qos-ch/logback-tyler">source
+    code</a> at commit 3f7f79d91c9a889435e03eafc68472ef77f41ce3
+    associated with the tag v_1.0.5. Release built using Java "21"
+    2023-10-17 LTS build 21.0.1.+12-LTS-29 under Linux Debian 11.6.
+    </p>
+
+    <!-- ============================================================================ -->
+    
+    <h3 class="doAnchor" name="tyler_1.0.4">2026-10-26 Release of logback-tyler
+    version 1.0.4</h3>
+
+    <p>&bull; logback-tyler now requires logback version 1.6.6 or
+    later.</p> 
+
+    <p>&bull; The <code>scan</code> attribute of the
+    <code>&lt;configuration&gt;</code> element is now interpreted as
+    in logback-classic. A value containing variables,
+    e.g. <code>scan="${SCAN:-true}"</code>, is evaluated when the
+    generated configurator runs. A literal value is evaluated at
+    translation time. Any non-empty value other than "false" enables
+    scanning. If scanning is disabled, no scanning code is
+    generated.</p>
+
+    <p>&bull; A bit-wise identical binary of this version can be
+    reproduced by building
+    from <a href="https://github.com/qos-ch/logback-tyler">source
+    code</a> at commit
+    320e7c71b027ad901f1ff4d6dda8f8a84ce6ceae
+    associated with the tag v_1.0.4. Release built using Java "21"
+    2023-10-17 LTS build 21.0.1.+12-LTS-29 under Linux Debian 11.6.
+    </p>
+
+    <!-- ============================================================================ -->
+
+
+    <h3 class="doAnchor" name="1.6.6">2026-10-25 Release of logback
+     version 1.6.6</h3>
+
+     <p>&bull; <code>LoggingEventVO</code> now rejects, during
+     deserialization, throwable proxies whose cause or suppressed
+     entries point back into the graph of proxies, for example to
+     their own parent. Such graphs cannot be produced by logback
+     itself. However, a crafted stream sent to a socket receiver could
+     use serialization back-references to build them, after which
+     <code>DefaultThrowableRenderer</code> and
+     <code>SyslogAppender</code> would loop forever and the recursive
+     converters would overflow the stack. These streams are now
+     rejected with an <code>InvalidObjectException</code>. Circular
+     exceptions logged by the application are still transmitted
+     correctly. This issue was reported and fixed in <a
+     href="https://github.com/qos-ch/logback/pull/1079">PR #1079</a>
+     by <a href="https://github.com/arfa-21">arfa-21</a>.
+     </p>
+
+     <p>&bull; <code>FileNamePattern</code> now escapes characters
+     with a special meaning in regular expressions, such as
+     <code>(</code>, <code>[</code> or <code>+</code>, when converting
+     the literal parts of a file name pattern into a regex. Previously,
+     <code>RollingFileAppender</code> failed to start when the path
+     contained an unbalanced parenthesis, as in
+     <code>C:/Users/Michael(Financ</code>. This issue was reported in
+     <a href="https://github.com/qos-ch/logback/issues/914">issues/914</a>
+     by <a href="https://github.com/danamlund">danamlund</a>. Moreover,
+     with <code>SizeAndTimeBasedRollingPolicy</code> and a pattern such
+     as <code>app.%d.(%i).log</code>, existing archives were not
+     recognized. After a restart within the same period, the next
+     rollover could overwrite an existing archive, and <span
+     class="option">maxHistory</span> and <span
+     class="option">totalSizeCap</span> never removed such
+     archives. This issue was reported in <a
+     href="https://github.com/qos-ch/logback/issues/933">issues/933</a>
+     by <a href="https://github.com/GeoffreyBoulay">GeoffreyBoulay</a>.
+     The fix was contributed in <a
+     href="https://github.com/qos-ch/logback/pull/1077">PR #1077</a>
+     by <a href="https://github.com/CCCLL">Jialin Chen</a>. Regex
+     metacharacters in <code>%d{...}</code> date patterns are now
+     escaped as well.
+     </p>
+
+     <p>&bull; The conversion of date patterns into regular
+     expressions now follows the rules of
+     <code>DateTimeFormatter</code>, which logback uses to format
+     dates, instead of those of <code>SimpleDateFormat</code>. In
+     particular, the <code>L</code> (stand-alone month) pattern letter
+     is now supported.
+     </p>
+
+     <p>&bull; <code>SyslogOutputStream</code> now connects its
+     <code>DatagramSocket</code> to the syslog host. Previously, the
+     socket was bound to the wildcard address, so that hardened
+     environments saw an unconnected UDP listener on all interfaces
+     for as long as the application ran. This issue was reported in <a
+     href="https://github.com/qos-ch/logback/issues/939">issues/939</a>
+     by <a href="https://github.com/joao-rebelo">joao-rebelo</a>. The
+     fix was contributed in <a
+     href="https://github.com/qos-ch/logback/pull/1076">PR #1076</a>
+     by <a href="https://github.com/Lyin-OTTF">Lyin-OTTF</a>.
+     </p>
+
+     <p>If the socket cannot be connected, for example because the
+     network is not yet available, <code>SyslogOutputStream</code>
+     falls back to an unconnected socket and
+     <code>SyslogAppenderBase</code> emits a warning. When a datagram
+     sent on a connected socket fails due to an ICMP "port
+     unreachable" message caused by an earlier datagram, the datagram
+     is sent once more so that no message is lost. If the retry also
+     fails, a single warning is emitted instead of one error per
+     event.
+     </p>
+
+     <p>&bull; <code>OutputStreamAppender</code> now stops its encoder
+     when the appender is stopped. Previously, encoders holding
+     resources until they were stopped, such as those of
+     logstash-logback-encoder, were never released, causing heap
+     growth at each reconfiguration. This issue was fixed in <a
+     href="https://github.com/qos-ch/logback/pull/1072">PR #1072</a>
+     by <a href="https://github.com/samyuh">Samuel Fernandes</a>.
+     </p>
+
+     <p>&bull; During variable substitution, an unmatched right curly
+     brace now causes an error to be reported, with the original value
+     left unchanged. Previously, the brace and all subsequent
+     characters were silently dropped, so that <code>%m}some
+     text</code> became <code>%m</code>. This issue was reported in <a
+     href="https://github.com/qos-ch/logback/issues/836">issues/836</a>
+     by <a href="https://github.com/philsttr">philsttr</a>.
+     </p>
+
+     <p>&bull; <code>LogbackMDCAdapter</code> now stores MDC entries
+     in a <code>LinkedHashMap</code>, so that the <code>%X</code>
+     converter outputs them in insertion order. This issue was
+     reported in <a
+     href="https://jira.qos.ch/browse/LOGBACK-1337">LOGBACK-1337</a>
+     and fixed by <a href="https://github.com/motlin">Craig P.
+     Motlin</a>.
+     </p>
+
+     <p>&bull; A bit-wise identical binary of this version can be
+     reproduced by building
+     from <a href="https://github.com/qos-ch/logback">source code</a>
+     at commit a9ee8019ee183e076ff5477957dbf90c4b04dd92 associated
+     with the tag <code>v_1.6.6</code>. The release was built using
+     Java "21" 2023-10-17 LTS build 21.0.1.+12-LTS-29 under Linux
+     Debian 11.6.</p>
+
+
+
+    <!-- ============================================================================ -->
+    
      <h3 class="doAnchor" name="1.6.5">2026-09-30 Release of logback
      version 1.6.5</h3>
 
-     <p>&bull; Fixed a vulnerability closely related to <a
+     <p>&bull; Fixed a vulnerability <a
+     href="https://www.cve.org/cverecord?id=CVE-2026-104721">CVE-2026-104721</a>
+     closely related to previously published <a
      href="https://www.cve.org/cverecord?id=CVE-2026-19880">CVE-2026-19880</a>.
-     The fix made in version 1.6.3, which strips forward and backward
-     slashes from MDC values, was not sufficient. An MDC value could
+     The fix in version 1.6.3, which strips forward and backward
+     slashes from MDC values, was insufficient. An MDC value could
      still contain relative path components such as <code>..</code>,
      variable references such as <code>${file.separator}</code>, or
      characters that are special in file name patterns and email
-     addresses. A new CVE will be created for this vulnerability.  The
-     new vulnerability was found and reported by François Martin
-     (GitHub: @martinfrancois, <a
+     addresses. This latest vulnerability was found and reported by
+     François Martin (GitHub: @martinfrancois, <a
      href="https://github.com/martinfrancois">https://github.com/martinfrancois</a>).
      </p>
 

@@ -581,7 +581,34 @@
   the <span class="attr">scan</span> attribute in case the <span
   class="attr">scan</span> attribute of the
   <code>&lt;configuration&gt;</code> element needs to be
-  overridden</p>
+  overridden. When set, it takes precedence over the top-level
+  <span class="attr">scan</span> attribute for the properties file in
+  question. When not set, the top-level value applies.</p>
+
+  <ul>
+    <li><code>scan="true"</code> causes the properties file to be
+    watched for changes even if the <code>&lt;configuration&gt;</code>
+    element does not set <span class="attr">scan</span>, or sets it to
+    false. In that case, only the properties file(s) requesting
+    scanning are watched, not the main configuration file.</li>
+
+    <li><code>scan="false"</code> causes the properties file not to be
+    watched even if the <code>&lt;configuration&gt;</code> element
+    sets <span class="attr">scan</span> to true. The main
+    configuration file and its included files are still watched as
+    usual.</li>
+  </ul>
+
+  <p>There is no local <span class="attr">scanPeriod</span>
+  attribute. The scanning period is always taken from the <span
+  class="attr">scanPeriod</span> attribute of the
+  <code>&lt;configuration&gt;</code> element, defaulting to one
+  minute.</p>
+
+  <pre><code>&lt;!-- watch local.properties only, every 30 seconds --&gt;
+&lt;configuration scanPeriod="30 seconds">
+  &lt;propertiesConfigurator scan="true" file="/path/to/local.properties"/>
+&lt;/configuration></code></pre>
   
   
   <!-- ==================== ContextListener =================== -->
